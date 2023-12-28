@@ -5,6 +5,8 @@
 /tmp
 /out-tsc
 /bazel-out
+/android
+/android/gradle
 
 # Node
 /node_modules
