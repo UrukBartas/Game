@@ -1,0 +1,74 @@
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
+@import "../../../../variables.scss";
+.navbar-logo {
+  max-width: 32px;
+}
+.wrapper{
+  background-color: $black-uruk;
+}
+
+i {
+  margin-right: 5px;
+}
+
+.last-row {
+  color: $font-color;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+}
+
+.sidebar {
+  width: 240px;
+  transition: width 0.3s ease;
+  position: absolute;
+  height: 100%;
+  z-index: 2;
+}
+.collapsed {
+  width: 100px; /* Ancho reducido */
+}
+.content {
+  position: relative;
+  margin: 0;
+  overflow: auto;
+}
+.content-collapsed {
+  @extend .content;
+  @include media-breakpoint-up(sm) {
+    width: calc(100% - 100px);
+    right: -100px;
+  }
+}
+.content-extended {
+  @extend .content;
+  width: calc(100% - 240px);
+  right: -240px;
+}
+
+.sidebar-lateral {
+  height: calc(100% - 55px);
+  color: $font-color;
+}
+
+nav,
+nav a {
+  color: $font-color;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: lighten($color: $secondary, $amount: 5);
+  }
+}
+
+.account-container {
+  gap: 10px;
+}
