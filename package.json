@@ -24,6 +24,7 @@
     "@capacitor/angular": "^2.0.3",
     "@capacitor/core": "latest",
     "@capacitor/screen-orientation": "^5.0.6",
+    "@wagmi/core": "^1.4.12",
     "@web3modal/wagmi": "^3.5.3",
     "ethers": "^6.9.1",
     "rxjs": "~7.5.0",
