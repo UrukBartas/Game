@@ -1,0 +1,92 @@
+<div class="wrapper">
+  <nav class="navbar navbar-expand-lg px-2 navbar-uruk bg-primary">
+    <a class="navbar-brand" href="#">Uruk bartas</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="d-flex justify-content-between">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#"
+              >Home <span class="sr-only">(current)</span></a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="w-100 justify-content-end d-none d-md-flex">
+        <button (click)="account.modal.open()">Connect Wallet</button>
+        <div *ngIf="account.address">
+          Connected Address: {{ account.address }}
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div
+    class="d-none d-sm-flex flex-column flex-shrink-0 p-3 bg-secondary sidebar sidebar-lateral {{
+      isSidebarOpened() ? 'collapsed' : ''
+    }}"
+  >
+    <div
+      class="d-flex align-items-center mb-3 text-decoration-none justify-content-center"
+    >
+      <a href="https://orimgames.com" target="_blank" rel="noopener noreferrer">
+        <img
+          class="navbar-logo mr-3"
+          src="https://avatars.githubusercontent.com/u/89161645?s=48&v=4"
+          alt=""
+          srcset=""
+        />
+      </a>
+      @if(!isSidebarOpened()){
+      <span class="fs-4 d-none d-lg-flex">Uruk Bartas</span>
+      }
+    </div>
+    <hr />
+    <ul class="list-group flex-grow-1">
+      @for (route of routesNavigation; track route.path) {
+      <li
+        class="list-group-item bg-primary"
+        [ngClass]="{ active: router.url == route.path }"
+        [routerLink]="[route.path]"
+      >
+        <i class="{{ route.icon }}"></i>
+        @if(!isSidebarOpened()){
+        <span class="d-none d-lg-flex">{{ route.displayText }}</span>
+        }
+      </li>
+      }
+    </ul>
+    <hr />
+    <div class="last-row">
+      <div class="collapse-item d-none d-sm-block">
+        <i
+          (click)="toggleSidebarOpened()"
+          class="pointer {{
+            isSidebarOpened()
+              ? 'fa-solid fa-angles-up fa-rotate-90'
+              : 'fa-solid fa-angles-up fa-rotate-270'
+          }}"
+        ></i>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex">
+    <div
+      class="container-fluid d-flex justify-content-center align-items-center  content {{
+        !isSidebarOpened() ? 'content-extended' : 'content-collapsed'
+      }}"
+    >
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
