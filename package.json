@@ -4,9 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build && npx cap sync",
+    "build": "ng build && npx capacitor-assets generate --android && npx cap sync",
     "add-android": "npx cap add android",
     "open-android": "npx cap open android",
+    "resources": "npx capacitor-assets generate --android",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -35,6 +36,7 @@
     "@angular-devkit/build-angular": "^17.0.8",
     "@angular/cli": "^17.0.8",
     "@angular/compiler-cli": "^17.0.8",
+    "@capacitor/assets": "^3.0.4",
     "@capacitor/cli": "latest",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
