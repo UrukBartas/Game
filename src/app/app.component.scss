@@ -1,0 +1,17 @@
+.game-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (orientation: landscape) {
+  .game-container {
+  }
+}
+
+@media screen and (orientation: portrait) {
+  .game-container {
+  }
+}
