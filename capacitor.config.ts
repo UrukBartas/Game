@@ -1,12 +1,12 @@
-import { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
   appId: 'com.urukbartas.game',
-  appName: 'GameApp',
+  appName: 'Uruk Bartas',
   webDir: 'dist/game-app',
   server: {
-    androidScheme: 'https'
-  }
-};
+    androidScheme: 'https',
+  },
+}
 
-export default config;
+export default config
