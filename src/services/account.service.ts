@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
-import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
-import { mainnet, arbitrum, bsc } from 'viem/chains';
 import { watchAccount } from '@wagmi/core';
+import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
 import { Web3Modal } from '@web3modal/wagmi/dist/types/src/client';
+import { arbitrum, bsc, mainnet } from 'viem/chains';
 @Injectable({
   providedIn: 'root',
 })
@@ -12,7 +11,7 @@ export class AccountService {
   modal: Web3Modal;
 
   initWalletConnect() {
-    const projectId = environment.walletConnectProjectId;
+    const projectId = process.env['WALLET_CONNECT_PROJECT_ID'] ?? '';
 
     const metadata = {
       name: 'Uruk Bartas',
