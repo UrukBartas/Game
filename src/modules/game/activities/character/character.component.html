@@ -1,7 +1,74 @@
-
-<img
-  src="https://secure-asset-delivery.gameforge.com/partnersite_live_product/148ce09c-ed1e-4595-9c0b-45ce9e36c0f6/6T76TG1QBedQ40F7TMatxQkHk2t8EaYcllcAHGcy.jpeg"
-  alt=""
-  srcset=""
-  class="w-100 h-100"
-/>
+<div class="h-100">
+  <div class="row h-100">
+    <div class="col-6 equipped h-100">
+      <div class="description">
+        <p class="h6">Character</p>
+      </div>
+      <div class="items-equipped-contained">
+        <div class="row justify-content-center row-item-character">
+          <app-item-box
+            [height]="obtainEquippedItemBoxHeightDependingOnScreenSize()"
+            [width]="obtainEquippedItemBoxWidthDependingOnScreenSize()"
+          ></app-item-box>
+        </div>
+        <div class="row justify-content-around row-item-character">
+          <app-item-box
+            [height]="obtainEquippedItemBoxHeightDependingOnScreenSize()"
+            [width]="obtainEquippedItemBoxWidthDependingOnScreenSize()"
+          ></app-item-box>
+          <app-item-box
+            [height]="obtainEquippedItemBoxHeightDependingOnScreenSize()"
+            [width]="obtainEquippedItemBoxWidthDependingOnScreenSize()"
+          ></app-item-box>
+          <app-item-box
+            [height]="obtainEquippedItemBoxHeightDependingOnScreenSize()"
+            [width]="obtainEquippedItemBoxWidthDependingOnScreenSize()"
+          ></app-item-box>
+        </div>
+        <div class="row justify-content-center row-item-character">
+          <app-item-box
+            [height]="obtainEquippedItemBoxHeightDependingOnScreenSize()"
+            [width]="obtainEquippedItemBoxWidthDependingOnScreenSize()"
+          ></app-item-box>
+        </div>
+      </div>
+      <hr />
+      <div class="row stats-summary">
+        <div class="description">
+          <p class="h6">Stats summary</p>
+          <span
+            ><a [routerLink]="['/stats']">
+             Stats detail  <i class="fa-solid fa-angles-up fa-rotate-90"></i></a
+            ></span
+          >
+        </div>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero
+          perspiciatis reprehenderit ullam magni consequatur deleniti eius
+          voluptatem sapiente officia nesciunt distinctio molestiae aspernatur,
+          repellendus neque facilis impedit fugiat dicta omnis.
+        </p>
+      </div>
+    </div>
+    <div class="col-6 inventory h-100">
+      <div class="description">
+        <p class="h6">Items</p>
+        <span>0/{{ itemInventoryBoxes.length }}</span>
+      </div>
+      <div class="item-inventory">
+        @for (box of itemInventoryBoxes; track box.id) {
+        <app-item-box [height]="50" [width]="50"></app-item-box>
+        }
+      </div>
+      <div class="description">
+        <p class="h6">Consumables</p>
+        <span>0/{{ consumablesInventoryBoxes.length }}</span>
+      </div>
+      <div class="consumables-inventory">
+        @for (box of consumablesInventoryBoxes; track box.id) {
+        <app-item-box [height]="50" [width]="50"></app-item-box>
+        }
+      </div>
+    </div>
+  </div>
+</div>
