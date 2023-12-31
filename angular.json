@@ -26,6 +26,27 @@
             "customWebpackConfig": {
               "path": "./extra-webpack.config.js"
             },
+            "allowedCommonJsDependencies": [
+              "eventemitter3",
+              "@coinbase/wallet-sdk",
+              "cross-fetch",
+              "@walletconnect/environment",
+              "@stablelib/ed25519",
+              "@stablelib/chacha20poly1305",
+              "@stablelib/hkdf",
+              "@stablelib/random",
+              "@stablelib/sha256",
+              "@stablelib/x25519",
+              "@walletconnect/time",
+              "@walletconnect/window-getters",
+              "@walletconnect/window-metadata",
+              "query-string",
+              "dayjs",
+              "dayjs/plugin/relativeTime.js",
+              "dayjs/plugin/updateLocale.js",
+              "buffer",
+              "qrcode"
+            ],
             "outputPath": "dist/game-app",
             "index": "src/index.html",
             "main": "src/main.ts",
