@@ -1,0 +1,47 @@
+@import "../../../../variables.scss";
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
+* {
+  color: $font-color;
+}
+.equipped {
+  display: flex;
+  flex-direction: column;
+}
+
+.items-equipped-contained {
+  max-width: 450px;
+  align-self: center;
+  background-image: url("../../../../assets/siluette.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: fit-content;
+}
+
+.row-item-character {
+  padding: 10px 0px;
+}
+
+.inventory {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  .item-inventory,
+  .consumables-inventory {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 10px;
+    overflow: auto;
+    padding: 0px 20px;
+  }
+  .item-inventory {
+    max-height: 470px;
+   min-height: 175px;
+  }
+  .consumables-inventory {
+    max-height: 120px;
+    min-height: 55px;
+  }
+}

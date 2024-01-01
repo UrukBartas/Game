@@ -1,28 +1,22 @@
-import { Component, HostListener, inject } from '@angular/core';
-import { InventoryService } from 'src/services/inventory.service';
+import { Component, inject } from '@angular/core';
 import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
-  selector: 'app-character',
-  templateUrl: './character.component.html',
-  styleUrl: './character.component.scss',
+  selector: 'app-stats-detail',
+  templateUrl: './stats-detail.component.html',
+  styleUrl: './stats-detail.component.scss',
 })
-export class CharacterComponent {
-  private inventoryService = inject(InventoryService);
+export class StatsDetailComponent {
   private viewportService = inject(ViewportService);
-  public itemInventoryBoxes = this.inventoryService.getInventoryStructure();
-  public consumablesInventoryBoxes =
-    this.inventoryService.getInventoryStructure(20);
-
   public obtainEquippedItemBoxHeightDependingOnScreenSize() {
     if (
       this.viewportService.screenSize == 'xs' ||
       this.viewportService.screenSize == 'sm' ||
       this.viewportService.screenSize == 'md'
     ) {
-      return 70;
+      return 150;
     }
-    return 140;
+    return 300;
   }
 
   public obtainEquippedItemBoxWidthDependingOnScreenSize() {
@@ -31,8 +25,8 @@ export class CharacterComponent {
       this.viewportService.screenSize == 'sm' ||
       this.viewportService.screenSize == 'md'
     ) {
-      return 62.5;
+      return 100;
     }
-    return 125;
+    return 200;
   }
 }
