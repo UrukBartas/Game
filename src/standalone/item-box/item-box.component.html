@@ -1,0 +1,11 @@
+<ng-template #tipContent>
+  <div class="description">
+    <p class="h6">Tooltip for item</p>
+  </div>
+  <strong>Hello ebola</strong>
+</ng-template>
+<div
+  [ngbTooltip]="true ? tipContent : null"
+  class="box"
+  [ngStyle]="{ height: height + 'px', width: width + 'px' }"
+></div>

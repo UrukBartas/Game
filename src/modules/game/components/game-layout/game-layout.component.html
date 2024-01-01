@@ -24,10 +24,16 @@
         </ul>
       </div>
       <div class="w-100 justify-content-end d-none d-md-flex">
-        <button (click)="account.modal.open()">Connect Wallet</button>
-        <div *ngIf="account.address">
-          Connected Address: {{ account.address }}
-        </div>
+        @if (account.address) { Connected Address: {{ account.address }}
+        } @else {
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="account.modal.open()"
+        >
+          Connect Wallet
+        </button>
+        }
       </div>
     </div>
   </nav>
@@ -80,9 +86,9 @@
       </div>
     </div>
   </div>
-  <div class="d-flex">
+  <div class="d-flex container-content">
     <div
-      class="container-fluid d-flex justify-content-center align-items-center  content {{
+      class="container-fluid d-flex justify-content-center align-items-center p-4 content {{
         !isSidebarOpened() ? 'content-extended' : 'content-collapsed'
       }}"
     >
