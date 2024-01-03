@@ -1,10 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { getAccount, signMessage } from '@wagmi/core';
-import { take } from 'rxjs';
+import { Select } from '@ngxs/store';
+import { Observable } from 'rxjs';
 import { AccountService } from 'src/services/account.service';
 import { AuthService } from 'src/services/auth.service';
 import { WalletService } from 'src/services/wallet.service';
+import { MainState } from 'src/store/main.store';
 
 @Component({
   selector: 'app-game-layout',
@@ -12,6 +13,8 @@ import { WalletService } from 'src/services/wallet.service';
   styleUrl: './game-layout.component.scss',
 })
 export class GameLayoutComponent {
+  @Select(MainState.getAddress) address$: Observable<string>;
+
   public routesNavigation = [
     {
       path: '/',
@@ -28,37 +31,5 @@ export class GameLayoutComponent {
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);
-  }
-
-  public logIn() {
-    this.authService
-      .getAuth()
-      .pipe(take(1))
-      .subscribe(async ({ nonce }) => {
-        const message = `Sign this message to authenticate your Ethereum address: ${nonce}`;
-        const sign = await signMessage({ message });
-        const address: string = getAccount().address ?? '';
-
-        this.authService
-          .signAuth(sign, address, nonce)
-          .pipe(take(1))
-          .subscribe((success: boolean) => {
-            if (success) {
-              console.log('Logged');
-            } else {
-              console.log('Couldnt verify the user');
-            }
-          });
-      });
-  }
-
-  public loadCharacter() {
-    this.accountService.loadCharacter().pipe(take(1)).subscribe(console.log);
-  }
-
-  public async signMessage(provider, message) {
-    const signer = provider.getSigner();
-    const signature = await signer.signMessage(message);
-    return signature;
   }
 }

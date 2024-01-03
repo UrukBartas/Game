@@ -24,10 +24,8 @@
         </ul>
       </div>
       <div class="w-100 justify-content-end d-none d-md-flex">
-        @if (walletService.address) {
-          Connected Address: {{ walletService.address }}
-          <button (click)="logIn()">Log in</button>
-          <button (click)="loadCharacter()">Load character</button>
+        @if (address$ | async) {
+          Connected Address: {{ address$ | async }}
         } @else {
           <button
             type="button"
