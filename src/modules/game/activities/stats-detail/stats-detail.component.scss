@@ -1,0 +1,12 @@
+@import "../../../../variables.scss";
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/mixins";
+* {
+  color: $font-color;
+}
+.stats-container{
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
