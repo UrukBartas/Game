@@ -44,15 +44,16 @@ export class GameLayoutComponent {
           .pipe(take(1))
           .subscribe((success: boolean) => {
             if (success) {
-              this.accountService
-                .loadCharacter()
-                .pipe(take(1))
-                .subscribe(console.log);
+              console.log('Logged');
             } else {
               console.log('Couldnt verify the user');
             }
           });
       });
+  }
+
+  public loadCharacter() {
+    this.accountService.loadCharacter().pipe(take(1)).subscribe(console.log);
   }
 
   public async signMessage(provider, message) {
