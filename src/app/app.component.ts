@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
-import { AccountService } from 'src/services/account.service';
+import { WalletService } from 'src/services/wallet.service';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +8,7 @@ import { AccountService } from 'src/services/account.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  public account = inject(AccountService);
+  public account = inject(WalletService);
   constructor() {
     this.lockOrientation();
     this.account.initWalletConnect();

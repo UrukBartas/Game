@@ -16,11 +16,7 @@ export class AuthService extends ApiBaseService {
     return this.get('/get-auth');
   }
 
-  signAuth(
-    sign: string,
-    address: string,
-    nonce: string
-  ): Observable<{ token: string }> {
+  signAuth(sign: string, address: string, nonce: string): Observable<boolean> {
     return this.post('/sign-auth', { sign, address, nonce });
   }
 }
