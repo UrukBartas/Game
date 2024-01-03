@@ -1,9 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { getAccount, signMessage } from '@wagmi/core';
+import { take } from 'rxjs';
 import { AccountService } from 'src/services/account.service';
 import { AuthService } from 'src/services/auth.service';
-import { take } from 'rxjs';
-import { signMessage, getAccount } from '@wagmi/core';
+import { WalletService } from 'src/services/wallet.service';
 
 @Component({
   selector: 'app-game-layout',
@@ -18,13 +19,12 @@ export class GameLayoutComponent {
       icon: 'fa fa-home',
     },
   ];
+
   public isSidebarOpened = signal(true);
   public router = inject(Router);
-  public accountService = inject(AccountService);
   public authService = inject(AuthService);
-  constructor() {
-    this.accountService.modal.subscribeEvents(console.log);
-  }
+  public accountService = inject(AccountService);
+  public walletService = inject(WalletService);
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);
@@ -42,7 +42,16 @@ export class GameLayoutComponent {
         this.authService
           .signAuth(sign, address, nonce)
           .pipe(take(1))
-          .subscribe(console.log);
+          .subscribe((success: boolean) => {
+            if (success) {
+              this.accountService
+                .loadCharacter()
+                .pipe(take(1))
+                .subscribe(console.log);
+            } else {
+              console.log('Couldnt verify the user');
+            }
+          });
       });
   }
 

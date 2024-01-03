@@ -102,6 +102,11 @@
               "buildTarget": "GameApp:build:development"
             }
           },
+          "options": {
+            "ssl": true,
+            "sslKey": "./ssl/key.pem",
+            "sslCert": "./ssl/cert.pem"
+          },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
