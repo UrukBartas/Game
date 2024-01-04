@@ -6,13 +6,17 @@ import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 @Injectable({
   providedIn: 'root',
 })
-export class AccountService extends ApiBaseService {
+export class AuthService extends ApiBaseService {
   constructor(private http: HttpClient) {
     super(http);
-    this.controllerPrefix = '/account';
+    this.controllerPrefix = '/auth';
   }
 
-  loadCharacter(): Observable<boolean> {
-    return this.get('/load-character');
+  getAuth(): Observable<{ nonce: string }> {
+    return this.get('/get-auth');
+  }
+
+  signAuth(sign: string, address: string, nonce: string): Observable<boolean> {
+    return this.post('/sign-auth', { sign, address, nonce });
   }
 }
