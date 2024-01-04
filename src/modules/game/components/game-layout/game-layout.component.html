@@ -24,15 +24,16 @@
         </ul>
       </div>
       <div class="w-100 justify-content-end d-none d-md-flex">
-        @if (account.address) { Connected Address: {{ account.address }}
+        @if (address$ | async) {
+          Connected Address: {{ address$ | async }}
         } @else {
-        <button
-          type="button"
-          class="btn btn-secondary"
-          (click)="account.modal.open()"
-        >
-          Connect Wallet
-        </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="walletService.modal.open()"
+          >
+            Connect Wallet
+          </button>
         }
       </div>
     </div>
@@ -53,23 +54,23 @@
           srcset=""
         />
       </a>
-      @if(!isSidebarOpened()){
-      <span class="fs-4 d-none d-lg-flex">Uruk Bartas</span>
+      @if (!isSidebarOpened()) {
+        <span class="fs-4 d-none d-lg-flex">Uruk Bartas</span>
       }
     </div>
     <hr />
     <ul class="list-group flex-grow-1">
       @for (route of routesNavigation; track route.path) {
-      <li
-        class="list-group-item bg-primary"
-        [ngClass]="{ active: router.url == route.path }"
-        [routerLink]="[route.path]"
-      >
-        <i class="{{ route.icon }}"></i>
-        @if(!isSidebarOpened()){
-        <span class="d-none d-lg-flex">{{ route.displayText }}</span>
-        }
-      </li>
+        <li
+          class="list-group-item bg-primary"
+          [ngClass]="{ active: router.url == route.path }"
+          [routerLink]="[route.path]"
+        >
+          <i class="{{ route.icon }}"></i>
+          @if (!isSidebarOpened()) {
+            <span class="d-none d-lg-flex">{{ route.displayText }}</span>
+          }
+        </li>
       }
     </ul>
     <hr />

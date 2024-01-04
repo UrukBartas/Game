@@ -21,8 +21,32 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "customWebpackConfig": {
+              "path": "./extra-webpack.config.js"
+            },
+            "allowedCommonJsDependencies": [
+              "eventemitter3",
+              "@coinbase/wallet-sdk",
+              "cross-fetch",
+              "@walletconnect/environment",
+              "@stablelib/ed25519",
+              "@stablelib/chacha20poly1305",
+              "@stablelib/hkdf",
+              "@stablelib/random",
+              "@stablelib/sha256",
+              "@stablelib/x25519",
+              "@walletconnect/time",
+              "@walletconnect/window-getters",
+              "@walletconnect/window-metadata",
+              "query-string",
+              "dayjs",
+              "dayjs/plugin/relativeTime.js",
+              "dayjs/plugin/updateLocale.js",
+              "buffer",
+              "qrcode"
+            ],
             "outputPath": "dist/game-app",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -31,7 +55,9 @@
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.scss"],
-            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -67,7 +93,7 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "GameApp:build:production"
@@ -75,6 +101,11 @@
             "development": {
               "buildTarget": "GameApp:build:development"
             }
+          },
+          "options": {
+            "ssl": true,
+            "sslKey": "./ssl/key.pem",
+            "sslCert": "./ssl/cert.pem"
           },
           "defaultConfiguration": "development"
         },
