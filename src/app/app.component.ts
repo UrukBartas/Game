@@ -14,6 +14,10 @@ export class AppComponent {
 
   }
   ngOnInit(): void {
+
+  }
+
+  ngAfterViewInit(): void {
     this.account.initWalletConnect();
   }
 
