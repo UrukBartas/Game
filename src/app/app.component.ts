@@ -11,6 +11,9 @@ export class AppComponent {
   public account = inject(WalletService);
   constructor() {
     this.lockOrientation();
+
+  }
+  ngOnInit(): void {
     this.account.initWalletConnect();
   }
 

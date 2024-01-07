@@ -20,7 +20,7 @@ export class WalletService {
 
   initWalletConnect() {
     const projectId = process.env['WALLET_CONNECT_PROJECT_ID'] ?? '';
-
+    console.log(projectId)
     const metadata = {
       name: 'Uruk Bartas',
       description: 'Play to earn game',
