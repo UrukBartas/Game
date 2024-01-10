@@ -7,8 +7,14 @@ import { GameLayoutComponent } from './components/game-layout/game-layout.compon
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ItemBoxComponent } from 'src/standalone/item-box/item-box.component';
 import { StatsDetailComponent } from './activities/stats-detail/stats-detail.component';
+import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 @NgModule({
-  declarations: [GameLayoutComponent, CharacterComponent, StatsDetailComponent],
+  declarations: [
+    GameLayoutComponent,
+    CharacterComponent,
+    StatsDetailComponent,
+    ExportImportNftComponent,
+  ],
   imports: [CommonModule, GameRoutingModule, NgbModule, ItemBoxComponent],
   exports: [GameLayoutComponent],
 })
