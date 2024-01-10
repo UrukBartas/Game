@@ -21,6 +21,11 @@ export class GameLayoutComponent {
       displayText: 'Character',
       icon: 'fa fa-home',
     },
+    {
+      path:'/export-import',
+      displayText:'Import/Export NFT',
+      icon:'fa fa-plug'
+    }
   ];
 
   public isSidebarOpened = signal(true);

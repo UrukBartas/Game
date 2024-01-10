@@ -23,7 +23,8 @@
     "allowSyntheticDefaultImports": true,
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "resolveJsonModule": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
