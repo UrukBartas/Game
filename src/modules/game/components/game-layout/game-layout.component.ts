@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { AccountService } from 'src/services/account.service';
+import { UserService } from 'src/services/user.service';
 import { AuthService } from 'src/services/auth.service';
 import { WalletService } from 'src/services/wallet.service';
 import { MainState } from 'src/store/main.store';
@@ -21,12 +21,17 @@ export class GameLayoutComponent {
       displayText: 'Character',
       icon: 'fa fa-home',
     },
+    {
+      path: '/edit',
+      displayText: 'Settings',
+      icon: 'fa fa-gear',
+    },
   ];
 
   public isSidebarOpened = signal(true);
   public router = inject(Router);
   public authService = inject(AuthService);
-  public accountService = inject(AccountService);
+  public accountService = inject(UserService);
   public walletService = inject(WalletService);
 
   public toggleSidebarOpened(): void {

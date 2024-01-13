@@ -4,11 +4,12 @@ import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
 import { Web3Modal } from '@web3modal/wagmi/dist/types/src/client';
 import { shimmer } from 'viem/chains';
 import { AuthService } from './auth.service';
-import { AccountService } from './account.service';
+import { UserService } from './user.service';
 import { take } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { DisconnectWallet, MainState, SetAddress } from 'src/store/main.store';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
@@ -16,8 +17,9 @@ export class WalletService {
   modal: Web3Modal;
 
   public authService = inject(AuthService);
-  public accountService = inject(AccountService);
+  public accountService = inject(UserService);
   private toastService = inject(ToastrService);
+  private router = inject(Router);
   public store = inject(Store);
 
   initWalletConnect() {
@@ -51,8 +53,8 @@ export class WalletService {
     this.authService
       .getAuth()
       .pipe(take(1))
-      .subscribe(
-        async ({ nonce }) => {
+      .subscribe({
+        next: async ({ nonce }) => {
           const message = `Sign this message to authenticate your Ethereum address: ${nonce}`;
           const sign = await signMessage({ message });
           const address: string = getAccount().address ?? '';
@@ -60,23 +62,28 @@ export class WalletService {
           this.authService
             .signAuth(sign, address, nonce)
             .pipe(take(1))
-            .subscribe((success: boolean) => {
-              if (success) {
-                this.store.dispatch(new SetAddress(address));
-                this.loadCharacter();
-              } else {
-                console.log('Couldnt verify the user');
-              }
+            .subscribe({
+              next: (exists) => {
+                if (exists) {
+                  this.store.dispatch(new SetAddress(address));
+                  this.loadCharacter();
+                } else {
+                  this.router.navigateByUrl('/edit');
+                }
+              },
+              error: (err) => {
+                this.toastService.error('Couldnt verify the user');
+              },
             });
         },
-        (err) => {
+        error: (err) => {
           this.toastService.error("Couldn't reach the server");
-        }
-      );
+        },
+      });
   }
 
-  public loadCharacter() {
-    this.accountService.loadCharacter().pipe(take(1)).subscribe(console.log);
+  private loadCharacter() {
+    //this.accountService.loadCharacter().pipe(take(1)).subscribe(console.log);
   }
 
   public async signMessage(provider, message) {

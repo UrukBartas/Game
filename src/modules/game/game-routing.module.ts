@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { CharacterComponent } from './activities/character/character.component';
 import { StatsDetailComponent } from './activities/stats-detail/stats-detail.component';
+import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
       {
         path: 'stats',
         component: StatsDetailComponent,
+      },
+      {
+        path: 'edit',
+        component: EditCharacterComponent,
       },
     ],
   },
