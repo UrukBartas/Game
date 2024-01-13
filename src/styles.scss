@@ -24,15 +24,16 @@ body {
 }
 
 a {
-  text-decoration: none !important;
-  color: $secondary !important;
+  text-decoration: none;
+  color: $secondary;
   i {
-    color: $secondary !important;
+    color: $secondary;
   }
 }
 
 app-character,
-app-stats-detail {
+app-stats-detail,
+app-export-import-nft {
   width: 100%;
   height: 100%;
 }
@@ -45,6 +46,29 @@ app-item-box {
   p,
   span {
     color: $secondary;
+  }
+}
+
+.inventory {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  .item-inventory,
+  .consumables-inventory {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 10px;
+    overflow: auto;
+    padding: 0px 20px;
+  }
+  .item-inventory {
+    max-height: 470px;
+    min-height: 175px;
+  }
+  .consumables-inventory {
+    max-height: 120px;
+    min-height: 55px;
   }
 }
 

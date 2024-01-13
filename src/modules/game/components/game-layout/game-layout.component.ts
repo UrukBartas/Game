@@ -22,6 +22,11 @@ export class GameLayoutComponent {
       icon: 'fa fa-home',
     },
     {
+      path: '/export-import',
+      displayText: 'Import/Export NFT',
+      icon: 'fa fa-plug',
+    },
+    {
       path: '/edit',
       displayText: 'Settings',
       icon: 'fa fa-gear',

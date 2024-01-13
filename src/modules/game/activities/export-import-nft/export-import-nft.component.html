@@ -1,0 +1,45 @@
+<div class="h-100">
+  <div class="row">
+    <div class="description">
+      <p class="h6">Export section</p>
+    </div>
+  </div>
+  <div class="selection py-3">
+    <div>
+      <div class="form-check form-switch">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="flexSwitchCheckChecked"
+          (change)="changeType($event)"
+          checked
+        />
+        <label
+          class="form-check-label text-light"
+          for="flexSwitchCheckChecked"
+          >{{ typeActive == 'export' ? 'Export' : 'Import' }}</label
+        >
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6 item-to-export-import">
+      <app-item-box [height]="200" [width]="200"></app-item-box>
+      <button
+        type="button"
+        class="btn btn-primary btn-lg btn-block w-100"
+        [disabled]="!allowImportExport"
+        (click)="triggerAction()"
+      >
+        {{ typeActive == 'export' ? 'Export' : 'Import' }}
+      </button>
+    </div>
+    <div class="col-6 inventory h-100">
+      <div class="item-inventory">
+        @for (box of itemInventoryBoxes; track box.id) {
+          <app-item-box [height]="50" [width]="50"></app-item-box>
+        }
+      </div>
+    </div>
+  </div>
+</div>
