@@ -1,5 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { getAccount, signMessage, watchAccount } from '@wagmi/core';
+import {
+  getAccount,
+  signMessage,
+  watchAccount,
+} from '@wagmi/core';
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
 import { Web3Modal } from '@web3modal/wagmi/dist/types/src/client';
 import { shimmer } from 'viem/chains';
@@ -70,11 +74,5 @@ export class WalletService {
 
   public loadCharacter() {
     this.accountService.loadCharacter().pipe(take(1)).subscribe(console.log);
-  }
-
-  public async signMessage(provider, message) {
-    const signer = provider.getSigner();
-    const signature = await signer.signMessage(message);
-    return signature;
   }
 }
