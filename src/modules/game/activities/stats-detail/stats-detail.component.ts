@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
@@ -6,7 +7,7 @@ import { ViewportService } from 'src/services/viewport.service';
   templateUrl: './stats-detail.component.html',
   styleUrl: './stats-detail.component.scss',
 })
-export class StatsDetailComponent {
+export class StatsDetailComponent extends TemplatePage {
   private viewportService = inject(ViewportService);
   public obtainEquippedItemBoxHeightDependingOnScreenSize() {
     if (

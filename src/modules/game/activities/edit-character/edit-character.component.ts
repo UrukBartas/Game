@@ -1,13 +1,15 @@
-import { Component, inject } from '@angular/core';
+import { Component, HostBinding, inject } from '@angular/core';
 import { take } from 'rxjs';
+import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { UserService } from 'src/services/user.service';
+import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
   selector: 'app-edit',
   templateUrl: './edit-character.component.html',
   styleUrls: ['./edit-character.component.scss'],
 })
-export class EditCharacterComponent {
+export class EditCharacterComponent extends TemplatePage {
   images = [
     'assets/free-portraits/knight.webp',
     'assets/free-portraits/knight-f.webp',
@@ -22,6 +24,7 @@ export class EditCharacterComponent {
   email: string = '';
 
   userService = inject(UserService);
+  viewportService = inject(ViewportService);
 
   saveCharacter() {
     this.userService
