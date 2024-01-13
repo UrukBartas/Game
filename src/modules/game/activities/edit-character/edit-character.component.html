@@ -1,0 +1,60 @@
+<div class="character-edit-container">
+  <div class="row">
+    <div class="description">
+      <p class="h4">Edit your character</p>
+    </div>
+  </div>
+  <form (ngSubmit)="saveCharacter()" class="d-flex flex-column gap-3">
+    <div class="image-picker">
+      <div class="image-thumbnails">
+        <div class="row">
+          @for (image of images; track image) {
+            <div class="col">
+              <div
+                class="image-container"
+                [style.height]="getImageContainerSizeByScreenSize() + 'px'"
+                [style.width]="getImageContainerSizeByScreenSize() + 'px'"
+                [class.selected]="image === selectedImage"
+                (click)="selectedImage = image"
+              >
+                <img [src]="image" class="character-image" />
+
+                <div class="check-icon" *ngIf="image === selectedImage">
+                  <i class="fa fa-check-circle"></i>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="characterName">Character Name:</label>
+      <input
+        type="text"
+        class="form-control"
+        id="characterName"
+        [(ngModel)]="characterName"
+        name="characterName"
+        placeholder="Enter character name"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        [(ngModel)]="email"
+        name="email"
+        placeholder="Enter email"
+      />
+    </div>
+
+    <div class="form-group py-3">
+      <button type="submit" class="btn btn-primary save-button">Save</button>
+    </div>
+  </form>
+</div>

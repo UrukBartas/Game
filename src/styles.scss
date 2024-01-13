@@ -3,7 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'UrukFont';
 }
 html,
 body {
@@ -70,6 +70,13 @@ app-item-box {
     max-height: 120px;
     min-height: 55px;
   }
+}
+
+@font-face {
+  font-family: 'UrukFont';
+  src: url('./assets/fonts/uruk-font.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 /* Importing Bootstrap SCSS file. */
