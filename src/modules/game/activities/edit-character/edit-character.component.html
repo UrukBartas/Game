@@ -11,6 +11,8 @@
           <div class="col" *ngFor="let image of images">
             <div
               class="image-container"
+              [style.height]="getImageContainerSizeByScreenSize() + 'px'"
+              [style.width]="getImageContainerSizeByScreenSize() + 'px'"
               [class.selected]="image === selectedImage"
               (click)="selectedImage = image"
             >

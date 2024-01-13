@@ -26,6 +26,16 @@ export class EditCharacterComponent extends TemplatePage {
   userService = inject(UserService);
   viewportService = inject(ViewportService);
 
+  public getImageContainerSizeByScreenSize() {
+    if (
+      this.viewportService.screenSize == 'xs' ||
+      this.viewportService.screenSize == 'sm'
+    ) {
+      return 100;
+    }
+    return 150;
+  }
+
   saveCharacter() {
     this.userService
       .createCharacter(this.email, this.characterName, this.selectedImage)
