@@ -1,11 +1,11 @@
-@import "node_modules/bootstrap/scss/functions";
-@import "node_modules/bootstrap/scss/variables";
-@import "node_modules/bootstrap/scss/mixins";
-@import "../../../../variables.scss";
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
+@import '../../../../variables.scss';
 .navbar-logo {
   max-width: 32px;
 }
-.wrapper{
+.wrapper {
   background-color: $black-uruk;
 }
 
@@ -62,6 +62,7 @@ nav a {
 .list-group-item {
   display: flex;
   justify-content: center;
+  align-items: center;
   cursor: pointer;
   transition: background-color 0.3s ease;
   border: none;
@@ -74,6 +75,6 @@ nav a {
   gap: 10px;
 }
 
-.container-content{
+.container-content {
   height: calc(100vh - 56px);
 }
