@@ -8,21 +8,23 @@
     <div class="image-picker">
       <div class="image-thumbnails">
         <div class="row">
-          <div class="col" *ngFor="let image of images">
-            <div
-              class="image-container"
-              [style.height]="getImageContainerSizeByScreenSize() + 'px'"
-              [style.width]="getImageContainerSizeByScreenSize() + 'px'"
-              [class.selected]="image === selectedImage"
-              (click)="selectedImage = image"
-            >
-              <img [src]="image" class="character-image" />
+          @for (image of images; track image) {
+            <div class="col">
+              <div
+                class="image-container"
+                [style.height]="getImageContainerSizeByScreenSize() + 'px'"
+                [style.width]="getImageContainerSizeByScreenSize() + 'px'"
+                [class.selected]="image === selectedImage"
+                (click)="selectedImage = image"
+              >
+                <img [src]="image" class="character-image" />
 
-              <div class="check-icon" *ngIf="image === selectedImage">
-                <i class="fa fa-check-circle"></i>
+                <div class="check-icon" *ngIf="image === selectedImage">
+                  <i class="fa fa-check-circle"></i>
+                </div>
               </div>
             </div>
-          </div>
+          }
         </div>
       </div>
     </div>
