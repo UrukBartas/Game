@@ -8,6 +8,7 @@ import { AccountService } from './account.service';
 import { take } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { DisconnectWallet, MainState, SetAddress } from 'src/store/main.store';
+import { ToastrService } from 'ngx-toastr';
 @Injectable({
   providedIn: 'root',
 })
@@ -16,6 +17,7 @@ export class WalletService {
 
   public authService = inject(AuthService);
   public accountService = inject(AccountService);
+  private toastService = inject(ToastrService);
   public store = inject(Store);
 
   initWalletConnect() {
@@ -49,23 +51,28 @@ export class WalletService {
     this.authService
       .getAuth()
       .pipe(take(1))
-      .subscribe(async ({ nonce }) => {
-        const message = `Sign this message to authenticate your Ethereum address: ${nonce}`;
-        const sign = await signMessage({ message });
-        const address: string = getAccount().address ?? '';
+      .subscribe(
+        async ({ nonce }) => {
+          const message = `Sign this message to authenticate your Ethereum address: ${nonce}`;
+          const sign = await signMessage({ message });
+          const address: string = getAccount().address ?? '';
 
-        this.authService
-          .signAuth(sign, address, nonce)
-          .pipe(take(1))
-          .subscribe((success: boolean) => {
-            if (success) {
-              this.store.dispatch(new SetAddress(address));
-              this.loadCharacter();
-            } else {
-              console.log('Couldnt verify the user');
-            }
-          });
-      });
+          this.authService
+            .signAuth(sign, address, nonce)
+            .pipe(take(1))
+            .subscribe((success: boolean) => {
+              if (success) {
+                this.store.dispatch(new SetAddress(address));
+                this.loadCharacter();
+              } else {
+                console.log('Couldnt verify the user');
+              }
+            });
+        },
+        (err) => {
+          this.toastService.error("Couldn't reach the server");
+        }
+      );
   }
 
   public loadCharacter() {
