@@ -54,7 +54,7 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
+            "styles": ["src/styles.scss", "node_modules/ngx-toastr/toastr.css"],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ]
@@ -101,11 +101,6 @@
             "development": {
               "buildTarget": "GameApp:build:development"
             }
-          },
-          "options": {
-            "ssl": true,
-            "sslKey": "./ssl/key.pem",
-            "sslCert": "./ssl/cert.pem"
           },
           "defaultConfiguration": "development"
         },
