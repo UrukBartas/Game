@@ -8,11 +8,15 @@ import { NgxsModule } from '@ngxs/store';
 import { MainState } from 'src/store/main.store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TemplatePage } from 'src/modules/core/components/template-page.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, TemplatePage],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     NgbModule,
     HttpClientModule,
@@ -21,6 +25,7 @@ import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
     NgxsStoragePluginModule.forRoot({
       key: ['main'],
     }),
+    ToastrModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

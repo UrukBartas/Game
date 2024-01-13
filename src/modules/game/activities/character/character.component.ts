@@ -1,4 +1,5 @@
 import { Component, HostListener, inject } from '@angular/core';
+import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { InventoryService } from 'src/services/inventory.service';
 import { ViewportService } from 'src/services/viewport.service';
 
@@ -7,7 +8,7 @@ import { ViewportService } from 'src/services/viewport.service';
   templateUrl: './character.component.html',
   styleUrl: './character.component.scss',
 })
-export class CharacterComponent {
+export class CharacterComponent extends TemplatePage {
   private inventoryService = inject(InventoryService);
   private viewportService = inject(ViewportService);
   public itemInventoryBoxes = this.inventoryService.getInventoryStructure();

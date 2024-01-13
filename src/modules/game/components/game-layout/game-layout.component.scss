@@ -2,9 +2,16 @@
 @import 'node_modules/bootstrap/scss/variables';
 @import 'node_modules/bootstrap/scss/mixins';
 @import '../../../../variables.scss';
+
 .navbar-logo {
   max-width: 32px;
 }
+
+.navbar-brand {
+  color: $font-color !important;
+  padding-left: 10px;
+}
+
 .wrapper {
   background-color: $black-uruk;
 }
@@ -66,6 +73,7 @@ nav a {
 .list-group-item {
   display: flex;
   justify-content: center;
+  align-items: center;
   cursor: pointer;
   transition: background-color 0.3s ease;
   border: none;
