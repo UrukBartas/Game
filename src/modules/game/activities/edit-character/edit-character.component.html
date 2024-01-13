@@ -1,6 +1,8 @@
 <div class="character-edit-container">
   <div class="row">
-    <h4>Edit your character</h4>
+    <div class="description">
+      <p class="h4">Edit your character</p>
+    </div>
   </div>
   <form (ngSubmit)="saveCharacter()" class="d-flex flex-column gap-3">
     <div class="image-picker">
@@ -47,7 +49,7 @@
       />
     </div>
 
-    <div class="form-group pt-2">
+    <div class="form-group py-3">
       <button type="submit" class="btn btn-primary save-button">Save</button>
     </div>
   </form>

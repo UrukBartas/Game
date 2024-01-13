@@ -1,9 +1,9 @@
-@import "./variables.scss";
+@import './variables.scss';
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
+  font-family: 'UrukFont';
 }
 html,
 body {
@@ -48,10 +48,17 @@ app-item-box {
   }
 }
 
-/* Importing Bootstrap SCSS file. */
-@import "bootstrap/scss/bootstrap";
+@font-face {
+  font-family: 'UrukFont';
+  src: url('./assets/fonts/uruk-font.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
-@import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
-@import "@fortawesome/fontawesome-free/scss/solid.scss";
-@import "@fortawesome/fontawesome-free/scss/regular.scss";
-@import "@fortawesome/fontawesome-free/scss/brands.scss";
+/* Importing Bootstrap SCSS file. */
+@import 'bootstrap/scss/bootstrap';
+
+@import '@fortawesome/fontawesome-free/scss/fontawesome.scss';
+@import '@fortawesome/fontawesome-free/scss/solid.scss';
+@import '@fortawesome/fontawesome-free/scss/regular.scss';
+@import '@fortawesome/fontawesome-free/scss/brands.scss';

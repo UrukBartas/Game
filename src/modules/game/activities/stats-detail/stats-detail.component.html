@@ -1,50 +1,48 @@
-<div class="h-100">
-  <div class="description">
-    <p class="h6">Stats detail</p>
-    <span
-      ><a [routerLink]="['/']">
-        <i class="fa-solid fa-angles-up fa-rotate-270"></i>
-        Go back</a
-      ></span
-    >
+<div class="description">
+  <p class="h6">Stats detail</p>
+  <span
+    ><a [routerLink]="['/']">
+      <i class="fa-solid fa-angles-up fa-rotate-270"></i>
+      Go back</a
+    ></span
+  >
+</div>
+<div class="stats-container">
+  <div class="row">
+    <div class="col">
+      <app-item-box
+        [height]="obtainEquippedItemBoxHeightDependingOnScreenSize()"
+        [width]="obtainEquippedItemBoxWidthDependingOnScreenSize()"
+      ></app-item-box>
+    </div>
   </div>
-  <div class="stats-container">
-    <div class="row">
-      <div class="col">
-        <app-item-box
-          [height]="obtainEquippedItemBoxHeightDependingOnScreenSize()"
-          [width]="obtainEquippedItemBoxWidthDependingOnScreenSize()"
-        ></app-item-box>
-      </div>
+  <div class="row">
+    <div class="col">
+      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Alias
+      voluptatem, vel veritatis debitis quam, facere saepe quod quaerat
+      assumenda sapiente odio iusto natus. Adipisci totam error sed amet optio
+      rem.
     </div>
-    <div class="row">
-      <div class="col">
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Alias
-        voluptatem, vel veritatis debitis quam, facere saepe quod quaerat
-        assumenda sapiente odio iusto natus. Adipisci totam error sed amet optio
-        rem.
-      </div>
-      <div class="col">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui fugiat
-        eveniet deserunt perspiciatis minima ex mollitia asperiores aliquid
-        veniam nisi consequuntur repellendus, adipisci nihil dolores debitis
-        voluptatem ea veritatis exercitationem?
-      </div>
+    <div class="col">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui fugiat
+      eveniet deserunt perspiciatis minima ex mollitia asperiores aliquid veniam
+      nisi consequuntur repellendus, adipisci nihil dolores debitis voluptatem
+      ea veritatis exercitationem?
     </div>
-    <hr />
-    <div class="row">
-      <div class="col">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui fugiat
-        eveniet deserunt perspiciatis minima ex mollitia asperiores aliquid
-        veniam nisi consequuntur repellendus, adipisci nihil dolores debitis
-        voluptatem ea veritatis exercitationem?
-      </div>
-      <div class="col">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui fugiat
-        eveniet deserunt perspiciatis minima ex mollitia asperiores aliquid
-        veniam nisi consequuntur repellendus, adipisci nihil dolores debitis
-        voluptatem ea veritatis exercitationem?
-      </div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui fugiat
+      eveniet deserunt perspiciatis minima ex mollitia asperiores aliquid veniam
+      nisi consequuntur repellendus, adipisci nihil dolores debitis voluptatem
+      ea veritatis exercitationem?
+    </div>
+    <div class="col">
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui fugiat
+      eveniet deserunt perspiciatis minima ex mollitia asperiores aliquid veniam
+      nisi consequuntur repellendus, adipisci nihil dolores debitis voluptatem
+      ea veritatis exercitationem?
     </div>
   </div>
 </div>
