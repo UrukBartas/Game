@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { InventoryService } from 'src/services/inventory.service';
 
 @Component({
@@ -6,7 +7,7 @@ import { InventoryService } from 'src/services/inventory.service';
   templateUrl: './export-import-nft.component.html',
   styleUrl: './export-import-nft.component.scss',
 })
-export class ExportImportNftComponent {
+export class ExportImportNftComponent extends TemplatePage {
   public typeActive: 'export' | 'import' = 'export';
   private inventoryService = inject(InventoryService);
   public itemInventoryBoxes = this.inventoryService.getInventoryStructure();

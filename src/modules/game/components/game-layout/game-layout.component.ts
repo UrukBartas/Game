@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { UserService } from 'src/services/user.service';
 import { AuthService } from 'src/services/auth.service';
 import { WalletService } from 'src/services/wallet.service';
-import { MainState } from 'src/store/main.store';
+import { MainState, MainStateModel } from 'src/store/main.store';
 
 @Component({
   selector: 'app-game-layout',
@@ -13,13 +13,13 @@ import { MainState } from 'src/store/main.store';
   styleUrl: './game-layout.component.scss',
 })
 export class GameLayoutComponent {
-  @Select(MainState.getAddress) address$: Observable<string>;
+  @Select(MainState.getState) state$: Observable<MainStateModel>;
 
   public routesNavigation = [
     {
-      path: '/',
+      path: '/inventory',
       displayText: 'Character',
-      icon: 'fa fa-home',
+      icon: 'fa fa-shield-halved',
     },
     {
       path: '/export-import',

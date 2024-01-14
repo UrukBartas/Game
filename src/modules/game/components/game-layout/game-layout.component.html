@@ -1,6 +1,9 @@
 <div class="wrapper">
   <nav class="navbar navbar-expand-lg px-2 navbar-uruk bg-primary">
-    <a class="navbar-brand" href="#">URUK BARTAS</a>
+    <div class="navbar-title">
+      <img class="navbar-logo" src="./assets/white-uruk.png" alt="" srcset="" />
+      <a class="navbar-brand" href="#">URUK BARTAS</a>
+    </div>
     <button
       class="navbar-toggler"
       type="button"
@@ -24,16 +27,8 @@
         </ul>
       </div>
       <div class="w-100 justify-content-end d-none d-md-flex">
-        @if (address$ | async) {
-          Connected Address: {{ address$ | async }}
-        } @else {
-          <button
-            type="button"
-            class="btn btn-secondary"
-            (click)="walletService.modal.open()"
-          >
-            Connect Wallet
-          </button>
+        @if ((state$ | async)?.address) {
+          Connected Address: {{ (state$ | async)?.address }}
         }
       </div>
     </div>
@@ -43,26 +38,6 @@
       isSidebarOpened() ? 'collapsed' : ''
     }}"
   >
-    <div
-      class="d-flex align-items-center mb-3 text-decoration-none justify-content-center"
-    >
-      <a
-        href="https://game.urukbartas.com"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img
-          class="navbar-logo mr-3"
-          src="https://avatars.githubusercontent.com/u/89161645?s=48&v=4"
-          alt=""
-          srcset=""
-        />
-      </a>
-      @if (!isSidebarOpened()) {
-        <span class="fs-4 d-none d-lg-flex">Uruk Bartas</span>
-      }
-    </div>
-    <hr />
     <ul class="list-group flex-grow-1">
       @for (route of routesNavigation; track route.path) {
         <li
