@@ -1,0 +1,43 @@
+<div *ngIf="!activeQuest; else currentQuest" class="container-fluid">
+  <div class="row">
+    <div class="col-md-5">
+      <div class="quest" *ngFor="let quest of quests">
+        <h3>{{ quest.name }}</h3>
+        <p>{{ quest.description }}</p>
+        <span class="badge" [ngStyle]="{ color: getRarityColor(quest.rarity) }">
+          <i class="fa-solid fa-certificate"></i>
+          {{ quest.rarity }}</span
+        >
+      </div>
+    </div>
+
+    <div
+      class="col-md-7 text-center py-2 d-flex flex-column align-items-center"
+    >
+      <img
+        src="https://img.freepik.com/premium-photo/fantastic-epic-magical-landscape-mountains-summer-nature-mystic-forest-gaming-rpg-background_636456-2552.jpg"
+        alt="Quest Image"
+        class="img-fluid"
+      />
+      <button (click)="(activeQuest)" class="btn btn-large start-button">
+        START
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #currentQuest>
+  <img src="{{ activeQuest.image }}" alt="Quest Image" class="w-100 h-100" />
+  <div class="progress-bar-container">
+    <div class="progress position-relative">
+      <span class="timer position-absolute">{{ timeCompletion }}</span>
+      <div
+        class="progress-bar progress-bar-striped progress-bar-animated"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        [style.width]="percentageCompletion + '%'"
+      ></div>
+    </div>
+  </div>
+</ng-template>

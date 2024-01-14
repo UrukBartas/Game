@@ -8,6 +8,7 @@ import { ValidInputDirective } from '../core/directives/valid-input.directive';
 import { CharacterComponent } from './activities/character/character.component';
 import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
+import { QuestsComponent } from './activities/quests/quests.component';
 import { StatsDetailComponent } from './activities/stats-detail/stats-detail.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { GameRoutingModule } from './game-routing.module';
@@ -19,6 +20,7 @@ import { GameRoutingModule } from './game-routing.module';
     EditCharacterComponent,
     ExportImportNftComponent,
     ValidInputDirective,
+    QuestsComponent,
   ],
   imports: [
     CommonModule,

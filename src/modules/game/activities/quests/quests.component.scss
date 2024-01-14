@@ -1,0 +1,33 @@
+@import '../../../../variables.scss';
+
+.quest {
+  border: 2px solid $secondary;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: $primary;
+  color: $white-uruk;
+  cursor: pointer;
+}
+
+.start-button {
+  background-color: $secondary;
+  color: $white-uruk;
+  font-size: 20px;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+.progress-bar-container {
+  .timer {
+    color: $white-uruk;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+}
