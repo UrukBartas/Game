@@ -7,6 +7,7 @@ import { EditCharacterComponent } from './activities/edit-character/edit-charact
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { ConnectComponent } from './activities/connect/connect.component';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { QuestsComponent } from './activities/quests/quests.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,11 @@ const routes: Routes = [
         path: 'stats',
         canActivate: [AuthGuard],
         component: StatsDetailComponent,
+      },
+      {
+        path: 'quests',
+        canActivate: [AuthGuard],
+        component: QuestsComponent,
       },
       {
         path: 'edit',

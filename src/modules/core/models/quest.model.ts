@@ -1,13 +1,15 @@
 import { RarityEnum } from './items.enum';
 
-export interface ActiveQuestModel {
+export interface QuestModel {
   id: number;
   userId: string;
   name: string;
-  level: string;
+  description: string;
+  image: string;
+  level: number;
   rarity: RarityEnum;
   startedAt: string;
-  finishedAt: string | null;
+  finishedAt: string;
   completed: boolean;
   claimed: boolean;
 }

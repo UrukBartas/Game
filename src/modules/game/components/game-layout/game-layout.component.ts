@@ -22,8 +22,13 @@ export class GameLayoutComponent {
       icon: 'fa fa-shield-halved',
     },
     {
+      path: '/quests',
+      displayText: 'Quests',
+      icon: 'fa fa-map',
+    },
+    {
       path: '/export-import',
-      displayText: 'Import/Export NFT',
+      displayText: 'Import/Export',
       icon: 'fa fa-plug',
     },
     {

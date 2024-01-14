@@ -12,7 +12,7 @@
     max-width: 32px;
   }
   .navbar-brand {
-    color: $font-color !important;
+    color: $white-uruk !important;
     padding-left: 10px;
   }
 }
@@ -26,7 +26,7 @@ i {
 }
 
 .last-row {
-  color: $font-color;
+  color: $white-uruk;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -63,12 +63,12 @@ i {
 
 .sidebar-lateral {
   height: calc(100% - 55px);
-  color: $font-color;
+  color: $white-uruk;
 }
 
 nav,
 nav a {
-  color: $font-color;
+  color: $white-uruk;
 }
 
 .list-group {

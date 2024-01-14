@@ -1,9 +1,9 @@
-@import "../../../../variables.scss";
-@import "node_modules/bootstrap/scss/functions";
-@import "node_modules/bootstrap/scss/variables";
-@import "node_modules/bootstrap/scss/mixins";
+@import '../../../../variables.scss';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
 * {
-  color: $font-color;
+  color: $white-uruk;
 }
 .equipped {
   display: flex;
@@ -13,7 +13,7 @@
 .items-equipped-contained {
   max-width: 450px;
   align-self: center;
-  background-image: url("../../../../assets/siluette.png");
+  background-image: url('../../../../assets/siluette.png');
   background-repeat: no-repeat;
   background-size: cover;
   height: fit-content;
@@ -22,4 +22,3 @@
 .row-item-character {
   padding: 10px 0px;
 }
-
