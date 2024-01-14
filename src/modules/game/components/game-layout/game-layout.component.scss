@@ -3,13 +3,18 @@
 @import 'node_modules/bootstrap/scss/mixins';
 @import '../../../../variables.scss';
 
-.navbar-logo {
-  max-width: 32px;
-}
-
-.navbar-brand {
-  color: $font-color !important;
+.navbar-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding-left: 10px;
+  .navbar-logo {
+    max-width: 32px;
+  }
+  .navbar-brand {
+    color: $font-color !important;
+    padding-left: 10px;
+  }
 }
 
 .wrapper {

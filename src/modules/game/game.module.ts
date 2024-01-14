@@ -1,15 +1,16 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { GameRoutingModule } from './game-routing.module';
-import { CharacterComponent } from './activities/character/character.component';
-import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { StatsDetailComponent } from './activities/stats-detail/stats-detail.component';
-import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
-import { FormsModule } from '@angular/forms';
-import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
+import { ValidInputDirective } from '../core/directives/valid-input.directive';
+import { CharacterComponent } from './activities/character/character.component';
+import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
+import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
+import { StatsDetailComponent } from './activities/stats-detail/stats-detail.component';
+import { GameLayoutComponent } from './components/game-layout/game-layout.component';
+import { GameRoutingModule } from './game-routing.module';
 @NgModule({
   declarations: [
     GameLayoutComponent,
@@ -17,13 +18,15 @@ import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
     StatsDetailComponent,
     EditCharacterComponent,
     ExportImportNftComponent,
+    ValidInputDirective,
   ],
   imports: [
     CommonModule,
-    FormsModule,
     GameRoutingModule,
     NgbModule,
     ItemBoxComponent,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   exports: [GameLayoutComponent],
 })

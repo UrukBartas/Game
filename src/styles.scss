@@ -11,6 +11,10 @@ body {
   overflow: hidden;
 }
 
+.btn-primary {
+  color: $font-color !important;
+}
+
 .wrapper {
   height: 100vh;
 }
@@ -31,15 +35,10 @@ a {
   }
 }
 
-app-character,
-app-stats-detail,
-app-export-import-nft {
-  width: 100%;
-  height: 100%;
-}
 app-item-box {
   width: fit-content !important;
 }
+
 .description {
   display: flex;
   justify-content: space-between;
@@ -70,6 +69,24 @@ app-item-box {
     max-height: 120px;
     min-height: 55px;
   }
+}
+
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $third;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $secondary;
 }
 
 @font-face {
