@@ -10,7 +10,7 @@ import { ViewportService } from 'src/services/viewport.service';
 })
 export class CharacterComponent extends TemplatePage {
   private inventoryService = inject(InventoryService);
-  private viewportService = inject(ViewportService);
+  viewportService = inject(ViewportService);
   public itemInventoryBoxes = this.inventoryService.getInventoryStructure();
   public consumablesInventoryBoxes =
     this.inventoryService.getInventoryStructure(20);

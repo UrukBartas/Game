@@ -4,14 +4,14 @@ export function getRarityColor(rarity: RarityEnum): string {
   switch (rarity) {
     default:
     case RarityEnum.COMMON:
-      return 'grey';
+      return '#B0B5B3';
     case RarityEnum.UNCOMMON:
-      return 'blue';
+      return '#3D74B8';
     case RarityEnum.EPIC:
-      return 'purple';
+      return '#9D44B5';
     case RarityEnum.LEGENDARY:
-      return 'orange';
+      return '#FF7F11';
     case RarityEnum.MYTHIC:
-      return 'red';
+      return '#F34213';
   }
 }

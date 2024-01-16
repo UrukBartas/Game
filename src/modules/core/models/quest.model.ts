@@ -12,4 +12,5 @@ export interface QuestModel {
   finishedAt: string;
   completed: boolean;
   claimed: boolean;
+  selected?: boolean;
 }

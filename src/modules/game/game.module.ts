@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
 import { ValidInputDirective } from '../core/directives/valid-input.directive';
+import { ActiveQuestComponent } from './activities/active-quest/active-quest.component';
 import { CharacterComponent } from './activities/character/character.component';
 import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
@@ -21,6 +22,7 @@ import { GameRoutingModule } from './game-routing.module';
     ExportImportNftComponent,
     ValidInputDirective,
     QuestsComponent,
+    ActiveQuestComponent,
   ],
   imports: [
     CommonModule,
