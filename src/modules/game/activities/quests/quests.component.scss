@@ -1,18 +1,31 @@
 @import '../../../../variables.scss';
 
+.quest-carousel {
+  display: flex;
+  flex-direction: column; /* Set the flex direction to column */
+  overflow: hidden;
+  height: 100%;
+}
+
 .quest {
-  border: 2px solid $secondary;
+  flex: 1; /* Allow quests to take up all available vertical space equally */
+  transition: transform 0.3s ease-in-out;
+  border: 2px solid $black-100;
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 5px;
-  background-color: $primary;
-  color: $white-uruk;
+  background-color: $black-400;
+  color: $white-100;
   cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .start-button {
   background-color: $secondary;
-  color: $white-uruk;
+  color: $white-100;
   font-size: 20px;
   border: none;
   border-radius: 5px;
@@ -21,13 +34,38 @@
   transition: all 0.3s ease;
 }
 
-.progress-bar-container {
-  .timer {
-    color: $white-uruk;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
-    text-align: center;
-  }
+
+.visible {
+  transform: translateX(0);
+}
+
+.next {
+  transform: translateX(100%);
+}
+
+.prev {
+  transform: translateX(-100%);
+}
+
+.visible {
+  position: absolute;
+  z-index: 1;
+}
+
+.next,
+.prev {
+  position: absolute;
+  z-index: -1;
+}
+
+.quest-carousel.visible {
+  left: 0;
+}
+
+.quest-carousel.next {
+  left: -100%;
+}
+
+.quest-carousel.prev {
+  left: 100%;
 }

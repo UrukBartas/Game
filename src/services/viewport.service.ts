@@ -25,4 +25,20 @@ export class ViewportService {
     if (width <= 1400) return 'xl';
     return 'xxl';
   }
+
+  getResponsiveTitleSize() {
+    switch (this.screenSize) {
+      case 'xxl':
+        return 'h2';
+      case 'xl':
+      case 'lg':
+        return 'h3';
+      case 'md':
+        return 'h4';
+      case 'xs':
+      case 'sm':
+      default:
+        return 'h5';
+    }
+  }
 }

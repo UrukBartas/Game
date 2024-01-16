@@ -2,7 +2,8 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
-import { take } from 'rxjs';
+import { concat, forkJoin, take, toArray } from 'rxjs';
+import { QuestModel } from 'src/modules/core/models/quest.model';
 import { SessionModel } from 'src/modules/core/models/session.model';
 import { UserModel } from 'src/modules/core/models/user.model';
 import { SessionService } from 'src/services/session.service';
@@ -31,10 +32,20 @@ export class DisconnectWallet {
   static readonly type = '[Wallet] Disconnect';
 }
 
+export class StartQuest {
+  static readonly type = '[Quest] Start';
+  constructor(public payload: QuestModel) {}
+}
+
+export class EndQuest {
+  static readonly type = '[Quest] End';
+}
+
 export class MainStateModel {
   public address: string | null;
   public user: UserModel | null;
   public session: SessionModel | null;
+  public activeQuest: QuestModel | null;
 }
 
 @State<MainStateModel>({
@@ -43,6 +54,7 @@ export class MainStateModel {
     address: '',
     user: null,
     session: null,
+    activeQuest: null,
   },
 })
 export class MainState {
@@ -72,24 +84,31 @@ export class MainState {
     });
   }
 
-  @Action(LoginUser)
-  loginUser({ patchState }: StateContext<MainStateModel>) {
-    this.sessionService
-      .open()
-      .pipe(take(1))
-      .subscribe((session) => {
-        this.store.dispatch(new SetSession(session));
-        this.userService
-          .get('/')
-          .pipe(take(1))
-          .subscribe((user) => {
-            this.router.navigateByUrl('/inventory');
+  @Action(StartQuest)
+  startQuest(
+    { patchState }: StateContext<MainStateModel>,
+    { payload }: StartQuest
+  ) {
+    patchState({
+      activeQuest: payload,
+    });
+  }
 
-            patchState({
-              user,
-            });
-          });
-      });
+  @Action(EndQuest)
+  endQuest({ patchState }: StateContext<MainStateModel>) {
+    patchState({
+      activeQuest: null,
+    });
+  }
+
+  @Action(LoginUser)
+  async loginUser({ patchState }: StateContext<MainStateModel>) {
+    // No cambiar a observables da problemas de syncro
+    const session = await this.sessionService.open().pipe(take(1)).toPromise();
+    const user = await this.userService.get('/').pipe(take(1)).toPromise();
+
+    patchState({ user, session });
+    this.router.navigateByUrl('/inventory');
   }
 
   @Action(DisconnectWallet)

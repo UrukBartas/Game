@@ -56,13 +56,18 @@ export class EditCharacterComponent extends TemplatePage {
   }
 
   public getImageContainerSizeByScreenSize() {
-    if (
-      this.viewportService.screenSize == 'xs' ||
-      this.viewportService.screenSize == 'sm'
-    ) {
-      return 100;
+    switch (this.viewportService.screenSize) {
+      case 'xxl':
+      case 'xl':
+      case 'lg':
+        return 200;
+      case 'md':
+        return 150;
+      case 'xs':
+      case 'sm':
+      default:
+        return 100;
     }
-    return 150;
   }
 
   saveCharacter() {

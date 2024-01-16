@@ -1,7 +1,7 @@
 <div class="character-edit-container">
   <div class="row">
     <div class="description">
-      <p class="h4">{{ this.editing ? 'Edit' : 'Create ' }} your character</p>
+      <p [class]="viewportService.getResponsiveTitleSize()">{{ this.editing ? 'Edit' : 'Create ' }} your character</p>
     </div>
   </div>
   <div [formGroup]="form" class="d-flex flex-column gap-3">

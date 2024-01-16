@@ -1,7 +1,7 @@
 <div class="row h-100">
   <div class="col-6 equipped h-100">
     <div class="description">
-      <p class="h6">Character</p>
+      <p  [class]="viewportService.getResponsiveTitleSize()">Character</p>
     </div>
     <div class="items-equipped-contained">
       <div class="row justify-content-center row-item-character">
@@ -34,7 +34,7 @@
     <hr />
     <div class="row stats-summary">
       <div class="description">
-        <p class="h6">Stats summary</p>
+        <p  [class]="viewportService.getResponsiveTitleSize()">Stats summary</p>
         <span
           ><a [routerLink]="['/stats']">
             Stats detail <i class="fa-solid fa-angles-up fa-rotate-90"></i></a
@@ -50,7 +50,7 @@
   </div>
   <div class="col-6 inventory h-100">
     <div class="description">
-      <p class="h6">Items</p>
+      <p  [class]="viewportService.getResponsiveTitleSize()">Items</p>
       <span>0/{{ itemInventoryBoxes.length }}</span>
     </div>
     <div class="item-inventory">
@@ -59,7 +59,7 @@
       }
     </div>
     <div class="description">
-      <p class="h6">Consumables</p>
+      <p  [class]="viewportService.getResponsiveTitleSize()">Consumables</p>
       <span>0/{{ consumablesInventoryBoxes.length }}</span>
     </div>
     <div class="consumables-inventory">

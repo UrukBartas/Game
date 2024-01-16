@@ -12,13 +12,13 @@
     max-width: 32px;
   }
   .navbar-brand {
-    color: $white-uruk !important;
+    color: $white-100 !important;
     padding-left: 10px;
   }
 }
 
 .wrapper {
-  background-color: $black-uruk;
+  background-color: $black;
 }
 
 i {
@@ -26,7 +26,7 @@ i {
 }
 
 .last-row {
-  color: $white-uruk;
+  color: $white-100;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -63,12 +63,12 @@ i {
 
 .sidebar-lateral {
   height: calc(100% - 55px);
-  color: $white-uruk;
+  color: $white-100;
 }
 
 nav,
 nav a {
-  color: $white-uruk;
+  color: $white-100;
 }
 
 .list-group {
