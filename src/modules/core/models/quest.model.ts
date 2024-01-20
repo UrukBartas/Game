@@ -1,13 +1,10 @@
-import { RarityEnum } from './items.enum';
+import { QuestDataModel } from './quest-data.model';
 
 export interface QuestModel {
   id: number;
-  userId: string;
-  name: string;
-  description: string;
-  image: string;
-  level: number;
-  rarity: RarityEnum;
+  playerId: string;
+  questId: number;
+  data: QuestDataModel;
   startedAt: string;
   finishedAt: string;
   completed: boolean;

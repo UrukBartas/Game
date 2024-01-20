@@ -1,30 +1,30 @@
 import { Injectable, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { Store } from '@ngxs/store';
 import { getAccount, signMessage, watchAccount } from '@wagmi/core';
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
 import { Web3Modal } from '@web3modal/wagmi/dist/types/src/client';
+import { ToastrService } from 'ngx-toastr';
+import { take } from 'rxjs';
+import {
+  ConnectWallet,
+  DisconnectWallet,
+  LoginPlayer,
+  MainState,
+} from 'src/store/main.store';
 import { shimmer } from 'viem/chains';
 import { AuthService } from './auth.service';
-import { UserService } from './user.service';
-import { take } from 'rxjs';
-import { Store } from '@ngxs/store';
-import {
-  DisconnectWallet,
-  MainState,
-  ConnectWallet,
-  LoginUser,
-  SetSession,
-} from 'src/store/main.store';
-import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
-import { SessionService } from './session.service';
+import { PlayerService } from './player.service';
+
 @Injectable({
   providedIn: 'root',
 })
 export class WalletService {
   modal: Web3Modal;
+  connectWalletInterval;
 
   public authService = inject(AuthService);
-  public userService = inject(UserService);
+  public playerService = inject(PlayerService);
   private toastService = inject(ToastrService);
   private router = inject(Router);
   public store = inject(Store);
@@ -77,13 +77,13 @@ export class WalletService {
               next: (exists) => {
                 this.store.dispatch(new ConnectWallet(address));
                 if (exists) {
-                  this.store.dispatch(new LoginUser());
+                  this.store.dispatch(new LoginPlayer());
                 } else {
                   this.router.navigateByUrl('/create');
                 }
               },
               error: () => {
-                this.toastService.error('Couldnt verify the user');
+                this.toastService.error('Couldnt verify the player');
               },
             });
         },

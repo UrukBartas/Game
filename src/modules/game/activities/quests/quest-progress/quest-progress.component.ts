@@ -1,17 +1,22 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { ViewportService } from 'src/services/viewport.service';
-import { EndQuest, MainState } from 'src/store/main.store';
+import { MainState } from 'src/store/main.store';
+import { QuestStatusEnum } from '../enums/quest-status.enum';
 
 @Component({
-  selector: 'app-active-quest',
-  templateUrl: './active-quest.component.html',
-  styleUrl: './active-quest.component.scss',
+  selector: 'app-quest-progress',
+  templateUrl: './quest-progress.component.html',
+  styleUrl: './quest-progress.component.scss',
 })
-export class ActiveQuestComponent extends TemplatePage implements OnDestroy {
+export class QuestProgressComponent extends TemplatePage implements OnDestroy {
+  @Output() questStatusChange = new EventEmitter<QuestStatusEnum>();
+
   quest: QuestModel;
+  questReady = false;
+  questStatusEnum = QuestStatusEnum;
   percentage: number;
   time: string;
   interval;
@@ -21,8 +26,9 @@ export class ActiveQuestComponent extends TemplatePage implements OnDestroy {
     private store: Store
   ) {
     super();
-    this.quest = this.store.selectSnapshot(MainState.getState).activeQuest;
-    this.store.dispatch(new EndQuest());
+    this.quest = this.store
+      .selectSnapshot(MainState.getState)
+      .quests.find((quest) => quest.startedAt !== null);
 
     if (this.quest) {
       this.setQuestTimer();
@@ -30,12 +36,15 @@ export class ActiveQuestComponent extends TemplatePage implements OnDestroy {
   }
 
   setQuestTimer() {
-    const finishedAt = new Date(new Date().getTime() + 5 * 60000);
-    const startedAt = new Date(new Date().getTime() - 2 * 60000);
     this.interval = setInterval(() => {
-      /* const startedAt = new Date(this.quest.startedAt);
-      const finishedAt = new Date(this.quest.finishedAt); */
+      const startedAt = new Date(this.quest.startedAt);
+      const finishedAt = new Date(this.quest.finishedAt);
       const currentDate = new Date();
+
+      if (currentDate > finishedAt) {
+        clearInterval(this.interval);
+        this.questReady = true;
+      }
 
       const totalTimeSpanMillis = finishedAt.getTime() - startedAt.getTime();
       const totalTimeDifferenceMillis =
@@ -56,8 +65,6 @@ export class ActiveQuestComponent extends TemplatePage implements OnDestroy {
 
       this.time = formattedTime;
       this.percentage = (timeDifferenceMillis / totalTimeSpanMillis) * 100;
-
-      console.log(this.percentage);
     }, 50);
   }
 
@@ -72,6 +79,21 @@ export class ActiveQuestComponent extends TemplatePage implements OnDestroy {
       case 'sm':
       default:
         return 20;
+    }
+  }
+
+  getResponsiveButtonSize() {
+    switch (this.viewportService.screenSize) {
+      case 'xxl':
+      case 'xl':
+      case 'lg':
+        return '0.8em 3em';
+      case 'md':
+        return '0.4em 1.5em';
+      case 'xs':
+      case 'sm':
+      default:
+        return '0.3em 1em';
     }
   }
 

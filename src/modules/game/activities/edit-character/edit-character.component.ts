@@ -5,17 +5,17 @@ import { Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { UserService } from 'src/services/user.service';
+import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { LoginUser, MainState, UpdateUser } from 'src/store/main.store';
+import { LoginPlayer, MainState, UpdatePlayer } from 'src/store/main.store';
 
 @Component({
-  selector: 'app-edit',
+  selector: 'app-edit-character',
   templateUrl: './edit-character.component.html',
   styleUrls: ['./edit-character.component.scss'],
 })
 export class EditCharacterComponent extends TemplatePage {
-  userService = inject(UserService);
+  playerService = inject(PlayerService);
   viewportService = inject(ViewportService);
   store = inject(Store);
   formBuilder = inject(FormBuilder);
@@ -43,14 +43,14 @@ export class EditCharacterComponent extends TemplatePage {
       email: ['', [Validators.required, Validators.email]],
     });
     if (this.editing) {
-      this.loadUser();
+      this.load();
     }
   }
 
-  private loadUser() {
-    const user = this.store.selectSnapshot(MainState.getState).user;
-    if (user) {
-      const { image, name, email } = user;
+  private load() {
+    const player = this.store.selectSnapshot(MainState.getState).player;
+    if (player) {
+      const { image, name, email } = player;
       this.form.patchValue({ image, name, email });
     }
   }
@@ -70,37 +70,37 @@ export class EditCharacterComponent extends TemplatePage {
     }
   }
 
-  saveCharacter() {
+  save() {
     if (this.form.valid) {
       if (this.editing) {
-        this.editUser();
+        this.edit();
       } else {
-        this.createUser();
+        this.create();
       }
     } else {
       this.toastService.error('Please, fulfill all the fields');
     }
   }
 
-  createUser() {
+  create() {
     const { email, name, image } = this.form.value;
 
-    this.userService
-      .createCharacter(email, name, image)
+    this.playerService
+      .create(email, name, image)
       .pipe(take(1))
       .subscribe(() => {
-        this.store.dispatch(new LoginUser());
+        this.store.dispatch(new LoginPlayer());
       });
   }
 
-  editUser() {
+  edit() {
     const { email, name, image } = this.form.value;
-    this.userService
-      .updateCharacter(email, name, image)
+    this.playerService
+      .update(email, name, image)
       .pipe(take(1))
-      .subscribe((user) => {
+      .subscribe(() => {
         this.toastService.success('Settings updated');
-        this.store.dispatch(new UpdateUser({ email, name, image }));
+        this.store.dispatch(new UpdatePlayer({ email, name, image }));
       });
   }
 }

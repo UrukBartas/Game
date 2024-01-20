@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
-import { CharacterComponent } from './activities/character/character.component';
+import { InventoryComponent } from './activities/inventory/inventory.component';
 import { StatsDetailComponent } from './activities/stats-detail/stats-detail.component';
-import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { ConnectComponent } from './activities/connect/connect.component';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { QuestsComponent } from './activities/quests/quests.component';
+import { QuestPickerComponent } from './activities/quests/quest-picker/quest-picker.component';
+import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
+import { QuestRouterComponent } from './activities/quests/quest-router.component';
+import { QuestProgressComponent } from './activities/quests/quest-progress/quest-progress.component';
 
 const routes: Routes = [
   {
@@ -21,7 +23,7 @@ const routes: Routes = [
       {
         path: 'inventory',
         canActivate: [AuthGuard],
-        component: CharacterComponent,
+        component: InventoryComponent,
       },
       {
         path: 'stats',
@@ -31,7 +33,7 @@ const routes: Routes = [
       {
         path: 'quests',
         canActivate: [AuthGuard],
-        component: QuestsComponent,
+        component: QuestRouterComponent,
       },
       {
         path: 'edit',

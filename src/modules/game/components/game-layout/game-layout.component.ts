@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { UserService } from 'src/services/user.service';
+import { PlayerService } from 'src/services/player.service';
 import { AuthService } from 'src/services/auth.service';
 import { WalletService } from 'src/services/wallet.service';
 import { MainState, MainStateModel } from 'src/store/main.store';
@@ -41,7 +41,7 @@ export class GameLayoutComponent {
   public isSidebarOpened = signal(true);
   public router = inject(Router);
   public authService = inject(AuthService);
-  public accountService = inject(UserService);
+  public accountService = inject(PlayerService);
   public walletService = inject(WalletService);
 
   public toggleSidebarOpened(): void {
