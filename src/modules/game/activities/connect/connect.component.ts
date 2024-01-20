@@ -16,8 +16,8 @@ export class ConnectComponent extends TemplatePage implements OnInit {
   router = inject(Router);
 
   ngOnInit(): void {
-    const user = this.store.selectSnapshot(MainState.getState).user;
-    if (user) {
+    const player = this.store.selectSnapshot(MainState.getState).player;
+    if (player) {
       this.router.navigateByUrl('/inventory');
     }
   }

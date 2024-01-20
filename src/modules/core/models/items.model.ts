@@ -1,5 +1,5 @@
 import { RarityEnum, TraitsEnum } from './items.enum';
-import { UserModel } from './user.model';
+import { PlayerModel } from './player.model';
 
 // Base interface for all items
 interface BaseItemModel {
@@ -8,7 +8,7 @@ interface BaseItemModel {
   image: string;
   rarity: RarityEnum;
   level: number;
-  userId: string | null;
+  playerId: string | null;
 }
 
 export interface HelmetModel extends BaseItemModel {

@@ -1,9 +1,9 @@
-import { UserModel } from './user.model';
+import { PlayerModel } from './player.model';
 
 export interface SessionModel {
   id: number;
   token: string;
   createdAt: string;
   expiresAt: string | null;
-  userId: string;
+  playerId: string;
 }

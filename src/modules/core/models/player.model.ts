@@ -1,3 +1,4 @@
+import { QuestModel } from './quest.model';
 import {
   HelmetModel,
   GlovesModel,
@@ -11,7 +12,7 @@ import {
 } from './items.model';
 import { SessionModel } from './session.model';
 
-export interface UserModel {
+export interface PlayerModel {
   id: string;
   email: string;
   createdAt: string;
@@ -32,4 +33,5 @@ export interface UserModel {
   ring?: RingModel | null;
   totem?: TotemModel | null;
   sessions: SessionModel[];
+  activeQuests: QuestModel[];
 }

@@ -1,0 +1,31 @@
+<div class="active-quest-container" *ngIf="quest">
+  <img [src]="'/assets/quests/1.png'" alt="Quest Image" class="active-quest" />
+  <div *ngIf="!questReady" class="progress-bar-container">
+    <h3 urTitle>
+      {{ quest.data.name }}
+    </h3>
+    <div
+      class="progress position-relative"
+      [style.height]="getProgressBarHeight() + 'px'"
+    >
+      <span class="timer position-absolute">{{ time }}</span>
+      <div
+        class="progress-bar progress-bar-striped progress-bar-animated shadow"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        [style.width]="percentage + '%'"
+      ></div>
+    </div>
+  </div>
+  <div *ngIf="questReady">
+    <button
+      urTitle
+      (click)="questStatusChange.emit(questStatusEnum.FIGHT)"
+      class="play-button"
+      [style.padding]="getResponsiveButtonSize()"
+    >
+      FIGHT
+    </button>
+  </div>
+</div>

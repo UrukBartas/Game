@@ -1,0 +1,68 @@
+<div id="fight-container" class="container-fluid h-100">
+  <div class="background-image"></div>
+  <button
+    [class]="
+      'btn btn-primary surrender-button action-button shadow ' + getButtonSize()
+    "
+  >
+    <i class="fa fa-flag"></i>
+  </button>
+  <div class="row position-relative h-100">
+    <div class="col-6 fighter-container">
+      <img [src]="player.image" class="character-image shadow" />
+      <span urText class="text-white"
+        >{{ player.name }} (level {{ player.level }})</span
+      >
+      <div class="progress" [style.height]="getHealthBarHeight() + 'px'">
+        <span class="health position-absolute"
+          >{{ player.health }}/{{ player.health }}</span
+        >
+        <div
+          class="progress-bar progress-bar-animated shadow"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          [style.width]="'100%'"
+        ></div>
+      </div>
+    </div>
+    <div class="col-6 fighter-container">
+      <img [src]="player.image" class="enemy-image shadow" />
+      <span urText class="text-white">Rat (level {{ player.level }})</span>
+      <div class="progress" [style.height]="getHealthBarHeight() + 'px'">
+        <span class="health position-absolute"
+          >{{ player.health }}/{{ player.health }}</span
+        >
+        <div
+          class="progress-bar progress-bar-animated shadow"
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          [style.width]="'100%'"
+        ></div>
+      </div>
+    </div>
+    <div class="action-buttons">
+      <button
+        [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
+      >
+        <i class="fa fa-hand-fist"></i> ATTACK
+      </button>
+      <button
+        [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
+      >
+        <i class="fa fa-shield"></i> DEFEND
+      </button>
+      <button
+        [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
+      >
+        <i class="fa fa-bolt"></i> CHARGE
+      </button>
+      <button
+        [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
+      >
+        <i class="fa fa-flask"></i> ITEMS
+      </button>
+    </div>
+  </div>
+</div>

@@ -4,11 +4,11 @@ import { InventoryService } from 'src/services/inventory.service';
 import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
-  selector: 'app-character',
-  templateUrl: './character.component.html',
-  styleUrl: './character.component.scss',
+  selector: 'app-inventory',
+  templateUrl: './inventory.component.html',
+  styleUrl: './inventory.component.scss',
 })
-export class CharacterComponent extends TemplatePage {
+export class InventoryComponent extends TemplatePage {
   private inventoryService = inject(InventoryService);
   viewportService = inject(ViewportService);
   public itemInventoryBoxes = this.inventoryService.getInventoryStructure();

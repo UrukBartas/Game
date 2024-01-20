@@ -1,4 +1,4 @@
-@import '../../../../variables.scss';
+@import '../../../../../variables.scss';
 
 .active-quest-container {
   position: relative;
@@ -19,7 +19,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: $white-400;
     color: $white-100;
     .progress {
       width: 90%;
