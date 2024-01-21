@@ -15,3 +15,9 @@ export function getRarityColor(rarity: RarityEnum): string {
       return '#F34213';
   }
 }
+
+export function calculateXPForLevel(level: number): number {
+  const baseXP = 10; // XP required for the first level
+  const multiplier = 1.05; // Exponential growth factor
+  return Math.round(baseXP * Math.pow(multiplier, level - 1));
+}
