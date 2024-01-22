@@ -37,7 +37,7 @@
   <div class="d-flex flex-column h-100">
     <div
       *ngIf="(state$ | async).player as player"
-      class="topbar d-flex justify-content-center p-2 {{
+      class="topbar d-flex justify-content-center px-2 pt-3 overflow-hidden {{
         !isSidebarOpened() ? 'content-extended' : 'content-collapsed'
       }}"
     >
@@ -46,6 +46,7 @@
         barClass="progress-bar-striped progress-bar-animated shadow"
         progress="75"
         text="0/10"
+        [style.height]="getProgressBarHeight() + 'px'"
       ></app-progress-bar>
       <span urText class="text-white px-3">Level {{ player.level }}</span>
     </div>
