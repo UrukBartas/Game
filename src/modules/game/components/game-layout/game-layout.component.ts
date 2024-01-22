@@ -6,6 +6,7 @@ import { PlayerService } from 'src/services/player.service';
 import { AuthService } from 'src/services/auth.service';
 import { WalletService } from 'src/services/wallet.service';
 import { MainState, MainStateModel } from 'src/store/main.store';
+import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
   selector: 'app-game-layout',
@@ -43,8 +44,23 @@ export class GameLayoutComponent {
   public authService = inject(AuthService);
   public accountService = inject(PlayerService);
   public walletService = inject(WalletService);
+  public viewportService = inject(ViewportService);
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);
+  }
+
+  getProgressBarHeight() {
+    switch (this.viewportService.screenSize) {
+      case 'xxl':
+      case 'xl':
+      case 'lg':
+        return 30;
+      case 'md':
+      case 'xs':
+      case 'sm':
+      default:
+        return 20;
+    }
   }
 }
