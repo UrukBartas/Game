@@ -3,17 +3,8 @@
 @import 'node_modules/bootstrap/scss/mixins';
 @import '../../../../variables.scss';
 
-.navbar-logo {
-  max-width: 32px;
-}
-
-.navbar-brand {
-  color: $font-color !important;
-  padding-left: 10px;
-}
-
 .wrapper {
-  background-color: $black-uruk;
+  background-color: $black;
 }
 
 i {
@@ -21,7 +12,7 @@ i {
 }
 
 .last-row {
-  color: $font-color;
+  color: $white-100;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,6 +25,12 @@ i {
   position: absolute;
   height: 100%;
   z-index: 2;
+  .logo {
+    max-width: 32px;
+    margin: 0 8px;
+    margin-bottom: 14px;
+    align-self: center;
+  }
 }
 .collapsed {
   width: 100px; /* Ancho reducido */
@@ -57,13 +54,13 @@ i {
 }
 
 .sidebar-lateral {
-  height: calc(100% - 55px);
-  color: $font-color;
+  height: 100%;
+  color: $white-100;
 }
 
 nav,
 nav a {
-  color: $font-color;
+  color: $white-100;
 }
 
 .list-group {
@@ -87,5 +84,18 @@ nav a {
 }
 
 .container-content {
-  height: calc(100vh - 56px);
+  height: 100%;
+}
+
+.topbar {
+  position: relative;
+  span {
+    position: absolute;
+    right: 0;
+    white-space: nowrap;
+  }
+  app-progress-bar {
+    height: 15px;
+    width: 60%;
+  }
 }

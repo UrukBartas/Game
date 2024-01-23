@@ -7,7 +7,7 @@ export class ApiBaseService {
 
   constructor(protected _http: HttpClient) {}
 
-  protected get(endpoint: string): Observable<any> {
+  public get(endpoint: string): Observable<any> {
     return this._http.get(
       environment.apiUrl + this.controllerPrefix + endpoint,
       {
@@ -16,7 +16,7 @@ export class ApiBaseService {
     );
   }
 
-  protected post(endpoint: string, body: any): Observable<any> {
+  public post(endpoint: string, body: any): Observable<any> {
     return this._http.post(
       environment.apiUrl + this.controllerPrefix + endpoint,
       body,
