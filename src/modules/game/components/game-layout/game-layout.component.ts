@@ -2,10 +2,11 @@ import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { UserService } from 'src/services/user.service';
+import { PlayerService } from 'src/services/player.service';
 import { AuthService } from 'src/services/auth.service';
 import { WalletService } from 'src/services/wallet.service';
-import { MainState } from 'src/store/main.store';
+import { MainState, MainStateModel } from 'src/store/main.store';
+import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
   selector: 'app-game-layout',
@@ -13,17 +14,22 @@ import { MainState } from 'src/store/main.store';
   styleUrl: './game-layout.component.scss',
 })
 export class GameLayoutComponent {
-  @Select(MainState.getAddress) address$: Observable<string>;
+  @Select(MainState.getState) state$: Observable<MainStateModel>;
 
   public routesNavigation = [
     {
-      path: '/',
+      path: '/inventory',
       displayText: 'Character',
-      icon: 'fa fa-home',
+      icon: 'fa fa-shield-halved',
+    },
+    {
+      path: '/quests',
+      displayText: 'Quests',
+      icon: 'fa fa-map',
     },
     {
       path: '/export-import',
-      displayText: 'Import/Export NFT',
+      displayText: 'Import/Export',
       icon: 'fa fa-plug',
     },
     {
@@ -36,10 +42,25 @@ export class GameLayoutComponent {
   public isSidebarOpened = signal(true);
   public router = inject(Router);
   public authService = inject(AuthService);
-  public accountService = inject(UserService);
+  public accountService = inject(PlayerService);
   public walletService = inject(WalletService);
+  public viewportService = inject(ViewportService);
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);
+  }
+
+  getProgressBarHeight() {
+    switch (this.viewportService.screenSize) {
+      case 'xxl':
+      case 'xl':
+      case 'lg':
+        return 30;
+      case 'md':
+      case 'xs':
+      case 'sm':
+      default:
+        return 20;
+    }
   }
 }

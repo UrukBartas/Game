@@ -1,31 +1,27 @@
 <div class="character-edit-container">
   <div class="row">
     <div class="description">
-      <p class="h4">Edit your character</p>
+      <p urTitle>{{ this.editing ? 'Edit' : 'Create ' }} your character</p>
     </div>
   </div>
-  <form (ngSubmit)="saveCharacter()" class="d-flex flex-column gap-3">
+  <div [formGroup]="form" class="d-flex flex-column gap-3">
     <div class="image-picker">
       <div class="image-thumbnails">
-        <div class="row">
-          @for (image of images; track image) {
-            <div class="col">
-              <div
-                class="image-container"
-                [style.height]="getImageContainerSizeByScreenSize() + 'px'"
-                [style.width]="getImageContainerSizeByScreenSize() + 'px'"
-                [class.selected]="image === selectedImage"
-                (click)="selectedImage = image"
-              >
-                <img [src]="image" class="character-image" />
+        @for (image of images; track image) {
+          <div
+            class="image-container"
+            [style.height]="getImageContainerSizeByScreenSize() + 'px'"
+            [style.width]="getImageContainerSizeByScreenSize() + 'px'"
+            [class.selected]="form.value.image === image"
+            (click)="form.patchValue({ image })"
+          >
+            <img [src]="image" class="character-image" />
 
-                <div class="check-icon" *ngIf="image === selectedImage">
-                  <i class="fa fa-check-circle"></i>
-                </div>
-              </div>
+            <div class="check-icon" *ngIf="form.value.image === image">
+              <i class="fa fa-check-circle"></i>
             </div>
-          }
-        </div>
+          </div>
+        }
       </div>
     </div>
 
@@ -35,9 +31,10 @@
         type="text"
         class="form-control"
         id="characterName"
-        [(ngModel)]="characterName"
+        formControlName="name"
         name="characterName"
         placeholder="Enter character name"
+        validInput
       />
     </div>
 
@@ -47,14 +44,15 @@
         type="email"
         class="form-control"
         id="email"
-        [(ngModel)]="email"
+        formControlName="email"
         name="email"
         placeholder="Enter email"
+        validInput
       />
     </div>
 
     <div class="form-group py-3">
-      <button type="submit" class="btn btn-primary save-button">Save</button>
+      <button (click)="save()" class="btn btn-primary save-button">Save</button>
     </div>
-  </form>
+  </div>
 </div>

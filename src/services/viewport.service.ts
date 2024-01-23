@@ -1,4 +1,5 @@
-import { HostListener, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -6,10 +7,12 @@ import { HostListener, Injectable } from '@angular/core';
 export class ViewportService {
   public screenSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' =
     this.getViewport();
+  public screenSizeChanges: Subject<string> = new Subject();
 
   constructor() {
     window.addEventListener('resize', (event) => {
       this.screenSize = this.getViewport();
+      this.screenSizeChanges.next(this.screenSize);
     });
   }
 

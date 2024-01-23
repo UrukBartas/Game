@@ -11,6 +11,10 @@ body {
   overflow: hidden;
 }
 
+.btn-primary {
+  color: $white-100 !important;
+}
+
 .wrapper {
   height: 100vh;
 }
@@ -31,15 +35,10 @@ a {
   }
 }
 
-app-character,
-app-stats-detail,
-app-export-import-nft {
-  width: 100%;
-  height: 100%;
-}
 app-item-box {
   width: fit-content !important;
 }
+
 .description {
   display: flex;
   justify-content: space-between;
@@ -70,6 +69,94 @@ app-item-box {
     max-height: 120px;
     min-height: 55px;
   }
+}
+
+.play-button {
+  padding: 0.6em 2em;
+  border: none;
+  outline: none;
+  color: $white-100 !important;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  position: absolute;
+  bottom: 0;
+  transform: translate(-50%, -50%);
+  left: 50%;
+
+  &::before {
+    content: '';
+    background: linear-gradient(
+      45deg,
+      #ff0000,
+      #ff7300,
+      #fffb00,
+      #48ff00,
+      #00ffd5,
+      #002bff,
+      #7a00ff,
+      #ff00c8,
+      #ff0000
+    );
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    -webkit-filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing-play-button 20s linear infinite;
+    transition: opacity 0.3s ease-in-out;
+    border-radius: 10px;
+  }
+
+  &::after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #30332bc4;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+  }
+
+  @keyframes glowing-play-button {
+    0% {
+      background-position: 0 0;
+    }
+    50% {
+      background-position: 400% 0;
+    }
+    100% {
+      background-position: 0 0;
+    }
+  }
+}
+
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $third;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $secondary;
 }
 
 @font-face {

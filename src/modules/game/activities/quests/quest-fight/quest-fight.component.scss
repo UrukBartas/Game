@@ -1,0 +1,74 @@
+@import '../../../../../variables.scss';
+
+#fight-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+
+  .background-image {
+    background-image: url('/assets/backgrounds/field.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 101%;
+    height: 101%;
+    filter: brightness(50%) blur(1px);
+  }
+
+  .fighter-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3%;
+    padding-bottom: 12%;
+
+    .character-image,
+    .enemy-image {
+      max-width: 50%;
+      border-radius: 20%;
+    }
+
+    .progress {
+      width: 80%;
+      position: relative;
+      .health {
+        color: $white-100;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+      .progress-bar {
+        background-color: $red;
+      }
+    }
+  }
+
+  .action-buttons {
+    position: absolute;
+    bottom: 3%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 3%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+  }
+
+  .action-button {
+    background-color: #dedede30 !important;
+    border-color: $white-100 !important;
+  }
+
+  .surrender-button {
+    position: absolute;
+    top: 3%;
+    left: 3%;
+  }
+}
