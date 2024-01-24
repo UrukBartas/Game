@@ -27,7 +27,7 @@
     gap: 3%;
     padding-bottom: 12%;
 
-    .character-image,
+    .player-image,
     .enemy-image {
       max-width: 50%;
       border-radius: 20%;
@@ -36,7 +36,7 @@
     .progress {
       width: 80%;
       position: relative;
-      .health {
+      .progress-text {
         color: $white-100;
         position: absolute;
         top: 50%;
@@ -44,8 +44,11 @@
         transform: translate(-50%, -50%);
         text-align: center;
       }
-      .progress-bar {
+      .progress-bar-health {
         background-color: $red;
+      }
+      .progress-bar-energy {
+        background-color: $yellow;
       }
     }
   }

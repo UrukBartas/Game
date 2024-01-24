@@ -16,10 +16,6 @@ export class FightService extends ApiBaseService {
     this.controllerPrefix = '/fight';
   }
 
-  start(): Observable<FightModel> {
-    return this.get('/start');
-  }
-
   actions(action: TurnActionEnum): Observable<FightModel> {
     return this.get(`/action/${action}`);
   }

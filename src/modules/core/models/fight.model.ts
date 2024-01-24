@@ -1,9 +1,10 @@
-import { PlayerModel } from './player.model';
+import { PlayerStatsModel } from './player-stats.model';
 
 export interface FightModel {
   questId: number;
-  player: PlayerModel;
-  enemy: PlayerModel;
+  playerId: string;
+  playerStats: PlayerStatsModel;
+  enemyStats: PlayerStatsModel;
   turns: FightTurnModel[];
 }
 
@@ -25,9 +26,9 @@ export interface FighterTurnModel {
 }
 
 export enum TurnActionEnum {
-  ATTACK,
-  MISS,
-  BLOCK,
-  CRIT,
-  DEFEND,
+  ATTACK = 'attack',
+  MISS = 'miss',
+  BLOCK = 'block',
+  CRIT = 'crit',
+  DEFEND = 'defend',
 }
