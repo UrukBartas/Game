@@ -5,14 +5,13 @@ import { PlayerModel } from 'src/modules/core/models/player.model';
 import { Store } from '@ngxs/store';
 import { MainState } from 'src/store/main.store';
 import { ViewportService } from 'src/services/viewport.service';
-
-enum QuestRarity {
-  COMMON = 1.0,
-  UNCOMMON = 2,
-  EPIC = 3,
-  LEGENDARY = 5,
-  MYTHIC = 10,
-}
+import { FightService } from 'src/services/fight.service';
+import {
+  FightModel,
+  TurnActionEnum,
+} from 'src/modules/core/models/fight.model';
+import { take } from 'rxjs';
+import { QuestModel } from 'src/modules/core/models/quest.model';
 
 @Component({
   selector: 'app-quest-fight',
@@ -22,8 +21,30 @@ enum QuestRarity {
 export class QuestFightComponent extends TemplatePage {
   private store = inject(Store);
   private viewportService = inject(ViewportService);
+  fightService = inject(FightService);
+  turnActions = TurnActionEnum;
   @Output() questStatusChange = new EventEmitter<QuestStatusEnum>();
   player: PlayerModel = this.store.selectSnapshot(MainState.getState).player;
+  quest: QuestModel = this.store
+    .selectSnapshot(MainState.getState)
+    .quests.find((quest) => quest.startedAt !== null);
+  fight: FightModel;
+
+  constructor() {
+    super();
+
+    this.fightService
+      .start()
+      .pipe(take(1))
+      .subscribe((fight) => (this.fight = fight));
+  }
+
+  doAction(action: TurnActionEnum) {
+    this.fightService
+      .actions(action)
+      .pipe(take(1))
+      .subscribe((fight) => (this.fight = fight));
+  }
 
   getHealthBarHeight() {
     switch (this.viewportService.screenSize) {
@@ -54,38 +75,3 @@ export class QuestFightComponent extends TemplatePage {
     }
   }
 }
-
-/* private calculateXPForLevel(level: number): number {
-    const baseXP = 10; // XP required for the first level
-    const multiplier = 1.05; // Exponential growth factor
-    return Math.round(baseXP * Math.pow(multiplier, level - 1));
-  }
-
-  private calculateRewardedXP(level: number, rarityMultiplier: number): number {
-    const baseQuestXP = 5; // Base XP for quests
-    const questMultiplier = 1.04; // Growth factor for quests
-
-    return Math.round(
-      baseQuestXP * Math.pow(questMultiplier, level - 1) * rarityMultiplier
-    );
-  }
-
-  private logResult() {
-    let levels = 200;
-    for (let level = 1; level <= levels; level++) {
-      const levelExp = this.calculateXPForLevel(level);
-      console.log(
-        `Level ${level}: Player XP = ${this.calculateXPForLevel(level)}`
-      );
-      for (let rarity in QuestRarity) {
-        if (!isNaN(Number(rarity))) {
-          const questXP = this.calculateRewardedXP(level, Number(rarity));
-          console.log(
-            `Quest Rarity ${QuestRarity[rarity]}: Percent ${Math.round(
-              levelExp / questXP
-            )}, XP = ${questXP}`
-          );
-        }
-      }
-    }
-  } */
