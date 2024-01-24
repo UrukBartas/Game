@@ -3,20 +3,6 @@
 @import 'node_modules/bootstrap/scss/mixins';
 @import '../../../../variables.scss';
 
-.navbar-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-left: 10px;
-  .navbar-logo {
-    max-width: 32px;
-  }
-  .navbar-brand {
-    color: $white-100 !important;
-    padding-left: 10px;
-  }
-}
-
 .wrapper {
   background-color: $black;
 }
@@ -39,6 +25,12 @@ i {
   position: absolute;
   height: 100%;
   z-index: 2;
+  .logo {
+    max-width: 32px;
+    margin: 0 8px;
+    margin-bottom: 14px;
+    align-self: center;
+  }
 }
 .collapsed {
   width: 100px; /* Ancho reducido */
@@ -62,7 +54,7 @@ i {
 }
 
 .sidebar-lateral {
-  height: calc(100% - 55px);
+  height: 100%;
   color: $white-100;
 }
 
@@ -92,5 +84,18 @@ nav a {
 }
 
 .container-content {
-  height: calc(100vh - 56px);
+  height: 100%;
+}
+
+.topbar {
+  position: relative;
+  span {
+    position: absolute;
+    right: 0;
+    white-space: nowrap;
+  }
+  app-progress-bar {
+    height: 15px;
+    width: 60%;
+  }
 }
