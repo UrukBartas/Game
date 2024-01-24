@@ -21,6 +21,7 @@ export interface PlayerModel {
   image: string;
   level: number;
   health: number;
+  energy: number;
   attack: number;
   defense: number;
   helmet?: HelmetModel | null;

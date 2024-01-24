@@ -28,7 +28,9 @@
     </div>
     <div class="col-6 fighter-container">
       <img [src]="player.image" class="enemy-image shadow" />
-      <span urText class="text-white">Rat (level {{ player.level }})</span>
+      <span urText class="text-white"
+        >{{ quest.data.enemy }} (level {{ quest.level }})</span
+      >
       <div class="progress" [style.height]="getHealthBarHeight() + 'px'">
         <span class="health position-absolute"
           >{{ player.health }}/{{ player.health }}</span
@@ -44,15 +46,18 @@
     </div>
     <div class="action-buttons">
       <button
+        (click)="doAction(turnActions.ATTACK)"
         [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
       >
         <i class="fa fa-hand-fist"></i> ATTACK
       </button>
       <button
+        (click)="doAction(turnActions.DEFEND)"
         [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
       >
         <i class="fa fa-shield"></i> DEFEND
       </button>
+      <!-- TODO
       <button
         [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
       >
@@ -62,7 +67,7 @@
         [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
       >
         <i class="fa fa-flask"></i> ITEMS
-      </button>
+      </button> -->
     </div>
   </div>
 </div>
