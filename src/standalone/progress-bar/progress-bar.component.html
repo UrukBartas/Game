@@ -1,0 +1,10 @@
+<div class="progress">
+  <span urText class="text">{{ text }}</span>
+  <div
+    [class]="'progress-bar ' + barClass"
+    role="progressbar"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    [style.width]="percentage + '%'"
+  ></div>
+</div>

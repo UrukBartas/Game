@@ -7,6 +7,8 @@ export interface QuestDataModel {
   enemy: string;
   enemyImage: string;
   image: string;
+  enemy: string;
+  enemyImage: string;
   level: number;
   rarity: RarityEnum;
 }

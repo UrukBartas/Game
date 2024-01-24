@@ -17,6 +17,7 @@ import { QuestRouterComponent } from './activities/quests/quest-router.component
 import { QuestFightComponent } from './activities/quests/quest-fight/quest-fight.component';
 import { TextSizeDirective } from '../core/directives/text-size.directive';
 import { TitleSizeDirective } from '../core/directives/title-size.directive';
+import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
 
 const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
 const components = [
@@ -40,6 +41,7 @@ const components = [
     ItemBoxComponent,
     FormsModule,
     ReactiveFormsModule,
+    ProgressBarComponent,
   ],
   exports: [GameLayoutComponent],
 })

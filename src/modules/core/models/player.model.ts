@@ -20,6 +20,7 @@ export interface PlayerModel {
   name: string;
   image: string;
   level: number;
+  experience: number;
   health: number;
   energy: number;
   attack: number;
