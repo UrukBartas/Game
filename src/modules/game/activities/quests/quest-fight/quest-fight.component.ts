@@ -20,28 +20,37 @@ import { PlayerStatsModel } from 'src/modules/core/models/player-stats.model';
   styleUrl: './quest-fight.component.scss',
 })
 export class QuestFightComponent extends TemplatePage {
-  private store = inject(Store);
-  private viewportService = inject(ViewportService);
-  fightService = inject(FightService);
   turnActions = TurnActionEnum;
-  @Output() questStatusChange = new EventEmitter<QuestStatusEnum>();
   player: PlayerModel = this.store.selectSnapshot(MainState.getState).player;
   quest: QuestModel = this.store
     .selectSnapshot(MainState.getState)
     .quests.find((quest) => quest.startedAt !== null);
   fight: FightModel;
   enemy: PlayerStatsModel;
+  victory = false;
+  defeat = false;
 
-  constructor() {
+  @Output() questStatusChange = new EventEmitter<QuestStatusEnum>();
+
+  constructor(
+    private store: Store,
+    private viewportService: ViewportService,
+    private fightService: FightService
+  ) {
     super();
 
     this.fightService
       .get('/')
       .pipe(take(1))
-      .subscribe((fight) => {
-        this.fight = fight;
-        this.enemy = this.fight.enemyStats;
-        this.store.dispatch(new StartFight(fight));
+      .subscribe({
+        next: (fight) => {
+          this.fight = fight;
+          this.enemy = this.fight.enemyStats;
+          this.store.dispatch(new StartFight(fight));
+        },
+        error: () => {
+          this.questStatusChange.emit(QuestStatusEnum.PICKING);
+        },
       });
   }
 
@@ -51,27 +60,44 @@ export class QuestFightComponent extends TemplatePage {
       .pipe(take(1))
       .subscribe((fight) => {
         const lastTurn = fight.turns[fight.turns.length - 1];
-        if (lastTurn.enemyTurn.action === TurnActionEnum.ATTACK) {
+
+        // player animations
+        if (fight.playerStats.health === 0) {
+          this.animateElement('.player-image', 'hinge', () => {
+            this.defeat = true;
+          });
+        } else if (fight.enemyStats.health === 0) {
+          this.animateElement('.player-image', 'pulse', () => {
+            this.victory = true;
+          });
+        } else if (lastTurn.enemyTurn.action === TurnActionEnum.ATTACK) {
           this.animateElement('.player-image', 'shakeX');
         }
-        if (lastTurn.playerTurn.action === TurnActionEnum.ATTACK) {
+
+        // enemy animations
+        if (fight.enemyStats.health === 0) {
+          this.animateElement('.enemy-image', 'hinge');
+        } else if (fight.playerStats.health === 0) {
+          this.animateElement('.enemy-image', 'pulse');
+        } else if (lastTurn.playerTurn.action === TurnActionEnum.ATTACK) {
           this.animateElement('.enemy-image', 'shakeX');
         }
+
         this.fight = fight;
       });
   }
 
-  animateElement(element, animation, prefix = 'animate__') {
+  animateElement(element, animation, callback?) {
     new Promise((resolve, reject) => {
-      const animationName = `${prefix}${animation}`;
+      const animationName = `animate__${animation}`;
       const node = document.querySelector(element);
 
-      node.classList.add(`${prefix}animated`, animationName);
+      node.classList.add(`animate__animated`, animationName);
 
       const handleAnimationEnd = (event) => {
         event.stopPropagation();
-        node.classList.remove(`${prefix}animated`, animationName);
-        resolve('Animation ended');
+        node.classList.remove(`animate__animated`, animationName);
+        resolve(callback?.());
       };
 
       node.addEventListener('animationend', handleAnimationEnd, { once: true });

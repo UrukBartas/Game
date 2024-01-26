@@ -37,6 +37,9 @@ export class QuestPickerComponent extends TemplatePage {
       .subscribe((quests) => {
         this.quests = quests;
         this.store.dispatch(new SetQuests(quests));
+        if (quests.find((quest) => quest.startedAt !== null)) {
+          this.questStatusChange.emit(QuestStatusEnum.IN_PROGRESS);
+        }
       });
   }
 
