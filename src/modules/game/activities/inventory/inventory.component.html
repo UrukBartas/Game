@@ -33,39 +33,48 @@
     </div>
     <hr />
     <div class="row stats-summary">
-      <div class="description">
-        <p urTitle>Stats summary</p>
-        <span
-          ><a [routerLink]="['/stats']">
-            Stats detail <i class="fa-solid fa-angles-up fa-rotate-90"></i></a
-        ></span>
+      <div class="col">
+        <div class="description stat">
+          <p urTitle>Achievements</p>
+        </div>
+        <ul>
+          <li>Killed 50 monsters: #########</li>
+          <li>Won 10 duels: #########</li>
+        </ul>
       </div>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero
-        perspiciatis reprehenderit ullam magni consequatur deleniti eius
-        voluptatem sapiente officia nesciunt distinctio molestiae aspernatur,
-        repellendus neque facilis impedit fugiat dicta omnis.
-      </p>
     </div>
   </div>
-  <div class="col-6 inventory h-100">
-    <div class="description">
-      <p urTitle>Items</p>
-      <span>0/{{ itemInventoryBoxes.length }}</span>
-    </div>
-    <div class="item-inventory">
-      @for (box of itemInventoryBoxes; track box.id) {
-        <app-item-box [height]="50" [width]="50"></app-item-box>
-      }
-    </div>
-    <div class="description">
-      <p urTitle>Consumables</p>
-      <span>0/{{ consumablesInventoryBoxes.length }}</span>
-    </div>
-    <div class="consumables-inventory">
-      @for (box of consumablesInventoryBoxes; track box.id) {
-        <app-item-box [height]="50" [width]="50"></app-item-box>
-      }
-    </div>
+  <div class="col-6 h-100">
+    <carousel
+      [isAnimated]="true"
+      [(activeSlide)]="activeSlideIndex"
+      [interval]="0"
+    >
+      <slide>
+        <div class="inventory">
+          <div class="description">
+            <p urTitle>Items</p>
+            <span>0/{{ itemInventoryBoxes.length }}</span>
+          </div>
+          <div class="item-inventory">
+            @for (box of itemInventoryBoxes; track box.id) {
+              <app-item-box [height]="40" [width]="40"></app-item-box>
+            }
+          </div>
+          <div class="description">
+            <p urTitle>Consumables</p>
+            <span>0/{{ consumablesInventoryBoxes.length }}</span>
+          </div>
+          <div class="consumables-inventory">
+            @for (box of consumablesInventoryBoxes; track box.id) {
+              <app-item-box [height]="40" [width]="40"></app-item-box>
+            }
+          </div>
+        </div>
+      </slide>
+      <slide>
+        <app-stats-detail></app-stats-detail>
+      </slide>
+    </carousel>
   </div>
 </div>

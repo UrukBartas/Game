@@ -17,7 +17,7 @@ export class StatsDetailComponent extends TemplatePage {
     ) {
       return 150;
     }
-    return 300;
+    return 200;
   }
 
   public obtainEquippedItemBoxWidthDependingOnScreenSize() {
@@ -28,6 +28,6 @@ export class StatsDetailComponent extends TemplatePage {
     ) {
       return 100;
     }
-    return 200;
+    return 150;
   }
 }

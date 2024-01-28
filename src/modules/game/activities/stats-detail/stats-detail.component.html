@@ -1,48 +1,60 @@
-<div class="description">
-  <p class="h6">Stats detail</p>
-  <span
-    ><a [routerLink]="['/']">
-      <i class="fa-solid fa-angles-up fa-rotate-270"></i>
-      Go back</a
-    ></span
-  >
-</div>
-<div class="stats-container">
+<div class="stats-container pb-3">
   <div class="row">
-    <div class="col">
+    <div class="col-6">
       <app-item-box
         [height]="obtainEquippedItemBoxHeightDependingOnScreenSize()"
         [width]="obtainEquippedItemBoxWidthDependingOnScreenSize()"
       ></app-item-box>
     </div>
+    <div class="col-6">
+      <div class="description stat">
+        <p urTitle>Player</p>
+        <ul>
+          <li>Name: #########</li>
+          <li>Email: #######################</li>
+          <li>Class: ##########</li>
+          <li>Last connection: ###########</li>
+        </ul>
+      </div>
+    </div>
   </div>
   <div class="row">
     <div class="col">
-      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Alias
-      voluptatem, vel veritatis debitis quam, facere saepe quod quaerat
-      assumenda sapiente odio iusto natus. Adipisci totam error sed amet optio
-      rem.
+      <div class="description stat">
+        <p urTitle>Level</p>
+        <ul>
+          <li>Level: ###li></li>
+          <li>Experience: ######</li>
+          <li>Boosting: ###</li>
+          <li>Quests completed: ####</li>
+        </ul>
+      </div>
     </div>
     <div class="col">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui fugiat
-      eveniet deserunt perspiciatis minima ex mollitia asperiores aliquid veniam
-      nisi consequuntur repellendus, adipisci nihil dolores debitis voluptatem
-      ea veritatis exercitationem?
+      <div class="description stat">
+        <p urTitle>General</p>
+        <ul>
+          <li>Life: #########</li>
+          <li>Armor: #######</li>
+          <li>Mana: #########</li>
+          <li>Energy: ###########</li>
+          <li>Dodge: #######</li>
+        </ul>
+      </div>
     </div>
   </div>
   <hr />
   <div class="row">
     <div class="col">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui fugiat
-      eveniet deserunt perspiciatis minima ex mollitia asperiores aliquid veniam
-      nisi consequuntur repellendus, adipisci nihil dolores debitis voluptatem
-      ea veritatis exercitationem?
-    </div>
-    <div class="col">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui fugiat
-      eveniet deserunt perspiciatis minima ex mollitia asperiores aliquid veniam
-      nisi consequuntur repellendus, adipisci nihil dolores debitis voluptatem
-      ea veritatis exercitationem?
+      <div class="description stat">
+        <p urTitle>Combat</p>
+        <ul>
+          <li>Strenght: #########</li>
+          <li>Accuaracy: #########</li>
+          <li>Critical chance: ###########</li>
+          <li>Penetration: ########</li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

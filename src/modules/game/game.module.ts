@@ -18,6 +18,7 @@ import { QuestFightComponent } from './activities/quests/quest-fight/quest-fight
 import { TextSizeDirective } from '../core/directives/text-size.directive';
 import { TitleSizeDirective } from '../core/directives/title-size.directive';
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
 const components = [
@@ -42,6 +43,7 @@ const components = [
     FormsModule,
     ReactiveFormsModule,
     ProgressBarComponent,
+    CarouselModule,
   ],
   exports: [GameLayoutComponent],
 })

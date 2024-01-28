@@ -11,6 +11,7 @@ import { ViewportService } from 'src/services/viewport.service';
 export class InventoryComponent extends TemplatePage {
   private inventoryService = inject(InventoryService);
   viewportService = inject(ViewportService);
+  public activeSlideIndex = 0;
   public itemInventoryBoxes = this.inventoryService.getInventoryStructure();
   public consumablesInventoryBoxes =
     this.inventoryService.getInventoryStructure(20);
@@ -36,4 +37,5 @@ export class InventoryComponent extends TemplatePage {
     }
     return 125;
   }
+
 }

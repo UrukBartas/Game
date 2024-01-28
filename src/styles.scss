@@ -159,6 +159,12 @@ app-item-box {
   background: $secondary;
 }
 
+
+
+.carousel-indicators {
+  bottom: -50px !important;
+}
+
 @font-face {
   font-family: 'UrukFont';
   src: url('./assets/fonts/uruk-font.ttf') format('truetype');
@@ -173,3 +179,19 @@ app-item-box {
 @import '@fortawesome/fontawesome-free/scss/solid.scss';
 @import '@fortawesome/fontawesome-free/scss/regular.scss';
 @import '@fortawesome/fontawesome-free/scss/brands.scss';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
+
+/* Importing Bootstrap SCSS file. */
+@import './node_modules/bootstrap/scss/bootstrap';
+
+/* Importing Datepicker SCSS file. */
+@import 'node_modules/ngx-bootstrap/datepicker/bs-datepicker';
+
+.carousel-inner {
+  padding: 0px 45px;
+  @include media-breakpoint-up(lg) {
+    padding: 0px 90px;
+  }
+}
