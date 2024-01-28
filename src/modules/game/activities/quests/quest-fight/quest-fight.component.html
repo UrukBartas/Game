@@ -67,7 +67,7 @@
             role="progressbar"
             aria-valuemin="0"
             aria-valuemax="100"
-            [style.width]="fight.enemyStats.health + '%'"
+            [style.width]="(fight.enemyStats.health / enemy.health) * 100 + '%'"
           ></div>
         </div>
 
