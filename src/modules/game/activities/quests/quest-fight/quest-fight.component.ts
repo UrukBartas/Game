@@ -3,16 +3,16 @@ import { TemplatePage } from 'src/modules/core/components/template-page.componen
 import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { Store } from '@ngxs/store';
-import { MainState } from 'src/store/main.store';
+import { MainState, StartFight } from 'src/store/main.store';
 import { ViewportService } from 'src/services/viewport.service';
-
-enum QuestRarity {
-  COMMON = 1.0,
-  UNCOMMON = 2,
-  EPIC = 3,
-  LEGENDARY = 5,
-  MYTHIC = 10,
-}
+import { FightService } from 'src/services/fight.service';
+import {
+  FightModel,
+  TurnActionEnum,
+} from 'src/modules/core/models/fight.model';
+import { take } from 'rxjs';
+import { QuestModel } from 'src/modules/core/models/quest.model';
+import { PlayerStatsModel } from 'src/modules/core/models/player-stats.model';
 
 @Component({
   selector: 'app-quest-fight',
@@ -20,10 +20,89 @@ enum QuestRarity {
   styleUrl: './quest-fight.component.scss',
 })
 export class QuestFightComponent extends TemplatePage {
-  private store = inject(Store);
-  private viewportService = inject(ViewportService);
-  @Output() questStatusChange = new EventEmitter<QuestStatusEnum>();
+  turnActions = TurnActionEnum;
   player: PlayerModel = this.store.selectSnapshot(MainState.getState).player;
+  quest: QuestModel = this.store
+    .selectSnapshot(MainState.getState)
+    .quests.find((quest) => quest.startedAt !== null);
+  fight: FightModel;
+  enemy: PlayerStatsModel;
+  victory = false;
+  defeat = false;
+
+  @Output() questStatusChange = new EventEmitter<QuestStatusEnum>();
+
+  constructor(
+    private store: Store,
+    private viewportService: ViewportService,
+    private fightService: FightService
+  ) {
+    super();
+
+    this.fightService
+      .get('/')
+      .pipe(take(1))
+      .subscribe({
+        next: (fight) => {
+          this.fight = fight;
+          this.enemy = this.fight.enemyStats;
+          this.store.dispatch(new StartFight(fight));
+        },
+        error: () => {
+          this.questStatusChange.emit(QuestStatusEnum.PICKING);
+        },
+      });
+  }
+
+  doAction(action: TurnActionEnum) {
+    this.fightService
+      .actions(action)
+      .pipe(take(1))
+      .subscribe((fight) => {
+        const lastTurn = fight.turns[fight.turns.length - 1];
+
+        // player animations
+        if (fight.playerStats.health === 0) {
+          this.animateElement('.player-image', 'hinge', () => {
+            this.defeat = true;
+          });
+        } else if (fight.enemyStats.health === 0) {
+          this.animateElement('.player-image', 'pulse', () => {
+            this.victory = true;
+          });
+        } else if (lastTurn.enemyTurn.action === TurnActionEnum.ATTACK) {
+          this.animateElement('.player-image', 'shakeX');
+        }
+
+        // enemy animations
+        if (fight.enemyStats.health === 0) {
+          this.animateElement('.enemy-image', 'hinge');
+        } else if (fight.playerStats.health === 0) {
+          this.animateElement('.enemy-image', 'pulse');
+        } else if (lastTurn.playerTurn.action === TurnActionEnum.ATTACK) {
+          this.animateElement('.enemy-image', 'shakeX');
+        }
+
+        this.fight = fight;
+      });
+  }
+
+  animateElement(element, animation, callback?) {
+    new Promise((resolve, reject) => {
+      const animationName = `animate__${animation}`;
+      const node = document.querySelector(element);
+
+      node.classList.add(`animate__animated`, animationName);
+
+      const handleAnimationEnd = (event) => {
+        event.stopPropagation();
+        node.classList.remove(`animate__animated`, animationName);
+        resolve(callback?.());
+      };
+
+      node.addEventListener('animationend', handleAnimationEnd, { once: true });
+    });
+  }
 
   getHealthBarHeight() {
     switch (this.viewportService.screenSize) {
@@ -37,6 +116,21 @@ export class QuestFightComponent extends TemplatePage {
       case 'sm':
       default:
         return 30;
+    }
+  }
+
+  getHealthEnergyHeight() {
+    switch (this.viewportService.screenSize) {
+      case 'xxl':
+      case 'xl':
+      case 'lg':
+        return 40;
+      case 'md':
+        return 30;
+      case 'xs':
+      case 'sm':
+      default:
+        return 20;
     }
   }
 
@@ -54,38 +148,3 @@ export class QuestFightComponent extends TemplatePage {
     }
   }
 }
-
-/* private calculateXPForLevel(level: number): number {
-    const baseXP = 10; // XP required for the first level
-    const multiplier = 1.05; // Exponential growth factor
-    return Math.round(baseXP * Math.pow(multiplier, level - 1));
-  }
-
-  private calculateRewardedXP(level: number, rarityMultiplier: number): number {
-    const baseQuestXP = 5; // Base XP for quests
-    const questMultiplier = 1.04; // Growth factor for quests
-
-    return Math.round(
-      baseQuestXP * Math.pow(questMultiplier, level - 1) * rarityMultiplier
-    );
-  }
-
-  private logResult() {
-    let levels = 200;
-    for (let level = 1; level <= levels; level++) {
-      const levelExp = this.calculateXPForLevel(level);
-      console.log(
-        `Level ${level}: Player XP = ${this.calculateXPForLevel(level)}`
-      );
-      for (let rarity in QuestRarity) {
-        if (!isNaN(Number(rarity))) {
-          const questXP = this.calculateRewardedXP(level, Number(rarity));
-          console.log(
-            `Quest Rarity ${QuestRarity[rarity]}: Percent ${Math.round(
-              levelExp / questXP
-            )}, XP = ${questXP}`
-          );
-        }
-      }
-    }
-  } */

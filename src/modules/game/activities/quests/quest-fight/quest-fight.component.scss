@@ -27,7 +27,7 @@
     gap: 3%;
     padding-bottom: 12%;
 
-    .character-image,
+    .player-image,
     .enemy-image {
       max-width: 50%;
       border-radius: 20%;
@@ -36,7 +36,7 @@
     .progress {
       width: 80%;
       position: relative;
-      .health {
+      .progress-text {
         color: $white-100;
         position: absolute;
         top: 50%;
@@ -44,8 +44,11 @@
         transform: translate(-50%, -50%);
         text-align: center;
       }
-      .progress-bar {
+      .progress-bar-health {
         background-color: $red;
+      }
+      .progress-bar-energy {
+        background-color: $yellow;
       }
     }
   }
@@ -62,13 +65,40 @@
   }
 
   .action-button {
-    background-color: #dedede30 !important;
-    border-color: $white-100 !important;
+    background-color: rgb(222 222 222 / 25%) !important;
   }
 
   .surrender-button {
     position: absolute;
     top: 3%;
     left: 3%;
+  }
+
+  .finish-quest-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+
+    .finish-quest-bg {
+      width: 150vh;
+      z-index: 1;
+      position: absolute;
+      max-width: 1400px;
+      padding-bottom: 40px;
+    }
+
+    .player-image {
+      width: 30vh;
+      position: relative;
+      z-index: 1;
+      max-width: 300px;
+      margin-left: 10px;
+    }
   }
 }
