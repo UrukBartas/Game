@@ -12,7 +12,7 @@ import {
   LoginPlayer,
   MainState,
 } from 'src/store/main.store';
-import { shimmer } from 'viem/chains';
+import { shimmerTestnet } from 'viem/chains';
 import { AuthService } from './auth.service';
 import { PlayerService } from './player.service';
 
@@ -40,7 +40,7 @@ export class WalletService {
       ],
     };
 
-    const chains = [shimmer];
+    const chains = [shimmerTestnet];
     const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
 
     watchAccount(({ address }) => this.controlWalletFlow(address));
