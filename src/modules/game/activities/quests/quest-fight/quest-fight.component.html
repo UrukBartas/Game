@@ -1,58 +1,106 @@
-<div id="fight-container" class="container-fluid h-100">
+<div *ngIf="fight" id="fight-container" class="container-fluid h-100">
   <div class="background-image"></div>
-  <button
-    [class]="
-      'btn btn-primary surrender-button action-button shadow ' + getButtonSize()
-    "
-  >
-    <i class="fa fa-flag"></i>
-  </button>
-  <div class="row position-relative h-100">
-    <div class="col-6 fighter-container">
-      <img [src]="player.image" class="character-image shadow" />
-      <span urText class="text-white"
-        >{{ player.name }} (level {{ player.level }})</span
-      >
-      <div class="progress" [style.height]="getHealthBarHeight() + 'px'">
-        <span class="health position-absolute"
-          >{{ player.health }}/{{ player.health }}</span
+
+  <ng-container *ngIf="!victory && !defeat">
+    <button
+      [class]="
+        'btn btn-primary surrender-button action-button shadow ' +
+        getButtonSize()
+      "
+    >
+      <i class="fa fa-flag"></i>
+    </button>
+    <div class="row position-relative h-100">
+      <div class="col-6 fighter-container">
+        <img [src]="player.image" class="player-image shadow" />
+        <span urText class="text-white"
+          >{{ player.name }} (level {{ player.level }})</span
         >
         <div
-          class="progress-bar progress-bar-animated shadow"
-          role="progressbar"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          [style.width]="'100%'"
-        ></div>
+          class="progress shadow"
+          [style.height]="getHealthBarHeight() + 'px'"
+        >
+          <span class="progress-text position-absolute"
+            >{{ fight.playerStats.health }}/{{ player.health }}</span
+          >
+          <div
+            class="progress-bar progress-bar-health progress-bar-animated shadow"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            [style.width]="
+              (fight.playerStats.health / player.health) * 100 + '%'
+            "
+          ></div>
+        </div>
+
+        <div
+          class="progress shadow"
+          [style.height]="getHealthEnergyHeight() + 'px'"
+        >
+          <span class="progress-text position-absolute"
+            >{{ fight.playerStats.energy }}/{{ player.energy }}</span
+          >
+          <div
+            class="progress-bar progress-bar-energy progress-bar-animated shadow"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            [style.width]="fight.playerStats.energy + '%'"
+          ></div>
+        </div>
       </div>
-    </div>
-    <div class="col-6 fighter-container">
-      <img [src]="player.image" class="enemy-image shadow" />
-      <span urText class="text-white">Rat (level {{ player.level }})</span>
-      <div class="progress" [style.height]="getHealthBarHeight() + 'px'">
-        <span class="health position-absolute"
-          >{{ player.health }}/{{ player.health }}</span
+      <div class="col-6 fighter-container">
+        <img [src]="player.image" class="enemy-image shadow" />
+        <span urText class="text-white"
+          >{{ quest.data.enemy }} (level {{ quest.level }})</span
         >
         <div
-          class="progress-bar progress-bar-animated shadow"
-          role="progressbar"
-          aria-valuemin="0"
-          aria-valuemax="100"
-          [style.width]="'100%'"
-        ></div>
+          class="progress shadow"
+          [style.height]="getHealthBarHeight() + 'px'"
+        >
+          <span class="progress-text position-absolute"
+            >{{ fight.enemyStats.health }}/{{ enemy.health }}</span
+          >
+          <div
+            class="progress-bar progress-bar-health progress-bar-animated shadow"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            [style.width]="(fight.enemyStats.health / enemy.health) * 100 + '%'"
+          ></div>
+        </div>
+
+        <div
+          class="progress shadow"
+          [style.height]="getHealthEnergyHeight() + 'px'"
+        >
+          <span class="progress-text position-absolute"
+            >{{ fight.enemyStats.energy }}/{{ enemy.energy }}</span
+          >
+          <div
+            class="progress-bar progress-bar-energy progress-bar-animated shadow"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            [style.width]="fight.enemyStats.energy + '%'"
+          ></div>
+        </div>
       </div>
-    </div>
-    <div class="action-buttons">
-      <button
-        [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
-      >
-        <i class="fa fa-hand-fist"></i> ATTACK
-      </button>
-      <button
-        [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
-      >
-        <i class="fa fa-shield"></i> DEFEND
-      </button>
+      <div class="action-buttons">
+        <button
+          (click)="doAction(turnActions.ATTACK)"
+          [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
+        >
+          <i class="fa fa-hand-fist"></i> ATTACK
+        </button>
+        <button
+          (click)="doAction(turnActions.DEFEND)"
+          [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
+        >
+          <i class="fa fa-shield"></i> DEFEND
+        </button>
+        <!-- TODO
       <button
         [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
       >
@@ -62,7 +110,17 @@
         [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
       >
         <i class="fa fa-flask"></i> ITEMS
-      </button>
+      </button> -->
+      </div>
     </div>
+  </ng-container>
+
+  <div *ngIf="victory" class="finish-quest-screen victory-screen">
+    <img class="player-image" [src]="player.image" />
+    <img class="finish-quest-bg" src="assets/fight-screens/victory.png" />
+  </div>
+  <div *ngIf="defeat" class="finish-quest-screen defeat-screen">
+    <img class="player-image" [src]="player.image" />
+    <img class="finish-quest-bg" src="assets/fight-screens/defeat.png" />
   </div>
 </div>

@@ -31,9 +31,10 @@ export class QuestRouterComponent extends TemplatePage {
     super();
     const quests = this.store.selectSnapshot(MainState.getState).quests ?? [];
     const activeQuest = quests.find((quest) => quest.startedAt !== null);
+    const activeFight = this.store.selectSnapshot(MainState.getState).fight;
 
     if (activeQuest) {
-      if (!activeQuest.completed) {
+      if (!activeFight) {
         this.questStatus = QuestStatusEnum.IN_PROGRESS;
       } else {
         this.questStatus = QuestStatusEnum.FIGHT;

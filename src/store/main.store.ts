@@ -8,6 +8,7 @@ import { PlayerModel } from 'src/modules/core/models/player.model';
 import { SessionModel } from 'src/modules/core/models/session.model';
 import { SessionService } from 'src/services/session.service';
 import { PlayerService } from 'src/services/player.service';
+import { FightModel } from 'src/modules/core/models/fight.model';
 
 export class ConnectWallet {
   static readonly type = '[Wallet] Connect';
@@ -37,11 +38,22 @@ export class SetQuests {
   constructor(public payload: QuestModel[]) {}
 }
 
+export class StartFight {
+  static readonly type = '[Fight] Start';
+  constructor(public payload: FightModel) {}
+}
+
+export class EndFight {
+  static readonly type = '[Fight] End';
+  constructor() {}
+}
+
 export class MainStateModel {
   public address: string | null;
   public player: PlayerModel | null;
   public session: SessionModel | null;
   public quests: QuestModel[] | null;
+  public fight: FightModel | null;
 }
 
 @State<MainStateModel>({
@@ -51,6 +63,7 @@ export class MainStateModel {
     player: null,
     session: null,
     quests: null,
+    fight: null,
   },
 })
 export class MainState {
@@ -134,6 +147,23 @@ export class MainState {
         player: player,
       });
     }
+  }
+
+  @Action(StartFight)
+  startFight(
+    { patchState }: StateContext<MainStateModel>,
+    { payload }: StartFight
+  ) {
+    patchState({
+      fight: payload,
+    });
+  }
+
+  @Action(EndFight)
+  endFight({ patchState }: StateContext<MainStateModel>) {
+    patchState({
+      fight: null,
+    });
   }
 
   @Selector()
