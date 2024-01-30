@@ -134,7 +134,7 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "tokenId",
+          "name": "uniqueId",
           "type": "uint256"
         },
         {
@@ -159,8 +159,14 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "tokenId",
+          "name": "uniqueId",
           "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "uri",
+          "type": "string"
         }
       ],
       "name": "ItemImported",
@@ -265,9 +271,9 @@
     {
       "inputs": [
         {
-          "internalType": "string",
+          "internalType": "uint256",
           "name": "backendUniqueId",
-          "type": "string"
+          "type": "uint256"
         },
         {
           "internalType": "address",
@@ -296,9 +302,9 @@
       "name": "allowedItems",
       "outputs": [
         {
-          "internalType": "string",
+          "internalType": "uint256",
           "name": "",
-          "type": "string"
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -357,9 +363,9 @@
     {
       "inputs": [
         {
-          "internalType": "string",
+          "internalType": "uint256",
           "name": "backendUniqueId",
-          "type": "string"
+          "type": "uint256"
         },
         {
           "internalType": "string",
@@ -375,9 +381,9 @@
     {
       "inputs": [
         {
-          "internalType": "string",
+          "internalType": "uint256",
           "name": "backendUniqueId",
-          "type": "string"
+          "type": "uint256"
         },
         {
           "internalType": "address",
@@ -426,9 +432,9 @@
       "name": "getItemsWhitelisted",
       "outputs": [
         {
-          "internalType": "string[]",
+          "internalType": "uint256[]",
           "name": "",
-          "type": "string[]"
+          "type": "uint256[]"
         }
       ],
       "stateMutability": "view",
@@ -487,9 +493,9 @@
     {
       "inputs": [
         {
-          "internalType": "string",
+          "internalType": "uint256",
           "name": "backendUniqueId",
-          "type": "string"
+          "type": "uint256"
         },
         {
           "internalType": "address",
@@ -604,6 +610,11 @@
           "internalType": "string",
           "name": "uri",
           "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "backendUniqueId",
+          "type": "uint256"
         }
       ],
       "name": "safeMint",
