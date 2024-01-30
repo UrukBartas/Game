@@ -1,13 +1,29 @@
 import { Inject, Injectable } from '@angular/core';
-import { readContract, writeContract } from '@wagmi/core';
+import { readContract, watchContractEvent, writeContract } from '@wagmi/core';
 import UrukNFTArtifact from '../assets/UrukNFT.json';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 import { HttpClient } from '@angular/common/http';
-import { HelmetModel } from 'src/modules/core/models/items.model';
+import { Contract, ethers } from 'ethers';
+import { contracts } from './ether.config';
 @Injectable({
   providedIn: 'root',
 })
 export class ContractService extends ApiBaseService {
+  public provider = new ethers.JsonRpcProvider(
+    contracts['shimmer-testnet'].provider
+  );
+  adminWallet = new ethers.Wallet(process.env['PRIVATE_KEY'], this.provider);
+  accountAWallet = new ethers.Wallet(
+    process.env['EUROFIGHTER01'],
+    this.provider
+  );
+
+  activeContract = new ethers.Contract(
+    contracts['shimmer-testnet'].address,
+    contracts['shimmer-testnet'].contractAbi,
+    this.adminWallet
+  ) as Contract;
+
   constructor(private http: HttpClient) {
     super(http);
     this.controllerPrefix = '/import-export';
@@ -15,7 +31,7 @@ export class ContractService extends ApiBaseService {
 
   public executeReadContractOnUrukNFT(functionName: string) {
     return readContract({
-      address: process.env['CONTRACT_ADDRESS_URUK'] as any,
+      address: process.env['SHIMMER_TESTNET_SC'] as any,
       abi: UrukNFTArtifact.abi,
       functionName,
     });
@@ -23,18 +39,10 @@ export class ContractService extends ApiBaseService {
 
   public executewriteContractOnUrukNFT(functionName: string, args: Array<any>) {
     return writeContract({
-      address: process.env['CONTRACT_ADDRESS_URUK'] as any,
+      address: process.env['SHIMMER_TESTNET_SC'] as any,
       abi: UrukNFTArtifact.abi,
       functionName,
       args,
     });
-  }
-
-  public whiteListItem(itemId: string, address: string) {
-    return this.post('/whitelist-export/' + address + '/' + itemId, {});
-  }
-
-  public uploadJsonMetadataNFT(item: HelmetModel) {
-    return this.post('/upload-metadata', item);
   }
 }

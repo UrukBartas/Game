@@ -1,10 +1,18 @@
 import { Component, inject } from '@angular/core';
-import { getAccount, waitForTransaction } from '@wagmi/core';
+import {
+  getAccount,
+  waitForTransaction,
+  watchContractEvent,
+} from '@wagmi/core';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom, forkJoin, switchMap } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { RarityEnum, TraitsEnum } from 'src/modules/core/models/items.enum';
 import { ContractService } from 'src/services/contract.service';
+import { ExportImportService } from 'src/services/export-import.service';
 import { InventoryService } from 'src/services/inventory.service';
+import { ItemService } from 'src/services/item.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 
@@ -20,19 +28,10 @@ export class ExportImportNftComponent extends TemplatePage {
   public allowImportExport = true;
   viewportService = inject(ViewportService);
   contractService = inject(ContractService);
-
-  testItem = {
-    id: 9, // backenduid
-    name: 'Casco Épico',
-    image: 'ipfs://bafkreifdspa6n2dbbeqm3clchqbmjceq2eum4jpeiet77ysanegscaor44',
-    rarity: RarityEnum.MYTHIC,
-    level: 5,
-    playerId: 'jugador123',
-    armor: 50,
-    health: 100,
-    accuracy: 90,
-    trait: TraitsEnum.HOLY,
-  };
+  itemService = inject(ItemService);
+  importExport = inject(ExportImportService);
+  spinnerService = inject(NgxSpinnerService);
+  toastService = inject(ToastrService);
 
   public changeType(event: any) {
     event.target.checked
@@ -41,39 +40,58 @@ export class ExportImportNftComponent extends TemplatePage {
   }
 
   public async triggerAction() {
+    const ITEM_ID = 4;
+    this.spinnerService.show();
     if (this.typeActive == 'export') {
-      await firstValueFrom(
-        this.contractService.whiteListItem(
-          this.testItem.id + '',
-          getAccount().address
-        )
-      );
+      //[TODO] display whitelisted items but not exported
+      try {
+        const staticItemfornow = await firstValueFrom(
+          this.itemService.getItem(ITEM_ID)
+        );
 
-      const uploadJsonMetadataNFTCID = (await firstValueFrom(
-        this.contractService.uploadJsonMetadataNFT(this.testItem)
-      )) as { cid: string };
+        await firstValueFrom(
+          this.importExport.whiteListItem(
+            staticItemfornow.id + '',
+            getAccount().address
+          )
+        );
 
-      const txHash = await this.contractService.executewriteContractOnUrukNFT(
-        'exportItemToNft',
-        [
-          this.testItem.id + '', //unique backend id
-          `ipfs://${uploadJsonMetadataNFTCID.cid}`,
-        ]
-      );
-      //[TODO]
-      //Escuchar completación en el back y que cuando lo haga ponga el item enabled a false y playerId a null
-      //Tambien cuando termine que envie una respuesta/evento al front para que se informe
+        const uploadJsonMetadataNFTCID = (await firstValueFrom(
+          this.importExport.uploadJsonMetadataNFT(staticItemfornow)
+        )) as { cid: string };
+
+        await this.contractService.executewriteContractOnUrukNFT(
+          'exportItemToNft',
+          [staticItemfornow.id + '', `ipfs://${uploadJsonMetadataNFTCID.cid}`]
+        );
+        this.spinnerService.hide();
+        this.toastService.success(
+          'The item got exported, you will receive your NFT in your wallet soon!'
+        );
+      } catch (error: any) {
+        this.toastService.error(
+          error?.error?.message ?? undefined,
+          'Something went wrong'
+        );
+        this.spinnerService.hide();
+      }
     } else {
-      const data = await this.contractService.executewriteContractOnUrukNFT(
-        'importNftToItem',
-        [2 + ''] // 1 es el token id del token en el SC
-      );
-      const result = await waitForTransaction({
-        hash: data?.hash,
-      });
-      console.log(result); //hash
-      //[TODO]
-      //Buscar el item en la BD por backenduid que vendrá dado por el NFT y ponerle enable a true y el playerID que toque
+      try {
+        await this.contractService.executewriteContractOnUrukNFT(
+          'importNftToItem',
+          [ITEM_ID + '']
+        );
+        this.spinnerService.hide();
+        this.toastService.success(
+          'The item got imported, you will receive your item in your in-game inventory soon!'
+        );
+      } catch (error: any) {
+        this.toastService.error(
+          error?.error?.message ?? undefined,
+          'Something went wrong'
+        );
+        this.spinnerService.hide();
+      }
     }
   }
 }
