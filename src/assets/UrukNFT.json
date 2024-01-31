@@ -126,6 +126,56 @@
       "anonymous": false,
       "inputs": [
         {
+          "indexed": true,
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "uniqueId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "uri",
+          "type": "string"
+        }
+      ],
+      "name": "ItemExported",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "uniqueId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "uri",
+          "type": "string"
+        }
+      ],
+      "name": "ItemImported",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
           "indexed": false,
           "internalType": "uint256",
           "name": "_tokenId",
@@ -221,9 +271,9 @@
     {
       "inputs": [
         {
-          "internalType": "string",
+          "internalType": "uint256",
           "name": "backendUniqueId",
-          "type": "string"
+          "type": "uint256"
         },
         {
           "internalType": "address",
@@ -252,9 +302,9 @@
       "name": "allowedItems",
       "outputs": [
         {
-          "internalType": "string",
+          "internalType": "uint256",
           "name": "",
-          "type": "string"
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -313,9 +363,9 @@
     {
       "inputs": [
         {
-          "internalType": "string",
+          "internalType": "uint256",
           "name": "backendUniqueId",
-          "type": "string"
+          "type": "uint256"
         },
         {
           "internalType": "string",
@@ -331,9 +381,9 @@
     {
       "inputs": [
         {
-          "internalType": "string",
+          "internalType": "uint256",
           "name": "backendUniqueId",
-          "type": "string"
+          "type": "uint256"
         },
         {
           "internalType": "address",
@@ -382,9 +432,9 @@
       "name": "getItemsWhitelisted",
       "outputs": [
         {
-          "internalType": "string[]",
+          "internalType": "uint256[]",
           "name": "",
-          "type": "string[]"
+          "type": "uint256[]"
         }
       ],
       "stateMutability": "view",
@@ -399,7 +449,13 @@
         }
       ],
       "name": "importNftToItem",
-      "outputs": [],
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "function"
     },
@@ -437,9 +493,9 @@
     {
       "inputs": [
         {
-          "internalType": "string",
+          "internalType": "uint256",
           "name": "backendUniqueId",
-          "type": "string"
+          "type": "uint256"
         },
         {
           "internalType": "address",
@@ -554,16 +610,15 @@
           "internalType": "string",
           "name": "uri",
           "type": "string"
-        }
-      ],
-      "name": "safeMint",
-      "outputs": [
+        },
         {
           "internalType": "uint256",
-          "name": "",
+          "name": "backendUniqueId",
           "type": "uint256"
         }
       ],
+      "name": "safeMint",
+      "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
@@ -632,19 +687,6 @@
         }
       ],
       "name": "setApprovalForAll",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "newBaseUri",
-          "type": "string"
-        }
-      ],
-      "name": "setBaseUri",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
