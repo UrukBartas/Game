@@ -11,6 +11,7 @@ import { TemplatePage } from 'src/modules/core/components/template-page.componen
 import { MainState } from 'src/store/main.store';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [AppComponent, TemplatePage],
@@ -26,6 +27,7 @@ import { AppComponent } from './app.component';
       key: ['main'],
     }),
     ToastrModule.forRoot(),
+    NgxSpinnerModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
