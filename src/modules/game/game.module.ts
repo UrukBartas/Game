@@ -19,6 +19,7 @@ import { TextSizeDirective } from '../core/directives/text-size.directive';
 import { TitleSizeDirective } from '../core/directives/title-size.directive';
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
 
 const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
 const components = [
@@ -44,6 +45,7 @@ const components = [
     ReactiveFormsModule,
     ProgressBarComponent,
     CarouselModule,
+    ItemTooltipComponent,
   ],
   exports: [GameLayoutComponent],
 })
