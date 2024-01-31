@@ -1,4 +1,7 @@
 @import './variables.scss';
+
+$min-contrast-ratio: 2.5;
+
 * {
   margin: 0;
   padding: 0;
@@ -171,8 +174,8 @@ app-item-box {
 }
 
 ngb-tooltip-window {
-  .tooltip-inner{
-    display: table
+  .tooltip-inner {
+    display: table;
   }
 }
 
