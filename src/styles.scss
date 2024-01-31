@@ -159,8 +159,6 @@ app-item-box {
   background: $secondary;
 }
 
-
-
 .carousel-indicators {
   bottom: -50px !important;
 }
@@ -170,6 +168,12 @@ app-item-box {
   src: url('./assets/fonts/uruk-font.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
+}
+
+ngb-tooltip-window {
+  .tooltip-inner{
+    display: table
+  }
 }
 
 /* Importing Bootstrap SCSS file. */

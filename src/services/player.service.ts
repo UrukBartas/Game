@@ -20,4 +20,8 @@ export class PlayerService extends ApiBaseService {
   update(email: string, name: string, image: string): Observable<PlayerModel> {
     return this.post('/update', { email, name, image });
   }
+
+  getItems() {
+    return this.get('/inventory');
+  }
 }
