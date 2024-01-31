@@ -1,18 +1,34 @@
-import { RarityEnum } from './core/models/items.enum';
+import { Rarity } from './core/models/items.model';
 
-export function getRarityColor(rarity: RarityEnum): string {
+export function getRarityColor(rarity: Rarity): string {
   switch (rarity) {
     default:
-    case RarityEnum.COMMON:
+    case Rarity.COMMON:
       return '#B0B5B3';
-    case RarityEnum.UNCOMMON:
+    case Rarity.UNCOMMON:
       return '#3D74B8';
-    case RarityEnum.EPIC:
+    case Rarity.EPIC:
       return '#9D44B5';
-    case RarityEnum.LEGENDARY:
+    case Rarity.LEGENDARY:
       return '#FF7F11';
-    case RarityEnum.MYTHIC:
+    case Rarity.MYTHIC:
       return '#F34213';
+  }
+}
+
+export function getRarityText(rarity: Rarity): string {
+  switch (rarity) {
+    default:
+    case Rarity.COMMON:
+      return 'Common';
+    case Rarity.UNCOMMON:
+      return 'Uncommon';
+    case Rarity.EPIC:
+      return 'Epic';
+    case Rarity.LEGENDARY:
+      return 'Legendary';
+    case Rarity.MYTHIC:
+      return 'Mythic';
   }
 }
 

@@ -1,4 +1,4 @@
-import { RarityEnum } from './items.enum';
+import { Rarity } from "./items.model";
 
 export interface QuestDataModel {
   id: number;
@@ -8,5 +8,5 @@ export interface QuestDataModel {
   enemy: string;
   enemyImage: string;
   level: number;
-  rarity: RarityEnum;
+  rarity: Rarity;
 }
