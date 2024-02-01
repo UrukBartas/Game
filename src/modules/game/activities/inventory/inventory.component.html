@@ -56,9 +56,30 @@
             <p urTitle>Items</p>
             <span>0/{{ itemInventoryBoxes.length }}</span>
           </div>
-          <div class="item-inventory">
-            @for (box of itemInventoryBoxes; track box.id) {
-              <app-item-box [height]="40" [width]="40"></app-item-box>
+          <div
+            class="item-inventory"
+            *ngIf="currentInventory$ | async as inventory"
+          >
+            @for (box of itemInventoryBoxes; track box.id; let index = $index) {
+              <app-item-box
+                [height]="40"
+                [width]="40"
+                [image]="
+                  inventory[index]?.itemData?.image
+                    ? 'https://' +
+                      inventory[index]?.itemData?.image +
+                      '.ipfs.nftstorage.link/'
+                    : null
+                "
+              >
+                @if (!!inventory[index]) {
+                  <div tooltip class="tooltip-uruk">
+                    <app-item-tooltip
+                      [item]="inventory[index]"
+                    ></app-item-tooltip>
+                  </div>
+                }
+              </app-item-box>
             }
           </div>
           <div class="description">

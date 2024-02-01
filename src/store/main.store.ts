@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
-import { take } from 'rxjs';
+import { firstValueFrom, take } from 'rxjs';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { SessionModel } from 'src/modules/core/models/session.model';
@@ -32,6 +32,8 @@ export class SetSession {
 export class DisconnectWallet {
   static readonly type = '[Wallet] Disconnect';
 }
+
+
 
 export class SetQuests {
   static readonly type = '[Quest] Set';

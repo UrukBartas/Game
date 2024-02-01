@@ -1,6 +1,7 @@
 import { Component, HostListener, inject } from '@angular/core';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { InventoryService } from 'src/services/inventory.service';
+import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
@@ -10,11 +11,13 @@ import { ViewportService } from 'src/services/viewport.service';
 })
 export class InventoryComponent extends TemplatePage {
   private inventoryService = inject(InventoryService);
+  private playerService = inject(PlayerService);
   viewportService = inject(ViewportService);
   public activeSlideIndex = 0;
   public itemInventoryBoxes = this.inventoryService.getInventoryStructure();
   public consumablesInventoryBoxes =
     this.inventoryService.getInventoryStructure(20);
+  public currentInventory$ = this.playerService.getItems();
 
   public obtainEquippedItemBoxHeightDependingOnScreenSize() {
     if (
@@ -37,5 +40,4 @@ export class InventoryComponent extends TemplatePage {
     }
     return 125;
   }
-
 }

@@ -1,20 +1,14 @@
 import { Component, inject } from '@angular/core';
-import {
-  getAccount,
-  waitForTransaction,
-  watchContractEvent,
-} from '@wagmi/core';
+import { getAccount } from '@wagmi/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom, forkJoin, switchMap } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { RarityEnum, TraitsEnum } from 'src/modules/core/models/items.enum';
 import { ContractService } from 'src/services/contract.service';
 import { ExportImportService } from 'src/services/export-import.service';
 import { InventoryService } from 'src/services/inventory.service';
 import { ItemService } from 'src/services/item.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { WalletService } from 'src/services/wallet.service';
 
 @Component({
   selector: 'app-export-import-nft',
