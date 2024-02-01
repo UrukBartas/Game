@@ -1,74 +1,62 @@
-import { RarityEnum, TraitsEnum } from './items.enum';
 import { PlayerModel } from './player.model';
 
-// Base interface for all items
-interface BaseItemModel {
+export interface Item {
+  id: number;
+  level: number;
+
+  playerId?: string;
+  player?: PlayerModel | null;
+  itemDataId: number;
+  itemData: ItemData;
+
+  health?: number | null;
+  damage?: number | null;
+  armor?: number | null;
+  penetration?: number | null;
+  speed?: number | null;
+  energy?: number | null;
+  dodge?: number | null;
+  crit?: number | null;
+  block?: number | null;
+  accuracy?: number | null;
+
+  equipped: boolean;
+  enabled: boolean;
+}
+
+interface ItemData {
   id: number;
   name: string;
   image: string;
-  rarity: RarityEnum;
-  level: number;
-  playerId: string | null;
+  rarity: Rarity;
+  itemType: ItemType;
+  trait?: Trait | null;
+
+  items: Item[];
 }
 
-export interface HelmetModel extends BaseItemModel {
-  armor: number;
-  health: number;
-  accuracy: number;
-  trait?: TraitsEnum | null;
+export enum ItemType {
+  Helmet = 'Helmet',
+  Chest = 'Chest',
+  Gloves = 'Gloves',
+  Trousers = 'Trousers',
+  Boots = 'Boots',
+  Weapon = 'Weapon',
+  Shield = 'Shield',
+  Ring = 'Ring',
+  Totem = 'Totem',
 }
 
-export interface ChestModel extends BaseItemModel {
-  armor: number;
-  health: number;
-  trait?: TraitsEnum | null;
+export enum Rarity {
+  COMMON = 'COMMON',
+  UNCOMMON = 'UNCOMMON',
+  EPIC = 'EPIC',
+  LEGENDARY = 'LEGENDARY',
+  MYTHIC = 'MYTHIC',
 }
 
-export interface GlovesModel extends BaseItemModel {
-  armor: number;
-  health: number;
-  accuracy: number;
-  crit: number;
-  trait?: TraitsEnum | null;
-}
-
-export interface TrousersModel extends BaseItemModel {
-  armor: number;
-  health: number;
-  trait?: TraitsEnum | null;
-}
-
-export interface BootsModel extends BaseItemModel {
-  armor: number;
-  health: number;
-  speed: number;
-  dodge: number;
-  trait?: TraitsEnum | null;
-}
-
-export interface WeaponModel extends BaseItemModel {
-  damage: number;
-  accuracy: number;
-  speed: number;
-  crit: number;
-  penetration: number;
-  trait?: TraitsEnum | null;
-}
-
-export interface ShieldModel extends BaseItemModel {
-  armor: number;
-  health: number;
-  block: number;
-  trait?: TraitsEnum | null;
-}
-
-export interface RingModel extends BaseItemModel {
-  health: number;
-  trait?: TraitsEnum | null;
-}
-
-export interface TotemModel extends BaseItemModel {
-  damage: number;
-  health: number;
-  trait?: TraitsEnum | null;
+export enum Trait {
+  HOLY = 'HOLY',
+  INFERNAL = 'INFERNAL',
+  CORROSION = 'CORROSION',
 }
