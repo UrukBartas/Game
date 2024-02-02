@@ -3,7 +3,7 @@ import { TemplatePage } from 'src/modules/core/components/template-page.componen
 import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { Store } from '@ngxs/store';
-import { MainState, StartFight } from 'src/store/main.store';
+import { EndFight, MainState, StartFight } from 'src/store/main.store';
 import { ViewportService } from 'src/services/viewport.service';
 import { FightService } from 'src/services/fight.service';
 import {
@@ -65,10 +65,23 @@ export class QuestFightComponent extends TemplatePage {
         if (fight.playerStats.health === 0) {
           this.animateElement('.player-image', 'hinge', () => {
             this.defeat = true;
+            this.store.dispatch(new EndFight());
+            setTimeout(() => {
+              this.animateElement('.defeat-title', 'jackInTheBox');
+            });
+            /* setTimeout(() => {
+              this.questStatusChange.emit(QuestStatusEnum.PICKING);
+            }, 1000); */
           });
         } else if (fight.enemyStats.health === 0) {
           this.animateElement('.player-image', 'pulse', () => {
             this.victory = true;
+            this.store.dispatch(new EndFight());
+            console.log(fight);
+
+            /*setTimeout(() => {
+              this.questStatusChange.emit(QuestStatusEnum.REWARDS);
+            }, 1000);*/
           });
         } else if (lastTurn.enemyTurn.action === TurnActionEnum.ATTACK) {
           this.animateElement('.player-image', 'shakeX');
@@ -97,7 +110,9 @@ export class QuestFightComponent extends TemplatePage {
       const handleAnimationEnd = (event) => {
         event.stopPropagation();
         node.classList.remove(`animate__animated`, animationName);
-        resolve(callback?.());
+        setTimeout(() => {
+          resolve(callback?.());
+        }, 300);
       };
 
       node.addEventListener('animationend', handleAnimationEnd, { once: true });
