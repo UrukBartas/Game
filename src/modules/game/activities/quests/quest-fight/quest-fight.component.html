@@ -115,12 +115,11 @@
     </div>
   </ng-container>
 
-  <div *ngIf="victory" class="finish-quest-screen victory-screen">
+  <div *ngIf="victory" class="finish-quest-screen">
     <img class="player-image" [src]="player.image" />
     <img class="finish-quest-bg" src="assets/fight-screens/victory.png" />
   </div>
-  <div *ngIf="defeat" class="finish-quest-screen defeat-screen">
-    <img class="player-image" [src]="player.image" />
-    <img class="finish-quest-bg" src="assets/fight-screens/defeat.png" />
+  <div *ngIf="defeat" class="finish-quest-screen">
+    <div class="h1 defeat-title text-white">QUEST FAILED ☠️</div>
   </div>
 </div>
