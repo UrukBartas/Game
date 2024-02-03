@@ -11,6 +11,7 @@
           <div class="slide-title">
             <span urTitle>
               {{ quest.data.name }}
+              <span class="level">{{ quest.level }}</span>
             </span>
             <span
               urText
@@ -28,7 +29,7 @@
     <button
       urTitle
       (click)="startQuest()"
-      class="play-button"
+      class="button-rainbow"
       [style.padding]="getResponsiveButtonSize()"
     >
       START QUEST

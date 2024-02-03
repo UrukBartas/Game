@@ -11,5 +11,5 @@ import { Component, Input } from '@angular/core';
 export class ProgressBarComponent {
   @Input() text: string;
   @Input() barClass: string;
-  @Input() percentage: string;
+  @Input() percentage: number;
 }
