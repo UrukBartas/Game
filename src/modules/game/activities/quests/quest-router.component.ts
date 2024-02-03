@@ -3,29 +3,34 @@ import { Store } from '@ngxs/store';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { MainState } from 'src/store/main.store';
 import { QuestStatusEnum } from './enums/quest-status.enum';
+import { QuestRouterModel } from './models/quest-router.model';
 
 @Component({
   selector: 'app-quest-router',
   template: `
-    <ng-container [ngSwitch]="questStatus">
+    <ng-container [ngSwitch]="questRouter.status">
       <app-quest-picker
         *ngSwitchCase="questStatusEnum.PICKING"
-        (questStatusChange)="questStatus = $event"
+        (questStatusChange)="questRouter = $event"
       ></app-quest-picker>
       <app-quest-progress
         *ngSwitchCase="questStatusEnum.IN_PROGRESS"
-        (questStatusChange)="questStatus = $event"
+        (questStatusChange)="questRouter = $event"
       ></app-quest-progress>
       <app-quest-fight
         *ngSwitchCase="questStatusEnum.FIGHT"
-        (questStatusChange)="questStatus = $event"
+        (questStatusChange)="questRouter = $event"
       ></app-quest-fight>
+      <app-quest-result
+        *ngSwitchCase="questStatusEnum.RESULT"
+        [result]="questRouter.data"
+      ></app-quest-result>
     </ng-container>
   `,
 })
 export class QuestRouterComponent extends TemplatePage {
   questStatusEnum = QuestStatusEnum;
-  questStatus = QuestStatusEnum.PICKING;
+  questRouter: QuestRouterModel = { status: QuestStatusEnum.PICKING };
 
   constructor(private store: Store) {
     super();
@@ -35,12 +40,12 @@ export class QuestRouterComponent extends TemplatePage {
 
     if (activeQuest) {
       if (!activeFight) {
-        this.questStatus = QuestStatusEnum.IN_PROGRESS;
+        this.questRouter.status = QuestStatusEnum.IN_PROGRESS;
       } else {
-        this.questStatus = QuestStatusEnum.FIGHT;
+        this.questRouter.status = QuestStatusEnum.FIGHT;
       }
     } else {
-      this.questStatus = QuestStatusEnum.PICKING;
+      this.questRouter.status = QuestStatusEnum.PICKING;
     }
   }
 }

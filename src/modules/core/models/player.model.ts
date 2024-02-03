@@ -13,8 +13,8 @@ export interface PlayerModel {
   experience: number;
   health: number;
   energy: number;
-  attack: number;
-  defense: number;
+  damage: number;
+  armor: number;
   items: Array<Item>;
   sessions: SessionModel[];
   activeQuests: QuestModel[];

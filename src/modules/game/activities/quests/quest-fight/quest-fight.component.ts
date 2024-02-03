@@ -1,18 +1,20 @@
-import { Component, EventEmitter, Output, inject } from '@angular/core';
-import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { QuestStatusEnum } from '../enums/quest-status.enum';
-import { PlayerModel } from 'src/modules/core/models/player.model';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { EndFight, MainState, StartFight } from 'src/store/main.store';
-import { ViewportService } from 'src/services/viewport.service';
-import { FightService } from 'src/services/fight.service';
+import { take } from 'rxjs';
+import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import {
   FightModel,
   TurnActionEnum,
 } from 'src/modules/core/models/fight.model';
-import { take } from 'rxjs';
-import { QuestModel } from 'src/modules/core/models/quest.model';
 import { PlayerStatsModel } from 'src/modules/core/models/player-stats.model';
+import { PlayerModel } from 'src/modules/core/models/player.model';
+import { QuestModel } from 'src/modules/core/models/quest.model';
+import { animateElement } from 'src/modules/utils';
+import { FightService } from 'src/services/fight.service';
+import { ViewportService } from 'src/services/viewport.service';
+import { EndFight, MainState, StartFight } from 'src/store/main.store';
+import { QuestStatusEnum } from '../enums/quest-status.enum';
+import { QuestRouterModel } from '../models/quest-router.model';
 
 @Component({
   selector: 'app-quest-fight',
@@ -29,8 +31,11 @@ export class QuestFightComponent extends TemplatePage {
   enemy: PlayerStatsModel;
   victory = false;
   defeat = false;
+  private lastClickTime: number = 0;
+  showPlayerAction = false;
+  showEnemyAction = false;
 
-  @Output() questStatusChange = new EventEmitter<QuestStatusEnum>();
+  @Output() questStatusChange = new EventEmitter<QuestRouterModel>();
 
   constructor(
     private store: Store,
@@ -49,73 +54,105 @@ export class QuestFightComponent extends TemplatePage {
           this.store.dispatch(new StartFight(fight));
         },
         error: () => {
-          this.questStatusChange.emit(QuestStatusEnum.PICKING);
+          this.questStatusChange.emit({ status: QuestStatusEnum.PICKING });
         },
       });
   }
 
   doAction(action: TurnActionEnum) {
+    const currentTime = Date.now();
+
+    if (currentTime - this.lastClickTime < 1000) {
+      return;
+    }
+    this.lastClickTime = currentTime;
+
     this.fightService
       .actions(action)
       .pipe(take(1))
       .subscribe((fight) => {
-        const lastTurn = fight.turns[fight.turns.length - 1];
+        const victory = fight.enemyStats.health === 0;
+        const defeat = fight.playerStats.health === 0;
 
-        // player animations
-        if (fight.playerStats.health === 0) {
-          this.animateElement('.player-image', 'hinge', () => {
-            this.defeat = true;
-            this.store.dispatch(new EndFight());
-            setTimeout(() => {
-              this.animateElement('.defeat-title', 'jackInTheBox');
-            });
-            /* setTimeout(() => {
-              this.questStatusChange.emit(QuestStatusEnum.PICKING);
-            }, 1000); */
-          });
-        } else if (fight.enemyStats.health === 0) {
-          this.animateElement('.player-image', 'pulse', () => {
-            this.victory = true;
-            this.store.dispatch(new EndFight());
-            console.log(fight);
-
-            /*setTimeout(() => {
-              this.questStatusChange.emit(QuestStatusEnum.REWARDS);
-            }, 1000);*/
-          });
-        } else if (lastTurn.enemyTurn.action === TurnActionEnum.ATTACK) {
-          this.animateElement('.player-image', 'shakeX');
-        }
-
-        // enemy animations
-        if (fight.enemyStats.health === 0) {
-          this.animateElement('.enemy-image', 'hinge');
-        } else if (fight.playerStats.health === 0) {
-          this.animateElement('.enemy-image', 'pulse');
-        } else if (lastTurn.playerTurn.action === TurnActionEnum.ATTACK) {
-          this.animateElement('.enemy-image', 'shakeX');
+        this.controlTurnActions(fight);
+        if (victory || defeat) {
+          victory ? this.triggerVictory(fight) : this.triggerDefeat(fight);
         }
 
         this.fight = fight;
       });
   }
 
-  animateElement(element, animation, callback?) {
-    new Promise((resolve, reject) => {
-      const animationName = `animate__${animation}`;
-      const node = document.querySelector(element);
+  private controlTurnActions(fight: FightModel) {
+    const lastTurn = fight.turns[fight.turns.length - 1];
+    const lastPlayerAction = lastTurn.playerTurn.action;
+    const lastEnemyAction = lastTurn.enemyTurn.action;
+    if (lastPlayerAction === TurnActionEnum.ATTACK) {
+      animateElement('.player-image', 'fadeOutRightBig');
+    }
+    if (lastEnemyAction === TurnActionEnum.ATTACK) {
+      animateElement('.enemy-image', 'fadeOutLeftBig');
+    }
+    if (lastPlayerAction === TurnActionEnum.DEFEND) {
+      animateElement('.player-image', 'rotateInUpLeft');
+    }
+    if (lastEnemyAction === TurnActionEnum.DEFEND) {
+      animateElement('.enemy-image', 'rotateInUpRight');
+    }
+    if (
+      lastPlayerAction === TurnActionEnum.BLOCK ||
+      lastPlayerAction === TurnActionEnum.CRIT ||
+      lastPlayerAction === TurnActionEnum.MISS
+    ) {
+      this.showPlayerAction = true;
+      setTimeout(() => {
+        this.showPlayerAction = false;
+      }, 1000);
+    }
 
-      node.classList.add(`animate__animated`, animationName);
+    if (
+      lastEnemyAction === TurnActionEnum.BLOCK ||
+      lastEnemyAction === TurnActionEnum.CRIT ||
+      lastEnemyAction === TurnActionEnum.MISS
+    ) {
+      this.showEnemyAction = true;
+      setTimeout(() => {
+        this.showEnemyAction = false;
+      }, 1000);
+    }
+  }
 
-      const handleAnimationEnd = (event) => {
-        event.stopPropagation();
-        node.classList.remove(`animate__animated`, animationName);
+  private triggerVictory(fight: FightModel) {
+    animateElement('.player-image', 'pulse');
+    animateElement('.enemy-image', 'hinge', () => {
+      this.victory = true;
+      this.store.dispatch(new EndFight());
+      setTimeout(() => {
+        animateElement('.finish-quest-screen', 'jackInTheBox');
         setTimeout(() => {
-          resolve(callback?.());
-        }, 300);
-      };
+          this.questStatusChange.emit({
+            status: QuestStatusEnum.RESULT,
+            data: fight.result,
+          });
+        }, 1500);
+      });
+    });
+  }
 
-      node.addEventListener('animationend', handleAnimationEnd, { once: true });
+  private triggerDefeat(fight: FightModel) {
+    animateElement('.enemy-image', 'pulse');
+    animateElement('.player-image', 'hinge', () => {
+      this.defeat = true;
+      this.store.dispatch(new EndFight());
+      setTimeout(() => {
+        animateElement('.defeat-title', 'jackInTheBox');
+        setTimeout(() => {
+          this.questStatusChange.emit({
+            status: QuestStatusEnum.RESULT,
+            data: fight.result,
+          });
+        }, 1500);
+      });
     });
   }
 
