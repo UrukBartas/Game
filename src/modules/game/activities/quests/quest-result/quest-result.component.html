@@ -4,7 +4,10 @@
       <p urTitle>{{ victory ? 'Victory!' : 'Defeat!' }}</p>
     </div>
 
-    <div class="row pb-4">
+    <div
+      class="row pb-4"
+      *ngIf="fightResult.player?.level > player.level || fightResult.loot"
+    >
       <div
         *ngIf="fightResult.player?.level > player.level"
         class="col pb-md-4 col-md-12 d-flex flex-column gap-2"
@@ -49,15 +52,15 @@
       </div>
     </div>
 
+    <span urText *ngIf="fightResult.exp" class="text-white pb-2"
+      >You gained {{ fightResult.exp }} experience</span
+    >
     <span urText class="text-white pb-2"
       >New quest unlocked:
       <span
         [ngStyle]="{ color: getRarityColor(fightResult.newQuest.data.rarity) }"
         >{{ fightResult.newQuest.data.name }}</span
       ></span
-    >
-    <span urText *ngIf="fightResult.exp" class="text-white pb-2"
-      >You gained {{ fightResult.exp }} exp from completing the quest</span
     >
 
     >
