@@ -17,29 +17,202 @@
         <label
           class="form-check-label text-light"
           for="flexSwitchCheckChecked"
-          >{{ typeActive == 'export' ? 'Export' : 'Import' }}</label
+          >{{ exportTypeActive == 'export' ? 'Export' : 'Import' }}</label
         >
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-6 item-to-export-import">
-      <app-item-box [height]="200" [width]="200"></app-item-box>
-      <button
-        type="button"
-        class="btn btn-primary btn-lg btn-block w-100"
-        [disabled]="!allowImportExport"
-        (click)="triggerAction()"
-      >
-        {{ typeActive == 'export' ? 'Export' : 'Import' }}
-      </button>
-    </div>
-    <div class="col-6 inventory h-100">
-      <div class="item-inventory">
-        @for (box of itemInventoryBoxes; track box.id) {
-          <app-item-box [height]="50" [width]="50"></app-item-box>
-        }
+
+  <div class="row justify-content-center">
+    <div
+      class="col-6 item-to-export-import"
+      [ngClass]="{ 'col-12': exportingObjectTypeActive != 'nft' }"
+    >
+      <div class="row justify-content-center">
+        <div class="description justify-content-center">
+          <p urTitle>Select type</p>
+        </div>
+        <app-item-box
+          [height]="100"
+          [width]="100"
+          [active]="exportingObjectTypeActive == 'nft'"
+          (click)="exportingObjectTypeActive = 'nft'"
+          [image]="
+            '/assets/helmet.png'
+          "
+        >
+          <div tooltip class="tooltip-uruk">Uruk Bartas item NFT's</div>
+        </app-item-box>
+        <app-item-box
+          [height]="100"
+          [width]="100"
+          [active]="exportingObjectTypeActive == 'coins'"
+          (click)="exportingObjectTypeActive = 'coins'"
+          [image]="'/assets/goldenuruks.png'"
+        >
+          <div tooltip class="tooltip-uruk">Golden Uruks</div>
+        </app-item-box>
       </div>
+      @if (exportingObjectTypeActive == 'coins') {
+        <div class="row">
+          <div class="description justify-content-center">
+            <p urTitle>
+              Current
+              {{ exportTypeActive == 'export' ? 'in-game' : 'wallet' }} balance:
+              {{
+                exportTypeActive == 'export'
+                  ? (player$ | async).uruks
+                  : (erc20Balance$ | async)
+              }}
+            </p>
+          </div>
+        </div>
+        <div class="container-range">
+          <input
+            type="range"
+            class="form-range"
+            min="0"
+            [max]="
+              exportTypeActive == 'export'
+                ? (player$ | async).uruks
+                : (erc20Balance$ | async)
+            "
+            [(ngModel)]="selectedUruksToExport"
+          />
+          <button
+            type="button"
+            class="btn btn-secondary fit-content"
+            (click)="assignValueToSelectedUruks(0.5)"
+          >
+            HALF
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary fit-content"
+            (click)="assignValueToSelectedUruks(1)"
+          >
+            ALL
+          </button>
+        </div>
+
+        <p class="text-light" *ngIf="selectedUruksToExport > 0">
+          {{ selectedUruksToExport + ' Golden Uruks selected' }}
+        </p>
+      } @else {
+        <app-item-box
+          [height]="200"
+          [width]="200"
+          [image]="
+            selectedItem?.itemData?.image
+              ? 'https://' +
+                selectedItem?.itemData?.image +
+                '.ipfs.nftstorage.link/'
+              : null
+          "
+        >
+          @if (!!selectedItem) {
+            <div tooltip class="tooltip-uruk">
+              <app-item-tooltip [item]="selectedItem"></app-item-tooltip>
+            </div>
+          }
+        </app-item-box>
+      }
+
+      <div
+        class="all-pending-exports"
+        *ngIf="
+          exportTypeActive == 'export' && exportingObjectTypeActive == 'nft'
+        "
+      >
+        <div
+          class="container-pending-exports"
+          *ngIf="whiteListedItems$ | async as pending"
+        >
+          <div class="description text-light">
+            {{
+              !!pending && pending.length == 0
+                ? 'No pending exports'
+                : 'Pending exports'
+            }}
+          </div>
+          <div class="d-flex pending-exports">
+            <button
+              type="button"
+              class="btn btn-secondary btn-lg btn-block w-100"
+              *ngFor="let whiteListedItemId of parseToAny(pending)"
+              (click)="exportItem(whiteListedItemId)"
+            >
+              #{{ whiteListedItemId }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      @if (exportingObjectTypeActive == 'nft') {
+        <button
+          type="button"
+          class="btn btn-primary btn-lg btn-block w-100"
+          [disabled]="!selectedItem"
+          (click)="triggerActionForNFT()"
+        >
+          {{ exportTypeActive == 'export' ? 'Export' : 'Import' }}
+        </button>
+      } @else {
+        <button
+          type="button"
+          class="btn btn-primary btn-lg btn-block w-100"
+          [disabled]="selectedUruksToExport == 0"
+          (click)="triggerActionForERC20()"
+        >
+          {{ exportTypeActive == 'export' ? 'Export' : 'Import' }}
+        </button>
+      }
+    </div>
+    <div
+      class="col-6 inventory h-100"
+      *ngIf="exportingObjectTypeActive == 'nft'"
+    >
+      @if (exportTypeActive == 'export') {
+        <ng-container
+          *ngTemplateOutlet="
+            inventory;
+            context: { itemsToLoad$: currentInventory$ }
+          "
+        ></ng-container>
+      } @else {
+        <ng-container
+          *ngTemplateOutlet="
+            inventory;
+            context: { itemsToLoad$: currentInventoryOfNfts$ }
+          "
+        ></ng-container>
+      }
     </div>
   </div>
+
+  <ng-template #inventory let-items$="itemsToLoad$">
+    <div class="item-inventory" *ngIf="items$ | async as inventory">
+      @for (box of itemInventoryBoxes; track box.id; let index = $index) {
+        <app-item-box
+          (click)="selectedItem = inventory[index]"
+          [height]="40"
+          [width]="40"
+          [active]="selectedItem == inventory[index]"
+          [image]="
+            inventory[index]?.itemData?.image
+              ? 'https://' +
+                inventory[index]?.itemData?.image +
+                '.ipfs.nftstorage.link/'
+              : null
+          "
+        >
+          @if (!!inventory[index]) {
+            <div tooltip class="tooltip-uruk">
+              <app-item-tooltip [item]="inventory[index]"></app-item-tooltip>
+            </div>
+          }
+        </app-item-box>
+      }
+    </div>
+  </ng-template>
 </div>

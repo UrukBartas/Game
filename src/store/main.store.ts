@@ -24,6 +24,15 @@ export class UpdatePlayer {
   constructor(public payload: PlayerModel) {}
 }
 
+export class SetPlayer {
+  static readonly type = '[Player] Set';
+  constructor(public payload: PlayerModel) {}
+}
+
+export class RefreshPlayer {
+  static readonly type = '[Player] Refresh';
+}
+
 export class SetSession {
   static readonly type = '[Session] Set';
   constructor(public payload: SessionModel) {}
@@ -128,6 +137,23 @@ export class MainState {
       address: null,
       player: null,
       session: null,
+    });
+  }
+
+  @Action(RefreshPlayer) async refreshPlayer({
+    patchState,
+  }: StateContext<MainStateModel>) {
+    const player = await this.playerService.get('/').pipe(take(1)).toPromise();
+    this.store.dispatch(new SetPlayer(player));
+  }
+
+  @Action(SetPlayer)
+  setPlayer(
+    { patchState }: StateContext<MainStateModel>,
+    data: { payload: PlayerModel }
+  ) {
+    patchState({
+      player: data.payload,
     });
   }
 

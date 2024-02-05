@@ -24,4 +24,12 @@ export class PlayerService extends ApiBaseService {
   getItems() {
     return this.get('/inventory');
   }
+
+  getItemsDisabled() {
+    return this.get('/inventory-disabled');
+  }
+
+  getNFTS() {
+    return this.get('/get-nfts-items');
+  }
 }
