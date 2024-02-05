@@ -20,6 +20,7 @@ import { TitleSizeDirective } from '../core/directives/title-size.directive';
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
+import { QuestResultComponent } from './activities/quests/quest-result/quest-result.component';
 
 const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
 const components = [
@@ -32,6 +33,7 @@ const components = [
   QuestPickerComponent,
   QuestProgressComponent,
   QuestFightComponent,
+  QuestResultComponent,
 ];
 
 @NgModule({

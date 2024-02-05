@@ -3,6 +3,9 @@
 .progress {
   height: 100%;
   position: relative;
+  .progress-bar {
+    background-color: $secondary;
+  }
   .text {
     color: $white-100;
     position: absolute;
