@@ -11,6 +11,9 @@ import {
   DisconnectWallet,
   LoginPlayer,
   MainState,
+  RefreshPlayer,
+  SetPlayer,
+  UpdatePlayer,
 } from 'src/store/main.store';
 import { shimmerTestnet } from 'viem/chains';
 import { AuthService } from './auth.service';
@@ -48,12 +51,14 @@ export class WalletService {
     this.modal = createWeb3Modal({ wagmiConfig, projectId, chains });
   }
 
-  private controlWalletFlow(address: `0x${string}` | undefined) {
+  private async controlWalletFlow(address: `0x${string}` | undefined) {
     const state = this.store.selectSnapshot(MainState.getState);
 
     if (state.address) {
       if (address === undefined || address !== state.address) {
         this.store.dispatch(new DisconnectWallet());
+      } else {
+        this.store.dispatch(new RefreshPlayer());
       }
     } else if (address && !state.address) {
       this.logIn();

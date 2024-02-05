@@ -3,12 +3,17 @@
 </ng-template>
 <div
   [ngbTooltip]="true ? tipContent : null"
-
   container="body"
   class="box"
   [ngStyle]="{ height: height + 'px', width: width + 'px' }"
 >
   @if (!!image) {
-    <img [ngSrc]="image" priority [width]="width" [height]="height" />
+    <img
+      [ngSrc]="image"
+      priority
+      [width]="width"
+      [height]="height"
+      [ngClass]="{ selectedItem: active }"
+    />
   }
 </div>
