@@ -13,4 +13,5 @@ export class ItemBoxComponent {
   @Input() height = 30;
   @Input() width = 30;
   @Input() image: string = null;
+  @Input() active = false;
 }

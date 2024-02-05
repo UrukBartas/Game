@@ -10,3 +10,7 @@
     transition: all 0.3s;
   }
 }
+
+.selectedItem{
+  border: 1px solid $secondary;
+}
