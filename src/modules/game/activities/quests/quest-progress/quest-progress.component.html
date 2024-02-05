@@ -1,5 +1,5 @@
 <div class="active-quest-container" *ngIf="quest">
-  <img [src]="'/assets/quests/1.png'" alt="Quest Image" class="active-quest" />
+  <img [src]="quest.data.image" alt="Quest Image" class="active-quest" />
   <div *ngIf="!questReady" class="progress-bar-container">
     <h3 urTitle>
       {{ quest.data.name }}
