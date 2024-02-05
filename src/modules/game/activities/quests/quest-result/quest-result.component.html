@@ -1,0 +1,68 @@
+<div class="d-flex flex-column gap-2">
+  <ng-container *ngIf="fightResult">
+    <div class="description">
+      <p urTitle>{{ victory ? 'Victory!' : 'Defeat!' }}</p>
+    </div>
+
+    <div
+      class="row pb-4"
+      *ngIf="fightResult.player?.level > player.level || fightResult.loot"
+    >
+      <div
+        *ngIf="fightResult.player?.level > player.level"
+        class="col pb-md-4 col-md-12 d-flex flex-column gap-2"
+      >
+        <span urText class="text-rainbow text-center">LEVEL UP!</span>
+        <span urText class="text-white text-center"
+          >Level {{ player.level }} → {{ fightResult.player.level }}</span
+        >
+        <span urText class="text-white text-center"
+          >Health {{ player.health }} → {{ fightResult.player.health }}</span
+        >
+        <span urText class="text-white text-center"
+          >Attack {{ player.damage }} → {{ fightResult.player.damage }}</span
+        >
+        <span urText class="text-white text-center"
+          >Defense {{ player.armor }} → {{ fightResult.player.armor }}</span
+        >
+      </div>
+      <div
+        *ngIf="fightResult.loot"
+        class="col col-md-12 d-flex flex-column gap-2"
+      >
+        <span urText class="text-rainbow text-center">Congratulations!</span>
+        <span urText class="text-white text-center">
+          Your enemy dropped something.</span
+        >
+        <app-item-box
+          #lootItem
+          class="d-flex justify-content-center w-100"
+          [height]="getItemBoxSize()"
+          [width]="getItemBoxSize()"
+          [image]="
+            'https://' +
+            fightResult.loot.itemData.image +
+            '.ipfs.nftstorage.link/'
+          "
+        >
+          <div tooltip class="tooltip-uruk">
+            <app-item-tooltip [item]="fightResult.loot"></app-item-tooltip>
+          </div>
+        </app-item-box>
+      </div>
+    </div>
+
+    <span urText *ngIf="fightResult.exp" class="text-white pb-2"
+      >You gained {{ fightResult.exp }} experience</span
+    >
+    <span urText class="text-white pb-2"
+      >New quest unlocked:
+      <span
+        [ngStyle]="{ color: getRarityColor(fightResult.newQuest.data.rarity) }"
+        >{{ fightResult.newQuest.data.name }}</span
+      ></span
+    >
+
+    >
+  </ng-container>
+</div>

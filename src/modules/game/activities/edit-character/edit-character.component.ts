@@ -98,9 +98,9 @@ export class EditCharacterComponent extends TemplatePage {
     this.playerService
       .update(email, name, image)
       .pipe(take(1))
-      .subscribe(() => {
+      .subscribe((player) => {
         this.toastService.success('Settings updated');
-        this.store.dispatch(new UpdatePlayer({ email, name, image }));
+        this.store.dispatch(new UpdatePlayer(player));
       });
   }
 }

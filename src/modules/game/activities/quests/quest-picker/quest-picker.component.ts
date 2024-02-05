@@ -8,6 +8,7 @@ import { QuestService } from 'src/services/quest.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { SetQuests } from 'src/store/main.store';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
+import { QuestRouterModel } from '../models/quest-router.model';
 
 @Component({
   selector: 'app-quest-picker',
@@ -15,7 +16,7 @@ import { QuestStatusEnum } from '../enums/quest-status.enum';
   styleUrl: './quest-picker.component.scss',
 })
 export class QuestPickerComponent extends TemplatePage {
-  @Output() questStatusChange = new EventEmitter<QuestStatusEnum>();
+  @Output() questStatusChange = new EventEmitter<QuestRouterModel>();
 
   quests: QuestModel[];
   getRarityColor = getRarityColor;
@@ -38,7 +39,7 @@ export class QuestPickerComponent extends TemplatePage {
         this.quests = quests;
         this.store.dispatch(new SetQuests(quests));
         if (quests.find((quest) => quest.startedAt !== null)) {
-          this.questStatusChange.emit(QuestStatusEnum.IN_PROGRESS);
+          this.questStatusChange.emit({ status: QuestStatusEnum.IN_PROGRESS });
         }
       });
   }
@@ -66,7 +67,7 @@ export class QuestPickerComponent extends TemplatePage {
         this.quests[this.activeSlideIndex].startedAt = startedAt;
         this.quests[this.activeSlideIndex].finishedAt = finishedAt;
         this.store.dispatch(new SetQuests(this.quests));
-        this.questStatusChange.emit(QuestStatusEnum.IN_PROGRESS);
+        this.questStatusChange.emit({ status: QuestStatusEnum.IN_PROGRESS });
       });
   }
 
