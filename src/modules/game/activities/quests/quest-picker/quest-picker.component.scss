@@ -41,6 +41,9 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
+        .level {
+          color: $white-400;
+        }
       }
     }
   }

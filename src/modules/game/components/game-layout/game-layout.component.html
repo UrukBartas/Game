@@ -43,9 +43,9 @@
     >
       <app-progress-bar
         class="px-2"
-        barClass="progress-bar-striped progress-bar-animated shadow"
-        progress="75"
-        text="0/10"
+        barClass="shadow"
+        [percentage]="getProgressBarData(player).percent"
+        [text]="getProgressBarData(player).text"
         [style.height]="getProgressBarHeight() + 'px'"
       ></app-progress-bar>
       <span urText class="text-white px-4">Level {{ player.level }}</span>

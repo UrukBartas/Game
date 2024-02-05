@@ -21,7 +21,7 @@ export class LoginPlayer {
 
 export class UpdatePlayer {
   static readonly type = '[Player] Update';
-  constructor(public payload: { name: string; email: string; image: string }) {}
+  constructor(public payload: PlayerModel) {}
 }
 
 export class SetSession {
@@ -32,8 +32,6 @@ export class SetSession {
 export class DisconnectWallet {
   static readonly type = '[Wallet] Disconnect';
 }
-
-
 
 export class SetQuests {
   static readonly type = '[Quest] Set';
@@ -138,17 +136,9 @@ export class MainState {
     { patchState }: StateContext<MainStateModel>,
     { payload }: UpdatePlayer
   ) {
-    const player = this.store.selectSnapshot(MainState.getState)?.player;
-
-    if (player) {
-      player.name = payload.name;
-      player.email = payload.email;
-      player.image = payload.image;
-
-      patchState({
-        player: player,
-      });
-    }
+    patchState({
+      player: payload,
+    });
   }
 
   @Action(StartFight)

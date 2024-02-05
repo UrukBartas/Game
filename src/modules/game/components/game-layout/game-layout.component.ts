@@ -7,6 +7,8 @@ import { AuthService } from 'src/services/auth.service';
 import { WalletService } from 'src/services/wallet.service';
 import { MainState, MainStateModel } from 'src/store/main.store';
 import { ViewportService } from 'src/services/viewport.service';
+import { PlayerModel } from 'src/modules/core/models/player.model';
+import { calculateXPForLevel } from 'src/modules/utils';
 
 @Component({
   selector: 'app-game-layout',
@@ -48,6 +50,14 @@ export class GameLayoutComponent {
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);
+  }
+
+  getProgressBarData(player: PlayerModel) {
+    const totalExp = calculateXPForLevel(player.level);
+    return {
+      text: `${player.experience}/${totalExp}`,
+      percent: (player.experience / totalExp) * 100,
+    };
   }
 
   getProgressBarHeight() {
