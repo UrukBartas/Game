@@ -18,4 +18,5 @@ export interface PlayerModel {
   items: Array<Item>;
   sessions: SessionModel[];
   activeQuests: QuestModel[];
+  uruks: number;
 }

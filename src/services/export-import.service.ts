@@ -14,6 +14,13 @@ export class ExportImportService extends ApiBaseService {
     return this.post('/whitelist-export/' + address + '/' + itemId, {});
   }
 
+  public whiteListItemERC20(amount: number, address: string) {
+    return this.post(
+      '/whitelist-export-erc20/' + address + '/' + amount.toString(),
+      {}
+    );
+  }
+
   public uploadJsonMetadataNFT(item: any) {
     return this.post('/upload-metadata', item);
   }
