@@ -8,7 +8,6 @@ export interface QuestModel {
   data: QuestDataModel;
   startedAt: string;
   finishedAt: string;
-  completed: boolean;
-  claimed: boolean;
+  active: boolean;
   selected?: boolean;
 }

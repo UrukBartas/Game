@@ -5,6 +5,7 @@ import { QuestModel } from 'src/modules/core/models/quest.model';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
+import { QuestRouterModel } from '../models/quest-router.model';
 
 @Component({
   selector: 'app-quest-progress',
@@ -12,7 +13,7 @@ import { QuestStatusEnum } from '../enums/quest-status.enum';
   styleUrl: './quest-progress.component.scss',
 })
 export class QuestProgressComponent extends TemplatePage implements OnDestroy {
-  @Output() questStatusChange = new EventEmitter<QuestStatusEnum>();
+  @Output() questStatusChange = new EventEmitter<QuestRouterModel>();
 
   quest: QuestModel;
   questReady = false;
@@ -39,6 +40,7 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
     this.interval = setInterval(() => {
       const startedAt = new Date(this.quest.startedAt);
       const finishedAt = new Date(this.quest.finishedAt);
+      finishedAt.setMinutes(finishedAt.getMinutes() - 30);
       const currentDate = new Date();
 
       if (currentDate > finishedAt) {

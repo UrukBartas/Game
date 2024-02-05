@@ -13,6 +13,15 @@
     <div class="row position-relative h-100">
       <div class="col-6 fighter-container">
         <img [src]="player.image" class="player-image shadow" />
+        <span
+          *ngIf="showPlayerAction"
+          urTitle
+          class="text-white animate__animated animate__fadeInUp position-absolute z-2"
+          >{{
+            fight.turns[fight.turns.length - 1].playerTurn.action + '!'
+              | uppercase
+          }}</span
+        >
         <span urText class="text-white"
           >{{ player.name }} (level {{ player.level }})</span
         >
@@ -49,9 +58,27 @@
             [style.width]="fight.playerStats.energy + '%'"
           ></div>
         </div>
+        <div class="position-relative" style="width: 80%">
+          <span
+            urText
+            class="position-absolute"
+            *ngIf="fight.playerStats.energy < 40"
+            [ngbTooltip]="exhausted"
+            >😫</span
+          >
+        </div>
       </div>
       <div class="col-6 fighter-container">
-        <img [src]="player.image" class="enemy-image shadow" />
+        <span
+          *ngIf="showEnemyAction"
+          urTitle
+          class="text-white animate__animated animate__fadeInUp position-absolute z-2"
+          >{{
+            fight.turns[fight.turns.length - 1].enemyTurn.action + '!'
+              | uppercase
+          }}</span
+        >
+        <img [src]="quest.data.enemyImage" class="enemy-image shadow" />
         <span urText class="text-white"
           >{{ quest.data.enemy }} (level {{ quest.level }})</span
         >
@@ -86,6 +113,16 @@
             [style.width]="fight.enemyStats.energy + '%'"
           ></div>
         </div>
+
+        <div class="position-relative" style="width: 80%">
+          <span
+            urText
+            class="position-absolute"
+            *ngIf="fight.enemyStats.energy < 40"
+            [ngbTooltip]="exhausted"
+            >😫</span
+          >
+        </div>
       </div>
       <div class="action-buttons">
         <button
@@ -115,12 +152,13 @@
     </div>
   </ng-container>
 
-  <div *ngIf="victory" class="finish-quest-screen victory-screen">
+  <div *ngIf="victory" class="finish-quest-screen">
     <img class="player-image" [src]="player.image" />
     <img class="finish-quest-bg" src="assets/fight-screens/victory.png" />
   </div>
-  <div *ngIf="defeat" class="finish-quest-screen defeat-screen">
-    <img class="player-image" [src]="player.image" />
-    <img class="finish-quest-bg" src="assets/fight-screens/defeat.png" />
+  <div *ngIf="defeat" class="finish-quest-screen">
+    <div class="h1 defeat-title text-white">QUEST FAILED ☠️</div>
   </div>
 </div>
+
+<ng-template #exhausted>Exhausted: Attacks do 50% less damage</ng-template>
