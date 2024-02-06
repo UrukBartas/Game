@@ -38,4 +38,8 @@ export class ItemTooltipComponent {
   public parseKeyPascalCase(key: string) {
     return key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
   }
+
+  public getPercentage(key: string) {
+    return ['dodge', 'accuracy', 'block', 'crit'].includes(key) ? '%' : '';
+  }
 }

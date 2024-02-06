@@ -39,7 +39,7 @@ export interface FighterTurnModel {
 export enum TurnActionEnum {
   ATTACK = 'attack',
   MISS = 'miss',
-  BLOCK = 'block',
+  BLOCKED = 'blocked',
   CRIT = 'crit',
   DEFEND = 'defend',
 }
