@@ -44,7 +44,7 @@ export enum ItemType {
   Weapon = 'Weapon',
   Shield = 'Shield',
   Ring = 'Ring',
-  Totem = 'Totem',
+  Charm = 'Charm',
 }
 
 export enum Rarity {
