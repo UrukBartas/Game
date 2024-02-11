@@ -2,15 +2,16 @@
   <ng-content select="[tooltip]"></ng-content>
 </ng-template>
 <div
-  [ngbTooltip]="true ? tipContent : null"
+  [ngbTooltip]="displayTooltip ? tipContent : null"
   container="body"
-  class="box"
+  class="box d-flex justify-content-center"
+  [ngClass]="{ selectedBox: active }"
   [ngStyle]="{ height: height + 'px', width: width + 'px' }"
 >
   @if (!!image) {
     <img
       [ngSrc]="image"
-      class="w-100 h-100"
+      class="w-100 h-100 rounded"
       priority
       [width]="width"
       [height]="height"

@@ -7,11 +7,15 @@
 }
 .stats-container {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   flex-direction: column;
 }
 
-.stat{
+.stat {
   display: flex;
   flex-direction: column;
-}
+  li {
+    padding: 5px;
+    list-style: none;
+  }
+ }

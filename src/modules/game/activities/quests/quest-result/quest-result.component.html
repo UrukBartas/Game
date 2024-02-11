@@ -39,11 +39,7 @@
           class="d-flex justify-content-center w-100"
           [height]="getItemBoxSize()"
           [width]="getItemBoxSize()"
-          [image]="
-            'https://' +
-            fightResult.loot.itemData.image +
-            '.ipfs.nftstorage.link/'
-          "
+          [image]="fightResult.loot.itemData.image | toIpfsImageFromCid"
         >
           <div tooltip class="tooltip-uruk">
             <app-item-tooltip [item]="fightResult.loot"></app-item-tooltip>
