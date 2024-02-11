@@ -15,6 +15,7 @@ export interface PlayerModel {
   energy: number;
   damage: number;
   armor: number;
+  speed: number;
   items: Array<Item>;
   sessions: SessionModel[];
   activeQuests: QuestModel[];

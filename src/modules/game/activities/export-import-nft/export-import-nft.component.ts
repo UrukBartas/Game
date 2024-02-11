@@ -9,6 +9,7 @@ import {
   BehaviorSubject,
   Observable,
   delay,
+  distinctUntilChanged,
   expand,
   firstValueFrom,
   forkJoin,
@@ -81,6 +82,11 @@ export class ExportImportNftComponent extends TemplatePage {
         'getItemsWhitelisted',
         [getAccount().address + '']
       );
+    }),
+    switchMap((entry: any) => {
+      const realTypeEntry = entry as Array<BigInt>;
+      const toNumbers = realTypeEntry.map((entry) => Number(entry.toString()));
+      return this.itemService.getMultipleItemsAtOnce({ ids: toNumbers });
     })
   );
 
@@ -244,6 +250,25 @@ export class ExportImportNftComponent extends TemplatePage {
         );
         this.selectedUruksToExport = 0;
       }
+    } catch (error: any) {
+      console.error(error);
+      this.toastService.error(
+        error?.error?.message ?? undefined,
+        'Something went wrong'
+      );
+      this.spinnerService.hide();
+    }
+  }
+
+  public async cancelPendingExport(idItem: number) {
+    this.spinnerService.show();
+    try {
+      await this.contractService.executewriteContractOnUrukNFT(
+        'deletePendingExport',
+        [idItem]
+      );
+      this.spinnerService.hide();
+      this.toastService.success('Success');
     } catch (error: any) {
       console.error(error);
       this.toastService.error(

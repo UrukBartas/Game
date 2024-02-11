@@ -19,5 +19,7 @@ export class ItemService extends ApiBaseService {
     return this.get('/get-item-data/' + itemIdData);
   }
 
-
+  public getMultipleItemsAtOnce(ids: { ids: Array<number> }) {
+    return this.post('/get-multiple-at-once', ids);
+  }
 }
