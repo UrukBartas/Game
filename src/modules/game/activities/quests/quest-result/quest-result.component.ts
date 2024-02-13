@@ -4,7 +4,7 @@ import { TemplatePage } from 'src/modules/core/components/template-page.componen
 import { FightResultModel } from 'src/modules/core/models/fight.model';
 import { getRarityColor } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
-import { MainState, SetQuests, UpdatePlayer } from 'src/store/main.store';
+import { MainState, RefreshPlayer, SetQuests } from 'src/store/main.store';
 import * as party from 'party-js';
 import { QuestService } from 'src/services/quest.service';
 import { take } from 'rxjs';
@@ -37,7 +37,7 @@ export class QuestResultComponent extends TemplatePage {
             });
           });
         }
-        this.store.dispatch(new UpdatePlayer(fightResult.player));
+        this.store.dispatch(new RefreshPlayer());
       }
     }
   }

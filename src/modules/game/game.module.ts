@@ -21,6 +21,9 @@ import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
 import { QuestResultComponent } from './activities/quests/quest-result/quest-result.component';
+import { DoubleClickDirective } from '../core/directives/double-click.directive';
+import { ToIpfsImageFromCidPipe } from '../core/pipes/to-ipfs-image-from-cid.pipe';
+import { DndModule } from 'ngx-drag-drop';
 
 const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
 const components = [
@@ -48,6 +51,9 @@ const components = [
     ProgressBarComponent,
     CarouselModule,
     ItemTooltipComponent,
+    DoubleClickDirective,
+    ToIpfsImageFromCidPipe,
+    DndModule,
   ],
   exports: [GameLayoutComponent],
 })

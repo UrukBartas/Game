@@ -37,9 +37,7 @@
           [width]="100"
           [active]="exportingObjectTypeActive == 'nft'"
           (click)="exportingObjectTypeActive = 'nft'"
-          [image]="
-            '/assets/helmet.png'
-          "
+          [image]="'/assets/helmet.png'"
         >
           <div tooltip class="tooltip-uruk">Uruk Bartas item NFT's</div>
         </app-item-box>
@@ -104,9 +102,7 @@
           [width]="200"
           [image]="
             selectedItem?.itemData?.image
-              ? 'https://' +
-                selectedItem?.itemData?.image +
-                '.ipfs.nftstorage.link/'
+              ? (selectedItem?.itemData?.image | toIpfsImageFromCid)
               : null
           "
         >
@@ -138,11 +134,36 @@
           <div class="d-flex pending-exports">
             <button
               type="button"
-              class="btn btn-secondary btn-lg btn-block w-100"
+              class="btn btn-secondary btn-lg btn-block w-100 btn-pending"
               *ngFor="let whiteListedItemId of parseToAny(pending)"
               (click)="exportItem(whiteListedItemId)"
             >
-              #{{ whiteListedItemId }}
+              #{{ whiteListedItemId.id }}
+              <i
+                class="bi bi-x-circle-fill close-icon-pending"
+                (click)="
+                  $event.preventDefault();
+                  $event.stopPropagation();
+                  cancelPendingExport(whiteListedItemId.id)
+                "
+              ></i>
+              <app-item-box
+                [height]="100"
+                [width]="100"
+                [image]="
+                  whiteListedItemId?.itemData?.image
+                    ? (whiteListedItemId?.itemData?.image | toIpfsImageFromCid)
+                    : null
+                "
+              >
+                @if (!!whiteListedItemId) {
+                  <div tooltip class="tooltip-uruk">
+                    <app-item-tooltip
+                      [item]="whiteListedItemId"
+                    ></app-item-tooltip>
+                  </div>
+                }
+              </app-item-box>
             </button>
           </div>
         </div>
@@ -197,12 +218,11 @@
           (click)="selectedItem = inventory[index]"
           [height]="40"
           [width]="40"
-          [active]="selectedItem == inventory[index]"
+          [active]="selectedItem == inventory[index] && !!selectedItem"
+          [displayTooltip]="!!inventory[index]"
           [image]="
             inventory[index]?.itemData?.image
-              ? 'https://' +
-                inventory[index]?.itemData?.image +
-                '.ipfs.nftstorage.link/'
+              ? (inventory[index]?.itemData?.image | toIpfsImageFromCid)
               : null
           "
         >

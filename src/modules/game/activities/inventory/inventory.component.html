@@ -5,42 +5,98 @@
     </div>
     <div class="items-equipped-contained">
       <div class="row justify-content-center row-item-character">
-        <app-item-box
-          [height]="obtainEquippedItemBoxHeightDependingOnScreenSize()"
-          [width]="obtainEquippedItemBoxWidthDependingOnScreenSize()"
-        ></app-item-box>
+        <ng-container
+          *ngTemplateOutlet="
+            equippedSlot;
+            context: {
+              item$: getHelmet$,
+              hovered: activeDragAndDropItemType == itemTypePublic.Helmet
+            }
+          "
+        ></ng-container>
       </div>
       <div class="row justify-content-around row-item-character">
-        <app-item-box
-          [height]="obtainEquippedItemBoxHeightDependingOnScreenSize()"
-          [width]="obtainEquippedItemBoxWidthDependingOnScreenSize()"
-        ></app-item-box>
-        <app-item-box
-          [height]="obtainEquippedItemBoxHeightDependingOnScreenSize()"
-          [width]="obtainEquippedItemBoxWidthDependingOnScreenSize()"
-        ></app-item-box>
-        <app-item-box
-          [height]="obtainEquippedItemBoxHeightDependingOnScreenSize()"
-          [width]="obtainEquippedItemBoxWidthDependingOnScreenSize()"
-        ></app-item-box>
+        <ng-container
+          *ngTemplateOutlet="
+            equippedSlot;
+            context: {
+              item$: getWeapon$,
+              hovered: activeDragAndDropItemType == itemTypePublic.Weapon
+            }
+          "
+        ></ng-container>
+
+        <ng-container
+          *ngTemplateOutlet="
+            equippedSlot;
+            context: {
+              item$: getChest$,
+              hovered: activeDragAndDropItemType == itemTypePublic.Chest
+            }
+          "
+        ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            equippedSlot;
+            context: {
+              item$: getShield$,
+              hovered: activeDragAndDropItemType == itemTypePublic.Shield
+            }
+          "
+        ></ng-container>
       </div>
       <div class="row justify-content-center row-item-character">
-        <app-item-box
-          [height]="obtainEquippedItemBoxHeightDependingOnScreenSize()"
-          [width]="obtainEquippedItemBoxWidthDependingOnScreenSize()"
-        ></app-item-box>
+        <ng-container
+          *ngTemplateOutlet="
+            equippedSlot;
+            context: {
+              item$: getTrousers$,
+              hovered: activeDragAndDropItemType == itemTypePublic.Trousers
+            }
+          "
+        ></ng-container>
       </div>
-    </div>
-    <hr />
-    <div class="row stats-summary">
-      <div class="col">
-        <div class="description stat">
-          <p urTitle>Achievements</p>
-        </div>
-        <ul>
-          <li>Killed 50 monsters: #########</li>
-          <li>Won 10 duels: #########</li>
-        </ul>
+      <div class="row justify-content-start row-item-character">
+        <ng-container
+          *ngTemplateOutlet="
+            equippedSlot;
+            context: {
+              item$: getGloves$,
+              hovered: activeDragAndDropItemType == itemTypePublic.Gloves
+            }
+          "
+        ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            equippedSlot;
+            context: {
+              item$: getBoots$,
+              hovered: activeDragAndDropItemType == itemTypePublic.Boots
+            }
+          "
+        ></ng-container>
+      </div>
+      <div class="row justify-content-center row-item-character">
+        <ng-container
+          *ngTemplateOutlet="
+            equippedSlot;
+            context: {
+              item$: getCharm$,
+              isSmallItem: true,
+              hovered: activeDragAndDropItemType == itemTypePublic.Charm
+            }
+          "
+        ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            equippedSlot;
+            context: {
+              item$: getRing$,
+              isSmallItem: true,
+              hovered: activeDragAndDropItemType == itemTypePublic.Ring
+            }
+          "
+        ></ng-container>
       </div>
     </div>
   </div>
@@ -49,41 +105,67 @@
       [isAnimated]="true"
       [(activeSlide)]="activeSlideIndex"
       [interval]="0"
+      [showIndicators]="false"
+      class="remove-arrow-sliders"
     >
       <slide>
+        <div class="description desc-mover">
+          <p urTitle>Inventory</p>
+          <div class="mover">
+            <i
+              class="bi bi-caret-left-fill"
+              [ngClass]="{ 'disabled-icon': activeSlideIndex == 0 }"
+            ></i>
+            <i
+              class="bi bi-caret-right-fill"
+              (click)="activeSlideIndex = activeSlideIndex + 1"
+            ></i>
+          </div>
+        </div>
         <div class="inventory">
           <div class="description">
-            <p urTitle>Items</p>
+            <p>Items</p>
             <span>0/{{ itemInventoryBoxes.length }}</span>
           </div>
-          <div
-            class="item-inventory"
-            *ngIf="currentInventory$ | async as inventory"
-          >
-            @for (box of itemInventoryBoxes; track box.id; let index = $index) {
-              <app-item-box
-                [height]="40"
-                [width]="40"
-                [image]="
-                  inventory[index]?.itemData?.image
-                    ? 'https://' +
-                      inventory[index]?.itemData?.image +
-                      '.ipfs.nftstorage.link/'
-                    : null
-                "
-              >
-                @if (!!inventory[index]) {
-                  <div tooltip class="tooltip-uruk">
-                    <app-item-tooltip
-                      [item]="inventory[index]"
-                    ></app-item-tooltip>
-                  </div>
-                }
-              </app-item-box>
-            }
+          <div class="item-inventory">
+            <ng-container *ngIf="currentInventory$ | async as inventory">
+              @for (
+                box of itemInventoryBoxes;
+                track box.id;
+                let index = $index
+              ) {
+                <app-item-box
+                  [dndDraggable]="inventory[index]"
+                  [dndEffectAllowed]="'all'"
+                  [dndDisableIf]="!inventory[index]"
+                  (dndStart)="onDragStart($event, inventory[index])"
+                  (dndEnd)="onDragEnd($event)"
+                  [height]="40"
+                  [width]="40"
+                  [displayTooltip]="!!inventory[index]"
+                  (appDoubleClick)="
+                    !!inventory[index] ? equipItem(inventory[index]) : false
+                  "
+                  [image]="
+                    inventory[index]?.itemData?.image
+                      ? (inventory[index].itemData.image | toIpfsImageFromCid)
+                      : null
+                  "
+                >
+                  @if (!!inventory[index]) {
+                    <div tooltip class="tooltip-uruk">
+                      <app-item-tooltip
+                        [item]="inventory[index]"
+                      ></app-item-tooltip>
+                    </div>
+                  }
+                </app-item-box>
+              }
+            </ng-container>
           </div>
+
           <div class="description">
-            <p urTitle>Consumables</p>
+            <p>Consumables</p>
             <span>0/{{ consumablesInventoryBoxes.length }}</span>
           </div>
           <div class="consumables-inventory">
@@ -94,8 +176,55 @@
         </div>
       </slide>
       <slide>
+        <div class="description desc-mover">
+          <p urTitle>Stats</p>
+          <div class="mover">
+            <i
+              class="bi bi-caret-left-fill"
+              (click)="activeSlideIndex = activeSlideIndex - 1"
+            ></i>
+            <i
+              class="bi bi-caret-right-fill"
+              [ngClass]="{ 'disabled-icon': activeSlideIndex == 1 }"
+            ></i>
+          </div>
+        </div>
         <app-stats-detail></app-stats-detail>
       </slide>
     </carousel>
   </div>
 </div>
+
+<ng-template
+  #equippedSlot
+  let-item$="item$"
+  let-hovered="hovered"
+  let-isSmallItem="isSmallItem"
+>
+  <app-item-box
+    dndDropzone
+    (dndDrop)="onDrop($event)"
+    (appDoubleClick)="unEquipItem(item$)"
+    [height]="
+      obtainEquippedItemBoxHeightDependingOnScreenSize() /
+      (!!isSmallItem ? 2 : 1)
+    "
+    [width]="
+      obtainEquippedItemBoxWidthDependingOnScreenSize() /
+      (!!isSmallItem ? 2 : 1)
+    "
+    [active]="hovered"
+    [displayTooltip]="!!(item$ | async)"
+    [image]="
+      toItem(item$ | async)?.itemData?.image
+        ? (toItem(item$ | async).itemData.image | toIpfsImageFromCid)
+        : null
+    "
+  >
+    @if (!!(item$ | async)) {
+      <div tooltip class="tooltip-uruk">
+        <app-item-tooltip [item]="item$ | async"></app-item-tooltip>
+      </div>
+    }
+  </app-item-box>
+</ng-template>
