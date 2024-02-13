@@ -12,7 +12,11 @@
     </button>
     <div class="row position-relative h-100">
       <div class="col-6 fighter-container">
-        <img [src]="player.image" class="player-image shadow" />
+        <img
+          [src]="player.image"
+          class="player-image shadow"
+          [style.animation]="playerAnimation"
+        />
         <span
           *ngIf="showPlayerAction"
           urTitle
@@ -21,6 +25,16 @@
             fight.turns[fight.turns.length - 1].playerTurn.action + '!'
               | uppercase
           }}</span
+        >
+        <span
+          *ngIf="showReceivedPlayerDamage"
+          urTitle
+          [ngClass]="{
+            'crit-text':
+              fight.turns[fight.turns.length - 1].enemyTurn.action === 'crit'
+          }"
+          class="text-white animate__animated animate__fadeInUp position-absolute z-2"
+          >-{{ fight.turns[fight.turns.length - 1].enemyTurn.damage }}</span
         >
         <span urText class="text-white"
           >{{ player.name }} (level {{ player.level }})</span
@@ -78,7 +92,21 @@
               | uppercase
           }}</span
         >
-        <img [src]="quest.data.enemyImage" class="enemy-image shadow" />
+        <span
+          *ngIf="showReceivedEnemyDamage"
+          urTitle
+          [ngClass]="{
+            'crit-text':
+              fight.turns[fight.turns.length - 1].playerTurn.action === 'crit'
+          }"
+          class="text-white animate__animated animate__fadeInUp position-absolute z-2"
+          >-{{ fight.turns[fight.turns.length - 1].playerTurn.damage }}</span
+        >
+        <img
+          [src]="quest.data.enemyImage"
+          class="enemy-image shadow"
+          [style.animation]="enemyAnimation"
+        />
         <span urText class="text-white"
           >{{ quest.data.enemy }} (level {{ quest.level }})</span
         >
