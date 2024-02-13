@@ -1,4 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 import { Store } from '@ngxs/store';
 import { take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
@@ -20,6 +25,7 @@ import { QuestRouterModel } from '../models/quest-router.model';
   selector: 'app-quest-fight',
   templateUrl: './quest-fight.component.html',
   styleUrl: './quest-fight.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class QuestFightComponent extends TemplatePage {
   turnActions = TurnActionEnum;
@@ -34,6 +40,10 @@ export class QuestFightComponent extends TemplatePage {
   private lastClickTime: number = 0;
   showPlayerAction = false;
   showEnemyAction = false;
+  showReceivedPlayerDamage = false;
+  showReceivedEnemyDamage = false;
+  playerAnimation;
+  enemyAnimation;
 
   @Output() questStatusChange = new EventEmitter<QuestRouterModel>();
 
@@ -87,32 +97,48 @@ export class QuestFightComponent extends TemplatePage {
     const lastTurn = fight.turns[fight.turns.length - 1];
     const lastPlayerAction = lastTurn.playerTurn.action;
     const lastEnemyAction = lastTurn.enemyTurn.action;
-    if (lastPlayerAction === TurnActionEnum.ATTACK) {
-      animateElement('.player-image', 'fadeOutRightBig');
-    }
-    if (lastEnemyAction === TurnActionEnum.ATTACK) {
-      animateElement('.enemy-image', 'fadeOutLeftBig');
-    }
-    if (lastPlayerAction === TurnActionEnum.DEFEND) {
-      animateElement('.player-image', 'rotateInUpLeft');
-    }
-    if (lastEnemyAction === TurnActionEnum.DEFEND) {
-      animateElement('.enemy-image', 'rotateInUpRight');
+    if (
+      lastPlayerAction === TurnActionEnum.ATTACK ||
+      lastPlayerAction === TurnActionEnum.CRIT
+    ) {
+      this.handlePlayerAnimation('attack-right', 1);
+      this.showReceivedEnemyDamage = true;
+      setTimeout(() => {
+        this.showReceivedEnemyDamage = false;
+      }, 1000);
     }
     if (
-      lastPlayerAction === TurnActionEnum.BLOCK ||
-      lastPlayerAction === TurnActionEnum.CRIT ||
+      lastEnemyAction === TurnActionEnum.ATTACK ||
+      lastEnemyAction === TurnActionEnum.CRIT
+    ) {
+      this.handleEnemyAnimation('attack-left', 1);
+      if (lastTurn.enemyTurn.damage > 0) {
+        this.showReceivedPlayerDamage = true;
+        setTimeout(() => {
+          this.showReceivedPlayerDamage = false;
+        }, 1000);
+      }
+    }
+    if (lastPlayerAction === TurnActionEnum.DEFEND) {
+      this.handlePlayerAnimation('defend-right', 1);
+    }
+    if (lastEnemyAction === TurnActionEnum.DEFEND) {
+      this.handleEnemyAnimation('defend-left', 1);
+    }
+    if (
+      lastPlayerAction === TurnActionEnum.BLOCKED ||
       lastPlayerAction === TurnActionEnum.MISS
     ) {
-      this.showPlayerAction = true;
-      setTimeout(() => {
-        this.showPlayerAction = false;
-      }, 1000);
+      if (lastTurn.playerTurn.damage > 0) {
+        this.showPlayerAction = true;
+        setTimeout(() => {
+          this.showPlayerAction = false;
+        }, 1000);
+      }
     }
 
     if (
-      lastEnemyAction === TurnActionEnum.BLOCK ||
-      lastEnemyAction === TurnActionEnum.CRIT ||
+      lastEnemyAction === TurnActionEnum.BLOCKED ||
       lastEnemyAction === TurnActionEnum.MISS
     ) {
       this.showEnemyAction = true;
@@ -198,5 +224,21 @@ export class QuestFightComponent extends TemplatePage {
       default:
         return 'btn-md';
     }
+  }
+
+  // duration in seconds
+  private handlePlayerAnimation(animation: string, duration: number) {
+    this.playerAnimation = `${animation} ${duration}s ease-in-out`;
+    setTimeout(() => {
+      this.playerAnimation = '';
+    }, duration * 1000);
+  }
+
+  // duration in seconds
+  private handleEnemyAnimation(animation: string, duration: number) {
+    this.enemyAnimation = `${animation} ${duration}s`;
+    setTimeout(() => {
+      this.enemyAnimation = '';
+    }, duration * 1000);
   }
 }
