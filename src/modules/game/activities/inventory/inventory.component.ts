@@ -63,7 +63,7 @@ export class InventoryComponent extends TemplatePage {
   public getTrousers$ = this.getItem$(ItemType.Trousers);
   public getBoots$ = this.getItem$(ItemType.Boots);
   public getGloves$ = this.getItem$(ItemType.Gloves);
-  public getTotem$ = this.getItem$(ItemType.Totem);
+  public getCharm$ = this.getItem$(ItemType.Charm);
   public getRing$ = this.getItem$(ItemType.Ring);
 
   constructor() {
