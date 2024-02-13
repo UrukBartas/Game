@@ -1,16 +1,23 @@
-@import "../../variables.scss";
+@import '../../variables.scss';
 
 .box {
   background-color: $black;
   border: 1px solid $primary;
   opacity: 0.7;
   &:hover {
-    background-color: $primary;
-    cursor: pointer;
-    transition: all 0.3s;
+    @extend .hovered;
   }
 }
 
-.selectedItem{
+.selectedItem {
   border: 1px solid $secondary;
+}
+.selectedBox {
+  @extend .hovered;
+}
+
+.hovered {
+  background-color: $primary;
+  cursor: pointer;
+  transition: all 0.3s;
 }

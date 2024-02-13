@@ -1,19 +1,22 @@
 <div class="stats-container pb-3">
   <div class="row">
-    <div class="col-6">
-      <app-item-box
-        [height]="obtainEquippedItemBoxHeightDependingOnScreenSize()"
-        [width]="obtainEquippedItemBoxWidthDependingOnScreenSize()"
-      ></app-item-box>
+    <div class="col-12 col-xl-4">
+      <div class="rounded">
+        <app-item-box
+          [height]="200"
+          [width]="200"
+          [image]="(player$ | async).image"
+        ></app-item-box>
+      </div>
     </div>
-    <div class="col-6">
+    <div class="col-12 col-xl-8">
       <div class="description stat">
-        <p urTitle>Player</p>
+        <p>Player</p>
         <ul>
-          <li>Name: #########</li>
-          <li>Email: #######################</li>
+          <li>Name: {{ (player$ | async).name }}</li>
+          <li>Email: {{ (player$ | async).email }}</li>
           <li>Class: ##########</li>
-          <li>Last connection: ###########</li>
+          <li>Member since: {{ (player$ | async).createdAt | date }}</li>
         </ul>
       </div>
     </div>
@@ -21,38 +24,24 @@
   <div class="row">
     <div class="col">
       <div class="description stat">
-        <p urTitle>Level</p>
+        <p>Progress</p>
         <ul>
-          <li>Level: ###li></li>
-          <li>Experience: ######</li>
-          <li>Boosting: ###</li>
-          <li>Quests completed: ####</li>
-        </ul>
-      </div>
-    </div>
-    <div class="col">
-      <div class="description stat">
-        <p urTitle>General</p>
-        <ul>
-          <li>Life: #########</li>
-          <li>Armor: #######</li>
-          <li>Mana: #########</li>
-          <li>Energy: ###########</li>
-          <li>Dodge: #######</li>
+          <li>Level: {{ (player$ | async).level }}</li>
+          <li>Experience: {{ (player$ | async).experience }}</li>
         </ul>
       </div>
     </div>
   </div>
-  <hr />
   <div class="row">
     <div class="col">
       <div class="description stat">
-        <p urTitle>Combat</p>
+        <p>Combat</p>
         <ul>
-          <li>Strenght: #########</li>
-          <li>Accuaracy: #########</li>
-          <li>Critical chance: ###########</li>
-          <li>Penetration: ########</li>
+          <li>Life: {{ (player$ | async).health }}</li>
+          <li>Armor: {{ (player$ | async).armor }}</li>
+          <li>Energy: {{ (player$ | async).energy }}</li>
+          <li>Damage: {{ (player$ | async).damage }}</li>
+          <li>Speed: {{ (player$ | async).speed }}</li>
         </ul>
       </div>
     </div>

@@ -1,12 +1,13 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Item } from 'src/modules/core/models/items.model';
+import { ToIpfsImageFromCidPipe } from 'src/modules/core/pipes/to-ipfs-image-from-cid.pipe';
 import { getRarityColor, getRarityText } from 'src/modules/utils';
 
 @Component({
   selector: 'app-item-tooltip',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage],
+  imports: [CommonModule, NgOptimizedImage, ToIpfsImageFromCidPipe],
   templateUrl: './item-tooltip.component.html',
   styleUrl: './item-tooltip.component.scss',
 })

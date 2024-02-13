@@ -1,6 +1,9 @@
 import { Component, inject } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { map } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { ViewportService } from 'src/services/viewport.service';
+import { MainState } from 'src/store/main.store';
 
 @Component({
   selector: 'app-stats-detail',
@@ -9,25 +12,9 @@ import { ViewportService } from 'src/services/viewport.service';
 })
 export class StatsDetailComponent extends TemplatePage {
   private viewportService = inject(ViewportService);
-  public obtainEquippedItemBoxHeightDependingOnScreenSize() {
-    if (
-      this.viewportService.screenSize == 'xs' ||
-      this.viewportService.screenSize == 'sm' ||
-      this.viewportService.screenSize == 'md'
-    ) {
-      return 150;
-    }
-    return 200;
-  }
+  public store: Store = inject(Store);
+  public player$ = this.store
+    .select(MainState.getState)
+    .pipe(map((entry) => entry.player));
 
-  public obtainEquippedItemBoxWidthDependingOnScreenSize() {
-    if (
-      this.viewportService.screenSize == 'xs' ||
-      this.viewportService.screenSize == 'sm' ||
-      this.viewportService.screenSize == 'md'
-    ) {
-      return 100;
-    }
-    return 150;
-  }
 }

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Item } from 'src/modules/core/models/items.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 
@@ -31,5 +32,13 @@ export class PlayerService extends ApiBaseService {
 
   getNFTS() {
     return this.get('/get-nfts-items');
+  }
+
+  public unEquipItem(item: Item) {
+    return this.post('/unequip/' + item.id, {}) as Observable<Item>;
+  }
+
+  public equipItem(item: Item) {
+    return this.post('/equip/' + item.id, {}) as Observable<Item>;
   }
 }
