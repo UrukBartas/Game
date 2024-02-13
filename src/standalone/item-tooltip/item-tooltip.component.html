@@ -18,7 +18,13 @@
       <div class="description stat">
         <ul>
           <li *ngFor="let key of getLoopableStatsKeys()">
-            {{ '+ ' + item[key] + ' ' + parseKeyPascalCase(key) }}
+            {{
+              '+ ' +
+                item[key] +
+                getPercentage(key) +
+                ' ' +
+                parseKeyPascalCase(key)
+            }}
           </li>
           <li [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }">
             {{ item.itemData.itemType }}
