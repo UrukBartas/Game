@@ -12,6 +12,7 @@ import { MainState } from 'src/store/main.store';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
   declarations: [AppComponent, TemplatePage],
@@ -28,6 +29,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     }),
     ToastrModule.forRoot(),
     NgxSpinnerModule,
+    ModalModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

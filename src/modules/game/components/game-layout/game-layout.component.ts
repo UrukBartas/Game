@@ -1,14 +1,17 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
+import { disconnect } from '@wagmi/core';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs';
-import { PlayerService } from 'src/services/player.service';
-import { AuthService } from 'src/services/auth.service';
-import { WalletService } from 'src/services/wallet.service';
-import { MainState, MainStateModel } from 'src/store/main.store';
-import { ViewportService } from 'src/services/viewport.service';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { calculateXPForLevel } from 'src/modules/utils';
+import { AuthService } from 'src/services/auth.service';
+import { PlayerService } from 'src/services/player.service';
+import { ViewportService } from 'src/services/viewport.service';
+import { WalletService } from 'src/services/wallet.service';
+import { MainState, MainStateModel } from 'src/store/main.store';
+import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component';
 
 @Component({
   selector: 'app-game-layout',
@@ -39,6 +42,11 @@ export class GameLayoutComponent {
       displayText: 'Settings',
       icon: 'fa fa-gear',
     },
+    {
+      displayText: 'Logout',
+      icon: 'fa fa-person-running',
+      click: this.logout.bind(this),
+    },
   ];
 
   public isSidebarOpened = signal(true);
@@ -47,9 +55,32 @@ export class GameLayoutComponent {
   public accountService = inject(PlayerService);
   public walletService = inject(WalletService);
   public viewportService = inject(ViewportService);
+  public store = inject(Store);
+  public modalService = inject(BsModalService);
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);
+  }
+
+  private logout() {
+    const isPlayerDisconnected = !this.store.selectSnapshot(MainState.getState)
+      .player;
+
+    if (isPlayerDisconnected) {
+      return null;
+    }
+
+    const config: ModalOptions = {
+      initialState: {
+        title: 'Logout',
+        description: 'Are you sure you want to disconnect?',
+        accept: () => {
+          disconnect();
+          modalRef.hide();
+        },
+      },
+    };
+    const modalRef = this.modalService.show(ConfirmModalComponent, config);
   }
 
   getProgressBarData(player: PlayerModel) {
