@@ -22,10 +22,29 @@
           </div>
         </div>
         <div *ngIf="currentInventory$ | async as inventory" class="inventory">
-          <div class="description">
-            <p>Items</p>
-            <span>{{ inventory.length }}/{{ itemInventoryBoxes.length }}</span>
+          <div class="item-inventory-topbar">
+            <div class="description">
+              <p>Items</p>
+              <span
+                >{{ inventory.length }}/{{ itemInventoryBoxes.length }}</span
+              >
+            </div>
+
+            <div class="d-flex w-100 justify-content-end">
+              <i
+                (click)="changeSortOrder()"
+                class="bi bi-caret-down-fill text-secondary px-1 pointer"
+                [ngClass]="{
+                  'bi-caret-down-fill': !sortOrderUp,
+                  'bi-caret-up-fill': sortOrderUp
+                }"
+              ></i>
+              <span class="pointer" (click)="changeSortType()">{{
+                sortType
+              }}</span>
+            </div>
           </div>
+
           <div class="item-inventory">
             <ng-container>
               @for (

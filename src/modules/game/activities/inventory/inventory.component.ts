@@ -35,7 +35,11 @@ export class InventoryComponent extends TemplatePage {
     this.inventoryService.getInventoryStructure(20);
 
   public inventoryUpdated$ = new Subject();
-  public currentInventory$ = this.playerService.getItems();
+  public sortOrderUp = false;
+  public sortType: 'rarity' | 'level' = 'rarity';
+  public currentInventory$ = this.playerService
+    .getItems()
+    .pipe(map((items) => this.sortInventory(items)));
   public activeDragAndDropItemType: ItemType = null;
   public itemTypePublic = ItemType;
   private spinnerService = inject(NgxSpinnerService);
@@ -70,8 +74,26 @@ export class InventoryComponent extends TemplatePage {
     super();
 
     this.inventoryUpdated$.subscribe(() => {
-      this.currentInventory$ = this.playerService.getItems();
+      this.currentInventory$ = this.playerService
+        .getItems()
+        .pipe(map((items) => this.sortInventory(items)));
     });
+  }
+
+  private sortInventory(items: Item[]) {
+    const rarityOrder = ['COMMON', 'UNCOMMON', 'EPIC', 'LEGENDARY', 'MYTHIC'];
+    const sortedItems = items.sort((a, b) => {
+      let comparison = 0;
+      if (this.sortType === 'level') {
+        comparison = a.level - b.level;
+      } else if (this.sortType === 'rarity') {
+        comparison =
+          rarityOrder.indexOf(a.itemData.rarity) -
+          rarityOrder.indexOf(b.itemData.rarity);
+      }
+      return this.sortOrderUp ? comparison : -comparison;
+    });
+    return sortedItems;
   }
 
   public getEquippedItemBoxSize() {
@@ -131,5 +153,15 @@ export class InventoryComponent extends TemplatePage {
 
   onDragEnd(event: DragEvent) {
     this.activeDragAndDropItemType = null;
+  }
+
+  changeSortOrder() {
+    this.sortOrderUp = !this.sortOrderUp;
+    this.inventoryUpdated$.next(true);
+  }
+
+  changeSortType() {
+    this.sortType = this.sortType === 'rarity' ? 'level' : 'rarity';
+    this.inventoryUpdated$.next(true);
   }
 }
