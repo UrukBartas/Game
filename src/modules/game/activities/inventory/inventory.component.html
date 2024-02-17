@@ -15,13 +15,13 @@
           "
         ></ng-container>
       </div>
-      <div class="row justify-content-around row-item-character">
+      <div class="row justify-content-start row-item-character">
         <ng-container
           *ngTemplateOutlet="
             equippedSlot;
             context: {
-              item$: getWeapon$,
-              hovered: activeDragAndDropItemType == itemTypePublic.Weapon
+              item$: getGloves$,
+              hovered: activeDragAndDropItemType == itemTypePublic.Gloves
             }
           "
         ></ng-container>
@@ -32,6 +32,26 @@
             context: {
               item$: getChest$,
               hovered: activeDragAndDropItemType == itemTypePublic.Chest
+            }
+          "
+        ></ng-container>
+      </div>
+      <div class="row justify-content-center row-item-character">
+        <ng-container
+          *ngTemplateOutlet="
+            equippedSlot;
+            context: {
+              item$: getWeapon$,
+              hovered: activeDragAndDropItemType == itemTypePublic.Weapon
+            }
+          "
+        ></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            equippedSlot;
+            context: {
+              item$: getTrousers$,
+              hovered: activeDragAndDropItemType == itemTypePublic.Trousers
             }
           "
         ></ng-container>
@@ -46,26 +66,6 @@
         ></ng-container>
       </div>
       <div class="row justify-content-center row-item-character">
-        <ng-container
-          *ngTemplateOutlet="
-            equippedSlot;
-            context: {
-              item$: getTrousers$,
-              hovered: activeDragAndDropItemType == itemTypePublic.Trousers
-            }
-          "
-        ></ng-container>
-      </div>
-      <div class="row justify-content-start row-item-character">
-        <ng-container
-          *ngTemplateOutlet="
-            equippedSlot;
-            context: {
-              item$: getGloves$,
-              hovered: activeDragAndDropItemType == itemTypePublic.Gloves
-            }
-          "
-        ></ng-container>
         <ng-container
           *ngTemplateOutlet="
             equippedSlot;

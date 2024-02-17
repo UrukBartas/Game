@@ -89,11 +89,24 @@ nav a {
 
 .topbar {
   position: relative;
-  span {
+  .level {
     position: absolute;
     right: 0;
     white-space: nowrap;
   }
+
+  .uruks {
+    position: absolute;
+    left: 0;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    .navbar-uruks-icon {
+      max-width: 30px;
+      max-height: 30px;
+    }
+  }
+
   app-progress-bar {
     height: 15px;
     width: 60%;
