@@ -8,16 +8,25 @@
 
     <ul class="list-group flex-grow-1">
       @for (route of routesNavigation; track route.path) {
-        <li
-          class="list-group-item bg-primary"
-          [ngClass]="{ active: router.url == route.path }"
-          [routerLink]="[route.path]"
-        >
-          <i class="{{ route.icon }}"></i>
-          @if (!isSidebarOpened()) {
-            <span class="d-none d-sm-flex">{{ route.displayText }}</span>
-          }
-        </li>
+        @if (route.path) {
+          <li
+            class="list-group-item bg-primary"
+            [ngClass]="{ active: router.url == route.path }"
+            [routerLink]="[route.path]"
+          >
+            <i class="{{ route.icon }}"></i>
+            @if (!isSidebarOpened()) {
+              <span class="d-none d-sm-flex">{{ route.displayText }}</span>
+            }
+          </li>
+        } @else {
+          <li class="list-group-item bg-primary" (click)="route.click()">
+            <i class="{{ route.icon }}"></i>
+            @if (!isSidebarOpened()) {
+              <span class="d-none d-sm-flex">{{ route.displayText }}</span>
+            }
+          </li>
+        }
       }
     </ul>
     <hr />
@@ -43,7 +52,9 @@
     >
       <div class="uruks gap-2 px-4">
         <img class="navbar-uruks-icon pb-1" src="assets/goldenuruks.png" />
-        <span urText class="text-white">{{ player.uruks }}</span>
+        <span urText class="text-white">{{
+          player.uruks | number: '1.2-2'
+        }}</span>
       </div>
       <app-progress-bar
         class="px-2"

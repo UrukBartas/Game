@@ -17,13 +17,16 @@
           >Level {{ player.level }} → {{ fightResult.player.level }}</span
         >
         <span urText class="text-white text-center"
-          >Health {{ player.health }} → {{ fightResult.player.health }}</span
+          >Health {{ player.stats.health }} →
+          {{ fightResult.player.health }}</span
         >
         <span urText class="text-white text-center"
-          >Attack {{ player.damage }} → {{ fightResult.player.damage }}</span
+          >Attack {{ player.stats.damage }} →
+          {{ fightResult.player.damage }}</span
         >
         <span urText class="text-white text-center"
-          >Defense {{ player.armor }} → {{ fightResult.player.armor }}</span
+          >Defense {{ player.stats.armor }} →
+          {{ fightResult.player.armor }}</span
         >
       </div>
       <div

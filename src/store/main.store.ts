@@ -2,13 +2,13 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
-import { firstValueFrom, take } from 'rxjs';
-import { QuestModel } from 'src/modules/core/models/quest.model';
-import { PlayerModel } from 'src/modules/core/models/player.model';
-import { SessionModel } from 'src/modules/core/models/session.model';
-import { SessionService } from 'src/services/session.service';
-import { PlayerService } from 'src/services/player.service';
+import { take } from 'rxjs';
 import { FightModel } from 'src/modules/core/models/fight.model';
+import { PlayerModel } from 'src/modules/core/models/player.model';
+import { QuestModel } from 'src/modules/core/models/quest.model';
+import { SessionModel } from 'src/modules/core/models/session.model';
+import { PlayerService } from 'src/services/player.service';
+import { SessionService } from 'src/services/session.service';
 
 export class ConnectWallet {
   static readonly type = '[Wallet] Connect';
@@ -17,11 +17,6 @@ export class ConnectWallet {
 
 export class LoginPlayer {
   static readonly type = '[Player] Log in';
-}
-
-export class UpdatePlayer {
-  static readonly type = '[Player] Update';
-  constructor(public payload: PlayerModel) {}
 }
 
 export class SetPlayer {
@@ -154,16 +149,6 @@ export class MainState {
   ) {
     patchState({
       player: data.payload,
-    });
-  }
-
-  @Action(UpdatePlayer)
-  updatePlayer(
-    { patchState }: StateContext<MainStateModel>,
-    { payload }: UpdatePlayer
-  ) {
-    patchState({
-      player: payload,
     });
   }
 

@@ -5,6 +5,7 @@ import {
   FightModel,
   TurnActionEnum,
 } from 'src/modules/core/models/fight.model';
+import { QuestModel } from 'src/modules/core/models/quest.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 
 @Injectable({
@@ -18,5 +19,9 @@ export class FightService extends ApiBaseService {
 
   actions(action: TurnActionEnum): Observable<FightModel> {
     return this.get(`/action/${action}`);
+  }
+
+  surrender(): Observable<QuestModel> {
+    return this.get(`/surrender`);
   }
 }

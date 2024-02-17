@@ -1,105 +1,4 @@
 <div class="row h-100">
-  <div class="col-6 equipped h-100">
-    <div class="description">
-      <p urTitle>Character</p>
-    </div>
-    <div class="items-equipped-contained">
-      <div class="row justify-content-center row-item-character">
-        <ng-container
-          *ngTemplateOutlet="
-            equippedSlot;
-            context: {
-              item$: getHelmet$,
-              hovered: activeDragAndDropItemType == itemTypePublic.Helmet
-            }
-          "
-        ></ng-container>
-      </div>
-      <div class="row justify-content-start row-item-character">
-        <ng-container
-          *ngTemplateOutlet="
-            equippedSlot;
-            context: {
-              item$: getGloves$,
-              hovered: activeDragAndDropItemType == itemTypePublic.Gloves
-            }
-          "
-        ></ng-container>
-
-        <ng-container
-          *ngTemplateOutlet="
-            equippedSlot;
-            context: {
-              item$: getChest$,
-              hovered: activeDragAndDropItemType == itemTypePublic.Chest
-            }
-          "
-        ></ng-container>
-      </div>
-      <div class="row justify-content-center row-item-character">
-        <ng-container
-          *ngTemplateOutlet="
-            equippedSlot;
-            context: {
-              item$: getWeapon$,
-              hovered: activeDragAndDropItemType == itemTypePublic.Weapon
-            }
-          "
-        ></ng-container>
-        <ng-container
-          *ngTemplateOutlet="
-            equippedSlot;
-            context: {
-              item$: getTrousers$,
-              hovered: activeDragAndDropItemType == itemTypePublic.Trousers
-            }
-          "
-        ></ng-container>
-        <ng-container
-          *ngTemplateOutlet="
-            equippedSlot;
-            context: {
-              item$: getShield$,
-              hovered: activeDragAndDropItemType == itemTypePublic.Shield
-            }
-          "
-        ></ng-container>
-      </div>
-      <div class="row justify-content-center row-item-character">
-        <ng-container
-          *ngTemplateOutlet="
-            equippedSlot;
-            context: {
-              item$: getBoots$,
-              hovered: activeDragAndDropItemType == itemTypePublic.Boots
-            }
-          "
-        ></ng-container>
-      </div>
-      <div class="row justify-content-center row-item-character">
-        <ng-container
-          *ngTemplateOutlet="
-            equippedSlot;
-            context: {
-              item$: getCharm$,
-              isSmallItem: true,
-              hovered: activeDragAndDropItemType == itemTypePublic.Charm
-            }
-          "
-        ></ng-container>
-        <ng-container
-          *ngTemplateOutlet="
-            equippedSlot;
-            context: {
-              item$: getRing$,
-              isSmallItem: true,
-              hovered: activeDragAndDropItemType == itemTypePublic.Ring
-            }
-          "
-        ></ng-container>
-      </div>
-    </div>
-  </div>
   <div class="col-6 h-100">
     <carousel
       [isAnimated]="true"
@@ -122,13 +21,13 @@
             ></i>
           </div>
         </div>
-        <div class="inventory">
+        <div *ngIf="currentInventory$ | async as inventory" class="inventory">
           <div class="description">
             <p>Items</p>
-            <span>0/{{ itemInventoryBoxes.length }}</span>
+            <span>{{ inventory.length }}/{{ itemInventoryBoxes.length }}</span>
           </div>
           <div class="item-inventory">
-            <ng-container *ngIf="currentInventory$ | async as inventory">
+            <ng-container>
               @for (
                 box of itemInventoryBoxes;
                 track box.id;
@@ -193,6 +92,110 @@
       </slide>
     </carousel>
   </div>
+  <div class="col-6 equipped h-100">
+    <div class="description">
+      <p urTitle>Character</p>
+    </div>
+    <div class="position-relative d-flex justify-content-center">
+      <div class="items-equipped-bg"></div>
+      <div>
+        <div class="row justify-content-center row-item-character">
+          <ng-container
+            *ngTemplateOutlet="
+              equippedSlot;
+              context: {
+                item$: getHelmet$,
+                hovered: activeDragAndDropItemType == itemTypePublic.Helmet
+              }
+            "
+          ></ng-container>
+        </div>
+        <div class="row justify-content-start row-item-character">
+          <ng-container
+            *ngTemplateOutlet="
+              equippedSlot;
+              context: {
+                item$: getGloves$,
+                hovered: activeDragAndDropItemType == itemTypePublic.Gloves
+              }
+            "
+          ></ng-container>
+
+          <ng-container
+            *ngTemplateOutlet="
+              equippedSlot;
+              context: {
+                item$: getChest$,
+                hovered: activeDragAndDropItemType == itemTypePublic.Chest
+              }
+            "
+          ></ng-container>
+        </div>
+        <div class="row justify-content-center row-item-character">
+          <ng-container
+            *ngTemplateOutlet="
+              equippedSlot;
+              context: {
+                item$: getWeapon$,
+                hovered: activeDragAndDropItemType == itemTypePublic.Weapon
+              }
+            "
+          ></ng-container>
+          <ng-container
+            *ngTemplateOutlet="
+              equippedSlot;
+              context: {
+                item$: getTrousers$,
+                hovered: activeDragAndDropItemType == itemTypePublic.Trousers
+              }
+            "
+          ></ng-container>
+          <ng-container
+            *ngTemplateOutlet="
+              equippedSlot;
+              context: {
+                item$: getShield$,
+                hovered: activeDragAndDropItemType == itemTypePublic.Shield
+              }
+            "
+          ></ng-container>
+        </div>
+        <div class="row justify-content-center row-item-character">
+          <ng-container
+            *ngTemplateOutlet="
+              equippedSlot;
+              context: {
+                item$: getBoots$,
+                hovered: activeDragAndDropItemType == itemTypePublic.Boots
+              }
+            "
+          ></ng-container>
+        </div>
+        <div class="row justify-content-center row-item-character">
+          <ng-container
+            *ngTemplateOutlet="
+              equippedSlot;
+              context: {
+                item$: getCharm$,
+                isSmallItem: true,
+                hovered: activeDragAndDropItemType == itemTypePublic.Charm
+              }
+            "
+          ></ng-container>
+          <ng-container
+            *ngTemplateOutlet="
+              equippedSlot;
+              context: {
+                item$: getRing$,
+                isSmallItem: true,
+                hovered: activeDragAndDropItemType == itemTypePublic.Ring
+              }
+            "
+          ></ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <ng-template
@@ -205,14 +208,8 @@
     dndDropzone
     (dndDrop)="onDrop($event)"
     (appDoubleClick)="unEquipItem(item$)"
-    [height]="
-      obtainEquippedItemBoxHeightDependingOnScreenSize() /
-      (!!isSmallItem ? 2 : 1)
-    "
-    [width]="
-      obtainEquippedItemBoxWidthDependingOnScreenSize() /
-      (!!isSmallItem ? 2 : 1)
-    "
+    [height]="getEquippedItemBoxSize() / (!!isSmallItem ? 2 : 1)"
+    [width]="getEquippedItemBoxSize() / (!!isSmallItem ? 2 : 1)"
     [active]="hovered"
     [displayTooltip]="!!(item$ | async)"
     [image]="

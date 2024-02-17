@@ -7,7 +7,6 @@
   z-index: 100;
 
   .background-image {
-    background-image: url('/assets/backgrounds/field.png');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -30,6 +29,7 @@
     justify-content: center;
     gap: 3%;
     padding-bottom: 12%;
+    padding-top: 1%;
 
     .player-image,
     .enemy-image {
@@ -78,6 +78,7 @@
     position: absolute;
     top: 3%;
     left: 3%;
+    z-index: 100;
   }
 
   .finish-quest-screen {
