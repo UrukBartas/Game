@@ -25,10 +25,11 @@ export interface FighterStatusModel {
 }
 
 export interface FightResultModel {
-  exp: number;
-  loot: Item;
-  player: PlayerModel;
   newQuest: QuestModel;
+  exp?: number;
+  loot?: Item;
+  player?: PlayerModel;
+  uruks?: number;
 }
 
 export interface FighterTurnModel {

@@ -49,7 +49,12 @@
     </div>
 
     <span urText *ngIf="fightResult.exp" class="text-white pb-2"
-      >You gained {{ fightResult.exp }} experience</span
+      >You gained
+      <span class="text-secondary">{{ fightResult.exp }}</span> experience</span
+    >
+    <span urText *ngIf="fightResult.uruks" class="text-white pb-2"
+      >You gained
+      <span class="text-secondary">{{ fightResult.uruks }}</span> Uruks</span
     >
     <span urText class="text-white pb-2"
       >New quest unlocked:
