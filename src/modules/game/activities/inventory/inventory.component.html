@@ -39,8 +39,8 @@
                   [dndDisableIf]="!inventory[index]"
                   (dndStart)="onDragStart($event, inventory[index])"
                   (dndEnd)="onDragEnd($event)"
-                  [height]="40"
-                  [width]="40"
+                  [height]="45"
+                  [width]="45"
                   [displayTooltip]="!!inventory[index]"
                   (appDoubleClick)="
                     !!inventory[index] ? equipItem(inventory[index]) : false
