@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { map } from 'rxjs';
+import { filter, map, of, switchMap } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { ViewportService } from 'src/services/viewport.service';
-import { MainState } from 'src/store/main.store';
+import { PlayerModel } from 'src/modules/core/models/player.model';
+import { PlayerService } from 'src/services/player.service';
 
 @Component({
   selector: 'app-stats-detail',
@@ -11,10 +11,6 @@ import { MainState } from 'src/store/main.store';
   styleUrl: './stats-detail.component.scss',
 })
 export class StatsDetailComponent extends TemplatePage {
-  private viewportService = inject(ViewportService);
   public store: Store = inject(Store);
-  public player$ = this.store
-    .select(MainState.getState)
-    .pipe(map((entry) => entry.player));
-
+  @Input() player!: PlayerModel;
 }

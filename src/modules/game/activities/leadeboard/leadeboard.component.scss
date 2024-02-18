@@ -1,0 +1,64 @@
+@import '../../../../variables.scss';
+
+.list-leaderboard {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto;
+
+  &-item {
+    background-color: $third;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    &:hover {
+      background-color: $primary;
+      transition: 0.5s all;
+    }
+    &-left {
+      display: flex;
+      gap: 20px;
+    }
+    &-right {
+      display: flex;
+      flex-direction: column;
+      align-items: end;
+      justify-content: space-around;
+      .view-player {
+        font-size: 24px;
+      }
+    }
+    a {
+      color: $secondary;
+    }
+    &-left-number-ranking {
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $primary;
+      border-radius: 50%;
+    }
+    &-left-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+    &-badge {
+      border: 1px solid $secondary;
+      padding: 0px 10px;
+      border-radius: 10px;
+      width: fit-content;
+    }
+  }
+  .active {
+    background-color: $primary;
+  }
+}
+
+i {
+  color: white;
+}

@@ -100,7 +100,7 @@
       </div>
     </div>
   </div>
-  <div class="col-6 h-100">
+  <div class="col-6 h-100 right-panel">
     <carousel
       [isAnimated]="true"
       [(activeSlide)]="activeSlideIndex"
@@ -115,6 +115,7 @@
             <i
               class="bi bi-caret-left-fill"
               [ngClass]="{ 'disabled-icon': activeSlideIndex == 0 }"
+              (click)="activeSlideIndex = 0"
             ></i>
             <i
               class="bi bi-caret-right-fill"
@@ -178,7 +179,7 @@
       <slide>
         <div class="description desc-mover">
           <p urTitle>Stats</p>
-          <div class="mover">
+          <div class="mover" *ngIf="!isViewingPlayer">
             <i
               class="bi bi-caret-left-fill"
               (click)="activeSlideIndex = activeSlideIndex - 1"
@@ -189,7 +190,7 @@
             ></i>
           </div>
         </div>
-        <app-stats-detail></app-stats-detail>
+        <app-stats-detail [player]="actualPlayer$ | async"></app-stats-detail>
       </slide>
     </carousel>
   </div>

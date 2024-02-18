@@ -1,19 +1,25 @@
 import { Component, HostListener, inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
+import { getAccount } from '@wagmi/core';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { NgxSpinnerService } from 'ngx-spinner';
 import {
   BehaviorSubject,
   Observable,
   Subject,
+  distinctUntilChanged,
   filter,
   firstValueFrom,
+  interval,
   map,
+  of,
   switchMap,
   tap,
 } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Item, ItemType } from 'src/modules/core/models/items.model';
+import { PlayerModel } from 'src/modules/core/models/player.model';
 import { InventoryService } from 'src/services/inventory.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
@@ -29,6 +35,7 @@ export class InventoryComponent extends TemplatePage {
   private store = inject(Store);
   private playerService = inject(PlayerService);
   viewportService = inject(ViewportService);
+  private route = inject(ActivatedRoute);
   public activeSlideIndex = 0;
   public itemInventoryBoxes = this.inventoryService.getInventoryStructure();
   public consumablesInventoryBoxes =
@@ -40,16 +47,32 @@ export class InventoryComponent extends TemplatePage {
   public itemTypePublic = ItemType;
   private spinnerService = inject(NgxSpinnerService);
 
+  public getPlayer$ = of(true).pipe(
+    switchMap(() => {
+      if (this.isViewingPlayer) {
+        return this.playerService.getPlayerByAddress(
+          this.route.snapshot.paramMap.get('id')
+        );
+      } else {
+        return this.store
+          .select(MainState.getState)
+          .pipe(map((entry) => entry.player));
+      }
+    })
+  );
+  public actualPlayer$ = new BehaviorSubject<PlayerModel>(null);
+
   public toItem = (anything: unknown) => {
     return anything as Item;
   };
 
   public getItem$ = (itemType: ItemType) => {
-    return this.store.select(MainState.getState).pipe(
-      map((store) => store.player.items),
-      map((items) => {
+    return this.actualPlayer$.pipe(
+      filter((player) => !!player),
+      map((player) => player.items),
+      map((items: Array<Item>) => {
         const foundItem = items.find(
-          (item) => item.itemData.itemType == itemType
+          (item) => item.itemData.itemType == itemType && item.equipped
         );
         return foundItem;
       })
@@ -66,9 +89,15 @@ export class InventoryComponent extends TemplatePage {
   public getCharm$ = this.getItem$(ItemType.Charm);
   public getRing$ = this.getItem$(ItemType.Ring);
 
+  public isViewingPlayer =
+    this.route.snapshot.url[0].path.includes('view-player');
+
   constructor() {
     super();
-
+    if (this.isViewingPlayer) this.activeSlideIndex = 1;
+    this.getPlayer$.subscribe((player) => {
+      this.actualPlayer$.next(player);
+    });
     this.inventoryUpdated$.subscribe(() => {
       this.currentInventory$ = this.playerService.getItems();
     });

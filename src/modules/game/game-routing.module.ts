@@ -10,6 +10,7 @@ import { QuestPickerComponent } from './activities/quests/quest-picker/quest-pic
 import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
 import { QuestProgressComponent } from './activities/quests/quest-progress/quest-progress.component';
+import { LeadeboardComponent } from './activities/leadeboard/leadeboard.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,10 @@ const routes: Routes = [
       {
         path: 'inventory',
         canActivate: [AuthGuard],
+        component: InventoryComponent,
+      },
+      {
+        path: 'view-player/:id',
         component: InventoryComponent,
       },
       {
@@ -48,6 +53,11 @@ const routes: Routes = [
         path: 'export-import',
         canActivate: [AuthGuard],
         component: ExportImportNftComponent,
+      },
+      {
+        path: 'leaderboard',
+        canActivate: [AuthGuard],
+        component: LeadeboardComponent,
       },
     ],
   },
