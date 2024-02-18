@@ -11,13 +11,18 @@ export interface PlayerModel {
   image: string;
   level: number;
   experience: number;
+  items: Array<Item>;
+  sessions: SessionModel[];
+  activeQuests: QuestModel[];
+  uruks: number;
   health: number;
   energy: number;
   damage: number;
   armor: number;
   speed: number;
-  items: Array<Item>;
-  sessions: SessionModel[];
-  activeQuests: QuestModel[];
-  uruks: number;
+  penetration?: number;
+  dodge?: number;
+  crit?: number;
+  block?: number;
+  accuracy?: number;
 }
