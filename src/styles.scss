@@ -75,8 +75,8 @@ app-item-box {
   }
 }
 
-.remove-arrow-sliders{
-  .carousel-control{
+.remove-arrow-sliders {
+  .carousel-control {
     display: none !important;
   }
 }
@@ -138,4 +138,21 @@ ngb-tooltip-window {
   @include media-breakpoint-up(lg) {
     padding: 0px 90px;
   }
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.mover {
+  display: flex;
+  justify-content: end;
+  i {
+    @extend .pointer;
+  }
+}
+
+.disabled-icon {
+  cursor: disabled;
+  color: gray !important;
 }

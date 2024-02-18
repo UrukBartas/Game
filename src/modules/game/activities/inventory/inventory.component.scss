@@ -10,22 +10,9 @@
   flex-direction: column;
 }
 
-.desc-mover{
+.desc-mover {
   display: flex;
   align-items: baseline;
-}
-
-.mover {
-  display: flex;
-  justify-content: end;
-  i {
-    cursor: pointer;
-  }
-}
-
-.disabled-icon {
-  cursor: disabled;
-  color: gray;
 }
 
 .items-equipped-contained {

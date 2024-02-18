@@ -1,11 +1,11 @@
-<div class="stats-container pb-3">
-  <div class="row">
+<div class="stats-container pb-3" *ngIf="!!player">
+  <div class="row" *ngIf="!!player">
     <div class="col-12 col-xl-4">
       <div class="rounded">
         <app-item-box
-          [height]="200"
-          [width]="200"
-          [image]="(player$ | async).image"
+          [height]="150"
+          [width]="150"
+          [image]="player.image"
         ></app-item-box>
       </div>
     </div>
@@ -13,10 +13,10 @@
       <div class="description stat">
         <p>Player</p>
         <ul>
-          <li>Name: {{ (player$ | async).name }}</li>
-          <li>Email: {{ (player$ | async).email }}</li>
+          <li>Name: {{ player.name }}</li>
+          <li>Email: {{ player.email }}</li>
           <li>Class: ##########</li>
-          <li>Member since: {{ (player$ | async).createdAt | date }}</li>
+          <li>Member since: {{ player.createdAt | date }}</li>
         </ul>
       </div>
     </div>
@@ -26,8 +26,8 @@
       <div class="description stat">
         <p>Progress</p>
         <ul>
-          <li>Level: {{ (player$ | async).level }}</li>
-          <li>Experience: {{ (player$ | async).experience }}</li>
+          <li>Level: {{ player.level }}</li>
+          <li>Experience: {{ player.experience }}</li>
         </ul>
       </div>
     </div>
@@ -37,11 +37,11 @@
       <div class="description stat">
         <p>Combat</p>
         <ul>
-          <li>Life: {{ (player$ | async).health }}</li>
-          <li>Armor: {{ (player$ | async).armor }}</li>
-          <li>Energy: {{ (player$ | async).energy }}</li>
-          <li>Damage: {{ (player$ | async).damage }}</li>
-          <li>Speed: {{ (player$ | async).speed }}</li>
+          <li>Life: {{ player.health }}</li>
+          <li>Armor: {{ player.armor }}</li>
+          <li>Energy: {{ player.energy }}</li>
+          <li>Damage: {{ player.damage }}</li>
+          <li>Speed: {{ player.speed }}</li>
         </ul>
       </div>
     </div>
