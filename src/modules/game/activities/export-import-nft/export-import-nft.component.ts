@@ -106,7 +106,7 @@ export class ExportImportNftComponent extends TemplatePage {
     })
   );
 
-  public updatePlayer$ = interval(5000).pipe(
+  public refreshPlayer$ = interval(5000).pipe(
     tap(() => {
       this.store.dispatch(new RefreshPlayer());
     })
@@ -132,7 +132,7 @@ export class ExportImportNftComponent extends TemplatePage {
       .subscribe((data: any) => {
         this.erc20Balance$.next(data);
       });
-    this.updatePlayer$.pipe(takeUntilDestroyed()).subscribe();
+    this.refreshPlayer$.pipe(takeUntilDestroyed()).subscribe();
   }
 
   ngOnInit(): void {}

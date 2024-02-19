@@ -8,6 +8,8 @@ export interface FightModel {
   playerId: string;
   playerStats: PlayerStatsModel;
   enemyStats: PlayerStatsModel;
+  currentPlayerStats: PlayerStatsModel;
+  currentEnemyStats: PlayerStatsModel;
   turns: FightTurnModel[];
   result: FightResultModel;
 }

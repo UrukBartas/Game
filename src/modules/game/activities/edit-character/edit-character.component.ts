@@ -7,7 +7,7 @@ import { take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { LoginPlayer, MainState, UpdatePlayer } from 'src/store/main.store';
+import { LoginPlayer, MainState, RefreshPlayer } from 'src/store/main.store';
 
 @Component({
   selector: 'app-edit-character',
@@ -98,9 +98,9 @@ export class EditCharacterComponent extends TemplatePage {
     this.playerService
       .update(email, name, image)
       .pipe(take(1))
-      .subscribe((player) => {
+      .subscribe(() => {
         this.toastService.success('Settings updated');
-        this.store.dispatch(new UpdatePlayer(player));
+        this.store.dispatch(new RefreshPlayer());
       });
   }
 }

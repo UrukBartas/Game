@@ -45,7 +45,8 @@
               "dayjs/plugin/relativeTime.js",
               "dayjs/plugin/updateLocale.js",
               "buffer",
-              "qrcode"
+              "qrcode",
+              "party-js"
             ],
             "outputPath": "dist/game-app",
             "index": "src/index.html",
@@ -53,10 +54,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "src/styles.scss",
               "node_modules/ngx-toastr/toastr.css",
@@ -126,13 +124,8 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss"],
             "scripts": []
           }
         }
