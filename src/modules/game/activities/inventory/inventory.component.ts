@@ -74,7 +74,7 @@ export class InventoryComponent extends TemplatePage {
     });
   }
 
-  public obtainEquippedItemBoxHeightDependingOnScreenSize() {
+  public getEquippedItemBoxSize() {
     if (
       this.viewportService.screenSize == 'xs' ||
       this.viewportService.screenSize == 'sm' ||
@@ -83,17 +83,6 @@ export class InventoryComponent extends TemplatePage {
       return 70;
     }
     return 140;
-  }
-
-  public obtainEquippedItemBoxWidthDependingOnScreenSize() {
-    if (
-      this.viewportService.screenSize == 'xs' ||
-      this.viewportService.screenSize == 'sm' ||
-      this.viewportService.screenSize == 'md'
-    ) {
-      return 62.5;
-    }
-    return 125;
   }
 
   public async unEquipItem(item$: Observable<Item>) {

@@ -1,8 +1,12 @@
 <div *ngIf="fight" id="fight-container" class="container-fluid h-100">
-  <div class="background-image"></div>
+  <div
+    class="background-image"
+    [style.background-image]="'url(' + fightBackgroundImage + ')'"
+  ></div>
 
   <ng-container *ngIf="!victory && !defeat">
     <button
+      (click)="surrender()"
       [class]="
         'btn btn-primary surrender-button action-button shadow ' +
         getButtonSize()
@@ -14,6 +18,7 @@
       <div class="col-6 fighter-container">
         <img
           [src]="player.image"
+          [ngbTooltip]="playerStats"
           class="player-image shadow"
           [style.animation]="playerAnimation"
         />
@@ -44,7 +49,9 @@
           [style.height]="getHealthBarHeight() + 'px'"
         >
           <span class="progress-text position-absolute"
-            >{{ fight.playerStats.health }}/{{ player.health }}</span
+            >{{ fight.currentPlayerStats.health }}/{{
+              fight.playerStats.health
+            }}</span
           >
           <div
             class="progress-bar progress-bar-health progress-bar-animated shadow"
@@ -52,7 +59,9 @@
             aria-valuemin="0"
             aria-valuemax="100"
             [style.width]="
-              (fight.playerStats.health / player.health) * 100 + '%'
+              (fight.currentPlayerStats.health / fight.playerStats.health) *
+                100 +
+              '%'
             "
           ></div>
         </div>
@@ -62,21 +71,23 @@
           [style.height]="getHealthEnergyHeight() + 'px'"
         >
           <span class="progress-text position-absolute"
-            >{{ fight.playerStats.energy }}/{{ player.energy }}</span
+            >{{ fight.currentPlayerStats.energy }}/{{
+              fight.playerStats.energy
+            }}</span
           >
           <div
             class="progress-bar progress-bar-energy progress-bar-animated shadow"
             role="progressbar"
             aria-valuemin="0"
             aria-valuemax="100"
-            [style.width]="fight.playerStats.energy + '%'"
+            [style.width]="fight.currentPlayerStats.energy + '%'"
           ></div>
         </div>
         <div class="position-relative" style="width: 80%">
           <span
             urText
             class="position-absolute"
-            *ngIf="fight.playerStats.energy < 40"
+            *ngIf="fight.currentPlayerStats.energy < 40"
             [ngbTooltip]="exhausted"
             >😫</span
           >
@@ -104,6 +115,7 @@
         >
         <img
           [src]="quest.data.enemyImage"
+          [ngbTooltip]="enemyStats"
           class="enemy-image shadow"
           [style.animation]="enemyAnimation"
         />
@@ -115,14 +127,19 @@
           [style.height]="getHealthBarHeight() + 'px'"
         >
           <span class="progress-text position-absolute"
-            >{{ fight.enemyStats.health }}/{{ enemy.health }}</span
+            >{{ fight.currentEnemyStats.health }}/{{
+              fight.enemyStats.health
+            }}</span
           >
           <div
             class="progress-bar progress-bar-health progress-bar-animated shadow"
             role="progressbar"
             aria-valuemin="0"
             aria-valuemax="100"
-            [style.width]="(fight.enemyStats.health / enemy.health) * 100 + '%'"
+            [style.width]="
+              (fight.currentEnemyStats.health / fight.enemyStats.health) * 100 +
+              '%'
+            "
           ></div>
         </div>
 
@@ -131,14 +148,16 @@
           [style.height]="getHealthEnergyHeight() + 'px'"
         >
           <span class="progress-text position-absolute"
-            >{{ fight.enemyStats.energy }}/{{ enemy.energy }}</span
+            >{{ fight.currentEnemyStats.energy }}/{{
+              fight.enemyStats.energy
+            }}</span
           >
           <div
             class="progress-bar progress-bar-energy progress-bar-animated shadow"
             role="progressbar"
             aria-valuemin="0"
             aria-valuemax="100"
-            [style.width]="fight.enemyStats.energy + '%'"
+            [style.width]="fight.currentEnemyStats.energy + '%'"
           ></div>
         </div>
 
@@ -146,7 +165,7 @@
           <span
             urText
             class="position-absolute"
-            *ngIf="fight.enemyStats.energy < 40"
+            *ngIf="fight.currentEnemyStats.energy < 40"
             [ngbTooltip]="exhausted"
             >😫</span
           >
@@ -190,3 +209,93 @@
 </div>
 
 <ng-template #exhausted>Exhausted: Attacks do 50% less damage</ng-template>
+
+<ng-template #playerStats>
+  <ul class="p-0 m-0">
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Life:</label>
+      {{ fight.playerStats.health }}
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Armor:</label>
+      {{ fight.playerStats.armor }}
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Energy:</label>
+      {{ fight.playerStats.energy }}
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Damage:</label>
+      {{ fight.playerStats.damage }}
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Speed:</label>
+      {{ fight.playerStats.speed }}
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Penetration:</label>
+      {{ fight.playerStats.penetration }}
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Crit:</label>
+      {{ fight.playerStats.crit }}%
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Dodge:</label>
+      {{ fight.playerStats.dodge }}%
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Block:</label>
+      {{ fight.playerStats.block }}%
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Accuracy:</label>
+      {{ fight.playerStats.accuracy }}%
+    </li>
+  </ul>
+</ng-template>
+
+<ng-template #enemyStats>
+  <ul class="p-0 m-0">
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Life:</label>
+      {{ fight.enemyStats.health }}
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Armor:</label>
+      {{ fight.enemyStats.armor }}
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Energy:</label>
+      {{ fight.enemyStats.energy }}
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Damage:</label>
+      {{ fight.enemyStats.damage }}
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Speed:</label>
+      {{ fight.enemyStats.speed }}
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Penetration:</label>
+      {{ fight.enemyStats.penetration }}
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Crit:</label>
+      {{ fight.enemyStats.crit }}%
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Dodge:</label>
+      {{ fight.enemyStats.dodge }}%
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Block:</label>
+      {{ fight.enemyStats.block }}%
+    </li>
+    <li urText class="d-flex justify-content-between gap-2">
+      <label class="text-third">Accuracy:</label>
+      {{ fight.enemyStats.accuracy }}%
+    </li>
+  </ul>
+</ng-template>
