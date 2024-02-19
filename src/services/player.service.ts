@@ -41,4 +41,24 @@ export class PlayerService extends ApiBaseService {
   public equipItem(item: Item) {
     return this.post('/equip/' + item.id, {}) as Observable<Item>;
   }
+
+  public getLeaderboard(
+    sortBy: string,
+    sortType: 'asc' | 'desc',
+    page: number,
+    chunkSize: number,
+    nameOrWallet: string
+  ) {
+    return this.post('/get-leaderboard/', {
+      sortBy,
+      sortType,
+      page,
+      chunkSize,
+      nameOrWallet,
+    }) as Observable<PlayerModel[]>;
+  }
+
+  public getPlayerByAddress(address: string) {
+    return this.get('/by-address/' + address);
+  }
 }

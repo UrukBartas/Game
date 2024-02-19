@@ -158,3 +158,20 @@ ngb-tooltip-window {
     padding: 0px 90px;
   }
 }
+
+.pointer {
+  cursor: pointer;
+}
+
+.mover {
+  display: flex;
+  justify-content: end;
+  i {
+    @extend .pointer;
+  }
+}
+
+.disabled-icon {
+  cursor: disabled;
+  color: gray !important;
+}
