@@ -8,13 +8,13 @@
   overflow: auto;
 
   &-item {
-    background-color: $third;
+    background-color: $primary;
     padding: 10px;
     border-radius: 10px;
     display: flex;
     justify-content: space-between;
     &:hover {
-      background-color: $primary;
+      background-color: $third;
       transition: 0.5s all;
     }
     &-left {
@@ -59,7 +59,7 @@
     }
   }
   .active {
-    background-color: $primary;
+    background-color: $third;
   }
 }
 
