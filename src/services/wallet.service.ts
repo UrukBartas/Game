@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { getAccount, signMessage, watchAccount } from '@wagmi/core';
@@ -12,8 +12,6 @@ import {
   LoginPlayer,
   MainState,
   RefreshPlayer,
-  SetPlayer,
-  UpdatePlayer,
 } from 'src/store/main.store';
 import { shimmerTestnet } from 'viem/chains';
 import { AuthService } from './auth.service';

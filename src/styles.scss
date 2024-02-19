@@ -32,6 +32,15 @@ body {
   font-size: 60px;
 }
 
+.text-third {
+  color: $third !important;
+}
+
+.btn-transparent {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
 a {
   text-decoration: none;
   color: $secondary;
@@ -49,7 +58,7 @@ app-item-box {
   justify-content: space-between;
   p,
   span {
-    color: $secondary;
+    color: $third;
   }
 }
 
@@ -81,6 +90,16 @@ app-item-box {
   }
 }
 
+.modal-dialog {
+  position: absolute !important;
+  top: 43%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+  .modal-content {
+    background: transparent !important;
+  }
+}
+
 /* scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
@@ -91,7 +110,7 @@ app-item-box {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $third;
+  background: #343432;
   border-radius: 3px;
 }
 

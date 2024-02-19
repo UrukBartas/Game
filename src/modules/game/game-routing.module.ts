@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { InventoryComponent } from './activities/inventory/inventory.component';
-import { StatsDetailComponent } from './activities/stats-detail/stats-detail.component';
+import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { ConnectComponent } from './activities/connect/connect.component';
 import { AuthGuard } from 'src/guards/auth.guard';
