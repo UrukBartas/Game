@@ -4,7 +4,7 @@
       <app-item-box
         [height]="getPlayerImageSize()"
         [width]="getPlayerImageSize()"
-        [image]="(player$ | async).image"
+        [image]="player.image"
       ></app-item-box>
     </div>
     <div class="col-12">
@@ -12,18 +12,18 @@
         <p>Player</p>
         <ul>
           <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Name:</label> {{ (player$ | async).name }}
+            <label class="text-third">Name:</label> {{ player.name }}
           </li>
           <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Email:</label>
-            {{ (player$ | async).email }}
+            {{ player.email }}
           </li>
           <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Class:</label> ##########
           </li>
           <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Member since:</label>
-            {{ (player$ | async).createdAt | date }}
+            {{ player.createdAt | date }}
           </li>
         </ul>
       </div>
@@ -36,11 +36,11 @@
         <ul>
           <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Level:</label>
-            {{ (player$ | async).level }}
+            {{ player.level }}
           </li>
           <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Experience:</label>
-            {{ (player$ | async).experience }}
+            {{ player.experience }}
           </li>
         </ul>
       </div>
@@ -53,43 +53,43 @@
         <ul>
           <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Life:</label>
-            {{ (player$ | async).stats.health }}
+            {{ player.stats.health }}
           </li>
           <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Armor:</label>
-            {{ (player$ | async).stats.armor }}
+            {{ player.stats.armor }}
           </li>
           <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Energy:</label>
-            {{ (player$ | async).stats.energy }}
+            {{ player.stats.energy }}
           </li>
           <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Damage:</label>
-            {{ (player$ | async).stats.damage }}
+            {{ player.stats.damage }}
           </li>
           <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Speed:</label>
-            {{ (player$ | async).stats.speed }}
+            {{ player.stats.speed }}
           </li>
           <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Penetration:</label>
-            {{ (player$ | async).stats.penetration }}
+            {{ player.stats.penetration }}
           </li>
           <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Crit:</label>
-            {{ (player$ | async).stats.crit }}%
+            {{ player.stats.crit }}%
           </li>
           <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Dodge:</label>
-            {{ (player$ | async).stats.dodge }}%
+            {{ player.stats.dodge }}%
           </li>
           <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Block:</label>
-            {{ (player$ | async).stats.block }}%
+            {{ player.stats.block }}%
           </li>
           <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Accuracy:</label>
-            {{ (player$ | async).stats.accuracy }}%
+            {{ player.stats.accuracy }}%
           </li>
         </ul>
       </div>

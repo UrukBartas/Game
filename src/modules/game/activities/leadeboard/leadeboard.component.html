@@ -1,0 +1,71 @@
+<div class="description">
+  <p urTitle>Hall of Uruks</p>
+</div>
+<div class="row py-3">
+  <div class="form-group col" [formGroup]="formGroup">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Search by username of address"
+      formControlName="userOrWallet"
+    />
+  </div>
+  <div class="mover col">
+    <i
+      class="bi bi-caret-left-fill"
+      [ngClass]="{ 'disabled-icon': activePage() == 0 }"
+      (click)="activePage() == 0 ? null : prevPage()"
+    ></i>
+    <i
+      class="bi bi-caret-right-fill"
+      [ngClass]="{
+        'disabled-icon': lastPageSize < chunkSize()
+      }"
+      (click)="lastPageSize < chunkSize() ? null : nextPage()"
+    ></i>
+  </div>
+</div>
+<div class="list-leaderboard">
+  @for (
+    player of getLeaderboard$() | async;
+    track player.id;
+    let index = $index
+  ) {
+    <div
+      class="list-leaderboard-item text-white"
+      [ngClass]="{ active: player.id == actualAddress }"
+    >
+      <div class="list-leaderboard-item-left">
+        @if (index >= 0 && index <= 2) {
+          <img
+            [src]="getImgBasedOnRanking(index)"
+            class="list-leaderboard-item-left-image-ranking"
+          />
+        } @else {
+          <div class="list-leaderboard-item-left-number-ranking">
+            {{ index + 1 }}
+          </div>
+        }
+        <div class="list-leaderboard-item-left-container">
+          <div class="list-leaderboard-item-name-container">
+            <a [routerLink]="['/view-player', player.id]">{{
+              truncateAddress(player.id)
+            }}</a>
+            ( {{ player.name }} )
+          </div>
+
+          <span class="list-leaderboard-item-badge"
+            >Level {{ player.level }}</span
+          >
+        </div>
+      </div>
+      <div class="list-leaderboard-item-right">
+        {{ player.experience + ' exp' }}
+        <i
+          class="bi bi-eye-fill pointer view-player"
+          [routerLink]="['/view-player', player.id]"
+        ></i>
+      </div>
+    </div>
+  }
+</div>

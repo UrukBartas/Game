@@ -24,6 +24,7 @@ import { QuestResultComponent } from './activities/quests/quest-result/quest-res
 import { DoubleClickDirective } from '../core/directives/double-click.directive';
 import { ToIpfsImageFromCidPipe } from '../core/pipes/to-ipfs-image-from-cid.pipe';
 import { DndModule } from 'ngx-drag-drop';
+import { LeadeboardComponent } from './activities/leadeboard/leadeboard.component';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 
 const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
@@ -42,7 +43,7 @@ const components = [
 ];
 
 @NgModule({
-  declarations: [...components, ...directives],
+  declarations: [...components, ...directives, LeadeboardComponent],
   imports: [
     CommonModule,
     GameRoutingModule,

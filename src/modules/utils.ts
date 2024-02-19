@@ -54,3 +54,12 @@ export function animateElement(element, animation, callback?) {
     node.addEventListener('animationend', handleAnimationEnd, { once: true });
   });
 }
+
+export function truncateEthereumAddress(address: string, length: number = 6): string {
+  if (!address.match(/^0x[a-fA-F0-9]{40}$/)) {
+      throw new Error('La dirección proporcionada no tiene el formato válido de una dirección de Ethereum.');
+  }
+
+  const truncated = address.slice(0, length + 2) + '...' + address.slice(-length);
+  return truncated;
+}
