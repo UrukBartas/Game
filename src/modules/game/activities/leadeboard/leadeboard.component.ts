@@ -15,7 +15,7 @@ import { PlayerService } from 'src/services/player.service';
 export class LeadeboardComponent extends TemplatePage {
   playerService = inject(PlayerService);
   fb = inject(FormBuilder);
-  public sortBy = signal<string>('experience');
+  public sortBy = signal<string>('level');
   public sortType = signal<'asc' | 'desc'>('desc');
   public activePage = signal<number>(0);
   public chunkSize = signal<number>(25);
