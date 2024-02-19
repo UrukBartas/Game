@@ -47,9 +47,13 @@
           </div>
         }
         <div class="list-leaderboard-item-left-container">
-          <a [routerLink]="['/view-player', player.id]">{{
-            truncateAddress(player.id)
-          }}</a>
+          <div class="list-leaderboard-item-name-container">
+            <a [routerLink]="['/view-player', player.id]">{{
+              truncateAddress(player.id)
+            }}</a>
+            ( {{ player.name }} )
+          </div>
+
           <span class="list-leaderboard-item-badge"
             >Level {{ player.level }}</span
           >

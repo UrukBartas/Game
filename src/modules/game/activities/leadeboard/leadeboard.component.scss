@@ -47,6 +47,10 @@
       flex-direction: column;
       justify-content: space-around;
     }
+    &-name-container{
+      display: flex;
+      gap: 5px;
+    }
     &-badge {
       border: 1px solid $secondary;
       padding: 0px 10px;
