@@ -53,6 +53,10 @@ app-item-box {
   width: fit-content !important;
 }
 
+ngb-tooltip-window {
+  position: fixed !important;
+}
+
 .description {
   display: flex;
   justify-content: space-between;

@@ -1,17 +1,26 @@
 <div class="item-tooltip-wrapper">
-  <div class="description">
-    <p class="h6" [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }">
-      {{ item.itemData.name }}
+  <div class="d-flex flex-column align-items-start gap-1">
+    <div class="description w-100">
+      <p
+        class="h6 m-0"
+        [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }"
+      >
+        {{ item.itemData.name }}
+      </p>
+      <p urTitle class="text-white m-0">Level {{ item.level }}</p>
+    </div>
+    <p *ngIf="item.price" class="h6 d-flex align-items-center gap-1">
+      <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+      <span urText class="text-white">{{ item.price | number: '1.2-2' }}</span>
     </p>
-    <p urTitle class="text-white">Level {{ item.level }}</p>
   </div>
   <div class="row">
     <div class="col-6">
       <img
         [ngSrc]="item.itemData?.image | toIpfsImageFromCid"
         priority
-        [width]="200"
-        [height]="200"
+        [width]="getItemBoxSize()"
+        [height]="getItemBoxSize()"
       />
     </div>
     <div class="col-6">

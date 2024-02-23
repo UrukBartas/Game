@@ -1,0 +1,58 @@
+<div id="shop">
+  <div class="shop-bg"></div>
+  <div
+    class="col-12 position-relative d-flex justify-content-center align-items-end h-100 pb-lg-4 pb-sm-2"
+  >
+    <div class="shop-section-bg"></div>
+    <div *ngIf="showDialog" class="shop-tender-dialog">
+      <span urTitle>{{ dialog }} </span>
+    </div>
+    <div class="item-rack-bg"></div>
+    <div *ngIf="getSelectedItems().length > 0" class="shop-cart">
+      <div class="d-flex flex-column gap-2 mb-2 item-list">
+        @for (item of getSelectedItems(); track $index) {
+          <div urText class="text-white">
+            {{ item.name ? item.name : item.itemData.name }}
+          </div>
+        }
+      </div>
+      <button (click)="buyItems()" class="btn btn-primary w-100">
+        <div
+          class="d-flex align-items-center justify-content-center w-100 gap-1"
+        >
+          <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+          <span urText class="text-white">{{
+            getSelectedItemsPrice() | number: '1.2-2'
+          }}</span>
+        </div>
+      </button>
+    </div>
+    <div class="row item-row">
+      @for (item of items; track $index) {
+        <div class="col-sm d-flex justify-content-center position-relative">
+          <app-item-box
+            (click)="selectItem(item)"
+            [ngbTooltip]="item.itemData ? itemTooltip : consumableTooltip"
+            [tooltipContext]="{ item: item }"
+            [image]="
+              item.itemData
+                ? (item.itemData.image | toIpfsImageFromCid)
+                : item.image
+            "
+          ></app-item-box>
+          <div class="check-icon" *ngIf="item.selected">
+            <i class="fa fa-check-circle"></i>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<ng-template #itemTooltip let-item="item">
+  <app-item-tooltip [item]="item"></app-item-tooltip>
+</ng-template>
+
+<ng-template #consumableTooltip let-item="item">
+  <app-consumable-tooltip [item]="item"></app-consumable-tooltip>
+</ng-template>
