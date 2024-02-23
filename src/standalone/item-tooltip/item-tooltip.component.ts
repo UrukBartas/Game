@@ -1,8 +1,9 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { Item } from 'src/modules/core/models/items.model';
 import { ToIpfsImageFromCidPipe } from 'src/modules/core/pipes/to-ipfs-image-from-cid.pipe';
 import { getRarityColor, getRarityText } from 'src/modules/utils';
+import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
   selector: 'app-item-tooltip',
@@ -16,6 +17,7 @@ export class ItemTooltipComponent {
 
   public getRarityColor = getRarityColor;
   public getRarityText = getRarityText;
+  public viewportService = inject(ViewportService);
 
   public getLoopableStatsKeys(): Array<string> {
     if (!this.item) return [];
@@ -30,6 +32,8 @@ export class ItemTooltipComponent {
           'itemData',
           'equipped',
           'enabled',
+          'price',
+          'selected',
         ].includes(entry) &&
         !!this.item[entry] &&
         this.item[entry] > 0
@@ -42,5 +46,16 @@ export class ItemTooltipComponent {
 
   public getPercentage(key: string) {
     return ['dodge', 'accuracy', 'block', 'crit'].includes(key) ? '%' : '';
+  }
+
+  public getItemBoxSize() {
+    if (
+      this.viewportService.screenSize == 'xs' ||
+      this.viewportService.screenSize == 'sm' ||
+      this.viewportService.screenSize == 'md'
+    ) {
+      return 150;
+    }
+    return 200;
   }
 }

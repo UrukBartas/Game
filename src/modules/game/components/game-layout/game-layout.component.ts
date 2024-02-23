@@ -33,6 +33,11 @@ export class GameLayoutComponent {
       icon: 'fa fa-map',
     },
     {
+      path: '/shop',
+      displayText: 'Shop',
+      icon: 'fa fa-shop',
+    },
+    {
       path: '/export-import',
       displayText: 'Import/Export',
       icon: 'fa fa-plug',
@@ -44,7 +49,7 @@ export class GameLayoutComponent {
     },
     {
       displayText: 'Logout',
-      icon: 'fa fa-person-running',
+      icon: 'fa fa-right-from-bracket',
       click: this.logout.bind(this),
     },
   ];

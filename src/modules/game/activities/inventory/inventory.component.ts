@@ -13,7 +13,7 @@ import {
   tap,
 } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { Item, ItemType } from 'src/modules/core/models/items.model';
+import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { InventoryService } from 'src/services/inventory.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
@@ -60,15 +60,15 @@ export class InventoryComponent extends TemplatePage {
     );
   };
 
-  public getHelmet$ = this.getItem$(ItemType.Helmet);
-  public getShield$ = this.getItem$(ItemType.Shield);
-  public getChest$ = this.getItem$(ItemType.Chest);
-  public getWeapon$ = this.getItem$(ItemType.Weapon);
-  public getTrousers$ = this.getItem$(ItemType.Trousers);
-  public getBoots$ = this.getItem$(ItemType.Boots);
-  public getGloves$ = this.getItem$(ItemType.Gloves);
-  public getCharm$ = this.getItem$(ItemType.Charm);
-  public getRing$ = this.getItem$(ItemType.Ring);
+  public getHelmet$ = this.getItem$(ItemType.HELMET);
+  public getShield$ = this.getItem$(ItemType.SHIELD);
+  public getChest$ = this.getItem$(ItemType.CHEST);
+  public getWeapon$ = this.getItem$(ItemType.WEAPON);
+  public getTrousers$ = this.getItem$(ItemType.TROUSERS);
+  public getBoots$ = this.getItem$(ItemType.BOOTS);
+  public getGloves$ = this.getItem$(ItemType.GLOVES);
+  public getCharm$ = this.getItem$(ItemType.CHARM);
+  public getRing$ = this.getItem$(ItemType.RING);
 
   constructor() {
     super();
@@ -81,7 +81,13 @@ export class InventoryComponent extends TemplatePage {
   }
 
   private sortInventory(items: Item[]) {
-    const rarityOrder = ['COMMON', 'UNCOMMON', 'EPIC', 'LEGENDARY', 'MYTHIC'];
+    const rarityOrder = [
+      Rarity.COMMON,
+      Rarity.UNCOMMON,
+      Rarity.EPIC,
+      Rarity.LEGENDARY,
+      Rarity.MYTHIC,
+    ];
     const sortedItems = items.sort((a, b) => {
       let comparison = 0;
       if (this.sortType === 'level') {

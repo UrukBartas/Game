@@ -6,10 +6,9 @@ import { StatsDetailComponent } from './components/stats-detail/stats-detail.com
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { ConnectComponent } from './activities/connect/connect.component';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { QuestPickerComponent } from './activities/quests/quest-picker/quest-picker.component';
 import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
-import { QuestProgressComponent } from './activities/quests/quest-progress/quest-progress.component';
+import { ShopComponent } from './activities/shop/shop.component';
 
 const routes: Routes = [
   {
@@ -34,6 +33,11 @@ const routes: Routes = [
         path: 'quests',
         canActivate: [AuthGuard],
         component: QuestRouterComponent,
+      },
+      {
+        path: 'shop',
+        canActivate: [AuthGuard],
+        component: ShopComponent,
       },
       {
         path: 'edit',

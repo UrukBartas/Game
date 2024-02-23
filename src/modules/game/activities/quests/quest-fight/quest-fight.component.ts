@@ -79,11 +79,11 @@ export class QuestFightComponent extends TemplatePage {
       default:
         return '/assets/backgrounds/field.png';
       case Rarity.UNCOMMON:
-        return '/assets/backgrounds/arena.png';
+        return '/assets/backgrounds/city.png';
       case Rarity.EPIC:
         return '/assets/backgrounds/arena.png';
       case Rarity.LEGENDARY:
-        return '/assets/backgrounds/arena.png';
+        return '/assets/backgrounds/palace.png';
       case Rarity.MYTHIC:
         return '/assets/backgrounds/arena.png';
     }

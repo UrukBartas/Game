@@ -25,6 +25,8 @@ import { DoubleClickDirective } from '../core/directives/double-click.directive'
 import { ToIpfsImageFromCidPipe } from '../core/pipes/to-ipfs-image-from-cid.pipe';
 import { DndModule } from 'ngx-drag-drop';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
+import { ShopComponent } from './activities/shop/shop.component';
+import { ConsumableTooltipComponent } from 'src/standalone/consumable-tooltip/consumable-tooltip.component';
 
 const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
 const components = [
@@ -39,6 +41,7 @@ const components = [
   QuestFightComponent,
   QuestResultComponent,
   ConfirmModalComponent,
+  ShopComponent,
 ];
 
 @NgModule({
@@ -53,6 +56,7 @@ const components = [
     ProgressBarComponent,
     CarouselModule,
     ItemTooltipComponent,
+    ConsumableTooltipComponent,
     DoubleClickDirective,
     ToIpfsImageFromCidPipe,
     DndModule,
