@@ -31,7 +31,6 @@ export class WalletService {
   public store = inject(Store);
 
   initWalletConnect() {
-    console.log(process.env)
     const projectId = process.env['WALLET_CONNECT_PROJECT_ID'] ?? '';
     const metadata = {
       name: 'Uruk Bartas',
