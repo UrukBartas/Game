@@ -1,4 +1,12 @@
-import { Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+  inject,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import { Store } from '@ngxs/store';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { FightResultModel } from 'src/modules/core/models/fight.model';
@@ -8,6 +16,8 @@ import { MainState, RefreshPlayer, SetQuests } from 'src/store/main.store';
 import * as party from 'party-js';
 import { QuestService } from 'src/services/quest.service';
 import { take } from 'rxjs';
+import { QuestRouterModel } from '../models/quest-router.model';
+import { QuestStatusEnum } from '../enums/quest-status.enum';
 
 @Component({
   selector: 'app-quest-result',
@@ -21,9 +31,11 @@ export class QuestResultComponent extends TemplatePage {
   viewportService = inject(ViewportService);
   questService = inject(QuestService);
   victory = false;
+  questStatusEnum = QuestStatusEnum;
   player = this.store.selectSnapshot(MainState.getState).player;
   getRarityColor = getRarityColor;
 
+  @Output() questStatusChange = new EventEmitter<QuestRouterModel>();
   @Input() set result(fightResult: FightResultModel) {
     if (fightResult) {
       this.fightResult = fightResult;

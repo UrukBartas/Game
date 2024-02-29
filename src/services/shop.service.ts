@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 
 @Injectable({
@@ -11,11 +12,26 @@ export class ShopService extends ApiBaseService {
     this.controllerPrefix = '/shop';
   }
 
-  public freeRoll() {
-    return this.get('/free-roll');
+  public buyItems(itemIds: number[]) {
+    return this.post('/buy', { itemIds });
   }
 
-  public paidRoll() {
-    return this.get('/paid-roll');
+  public dailyRoll() {
+    return this.get('/daily-roll');
+  }
+
+  public premiumRoll() {
+    return this.get('/premium-roll');
+  }
+
+  public getPremiumRollData(): Observable<{
+    price: number;
+    rollNumber: number;
+  }> {
+    return this.get('/premium-roll-data');
+  }
+
+  public getDailyRollData(): Observable<Date> {
+    return this.get('/daily-roll-data');
   }
 }

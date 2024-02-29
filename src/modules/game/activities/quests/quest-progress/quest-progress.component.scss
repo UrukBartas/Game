@@ -10,6 +10,14 @@
     border-radius: 5px;
   }
 
+  .button-rainbow {
+    position: absolute;
+    bottom: 0;
+    transform: translate(-50%, -50%);
+    padding: 0.6em 2em;
+    left: 50%;
+  }
+
   .progress-bar-container {
     position: absolute;
     bottom: 3%;

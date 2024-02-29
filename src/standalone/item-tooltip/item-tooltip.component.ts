@@ -34,6 +34,7 @@ export class ItemTooltipComponent {
           'enabled',
           'price',
           'selected',
+          'shopItemId',
         ].includes(entry) &&
         !!this.item[entry] &&
         this.item[entry] > 0
