@@ -3,6 +3,7 @@
 #shop {
   position: relative;
   height: 100%;
+  overflow: hidden;
 
   .shop-bg {
     position: absolute;
@@ -42,6 +43,14 @@
       overflow: auto;
       height: calc(100% - 40px);
     }
+  }
+
+  .roll-buttons {
+    position: absolute;
+    bottom: 10.2vw;
+    right: 10px;
+    display: flex;
+    gap: 5px;
   }
 
   .check-icon {
@@ -96,6 +105,48 @@
         width: 8vw !important;
         height: 8vw !important;
       }
+    }
+  }
+
+  .show-items {
+    transform: rotateX(90deg);
+    transform-origin: center bottom;
+    animation: show-items-animation 0.6s forwards;
+
+    @for $i from 1 through 9 {
+      &:nth-child(#{$i}) {
+        animation-delay: ($i - 1) * 0.2s;
+      }
+    }
+  }
+
+  .hide-items {
+    transform: rotateX(0deg);
+    transform-origin: center bottom;
+    animation: hide-items-animation 0.3s forwards;
+
+    @for $i from 1 through 9 {
+      &:nth-child(#{$i}) {
+        animation-delay: ($i - 1) * 0.1s;
+      }
+    }
+  }
+
+  @keyframes hide-items-animation {
+    from {
+      transform: rotateX(0deg);
+    }
+    to {
+      transform: rotateX(90deg);
+    }
+  }
+
+  @keyframes show-items-animation {
+    from {
+      transform: rotateX(90deg);
+    }
+    to {
+      transform: rotateX(0deg);
     }
   }
 }

@@ -8,6 +8,18 @@
       <span urTitle>{{ dialog }} </span>
     </div>
     <div class="item-rack-bg"></div>
+    <div class="roll-buttons">
+      <app-daily-roll-button
+        (buttonClicked)="dailyRoll()"
+      ></app-daily-roll-button>
+      <button
+        (click)="premiumRoll()"
+        [class]="'btn btn-primary button-rainbow ' + getButtonSize()"
+      >
+        <i class="fa fa-crown pl-1 pb-1"></i>
+        Premium roll
+      </button>
+    </div>
     <div *ngIf="getSelectedItems().length > 0" class="shop-cart">
       <div class="d-flex flex-column gap-2 mb-2 item-list">
         @for (item of getSelectedItems(); track $index) {
@@ -29,7 +41,12 @@
     </div>
     <div class="row item-row">
       @for (item of items; track $index) {
-        <div class="col-sm d-flex justify-content-center position-relative">
+        <div
+          [class]="
+            'item-container col-sm d-flex justify-content-center position-relative ' +
+            rollAnimation
+          "
+        >
           <app-item-box
             (click)="selectItem(item)"
             [ngbTooltip]="item.itemData ? itemTooltip : consumableTooltip"

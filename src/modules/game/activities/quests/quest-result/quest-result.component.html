@@ -18,15 +18,15 @@
         >
         <span urText class="text-white text-center"
           >Health {{ player.stats.health }} →
-          {{ fightResult.player.stats.health }}</span
+          {{ fightResult.player.health }}</span
         >
         <span urText class="text-white text-center"
           >Attack {{ player.stats.damage }} →
-          {{ fightResult.player.stats.damage }}</span
+          {{ fightResult.player.damage }}</span
         >
         <span urText class="text-white text-center"
           >Defense {{ player.stats.armor }} →
-          {{ fightResult.player.stats.armor }}</span
+          {{ fightResult.player.armor }}</span
         >
       </div>
       <div
@@ -66,7 +66,13 @@
         >{{ fightResult.newQuest.data.name }}</span
       ></span
     >
-
-    >
+    <div class="pb-2">
+      <button
+        (click)="questStatusChange.emit({ status: questStatusEnum.PICKING })"
+        class="btn btn-primary"
+      >
+        <i class="fa fa-arrow-left px-2 pb-1"></i>Quests
+      </button>
+    </div>
   </ng-container>
 </div>
