@@ -72,7 +72,6 @@ export class WalletService {
   }
 
   public logIn() {
-    if (!this.checkIfChainIsAllow()) return;
     this.authService
       .getAuth()
       .pipe(take(1))
