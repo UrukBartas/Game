@@ -89,7 +89,10 @@
             ></i>
           </div>
         </div>
-        <app-stats-detail [player]="actualPlayer$ | async"></app-stats-detail>
+        <app-stats-detail
+          [player]="actualPlayer$ | async"
+          [isViewingAnotherPlayer]="isViewingPlayer"
+        ></app-stats-detail>
       </slide>
     </carousel>
   </div>
