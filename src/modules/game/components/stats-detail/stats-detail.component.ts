@@ -12,6 +12,7 @@ import { ViewportService } from 'src/services/viewport.service';
 export class StatsDetailComponent extends TemplatePage {
   public store: Store = inject(Store);
   @Input() player!: PlayerModel;
+  @Input() isViewingAnotherPlayer = false;
   private viewportService = inject(ViewportService);
 
   public getPlayerImageSize() {
