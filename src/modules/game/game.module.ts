@@ -18,6 +18,7 @@ import { ToIpfsImageFromCidPipe } from '../core/pipes/to-ipfs-image-from-cid.pip
 import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { InventoryComponent } from './activities/inventory/inventory.component';
+import { ConsumableModalComponent } from './activities/quests/quest-fight/components/consumable-modal.component';
 import { QuestFightComponent } from './activities/quests/quest-fight/quest-fight.component';
 import { QuestPickerComponent } from './activities/quests/quest-picker/quest-picker.component';
 import { QuestProgressComponent } from './activities/quests/quest-progress/quest-progress.component';
@@ -44,6 +45,7 @@ const components = [
   ConfirmModalComponent,
   ShopComponent,
   DailyRollButtonComponent,
+  ConsumableModalComponent
 ];
 
 @NgModule({

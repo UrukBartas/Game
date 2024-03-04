@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -9,10 +9,12 @@ export class ViewportService {
     this.getViewport();
   public screenSizeChanges: Subject<string> = new Subject();
 
-  constructor() {
-    window.addEventListener('resize', (event) => {
-      this.screenSize = this.getViewport();
-      this.screenSizeChanges.next(this.screenSize);
+  constructor(private zone: NgZone) {
+    window.addEventListener('resize', () => {
+      this.zone.run(() => {
+        this.screenSize = this.getViewport();
+        this.screenSizeChanges.next(this.screenSize);
+      });
     });
   }
 

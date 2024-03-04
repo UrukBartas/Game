@@ -19,9 +19,6 @@
             {{ (player$ | async).email }}
           </li>
           <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Class:</label> ##########
-          </li>
-          <li class="d-flex justify-content-between gap-2">
             <label class="text-third">Member since:</label>
             {{ (player$ | async).createdAt | date }}
           </li>

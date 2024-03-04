@@ -26,6 +26,7 @@ import { QuestStatusEnum } from '../enums/quest-status.enum';
 })
 export class QuestResultComponent extends TemplatePage {
   @ViewChild('lootItem', { read: ElementRef }) loot: ElementRef;
+  @ViewChild('levelUp', { read: ElementRef }) levelUp: ElementRef;
   fightResult: FightResultModel;
   store = inject(Store);
   viewportService = inject(ViewportService);
@@ -45,6 +46,13 @@ export class QuestResultComponent extends TemplatePage {
         if (fightResult.loot) {
           setTimeout(() => {
             party.confetti(this.loot.nativeElement, {
+              count: party.variation.range(20, 40),
+            });
+          });
+        }
+        if (fightResult.player?.level > this.player.level) {
+          setTimeout(() => {
+            party.sparkles(this.levelUp.nativeElement, {
               count: party.variation.range(20, 40),
             });
           });

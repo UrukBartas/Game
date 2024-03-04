@@ -109,7 +109,7 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
         Number.parseFloat(total) + Number.parseFloat(currentItem.price),
       0
     );
-    return this.decimalPipe.transform(totalPrice, '1.2-2');
+    return this.decimalPipe.transform(totalPrice, '1.0-2');
   }
 
   buyItems() {
@@ -174,14 +174,14 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
         const config: ModalOptions = {
           initialState: {
             title: 'Premium Roll',
-            description: `With each roll you get rarer items! \nNumber of rolls: ${rollData.rollNumber} \nNext item pool is: ${this.getItemsPoolByRolls(rollData.rollNumber)} \nCurrent roll price is at: ${rollData.price} \n\n Do you want to roll?`,
+            description: `With each roll your chances for rarer items improve! \nNumber of rolls: ${rollData.rollNumber} \nNext item pool is: ${this.getItemsPoolByRolls(rollData.rollNumber)} \nCurrent roll price is at: ${rollData.price} \n\n Do you want to roll?`,
             accept: () => {
               this.rollAnimation = 'hide-items';
               this.shopService
                 .premiumRoll()
                 .pipe(take(1))
                 .subscribe(() => {
-                  this.triggerDialog("Let's see what you've got!", 1000);
+                  this.triggerDialog("Good luck, let's roll!", 1000);
                   setTimeout(() => {
                     this.loadItems();
                   }, 1000);

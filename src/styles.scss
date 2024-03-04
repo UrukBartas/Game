@@ -99,8 +99,13 @@ ngb-tooltip-window {
   top: 43%;
   left: 50%;
   transform: translate(-50%, -50%) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   .modal-content {
     background: transparent !important;
+    width: fit-content;
   }
 }
 

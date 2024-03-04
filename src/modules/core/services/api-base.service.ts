@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { disconnect } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
-import { catchError, Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { MainState } from 'src/store/main.store';
 
@@ -19,7 +19,7 @@ export class ApiBaseService {
       .get(environment.apiUrl + this.controllerPrefix + endpoint, {
         withCredentials: true,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(catchError(this.handleError.bind(this)));
   }
 
   public post(endpoint: string, body: any): Observable<any> {
@@ -27,7 +27,7 @@ export class ApiBaseService {
       .post(environment.apiUrl + this.controllerPrefix + endpoint, body, {
         withCredentials: true,
       })
-      .pipe(catchError(this.handleError));
+      .pipe(catchError(this.handleError.bind(this)));
   }
 
   private handleError(
@@ -37,9 +37,9 @@ export class ApiBaseService {
     const { address } = this.store.selectSnapshot(MainState.getState);
     if (address && error.status === 401) {
       disconnect();
-    } else {
+    } else if (error.status !== 500) {
       this.toast.error(error.error.message);
     }
-    return caught;
+    return throwError(() => new Error(error.error.message));
   }
 }

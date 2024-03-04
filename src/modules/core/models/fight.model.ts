@@ -1,17 +1,20 @@
 import { Item } from './items.model';
-import { PlayerStatsModel } from './player-stats.model';
+import { FighterStats } from './player-stats.model';
 import { PlayerModel } from './player.model';
 import { QuestModel } from './quest.model';
 
 export interface FightModel {
   questId: number;
   playerId: string;
-  playerStats: PlayerStatsModel;
-  enemyStats: PlayerStatsModel;
-  currentPlayerStats: PlayerStatsModel;
-  currentEnemyStats: PlayerStatsModel;
+  baseStats: FightStatsModel;
+  currentStats: FightStatsModel;
   turns: FightTurnModel[];
   result: FightResultModel;
+}
+
+export interface FightStatsModel {
+  player: FighterStats;
+  enemy: FighterStats;
 }
 
 export interface FightTurnModel {
@@ -45,4 +48,6 @@ export enum TurnActionEnum {
   BLOCKED = 'blocked',
   CRIT = 'crit',
   DEFEND = 'defend',
+  USE_ITEM = 'use-item',
+  CHARGE = 'charge',
 }

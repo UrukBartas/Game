@@ -1,4 +1,6 @@
-export interface PlayerStatsModel {
+import { BuffModel } from './fight-buff.model';
+
+export interface FighterStats {
   health: number;
   damage: number;
   energy: number;
@@ -9,4 +11,5 @@ export interface PlayerStatsModel {
   crit: number;
   accuracy: number;
   dodge: number;
+  buffs?: BuffModel[];
 }
