@@ -23,6 +23,7 @@
   }
 
   .fighter-container {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -55,6 +56,38 @@
       }
       .progress-bar-energy {
         background-color: $yellow;
+      }
+    }
+
+    .status-bar {
+      position: relative;
+      width: 80%;
+      height: 30px;
+      display: flex;
+      gap: 5px;
+
+      .text-purple {
+        color: #6d507c;
+      }
+
+      .text-blue {
+        color: #048ba8;
+      }
+
+      .text-yellow {
+        color: #fea520;
+      }
+
+      .fa-flask {
+        padding-right: 7px;
+        padding-top: 3px;
+        position: relative;
+        span {
+          position: absolute;
+          bottom: 3px;
+          color: white;
+          font-size: 10px;
+        }
       }
     }
   }
@@ -166,6 +199,23 @@
     }
     100% {
       transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes charge {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    50% {
+      transform: translate(0px, -10vh);
+    }
+    70% {
+      transform: translate(0px, 0px);
+      transform-origin: center bottom;
+      transform: rotateX(30deg);
+    }
+    100% {
+      transform: rotateX(0deg);
     }
   }
 }

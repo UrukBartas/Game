@@ -12,21 +12,21 @@
         *ngIf="fightResult.player?.level > player.level"
         class="col pb-md-4 col-md-12 d-flex flex-column gap-2"
       >
-        <span urText class="text-rainbow text-center">LEVEL UP!</span>
+        <span #levelUp urText class="text-rainbow text-center">LEVEL UP!</span>
         <span urText class="text-white text-center"
           >Level {{ player.level }} → {{ fightResult.player.level }}</span
         >
         <span urText class="text-white text-center"
           >Health {{ player.stats.health }} →
-          {{ fightResult.player.health }}</span
+          {{ player.stats.health + 5 }}</span
         >
         <span urText class="text-white text-center"
           >Attack {{ player.stats.damage }} →
-          {{ fightResult.player.damage }}</span
+          {{ player.stats.damage + 2 }}</span
         >
         <span urText class="text-white text-center"
           >Defense {{ player.stats.armor }} →
-          {{ fightResult.player.armor }}</span
+          {{ player.stats.armor + 2 }}</span
         >
       </div>
       <div

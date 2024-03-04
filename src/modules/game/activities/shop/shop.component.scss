@@ -53,6 +53,23 @@
     gap: 5px;
   }
 
+  .item-price {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: #00000073;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .uruks-icon {
+      max-width: 2vw;
+      max-height: 2vw
+    }
+    span {
+      font-size: 1.2vw;
+    }
+  }
+
   .check-icon {
     position: absolute;
     top: 5px;

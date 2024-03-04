@@ -5,13 +5,13 @@
     </p>
     <p *ngIf="item.price" class="h6 d-flex align-items-center gap-1">
       <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
-      <span urText class="text-white">{{ item.price | number: '1.2-2' }}</span>
+      <span urText class="text-white">{{ item.price | number: '1.0-2' }}</span>
     </p>
   </div>
   <div class="row">
     <div class="col-6">
       <img
-        [ngSrc]="item.image"
+        [src]="item.image"
         priority
         [width]="getItemBoxSize()"
         [height]="getItemBoxSize()"
