@@ -1,95 +1,102 @@
-<div class="stats-container pb-3">
-  <div class="row gap-3">
-    <div class="col-12 d-flex justify-content-center">
-      <app-item-box
-        [height]="getPlayerImageSize()"
-        [width]="getPlayerImageSize()"
-        [image]="(player$ | async).image"
-      ></app-item-box>
+@if (!!player) {
+  <div class="stats-container pb-3">
+    <div class="row gap-3">
+      <div class="col-12 d-flex justify-content-center">
+        <app-item-box
+          [height]="getPlayerImageSize()"
+          [width]="getPlayerImageSize()"
+          [image]="player.image"
+        ></app-item-box>
+      </div>
+      <div class="col-12">
+        <div class="description stat">
+          <p>Player</p>
+          <ul>
+            <li class="d-flex justify-content-between gap-2">
+              <label class="text-third">Name:</label> {{ player.name }}
+            </li>
+            <li
+              class="d-flex justify-content-between gap-2"
+              *ngIf="!isViewingAnotherPlayer"
+            >
+              <label class="text-third">Email:</label>
+              {{ player.email }}
+            </li>
+            <li class="d-flex justify-content-between gap-2">
+              <label class="text-third">Member since:</label>
+              {{ player.createdAt | date }}
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="col-12">
-      <div class="description stat">
-        <p>Player</p>
-        <ul>
-          <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Name:</label> {{ (player$ | async).name }}
-          </li>
-          <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Email:</label>
-            {{ (player$ | async).email }}
-          </li>
-          <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Member since:</label>
-            {{ (player$ | async).createdAt | date }}
-          </li>
-        </ul>
+    <div class="row">
+      <div class="col">
+        <div class="description stat">
+          <p>Progress</p>
+          <ul>
+            <li class="d-flex justify-content-between gap-2">
+              <label class="text-third">Level:</label>
+              {{ player.level }}
+            </li>
+            <li class="d-flex justify-content-between gap-2">
+              <label class="text-third">Experience:</label>
+              {{ player.experience }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="description stat">
+          <p>Combat</p>
+          <ul>
+            <li class="d-flex justify-content-between gap-2">
+              <label class="text-third">Life:</label>
+              {{ player.stats.health }}
+            </li>
+            <li class="d-flex justify-content-between gap-2">
+              <label class="text-third">Armor:</label>
+              {{ player.stats.armor }}
+            </li>
+            <li class="d-flex justify-content-between gap-2">
+              <label class="text-third">Energy:</label>
+              {{ player.stats.energy }}
+            </li>
+            <li class="d-flex justify-content-between gap-2">
+              <label class="text-third">Damage:</label>
+              {{ player.stats.damage }}
+            </li>
+            <li class="d-flex justify-content-between gap-2">
+              <label class="text-third">Speed:</label>
+              {{ player.stats.speed }}
+            </li>
+            <li class="d-flex justify-content-between gap-2">
+              <label class="text-third">Penetration:</label>
+              {{ player.stats.penetration }}
+            </li>
+            <li class="d-flex justify-content-between gap-2">
+              <label class="text-third">Crit:</label>
+              {{ player.stats.crit }}%
+            </li>
+            <li class="d-flex justify-content-between gap-2">
+              <label class="text-third">Dodge:</label>
+              {{ player.stats.dodge }}%
+            </li>
+            <li class="d-flex justify-content-between gap-2">
+              <label class="text-third">Block:</label>
+              {{ player.stats.block }}%
+            </li>
+            <li class="d-flex justify-content-between gap-2">
+              <label class="text-third">Accuracy:</label>
+              {{ player.stats.accuracy }}%
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col">
-      <div class="description stat">
-        <p>Progress</p>
-        <ul>
-          <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Level:</label>
-            {{ (player$ | async).level }}
-          </li>
-          <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Experience:</label>
-            {{ (player$ | async).experience }}
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <div class="description stat">
-        <p>Combat</p>
-        <ul>
-          <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Life:</label>
-            {{ (player$ | async).stats.health }}
-          </li>
-          <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Armor:</label>
-            {{ (player$ | async).stats.armor }}
-          </li>
-          <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Energy:</label>
-            {{ (player$ | async).stats.energy }}
-          </li>
-          <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Damage:</label>
-            {{ (player$ | async).stats.damage }}
-          </li>
-          <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Speed:</label>
-            {{ (player$ | async).stats.speed }}
-          </li>
-          <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Penetration:</label>
-            {{ (player$ | async).stats.penetration }}
-          </li>
-          <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Crit:</label>
-            {{ (player$ | async).stats.crit }}%
-          </li>
-          <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Dodge:</label>
-            {{ (player$ | async).stats.dodge }}%
-          </li>
-          <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Block:</label>
-            {{ (player$ | async).stats.block }}%
-          </li>
-          <li class="d-flex justify-content-between gap-2">
-            <label class="text-third">Accuracy:</label>
-            {{ (player$ | async).stats.accuracy }}%
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
+} @else {
+  Loading...
+}

@@ -18,6 +18,7 @@ import { ToIpfsImageFromCidPipe } from '../core/pipes/to-ipfs-image-from-cid.pip
 import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { InventoryComponent } from './activities/inventory/inventory.component';
+import { LeadeboardComponent } from './activities/leadeboard/leadeboard.component';
 import { ConsumableModalComponent } from './activities/quests/quest-fight/components/consumable-modal.component';
 import { QuestFightComponent } from './activities/quests/quest-fight/quest-fight.component';
 import { QuestPickerComponent } from './activities/quests/quest-picker/quest-picker.component';
@@ -49,7 +50,7 @@ const components = [
 ];
 
 @NgModule({
-  declarations: [...components, ...directives],
+  declarations: [...components, ...directives, LeadeboardComponent],
   imports: [
     CommonModule,
     GameRoutingModule,

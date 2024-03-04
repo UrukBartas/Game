@@ -38,6 +38,11 @@ export class GameLayoutComponent {
       icon: 'fa fa-shop',
     },
     {
+      path: '/leaderboard',
+      displayText: 'Leaderboards',
+      icon: 'fas fa-users',
+    },
+    {
       path: '/export-import',
       displayText: 'Import/Export',
       icon: 'fa fa-plug',

@@ -1,20 +1,19 @@
-import { Component, inject } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { map } from 'rxjs';
+import { TemplatePage } from 'src/modules/core/components/template-page.component';
+import { PlayerModel } from 'src/modules/core/models/player.model';
 import { ViewportService } from 'src/services/viewport.service';
-import { MainState } from 'src/store/main.store';
 
 @Component({
   selector: 'app-stats-detail',
   templateUrl: './stats-detail.component.html',
   styleUrl: './stats-detail.component.scss',
 })
-export class StatsDetailComponent {
-  private viewportService = inject(ViewportService);
+export class StatsDetailComponent extends TemplatePage {
   public store: Store = inject(Store);
-  public player$ = this.store
-    .select(MainState.getState)
-    .pipe(map((entry) => entry.player));
+  @Input() player!: PlayerModel;
+  @Input() isViewingAnotherPlayer = false;
+  private viewportService = inject(ViewportService);
 
   public getPlayerImageSize() {
     if (

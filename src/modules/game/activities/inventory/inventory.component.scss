@@ -15,6 +15,11 @@
   align-items: baseline;
 }
 
+.items-equipped-contained {
+  max-width: 450px;
+  align-self: center;
+}
+
 .mover {
   display: flex;
   justify-content: flex-end;
