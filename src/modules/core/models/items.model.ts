@@ -22,6 +22,7 @@ export interface Item {
 
   equipped: boolean;
   enabled: boolean;
+  price?: number;
 }
 
 interface ItemData {
@@ -36,15 +37,15 @@ interface ItemData {
 }
 
 export enum ItemType {
-  Helmet = 'Helmet',
-  Chest = 'Chest',
-  Gloves = 'Gloves',
-  Trousers = 'Trousers',
-  Boots = 'Boots',
-  Weapon = 'Weapon',
-  Shield = 'Shield',
-  Ring = 'Ring',
-  Charm = 'Charm',
+  HELMET = 'Helmet',
+  CHEST = 'Chest',
+  GLOVES = 'Gloves',
+  TROUSERS = 'Trousers',
+  BOOTS = 'Boots',
+  WEAPON = 'Weapon',
+  SHIELD = 'Shield',
+  RING = 'Ring',
+  CHARM = 'Charm',
 }
 
 export enum Rarity {

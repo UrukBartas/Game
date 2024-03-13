@@ -1,0 +1,169 @@
+@import '../../../../variables.scss';
+
+#shop {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+
+  .shop-bg {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../../../../assets/shop/shop.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .item-rack-bg {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 10vw;
+    background-image: url('../../../../assets/shop/wood.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+
+  .uruks-icon {
+    max-width: 30px;
+    max-height: 30px;
+  }
+
+  .shop-cart {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    padding: 3%;
+    background: $black-transparent;
+    height: 50vh;
+    width: 30vw;
+    .item-list {
+      overflow: auto;
+      height: calc(100% - 40px);
+    }
+  }
+
+  .roll-buttons {
+    position: absolute;
+    bottom: 10.2vw;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+  }
+
+  .item-price {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: $black-transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .uruks-icon {
+      max-width: 2vw;
+      max-height: 2vw
+    }
+    span {
+      font-size: 1.2vw;
+    }
+  }
+
+  .check-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: $white-100;
+    font-size: 2vw;
+  }
+
+  .shop-tender-dialog {
+    position: absolute;
+    top: 20%;
+    right: 35%;
+    max-width: 50vw;
+    background-color: $white-100;
+    border: 2px solid $black-500;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    z-index: 10;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -20px;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      transform: translateY(-50%);
+    }
+
+    &::before {
+      border-left: 20px solid $black-500;
+      right: -22px;
+    }
+
+    &::after {
+      border-left: 20px solid $white-100;
+      z-index: 1;
+    }
+  }
+
+  .item-row {
+    > * {
+      padding: 0;
+    }
+
+    app-item-box {
+      .box {
+        width: 8vw !important;
+        height: 8vw !important;
+      }
+    }
+  }
+
+  .show-items {
+    transform: rotateX(90deg);
+    transform-origin: center bottom;
+    animation: show-items-animation 0.6s forwards;
+
+    @for $i from 1 through 9 {
+      &:nth-child(#{$i}) {
+        animation-delay: ($i - 1) * 0.2s;
+      }
+    }
+  }
+
+  .hide-items {
+    transform: rotateX(0deg);
+    transform-origin: center bottom;
+    animation: hide-items-animation 0.3s forwards;
+
+    @for $i from 1 through 9 {
+      &:nth-child(#{$i}) {
+        animation-delay: ($i - 1) * 0.1s;
+      }
+    }
+  }
+
+  @keyframes hide-items-animation {
+    from {
+      transform: rotateX(0deg);
+    }
+    to {
+      transform: rotateX(90deg);
+    }
+  }
+
+  @keyframes show-items-animation {
+    from {
+      transform: rotateX(90deg);
+    }
+    to {
+      transform: rotateX(0deg);
+    }
+  }
+}

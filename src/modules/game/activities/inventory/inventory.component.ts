@@ -1,24 +1,15 @@
-import { Component, HostListener, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { getAccount } from '@wagmi/core';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { NgxSpinnerService } from 'ngx-spinner';
 import {
-  BehaviorSubject,
-  Observable,
-  Subject,
-  distinctUntilChanged,
-  filter,
-  firstValueFrom,
-  interval,
-  map,
-  of,
-  switchMap,
-  tap,
+  BehaviorSubject, filter,
+  firstValueFrom, map, Observable, of, Subject, switchMap,
+  tap
 } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { Item, ItemType } from 'src/modules/core/models/items.model';
+import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { InventoryService } from 'src/services/inventory.service';
 import { PlayerService } from 'src/services/player.service';
@@ -42,7 +33,11 @@ export class InventoryComponent extends TemplatePage {
     this.inventoryService.getInventoryStructure(20);
 
   public inventoryUpdated$ = new Subject();
-  public currentInventory$ = this.playerService.getItems();
+  public sortOrderUp = false;
+  public sortType: 'rarity' | 'level' = 'rarity';
+  public currentInventory$ = this.playerService
+    .getItems()
+    .pipe(map((items) => this.sortInventory(items)));
   public activeDragAndDropItemType: ItemType = null;
   public itemTypePublic = ItemType;
   private spinnerService = inject(NgxSpinnerService);
@@ -79,15 +74,15 @@ export class InventoryComponent extends TemplatePage {
     );
   };
 
-  public getHelmet$ = this.getItem$(ItemType.Helmet);
-  public getShield$ = this.getItem$(ItemType.Shield);
-  public getChest$ = this.getItem$(ItemType.Chest);
-  public getWeapon$ = this.getItem$(ItemType.Weapon);
-  public getTrousers$ = this.getItem$(ItemType.Trousers);
-  public getBoots$ = this.getItem$(ItemType.Boots);
-  public getGloves$ = this.getItem$(ItemType.Gloves);
-  public getCharm$ = this.getItem$(ItemType.Charm);
-  public getRing$ = this.getItem$(ItemType.Ring);
+  public getHelmet$ = this.getItem$(ItemType.HELMET);
+  public getShield$ = this.getItem$(ItemType.SHIELD);
+  public getChest$ = this.getItem$(ItemType.CHEST);
+  public getWeapon$ = this.getItem$(ItemType.WEAPON);
+  public getTrousers$ = this.getItem$(ItemType.TROUSERS);
+  public getBoots$ = this.getItem$(ItemType.BOOTS);
+  public getGloves$ = this.getItem$(ItemType.GLOVES);
+  public getCharm$ = this.getItem$(ItemType.CHARM);
+  public getRing$ = this.getItem$(ItemType.RING);
 
   public isViewingPlayer =
     this.route.snapshot.url[0].path.includes('view-player');
@@ -99,8 +94,32 @@ export class InventoryComponent extends TemplatePage {
       this.actualPlayer$.next(player);
     });
     this.inventoryUpdated$.subscribe(() => {
-      this.currentInventory$ = this.playerService.getItems();
+      this.currentInventory$ = this.playerService
+        .getItems()
+        .pipe(map((items) => this.sortInventory(items)));
     });
+  }
+
+  private sortInventory(items: Item[]) {
+    const rarityOrder = [
+      Rarity.COMMON,
+      Rarity.UNCOMMON,
+      Rarity.EPIC,
+      Rarity.LEGENDARY,
+      Rarity.MYTHIC,
+    ];
+    const sortedItems = items.sort((a, b) => {
+      let comparison = 0;
+      if (this.sortType === 'level') {
+        comparison = a.level - b.level;
+      } else if (this.sortType === 'rarity') {
+        comparison =
+          rarityOrder.indexOf(a.itemData.rarity) -
+          rarityOrder.indexOf(b.itemData.rarity);
+      }
+      return this.sortOrderUp ? comparison : -comparison;
+    });
+    return sortedItems;
   }
 
   public getEquippedItemBoxSize() {
@@ -160,5 +179,15 @@ export class InventoryComponent extends TemplatePage {
 
   onDragEnd(event: DragEvent) {
     this.activeDragAndDropItemType = null;
+  }
+
+  changeSortOrder() {
+    this.sortOrderUp = !this.sortOrderUp;
+    this.inventoryUpdated$.next(true);
+  }
+
+  changeSortType() {
+    this.sortType = this.sortType === 'rarity' ? 'level' : 'rarity';
+    this.inventoryUpdated$.next(true);
   }
 }

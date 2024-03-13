@@ -17,11 +17,22 @@ export class FightService extends ApiBaseService {
     this.controllerPrefix = '/fight';
   }
 
-  actions(action: TurnActionEnum): Observable<FightModel> {
-    return this.get(`/action/${action}`);
+  actions(
+    action: TurnActionEnum,
+    consumableId: number
+  ): Observable<FightModel> {
+    if (consumableId) {
+      return this.get(`/action/${action}/${consumableId}`);
+    } else {
+      return this.get(`/action/${action}`);
+    }
   }
 
   surrender(): Observable<QuestModel> {
     return this.get(`/surrender`);
+  }
+
+  consumables(): Observable<any> {
+    return this.get(`/consumables`);
   }
 }

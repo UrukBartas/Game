@@ -8,22 +8,23 @@ import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
+import { BuffType } from 'src/modules/core/models/fight-buff.model';
 import {
   FightModel,
   FightResultModel,
   TurnActionEnum,
 } from 'src/modules/core/models/fight.model';
-import { PlayerStatsModel } from 'src/modules/core/models/player-stats.model';
+import { Rarity } from 'src/modules/core/models/items.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { QuestModel } from 'src/modules/core/models/quest.model';
+import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { animateElement } from 'src/modules/utils';
 import { FightService } from 'src/services/fight.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { EndFight, MainState, StartFight } from 'src/store/main.store';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { QuestRouterModel } from '../models/quest-router.model';
-import { Rarity } from 'src/modules/core/models/items.model';
+import { ConsumableModalComponent } from './components/consumable-modal.component';
 
 @Component({
   selector: 'app-quest-fight',
@@ -48,6 +49,7 @@ export class QuestFightComponent extends TemplatePage {
   playerAnimation;
   enemyAnimation;
   fightBackgroundImage = this.getBackgroundByRarity();
+  buffType = BuffType;
 
   @Output() questStatusChange = new EventEmitter<QuestRouterModel>();
 
@@ -79,17 +81,18 @@ export class QuestFightComponent extends TemplatePage {
       default:
         return '/assets/backgrounds/field.png';
       case Rarity.UNCOMMON:
-        return '/assets/backgrounds/arena.png';
+        return '/assets/backgrounds/city.png';
       case Rarity.EPIC:
         return '/assets/backgrounds/arena.png';
       case Rarity.LEGENDARY:
-        return '/assets/backgrounds/arena.png';
+        return '/assets/backgrounds/palace.png';
       case Rarity.MYTHIC:
-        return '/assets/backgrounds/arena.png';
+        //TODO
+        return '/assets/backgrounds/palace.png';
     }
   }
 
-  doAction(action: TurnActionEnum) {
+  doAction(action: TurnActionEnum, consumableId?: number) {
     const currentTime = Date.now();
 
     if (currentTime - this.lastClickTime < 1000) {
@@ -98,11 +101,12 @@ export class QuestFightComponent extends TemplatePage {
     this.lastClickTime = currentTime;
 
     this.fightService
-      .actions(action)
+      .actions(action, consumableId)
       .pipe(take(1))
       .subscribe((fight) => {
-        const victory = fight.currentEnemyStats.health === 0;
-        const defeat = fight.currentPlayerStats.health === 0;
+        const { player, enemy } = fight.currentStats;
+        const victory = enemy.health === 0;
+        const defeat = player.health === 0;
 
         this.controlTurnActions(fight);
         if (victory || defeat) {
@@ -147,16 +151,20 @@ export class QuestFightComponent extends TemplatePage {
     if (lastEnemyAction === TurnActionEnum.DEFEND) {
       this.handleEnemyAnimation('defend-left', 1);
     }
+    if (lastPlayerAction === TurnActionEnum.CHARGE) {
+      this.handlePlayerAnimation('charge', 0.8);
+    }
+    if (lastEnemyAction === TurnActionEnum.CHARGE) {
+      this.handleEnemyAnimation('charge', 0.8);
+    }
     if (
       lastPlayerAction === TurnActionEnum.BLOCKED ||
       lastPlayerAction === TurnActionEnum.MISS
     ) {
-      if (lastTurn.playerTurn.damage > 0) {
-        this.showPlayerAction = true;
-        setTimeout(() => {
-          this.showPlayerAction = false;
-        }, 1000);
-      }
+      this.showPlayerAction = true;
+      setTimeout(() => {
+        this.showPlayerAction = false;
+      }, 1000);
     }
 
     if (
@@ -202,6 +210,20 @@ export class QuestFightComponent extends TemplatePage {
         }, 1500);
       });
     });
+  }
+
+  openConsumableModal() {
+    const config: ModalOptions = {
+      initialState: {
+        accept: (itemId: number) => {
+          if (itemId !== null) {
+            this.doAction(TurnActionEnum.USE_ITEM, itemId);
+          }
+          modalRef.hide();
+        },
+      },
+    };
+    const modalRef = this.modalService.show(ConsumableModalComponent, config);
   }
 
   getHealthBarHeight() {

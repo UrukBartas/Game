@@ -1,0 +1,43 @@
+@import '../../../../../../variables.scss';
+
+#consumables-container {
+  height: 80vh;
+  width: 70vw;
+  position: relative;
+  background-color: $black-500;
+  border-radius: 3px;
+
+  .consumables {
+    max-height: calc(100% - 70px);
+    overflow: auto;
+    padding: 16px;
+
+    .consumable-container {
+      width: fit-content;
+      padding-bottom: 10px;
+      position: relative;
+
+      app-item-box {
+        div {
+          border-radius: 5px !important;
+        }
+      }
+      .check-icon {
+        position: absolute;
+        top: 0px;
+        right: 12px;
+        color: $white-100;
+        font-size: 2vw;
+      }
+    }
+  }
+
+  .use-consumable {
+    height: 70px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 10px 20px;
+  }
+}
