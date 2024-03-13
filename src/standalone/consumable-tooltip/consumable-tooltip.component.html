@@ -1,0 +1,30 @@
+<div class="item-tooltip-wrapper">
+  <div class="description flex-column align-items-start">
+    <p class="h6">
+      {{ item.name }}
+    </p>
+    <p *ngIf="item.price" class="h6 d-flex align-items-center gap-1">
+      <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+      <span urText class="text-white">{{ item.price | number: '1.0-2' }}</span>
+    </p>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <img
+        [src]="item.image"
+        priority
+        [width]="getItemBoxSize()"
+        [height]="getItemBoxSize()"
+      />
+    </div>
+    <div class="col-6">
+      <div class="description">
+        <ul class="p-0">
+          <li>
+            {{ item.description }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

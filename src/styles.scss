@@ -53,6 +53,10 @@ app-item-box {
   width: fit-content !important;
 }
 
+ngb-tooltip-window {
+  position: fixed !important;
+}
+
 .description {
   display: flex;
   justify-content: space-between;
@@ -95,8 +99,13 @@ app-item-box {
   top: 43%;
   left: 50%;
   transform: translate(-50%, -50%) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   .modal-content {
     background: transparent !important;
+    width: fit-content;
   }
 }
 
@@ -165,7 +174,7 @@ ngb-tooltip-window {
 
 .mover {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   i {
     @extend .pointer;
   }

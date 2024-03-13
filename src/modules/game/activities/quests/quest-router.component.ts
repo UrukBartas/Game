@@ -24,6 +24,7 @@ import { QuestRouterModel } from './models/quest-router.model';
       <app-quest-result
         *ngSwitchCase="questStatusEnum.RESULT"
         [result]="questRouter.data"
+        (questStatusChange)="questRouter = $event"
       ></app-quest-result>
     </ng-container>
   `,
