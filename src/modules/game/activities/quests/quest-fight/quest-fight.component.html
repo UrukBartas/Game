@@ -239,34 +239,33 @@
 
 <ng-template #statusBar let-fighterStatus="fighterStatus" let-energy="energy">
   <div class="status-bar">
-    @for (buff of fighterStatus.buffs; track $index) {
-      @switch (buff.type) {
-        @case (buffType.CHARGE) {
+    <ng-container *ngFor="let buff of fighterStatus.buffs | keyvalue">
+      <ng-container [ngSwitch]="+buff.key">
+        <ng-container *ngSwitchCase="buffType.CHARGE">
           <span urText [ngbTooltip]="charged">🔥</span>
-        }
-        @case (buffType.ARMOR_POTION) {
+        </ng-container>
+        <ng-container *ngSwitchCase="buffType.ARMOR_POTION">
           <i urText [ngbTooltip]="armorPotion" class="fa fa-flask text-blue">
-            <span>{{ buff.remainingTurns }}</span>
+            <span>{{ buff.value }}</span>
           </i>
-        }
-        @case (buffType.ENERGY_POTION) {
+        </ng-container>
+        <ng-container *ngSwitchCase="buffType.ENERGY_POTION">
           <i urText [ngbTooltip]="energyPotion" class="fa fa-flask text-yellow">
-            <span>{{ buff.remainingTurns }}</span>
+            <span>{{ buff.value }}</span>
           </i>
-        }
-        @case (buffType.FURY_POTION) {
+        </ng-container>
+        <ng-container *ngSwitchCase="buffType.FURY_POTION">
           <i urText [ngbTooltip]="furyPotion" class="fa fa-flask text-purple">
-            <span>{{ buff.remainingTurns }}</span>
+            <span>{{ buff.value }}</span>
           </i>
-        }
-      }
-    }
+        </ng-container>
+      </ng-container>
+    </ng-container>
 
-    <span urText *ngIf="fighterStatus.energy < 40" [ngbTooltip]="exhausted"
-      >😫</span
-    >
+    <span urText *ngIf="fighterStatus.energy < 40" [ngbTooltip]="exhausted">😫</span>
   </div>
 </ng-template>
+
 
 <ng-template #playerStats let-player="player" let-playerName="playerName">
   <ul class="px-3 py-2 m-0">

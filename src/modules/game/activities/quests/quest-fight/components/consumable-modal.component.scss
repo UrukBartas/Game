@@ -4,15 +4,11 @@
   height: 80vh;
   width: 70vw;
   position: relative;
-  background: white;
-  background-color: #1f1f1e;
+  background-color: $black-500;
   border-radius: 3px;
 
   .consumables {
-    position: absolute;
-    height: calc(100% - 48px);
-    top: 0;
-    left: 0;
+    max-height: calc(100% - 70px);
     overflow: auto;
     padding: 16px;
 
