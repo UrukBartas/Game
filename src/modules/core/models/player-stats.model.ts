@@ -1,4 +1,4 @@
-import { BuffModel } from './fight-buff.model';
+import { BuffModel, BuffType } from './fight-buff.model';
 
 export interface FighterStats {
   health: number;
@@ -11,5 +11,5 @@ export interface FighterStats {
   crit: number;
   accuracy: number;
   dodge: number;
-  buffs?: BuffModel[];
+  buffs?: Map<BuffType, number>;
 }

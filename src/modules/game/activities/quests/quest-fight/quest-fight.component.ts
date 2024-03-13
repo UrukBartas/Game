@@ -226,10 +226,6 @@ export class QuestFightComponent extends TemplatePage {
     const modalRef = this.modalService.show(ConsumableModalComponent, config);
   }
 
-  getActiveBuffs() {
-    return this.fight.currentStats.player.buffs;
-  }
-
   getHealthBarHeight() {
     switch (this.viewportService.screenSize) {
       case 'xxl':
