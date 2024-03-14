@@ -31,7 +31,7 @@ export class ShopService extends ApiBaseService {
     return this.get('/premium-roll-data');
   }
 
-  public getDailyRollData(): Observable<Date> {
+  public getDailyRollData(): Observable<{date: Date}> {
     return this.get('/daily-roll-data');
   }
 }
