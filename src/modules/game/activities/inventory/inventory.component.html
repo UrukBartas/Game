@@ -118,6 +118,14 @@
   <div class="col-6 equipped h-100">
     <div class="description">
       <p urTitle>Character</p>
+      <button
+        (click)="router.navigateByUrl('/leaderboard')"
+        class="btn btn-primary"
+        style="height: fit-content"
+        *ngIf="isViewingPlayer"
+      >
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </button>
     </div>
     <div class="position-relative d-flex justify-content-center">
       <div class="items-equipped-bg"></div>

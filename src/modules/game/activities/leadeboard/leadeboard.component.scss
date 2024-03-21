@@ -33,7 +33,7 @@
     a {
       color: $secondary;
     }
-    &-left-number-ranking {
+    &-left-image-ranking {
       width: 64px;
       height: 64px;
       display: flex;
@@ -47,7 +47,7 @@
       flex-direction: column;
       justify-content: space-around;
     }
-    &-name-container{
+    &-name-container {
       display: flex;
       gap: 5px;
     }
