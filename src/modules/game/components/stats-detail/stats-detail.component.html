@@ -54,43 +54,43 @@
           <ul>
             <li class="d-flex justify-content-between gap-2">
               <label class="text-third">Life:</label>
-              {{ player.stats.health }}
+              {{ player.stats.health | number: '1.0-2' }}
             </li>
             <li class="d-flex justify-content-between gap-2">
               <label class="text-third">Armor:</label>
-              {{ player.stats.armor }}
+              {{ player.stats.armor | number: '1.0-2' }}
             </li>
             <li class="d-flex justify-content-between gap-2">
               <label class="text-third">Energy:</label>
-              {{ player.stats.energy }}
+              {{ player.stats.energy | number: '1.0-2' }}
             </li>
             <li class="d-flex justify-content-between gap-2">
               <label class="text-third">Damage:</label>
-              {{ player.stats.damage }}
+              {{ player.stats.damage | number: '1.0-2' }}
             </li>
             <li class="d-flex justify-content-between gap-2">
               <label class="text-third">Speed:</label>
-              {{ player.stats.speed }}
+              {{ player.stats.speed | number: '1.0-2' }}
             </li>
             <li class="d-flex justify-content-between gap-2">
               <label class="text-third">Penetration:</label>
-              {{ player.stats.penetration }}
+              {{ player.stats.penetration | number: '1.0-2' }}
             </li>
             <li class="d-flex justify-content-between gap-2">
               <label class="text-third">Crit:</label>
-              {{ player.stats.crit }}%
+              {{ player.stats.crit | number: '1.0-2' }}%
             </li>
             <li class="d-flex justify-content-between gap-2">
               <label class="text-third">Dodge:</label>
-              {{ player.stats.dodge }}%
+              {{ player.stats.dodge | number: '1.0-2' }}%
             </li>
             <li class="d-flex justify-content-between gap-2">
               <label class="text-third">Block:</label>
-              {{ player.stats.block }}%
+              {{ player.stats.block | number: '1.0-2' }}%
             </li>
             <li class="d-flex justify-content-between gap-2">
               <label class="text-third">Accuracy:</label>
-              {{ player.stats.accuracy }}%
+              {{ player.stats.accuracy | number: '1.0-2' }}%
             </li>
           </ul>
         </div>
