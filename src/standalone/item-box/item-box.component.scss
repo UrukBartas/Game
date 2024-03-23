@@ -10,7 +10,7 @@
 }
 
 .selectedItem {
-  border: 1px solid $secondary;
+  border: 3px solid $secondary;
 }
 .selectedBox {
   @extend .hovered;

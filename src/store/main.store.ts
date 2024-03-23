@@ -110,11 +110,20 @@ export class MainState {
   @Action(LoginPlayer)
   async loginPlayer({ patchState }: StateContext<MainStateModel>) {
     // No cambiar a observables da problemas de syncro
-    const session = await this.sessionService.open().pipe(take(1)).toPromise();
-    const player = await this.playerService.get('/').pipe(take(1)).toPromise();
-
-    patchState({ player, session });
-    this.router.navigateByUrl('/inventory');
+    try {
+      const session = await this.sessionService
+        .open()
+        .pipe(take(1))
+        .toPromise();
+      const player = await this.playerService
+        .get('/')
+        .pipe(take(1))
+        .toPromise();
+      patchState({ player, session });
+      this.router.navigateByUrl('/inventory');
+    } catch (error) {
+      this.store.dispatch(new DisconnectWallet());
+    }
   }
 
   @Action(DisconnectWallet)
@@ -138,8 +147,15 @@ export class MainState {
   @Action(RefreshPlayer) async refreshPlayer({
     patchState,
   }: StateContext<MainStateModel>) {
-    const player = await this.playerService.get('/').pipe(take(1)).toPromise();
-    this.store.dispatch(new SetPlayer(player));
+    try {
+      const player = await this.playerService
+        .get('/')
+        .pipe(take(1))
+        .toPromise();
+      this.store.dispatch(new SetPlayer(player));
+    } catch (error) {
+      this.store.dispatch(new DisconnectWallet());
+    }
   }
 
   @Action(SetPlayer)

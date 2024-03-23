@@ -1,30 +1,23 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { getAccount } from '@wagmi/core';
+import { getAccount, getNetwork, switchNetwork, watchNetwork } from '@wagmi/core';
 import { ethers } from 'ethers';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   BehaviorSubject,
-  Observable,
-  delay,
-  distinctUntilChanged,
-  expand,
+  filter,
   firstValueFrom,
-  forkJoin,
   from,
   interval,
   map,
-  of,
-  retry,
   startWith,
   switchMap,
   tap,
 } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Item } from 'src/modules/core/models/items.model';
-import { PlayerModel } from 'src/modules/core/models/player.model';
 import { ContractService } from 'src/services/contract.service';
 import { ExportImportService } from 'src/services/export-import.service';
 import { InventoryService } from 'src/services/inventory.service';
@@ -32,6 +25,7 @@ import { ItemService } from 'src/services/item.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
+import { WalletService, allowedChains } from 'src/services/wallet.service';
 
 @Component({
   selector: 'app-export-import-nft',
@@ -41,6 +35,7 @@ import { MainState, RefreshPlayer } from 'src/store/main.store';
 export class ExportImportNftComponent extends TemplatePage {
   public exportTypeActive: 'export' | 'import' = 'export';
   public exportingObjectTypeActive: 'nft' | 'coins' = 'nft';
+
   public selectedUruksToExport = 0;
   private inventoryService = inject(InventoryService);
   public itemInventoryBoxes = this.inventoryService.getInventoryStructure();
@@ -52,6 +47,9 @@ export class ExportImportNftComponent extends TemplatePage {
   spinnerService = inject(NgxSpinnerService);
   toastService = inject(ToastrService);
   store = inject(Store);
+  walletService = inject(WalletService);
+  public compatibleChains = allowedChains;
+  public activeNetworkId = signal(getNetwork().chain.id);
   player$ = this.store
     .select(MainState.getState)
     .pipe(map((entry) => entry.player));
@@ -61,9 +59,9 @@ export class ExportImportNftComponent extends TemplatePage {
     startWith(0),
     switchMap(() => {
       return from(
-        this.contractService.activeContractERC20['balanceOf'](
-          getAccount().address
-        )
+        this.contractService.executeReadContractOnUrukERC20('balanceOf', [
+          getAccount().address,
+        ])
       ).pipe(
         map((entry) => {
           return Number(ethers.formatEther(entry.toString())).toFixed(8);
@@ -117,25 +115,59 @@ export class ExportImportNftComponent extends TemplatePage {
   constructor() {
     super();
     this.whiteListedItemsInterval$
-      .pipe(takeUntilDestroyed())
+      .pipe(
+        filter((entry) => !!entry),
+        takeUntilDestroyed()
+      )
       .subscribe((data: any) => this.whiteListedItems$.next(data));
     this.currentInventoryInterval$
-      .pipe(takeUntilDestroyed())
+      .pipe(
+        filter((entry) => !!entry),
+        takeUntilDestroyed()
+      )
       .subscribe((data: any) => this.currentInventory$.next(data));
     this.currentInventoryOfNftsInterval$
-      .pipe(takeUntilDestroyed())
+      .pipe(
+        filter((entry) => !!entry),
+        takeUntilDestroyed()
+      )
       .subscribe((data: any) => {
         this.currentInventoryOfNfts$.next(data);
       });
     this.erc20BalanceInterval$
-      .pipe(takeUntilDestroyed())
+      .pipe(
+        filter((entry) => !!entry),
+        takeUntilDestroyed()
+      )
       .subscribe((data: any) => {
         this.erc20Balance$.next(data);
       });
-    this.refreshPlayer$.pipe(takeUntilDestroyed()).subscribe();
+    this.refreshPlayer$
+      .pipe(
+        filter((entry) => !!entry),
+        takeUntilDestroyed()
+      )
+      .subscribe();
   }
 
   ngOnInit(): void {}
+
+  ngAfterViewInit(): void {
+    watchNetwork((network) => {
+      const isAllowed = this.compatibleChains.find(
+        (chain) => chain.id == network.chain.id
+      );
+      if (!!isAllowed) {
+        this.activeNetworkId.set(network.chain.id);
+      } else {
+        this.activeNetworkId.set(0);
+      }
+    });
+  }
+
+  public changeNetwork(chainId: number) {
+    switchNetwork({ chainId });
+  }
 
   public async assignValueToSelectedUruks(factor: number) {
     const player = await firstValueFrom(this.player$);

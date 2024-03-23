@@ -39,13 +39,23 @@
   position: relative;
 }
 
-.close-icon-pending{
+.close-icon-pending {
   position: absolute;
   right: 5px;
   top: 0px;
   cursor: pointer;
-  &:hover{
+  &:hover {
     color: $primary;
     transition: all 0.5s;
+  }
+}
+
+.chains {
+  display: flex;
+  flex-direction: column;
+  .chain-list {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
   }
 }
