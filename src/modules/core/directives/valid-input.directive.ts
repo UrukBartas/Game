@@ -32,10 +32,11 @@ export class ValidInputDirective {
   }
 
   private setErrorStatus(errors: ValidationErrors | null) {
+    this.clearErrorMessage();
+
     if (errors) {
       const errorEl: HTMLElement = this.renderer.createElement('div');
       this.renderer.addClass(errorEl, 'invalid-feedback');
-
       // implementar mas errores if need
       let errorMessage = 'Invalid input';
       if (errors['required']) {
@@ -44,7 +45,6 @@ export class ValidInputDirective {
         errorMessage = 'Please enter a valid email address';
       }
       errorEl.textContent = errorMessage;
-      this.clearErrorMessage();
       this.renderer.appendChild(this.el.nativeElement.parentElement, errorEl);
     }
 

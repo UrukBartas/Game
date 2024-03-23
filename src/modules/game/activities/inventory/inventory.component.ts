@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -27,6 +27,7 @@ export class InventoryComponent extends TemplatePage {
   private playerService = inject(PlayerService);
   viewportService = inject(ViewportService);
   private route = inject(ActivatedRoute);
+  public router = inject(Router);
   public activeSlideIndex = 0;
   public itemInventoryBoxes = this.inventoryService.getInventoryStructure();
   public consumablesInventoryBoxes =
