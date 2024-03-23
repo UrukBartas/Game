@@ -1,7 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { getAccount, getNetwork, signMessage, watchAccount } from '@wagmi/core';
+import {
+  getAccount,
+  getNetwork,
+  signMessage,
+  switchNetwork,
+  watchAccount,
+} from '@wagmi/core';
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
 import { Web3Modal } from '@web3modal/wagmi/dist/types/src/client';
 import { ToastrService } from 'ngx-toastr';
@@ -16,6 +22,23 @@ import {
 import { shimmerTestnet, shimmer } from 'viem/chains';
 import { AuthService } from './auth.service';
 import { PlayerService } from './player.service';
+export const allowedChains = [
+  {
+    ...shimmerTestnet,
+    img: 'assets/smr-testnet.png',
+    NFT: '0xE2Dc34B0CDF64A958F14B7230ADFF090C5A2d13F' as `0x${string}`,
+    ERC20: '0xD6c9f8B5C78a8439b384f0d265c41D68F15B0749' as `0x${string}`,
+  },
+  {
+    ...shimmer,
+    img: 'assets/smr.png',
+    NFT: '0x4D8ccA0c1A3c6B455DE8c8D20Ea27241b38BBC33' as `0x${string}`,
+    ERC20: '0x81f1B7248Bb987D7849B1F08FcE74666a7068ECe' as `0x${string}`,
+  },
+];
+
+export const getChainById = (id: number) =>
+  allowedChains.find((chain) => chain.id == id);
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +52,6 @@ export class WalletService {
   private toastService = inject(ToastrService);
   private router = inject(Router);
   public store = inject(Store);
-  public allowedChains = [shimmerTestnet, shimmer];
 
   initWalletConnect() {
     const projectId = process.env['WALLET_CONNECT_PROJECT_ID'] ?? '';
@@ -44,7 +66,7 @@ export class WalletService {
 
     const wagmiConfig = defaultWagmiConfig({
       projectId,
-      chains: this.allowedChains,
+      chains: allowedChains,
       metadata,
     });
 
@@ -53,7 +75,7 @@ export class WalletService {
     this.modal = createWeb3Modal({
       wagmiConfig,
       projectId,
-      chains: this.allowedChains,
+      chains: allowedChains,
     });
   }
 
@@ -103,19 +125,4 @@ export class WalletService {
         },
       });
   }
-
-  // public checkIfChainIsAllow() {
-  //   const actualNetwork = getNetwork();
-  //   if (
-  //     this.allowedChains
-  //       .map((entry) => entry.id as number)
-  //       .includes(actualNetwork.chain?.id as number)
-  //   ) {
-  //     return true;
-  //   } else {
-  //     this.store.dispatch(new DisconnectWallet());
-  //     this.toastService.error('Not connected to correct network!');
-  //     return false;
-  //   }
-  // }
 }

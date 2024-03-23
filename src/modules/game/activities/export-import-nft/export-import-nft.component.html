@@ -29,9 +29,33 @@
       [ngClass]="{ 'col-12': exportingObjectTypeActive != 'nft' }"
     >
       <div class="row justify-content-center">
-        <div class="description justify-content-center">
-          <p urTitle>Select type</p>
+        <div class="chains py-3">
+          <div class="description justify-content-center">
+            <p urTitle>Select compatible network</p>
+          </div>
+          <div class="chain-list">
+            @for (
+              compatibleChain of compatibleChains;
+              track compatibleChain.id
+            ) {
+              <app-item-box
+                [height]="50"
+                [width]="50"
+                [active]="activeNetworkId() == compatibleChain.id"
+                (click)="changeNetwork(compatibleChain.id)"
+                [image]="compatibleChain.img"
+              >
+                <div tooltip class="tooltip-uruk">
+                  {{ compatibleChain.name }}
+                </div>
+              </app-item-box>
+            }
+          </div>
         </div>
+        <div class="description justify-content-center">
+          <p urTitle>Select type of export</p>
+        </div>
+
         <app-item-box
           [height]="100"
           [width]="100"
@@ -69,6 +93,7 @@
           <input
             type="range"
             class="form-range"
+            step="0.01"
             min="0"
             [max]="
               exportTypeActive == 'export'
@@ -173,7 +198,7 @@
         <button
           type="button"
           class="btn btn-primary btn-lg btn-block w-100"
-          [disabled]="!selectedItem"
+          [disabled]="!selectedItem || activeNetworkId() == 0"
           (click)="triggerActionForNFT()"
         >
           {{ exportTypeActive == 'export' ? 'Export' : 'Import' }}
@@ -182,7 +207,7 @@
         <button
           type="button"
           class="btn btn-primary btn-lg btn-block w-100"
-          [disabled]="selectedUruksToExport == 0"
+          [disabled]="selectedUruksToExport == 0 || activeNetworkId() == 0"
           (click)="triggerActionForERC20()"
         >
           {{ exportTypeActive == 'export' ? 'Export' : 'Import' }}

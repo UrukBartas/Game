@@ -10,13 +10,12 @@ import { WalletService } from 'src/services/wallet.service';
 export class AppComponent {
   public account = inject(WalletService);
   constructor() {
+    this.account.initWalletConnect();
     this.lockOrientation();
   }
   ngOnInit(): void {}
 
-  ngAfterViewInit(): void {
-    this.account.initWalletConnect();
-  }
+  ngAfterViewInit(): void {}
 
   async lockOrientation() {
     try {

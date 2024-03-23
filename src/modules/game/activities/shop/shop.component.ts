@@ -6,15 +6,14 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { Subscription } from 'ethers';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { map, take } from 'rxjs';
+import { firstValueFrom, map, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Rarity } from 'src/modules/core/models/items.model';
 import { animateElement } from 'src/modules/utils';
 import { ShopService } from 'src/services/shop.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { RefreshPlayer } from 'src/store/main.store';
+import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
 
 @Component({
@@ -35,6 +34,10 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
   shopItems = [];
   rollAnimation: string;
   premiumRollsNumber = 0;
+
+  player$ = this.store
+    .select(MainState.getState)
+    .pipe(map((entry) => entry.player));
 
   constructor() {
     super();
@@ -175,23 +178,30 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
           initialState: {
             title: 'Premium Roll',
             description: `With each roll your chances for rarer items improve! \nNumber of rolls: ${rollData.rollNumber} \nNext item pool is: ${this.getItemsPoolByRolls(rollData.rollNumber)} \nCurrent roll price is at: ${rollData.price} \n\n Do you want to roll?`,
-            accept: () => {
-              this.rollAnimation = 'hide-items';
-              this.shopService
-                .premiumRoll()
-                .pipe(take(1))
-                .subscribe(() => {
-                  this.triggerDialog("Good luck, let's roll!", 1000);
-                  setTimeout(() => {
-                    this.loadItems();
-                  }, 1000);
-                  setTimeout(() => {
-                    this.rollAnimation = 'show-items';
+            accept: async () => {
+              const actualUruks = await firstValueFrom(
+                this.player$.pipe(map((player) => player.uruks))
+              );
+              if (actualUruks < rollData.price) {
+                this.triggerDialog("Come back with more Golden Uruks, ya bastard! 💀", 3000);
+              } else {
+                this.rollAnimation = 'hide-items';
+                this.shopService
+                  .premiumRoll()
+                  .pipe(take(1))
+                  .subscribe(() => {
+                    this.triggerDialog("Good luck, let's roll!", 1000);
                     setTimeout(() => {
-                      this.showRareRollDialog();
-                    }, 500);
-                  }, 2000);
-                });
+                      this.loadItems();
+                    }, 1000);
+                    setTimeout(() => {
+                      this.rollAnimation = 'show-items';
+                      setTimeout(() => {
+                        this.showRareRollDialog();
+                      }, 500);
+                    }, 2000);
+                  });
+              }
               modalRef.hide();
             },
           },

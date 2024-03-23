@@ -37,11 +37,13 @@
     left: 5%;
     padding: 3%;
     background: $black-transparent;
-    height: 50vh;
+    height: fit-content;
     width: 30vw;
+    max-height: 400px;
+    overflow: auto;
     .item-list {
       overflow: auto;
-      height: calc(100% - 40px);
+      height: fit-content;
     }
   }
 

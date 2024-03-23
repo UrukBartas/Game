@@ -1,70 +1,81 @@
-import { Inject, Injectable } from '@angular/core';
-import { readContract, watchContractEvent, writeContract } from '@wagmi/core';
+import { Injectable } from '@angular/core';
+import { readContract, watchNetwork, writeContract } from '@wagmi/core';
 import UrukNFTArtifact from '../assets/UrukNFT.json';
 import GoldenUruks from '../assets/GoldenUruks.json';
-import { Contract, ethers } from 'ethers';
+import { BehaviorSubject, delay, filter, switchMap } from 'rxjs';
+import { getChainById } from './wallet.service';
+
 @Injectable({
   providedIn: 'root',
 })
 export class ContractService {
-  public provider = new ethers.JsonRpcProvider(process.env['PROVIDER']);
-  adminWallet = new ethers.Wallet(process.env['PRIVATE_KEY'], this.provider);
-  accountAWallet = new ethers.Wallet(
-    process.env['EUROFIGHTER01'],
-    this.provider
-  );
+  public activeChainId = new BehaviorSubject(-1);
 
-  activeContract = new ethers.Contract(
-    process.env['SHIMMER_TESTNET_SC'],
-    UrukNFTArtifact.abi,
-    this.adminWallet
-  ) as Contract;
-
-  activeContractERC20 = new ethers.Contract(
-    process.env['SHIMMER_TESTNET_ERC20'],
-    GoldenUruks.abi,
-    this.adminWallet
-  ) as Contract;
-
-  public executeReadContractOnUrukNFT(functionName: string, args: Array<any>) {
-    return readContract({
-      address: process.env['SHIMMER_TESTNET_SC'] as any,
-      abi: UrukNFTArtifact.abi,
-      functionName,
-      args,
+  constructor() {
+    watchNetwork((network) => {
+      this.activeChainId.next(network.chain.id);
     });
   }
 
+  public executeReadContractOnUrukNFT(functionName: string, args: Array<any>) {
+    return this.activeChainId.pipe(
+      filter((value) => value > 0),
+      switchMap((value) => {
+        return readContract({
+          address: getChainById(value).NFT,
+          abi: UrukNFTArtifact.abi,
+          functionName,
+          args,
+        });
+      })
+    );
+  }
+
   public executewriteContractOnUrukNFT(functionName: string, args: Array<any>) {
-    return writeContract({
-      address: process.env['SHIMMER_TESTNET_SC'] as any,
-      abi: UrukNFTArtifact.abi,
-      functionName,
-      args,
-    });
+    return this.activeChainId.pipe(
+      filter((value) => value > 0),
+      switchMap((value) => {
+        return writeContract({
+          address: getChainById(value).NFT,
+          abi: UrukNFTArtifact.abi,
+          functionName,
+          args,
+        });
+      })
+    );
   }
 
   public executeReadContractOnUrukERC20(
     functionName: string,
     args: Array<any>
   ) {
-    return readContract({
-      address: process.env['SHIMMER_TESTNET_ERC20'] as any,
-      abi: GoldenUruks.abi,
-      functionName,
-      args,
-    });
+    return this.activeChainId.pipe(
+      filter((value) => value > 0),
+      switchMap((value) => {
+        return readContract({
+          address: getChainById(value).ERC20,
+          abi: GoldenUruks.abi,
+          functionName,
+          args,
+        });
+      })
+    );
   }
 
   public executewriteContractOnUrukERC20(
     functionName: string,
     args: Array<any>
   ) {
-    return writeContract({
-      address: process.env['SHIMMER_TESTNET_ERC20'] as any,
-      abi: GoldenUruks.abi,
-      functionName,
-      args,
-    });
+    return this.activeChainId.pipe(
+      filter((value) => value > 0),
+      switchMap((value) => {
+        return writeContract({
+          address: getChainById(value).ERC20,
+          abi: GoldenUruks.abi,
+          functionName,
+          args,
+        });
+      })
+    );
   }
 }
