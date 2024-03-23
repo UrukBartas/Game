@@ -40,11 +40,11 @@ export class DailyRollButtonComponent implements OnDestroy {
     this.shopService
       .getDailyRollData()
       .pipe(take(1))
-      .subscribe((lastRoll) => {
+      .subscribe(({date}) => {
         this.showButton = true;
         const currentTime = new Date();
-        if (lastRoll) {
-          const lastRollDate = new Date(lastRoll);
+        if (date) {
+          const lastRollDate = new Date(date);
           const timeDiff = currentTime.getTime() - lastRollDate.getTime();
           const hoursDiff = timeDiff / (1000 * 60 * 60);
 

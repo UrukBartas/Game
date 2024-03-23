@@ -6,7 +6,7 @@
     <input
       type="text"
       class="form-control"
-      placeholder="Search by username of address"
+      placeholder="Search by username or address"
       formControlName="userOrWallet"
     />
   </div>
@@ -60,9 +60,8 @@
         </div>
       </div>
       <div class="list-leaderboard-item-right">
-        {{ player.experience + ' exp' }}
         <i
-          class="bi bi-eye-fill pointer view-player"
+          class="bi bi-eye-fill pointer view-player mx-2"
           [routerLink]="['/view-player', player.id]"
         ></i>
       </div>

@@ -31,15 +31,15 @@ export class ApiBaseService {
   }
 
   private handleError(
-    error: HttpErrorResponse,
+    response: HttpErrorResponse,
     caught: Observable<Object>
   ): Observable<Object> {
     const { address } = this.store.selectSnapshot(MainState.getState);
-    if (address && error.status === 401) {
+    if (address && response.status === 401) {
       disconnect();
-    } else if (error.status !== 500) {
-      this.toast.error(error.error.message);
+    } else if (response.status !== 500 && response.error?.message) {
+      this.toast.error(response.error.message);
     }
-    return throwError(() => new Error(error.error.message));
+    return throwError(() => new Error(response.error.message));
   }
 }
