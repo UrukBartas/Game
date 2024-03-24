@@ -4,6 +4,7 @@ import { Store } from '@ngxs/store';
 import {
   connect,
   Connector,
+  disconnect,
   getAccount,
   InjectedConnector,
   signMessage,
@@ -90,7 +91,7 @@ export class WalletService {
       } else {
         this.store.dispatch(new RefreshPlayer());
       }
-    } else if (address && !state.address) {
+    } else {
       this.logIn();
     }
   }
