@@ -1,4 +1,5 @@
 import {
+  HttpErrorResponse,
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
@@ -7,7 +8,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { getNetwork } from '@wagmi/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 
 @Injectable()
 export class HttpUrukInterceptor implements HttpInterceptor {
@@ -15,11 +16,21 @@ export class HttpUrukInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const modifiedReq = req.clone({
-      setHeaders: {
-        chainId: getNetwork().chain.id.toString(),
-      },
-    });
-    return next.handle(modifiedReq);
+    let request = req.clone();
+    try {
+      request = req.clone({
+        setHeaders: {
+          chainId: getNetwork().chain.id.toString(),
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    return next.handle(request).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error HTTP:', error);
+        return throwError(() => error);
+      })
+    );
   }
 }
