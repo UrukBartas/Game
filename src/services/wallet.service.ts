@@ -2,10 +2,11 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import {
+  connect,
+  Connector,
   getAccount,
-  getNetwork,
+  InjectedConnector,
   signMessage,
-  switchNetwork,
   watchAccount,
 } from '@wagmi/core';
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
@@ -44,7 +45,7 @@ export const getChainById = (id: number) =>
   providedIn: 'root',
 })
 export class WalletService {
-  modal: Web3Modal;
+  public modal: Web3Modal;
   connectWalletInterval;
 
   public authService = inject(AuthService);
@@ -54,7 +55,7 @@ export class WalletService {
   public store = inject(Store);
 
   initWalletConnect() {
-    const projectId = '01b4ad31e05b34f9bfc0afd40086547c';
+    const projectId = process.env['WALLET_CONNECT_PROJECT_ID'] ?? '';
     const metadata = {
       name: 'Uruk Bartas',
       description: 'Play to earn game',
@@ -67,9 +68,10 @@ export class WalletService {
     const wagmiConfig = defaultWagmiConfig({
       projectId,
       chains: allowedChains,
+      enableWalletConnect: true,
+      enableInjected: true,
       metadata,
     });
-
     watchAccount(({ address }) => this.controlWalletFlow(address));
 
     this.modal = createWeb3Modal({
