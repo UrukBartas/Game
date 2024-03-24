@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { disconnect } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
 import { FightModel } from 'src/modules/core/models/fight.model';
@@ -132,7 +133,10 @@ export class MainState {
       this.sessionService
         .close()
         .pipe(take(1))
-        .subscribe(() => this.toastService.info('Session clossed.'));
+        .subscribe(() => {
+          disconnect();
+          this.toastService.info('Session clossed.');
+        });
     }
 
     this.router.navigateByUrl('/');

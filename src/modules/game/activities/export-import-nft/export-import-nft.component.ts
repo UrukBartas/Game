@@ -1,12 +1,18 @@
 import { Component, inject, signal } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { getAccount, getNetwork, switchNetwork, watchNetwork } from '@wagmi/core';
+import {
+  getAccount,
+  getNetwork,
+  switchNetwork,
+  watchNetwork,
+} from '@wagmi/core';
 import { ethers } from 'ethers';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   BehaviorSubject,
+  catchError,
   filter,
   firstValueFrom,
   from,
@@ -63,6 +69,10 @@ export class ExportImportNftComponent extends TemplatePage {
           getAccount().address,
         ])
       ).pipe(
+        catchError((err) => {
+          console.error(err);
+          return err;
+        }),
         map((entry) => {
           return Number(ethers.formatEther(entry.toString())).toFixed(8);
         })
@@ -84,7 +94,12 @@ export class ExportImportNftComponent extends TemplatePage {
     switchMap((entry: any) => {
       const realTypeEntry = entry as Array<BigInt>;
       const toNumbers = realTypeEntry.map((entry) => Number(entry.toString()));
-      return this.itemService.getMultipleItemsAtOnce({ ids: toNumbers });
+      return this.itemService.getMultipleItemsAtOnce({ ids: toNumbers }).pipe(
+        catchError((err) => {
+          console.error(err);
+          return err;
+        })
+      );
     })
   );
 
@@ -92,7 +107,12 @@ export class ExportImportNftComponent extends TemplatePage {
   public currentInventoryInterval$ = interval(5000).pipe(
     startWith(0),
     switchMap(() => {
-      return this.playerService.getItems();
+      return this.playerService.getItems().pipe(
+        catchError((err) => {
+          console.error(err);
+          return err;
+        })
+      );
     })
   );
 
@@ -100,7 +120,12 @@ export class ExportImportNftComponent extends TemplatePage {
   public currentInventoryOfNftsInterval$ = interval(5000).pipe(
     startWith(0),
     switchMap(() => {
-      return this.playerService.getNFTS();
+      return this.playerService.getNFTS().pipe(
+        catchError((err) => {
+          console.error(err);
+          return err;
+        })
+      );
     })
   );
 
@@ -115,39 +140,22 @@ export class ExportImportNftComponent extends TemplatePage {
   constructor() {
     super();
     this.whiteListedItemsInterval$
-      .pipe(
-        filter((entry) => !!entry),
-        takeUntilDestroyed()
-      )
+      .pipe(takeUntilDestroyed())
       .subscribe((data: any) => this.whiteListedItems$.next(data));
     this.currentInventoryInterval$
-      .pipe(
-        filter((entry) => !!entry),
-        takeUntilDestroyed()
-      )
+      .pipe(takeUntilDestroyed())
       .subscribe((data: any) => this.currentInventory$.next(data));
     this.currentInventoryOfNftsInterval$
-      .pipe(
-        filter((entry) => !!entry),
-        takeUntilDestroyed()
-      )
+      .pipe(takeUntilDestroyed())
       .subscribe((data: any) => {
         this.currentInventoryOfNfts$.next(data);
       });
     this.erc20BalanceInterval$
-      .pipe(
-        filter((entry) => !!entry),
-        takeUntilDestroyed()
-      )
+      .pipe(takeUntilDestroyed())
       .subscribe((data: any) => {
         this.erc20Balance$.next(data);
       });
-    this.refreshPlayer$
-      .pipe(
-        filter((entry) => !!entry),
-        takeUntilDestroyed()
-      )
-      .subscribe();
+    this.refreshPlayer$.pipe(takeUntilDestroyed()).subscribe();
   }
 
   ngOnInit(): void {}
