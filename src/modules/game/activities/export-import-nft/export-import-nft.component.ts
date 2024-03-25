@@ -261,18 +261,17 @@ export class ExportImportNftComponent extends TemplatePage {
 
   public async triggerActionForERC20() {
     this.spinnerService.show();
-    const selectedAmount = Math.ceil(this.selectedUruksToExport);
     try {
       if (this.exportTypeActive == 'export') {
         await firstValueFrom(
           this.importExport.whiteListItemERC20(
-            selectedAmount,
+            this.selectedUruksToExport,
             getAccount().address
           )
         );
         await this.contractService.executewriteContractOnUrukERC20(
           'exportCoins',
-          [ethers.parseEther(selectedAmount.toString())]
+          [ethers.parseEther(this.selectedUruksToExport.toString())]
         );
         this.spinnerService.hide();
         this.toastService.success(
@@ -282,7 +281,7 @@ export class ExportImportNftComponent extends TemplatePage {
       } else {
         await this.contractService.executewriteContractOnUrukERC20(
           'importCoins',
-          [ethers.parseEther(selectedAmount.toString())]
+          [ethers.parseEther(this.selectedUruksToExport.toString())]
         );
         this.spinnerService.hide();
         this.toastService.success(
