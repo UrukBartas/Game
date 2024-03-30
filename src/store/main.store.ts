@@ -10,6 +10,7 @@ import { QuestModel } from 'src/modules/core/models/quest.model';
 import { SessionModel } from 'src/modules/core/models/session.model';
 import { PlayerService } from 'src/services/player.service';
 import { SessionService } from 'src/services/session.service';
+import { WalletService } from 'src/services/wallet.service';
 
 export class ConnectWallet {
   static readonly type = '[Wallet] Connect';
@@ -77,6 +78,7 @@ export class MainState {
   playerService = inject(PlayerService);
   toastService = inject(ToastrService);
   store = inject(Store);
+  walletService = inject(WalletService);
 
   @Action(ConnectWallet)
   connectWallet(
@@ -135,6 +137,7 @@ export class MainState {
         .pipe(take(1))
         .subscribe(() => {
           disconnect();
+          this.walletService.modal.close();
           this.toastService.info('Session clossed.');
         });
     }

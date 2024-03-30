@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import {
@@ -13,7 +13,7 @@ import {
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
 import { Web3Modal } from '@web3modal/wagmi/dist/types/src/client';
 import { ToastrService } from 'ngx-toastr';
-import { take } from 'rxjs';
+import { debounceTime, interval, Subject, take } from 'rxjs';
 import {
   ConnectWallet,
   DisconnectWallet,
@@ -54,6 +54,8 @@ export class WalletService {
   private toastService = inject(ToastrService);
   private router = inject(Router);
   public store = inject(Store);
+  public latestModalEvent = signal(null);
+  public address$ = new Subject<`0x${string}` | undefined>();
 
   initWalletConnect() {
     const projectId = process.env['WALLET_CONNECT_PROJECT_ID'] ?? '';
@@ -73,16 +75,27 @@ export class WalletService {
       enableInjected: true,
       metadata,
     });
-    watchAccount(({ address }) => this.controlWalletFlow(address));
+    watchAccount(({ address }) => {
+      this.address$.next(address);
+    });
 
     this.modal = createWeb3Modal({
       wagmiConfig,
       projectId,
       chains: allowedChains,
     });
+
+    this.modal.subscribeEvents((event) =>
+      this.latestModalEvent.set(event.data.event)
+    );
+
+    this.address$
+      .pipe(debounceTime(300))
+      .subscribe((address) => this.controlWalletFlow(address));
   }
 
   private async controlWalletFlow(address: `0x${string}` | undefined) {
+    console.log('trigger', address);
     const state = this.store.selectSnapshot(MainState.getState);
 
     if (state.address) {
