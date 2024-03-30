@@ -1,5 +1,5 @@
 <div class="w-100 h-100 d-flex justify-content-center align-items-center">
-  @if (walletService.latestModalEvent() == 'CONNECT_SUCCESS') {
+  @if (walletService.latestModalEvent().event == 'CONNECT_SUCCESS') {
     <button
       (click)="walletService.logIn()"
       type="submit"

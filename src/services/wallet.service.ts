@@ -11,6 +11,7 @@ import {
   watchAccount,
 } from '@wagmi/core';
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
+import { Event as Web3ModalEvent } from 'node_modules/@web3modal/core';
 import { Web3Modal } from '@web3modal/wagmi/dist/types/src/client';
 import { ToastrService } from 'ngx-toastr';
 import { debounceTime, interval, Subject, take } from 'rxjs';
@@ -54,7 +55,10 @@ export class WalletService {
   private toastService = inject(ToastrService);
   private router = inject(Router);
   public store = inject(Store);
-  public latestModalEvent = signal(null);
+  public latestModalEvent = signal<Web3ModalEvent>({
+    type: 'track',
+    event: 'MODAL_CREATED',
+  });
   public address$ = new Subject<`0x${string}` | undefined>();
 
   initWalletConnect() {
@@ -86,7 +90,7 @@ export class WalletService {
     });
 
     this.modal.subscribeEvents((event) =>
-      this.latestModalEvent.set(event.data.event)
+      this.latestModalEvent.set(event.data)
     );
 
     this.address$
