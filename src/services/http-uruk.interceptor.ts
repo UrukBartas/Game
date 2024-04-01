@@ -1,15 +1,14 @@
 import {
+  HttpContextToken,
   HttpErrorResponse,
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
-  HttpInterceptorFn,
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { getNetwork } from '@wagmi/core';
 import { Observable, catchError, throwError } from 'rxjs';
-
 @Injectable()
 export class HttpUrukInterceptor implements HttpInterceptor {
   intercept(

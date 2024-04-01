@@ -160,8 +160,8 @@
             <button
               type="button"
               class="btn btn-secondary btn-lg btn-block w-100 btn-pending"
-              *ngFor="let whiteListedItemId of parseToAny(pending)"
-              (click)="exportItem(whiteListedItemId)"
+              *ngFor="let whiteListedItemId of pending"
+              (click)="exportItem(whiteListedItemId.id)"
             >
               #{{ whiteListedItemId.id }}
               <i
