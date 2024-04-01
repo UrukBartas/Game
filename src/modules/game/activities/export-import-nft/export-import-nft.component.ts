@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   BehaviorSubject,
+  EMPTY,
   catchError,
   filter,
   firstValueFrom,
@@ -22,6 +23,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
+import { shimmerTestnet, shimmer } from 'viem/chains';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Item } from 'src/modules/core/models/items.model';
 import { ContractService } from 'src/services/contract.service';
@@ -32,6 +34,7 @@ import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { WalletService, allowedChains } from 'src/services/wallet.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-export-import-nft',
@@ -54,7 +57,7 @@ export class ExportImportNftComponent extends TemplatePage {
   toastService = inject(ToastrService);
   store = inject(Store);
   walletService = inject(WalletService);
-  public compatibleChains = allowedChains;
+  public compatibleChains = this.getChainList();
   public activeNetworkId = signal(getNetwork().chain.id);
   player$ = this.store
     .select(MainState.getState)
@@ -97,7 +100,7 @@ export class ExportImportNftComponent extends TemplatePage {
       return this.itemService.getMultipleItemsAtOnce({ ids: toNumbers }).pipe(
         catchError((err) => {
           console.error(err);
-          return err;
+          return EMPTY;
         })
       );
     })
@@ -110,7 +113,7 @@ export class ExportImportNftComponent extends TemplatePage {
       return this.playerService.getItems().pipe(
         catchError((err) => {
           console.error(err);
-          return err;
+          return EMPTY;
         })
       );
     })
@@ -123,7 +126,7 @@ export class ExportImportNftComponent extends TemplatePage {
       return this.playerService.getNFTS().pipe(
         catchError((err) => {
           console.error(err);
-          return err;
+          return EMPTY;
         })
       );
     })
@@ -135,7 +138,6 @@ export class ExportImportNftComponent extends TemplatePage {
     })
   );
 
-  public parseToAny = (anything: any) => anything as any;
 
   constructor() {
     super();
@@ -159,6 +161,14 @@ export class ExportImportNftComponent extends TemplatePage {
   }
 
   ngOnInit(): void {}
+
+  public getChainList() {
+    if (environment.production) {
+      return allowedChains.filter((entry) => entry.id == shimmer.id);
+    } else {
+      return allowedChains.filter((entry) => entry.id == shimmerTestnet.id);
+    }
+  }
 
   ngAfterViewInit(): void {
     watchNetwork((network) => {

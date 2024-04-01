@@ -31,7 +31,7 @@ export class PlayerService extends ApiBaseService {
   }
 
   getNFTS() {
-    return this.get('/get-nfts-items');
+    return this.get('/get-nfts-items', true);
   }
 
   public unEquipItem(item: Item) {
