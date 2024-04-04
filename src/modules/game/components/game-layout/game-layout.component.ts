@@ -63,7 +63,6 @@ export class GameLayoutComponent {
   public router = inject(Router);
   public authService = inject(AuthService);
   public accountService = inject(PlayerService);
-  public walletService = inject(WalletService);
   public viewportService = inject(ViewportService);
   public store = inject(Store);
   public modalService = inject(BsModalService);

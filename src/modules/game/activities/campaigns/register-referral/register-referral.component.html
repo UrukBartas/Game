@@ -1,0 +1,46 @@
+<div class="wrapper">
+  <div class="row justify-content-center content-row">
+    <div id="register-referral-modal" class="col-11 col-lg-6">
+      <div class="bg-uruk"></div>
+      <div class="row">
+        <p class="text-third text-center mb-0" urTitle>
+          Get your Golden Uruk now!
+        </p>
+      </div>
+      <div class="row">
+        <p class="text-third text-center extra-large mb-0" urTitle>
+          {{ 1000 - (getCampaignsCount$ | async) + ' remaining' }}
+        </p>
+      </div>
+      @if (!(walletService.address$ | async)) {
+        <button
+          urTitle
+          (click)="walletService.modal.open()"
+          class="button-rainbow w-100 mb-2"
+          [style.padding]="getResponsiveButtonSize()"
+        >
+          Connect wallet
+          <i class="fa-solid fa-torii-gate pl-2"></i>
+        </button>
+      } @else {
+        <button
+          urTitle
+          (click)="generateCampaign()"
+          class="button-rainbow w-100 mb-2"
+          [disabled]="(1000 - (getCampaignsCount$ | async)) <= 0"
+          [style.padding]="getResponsiveButtonSize()"
+        >
+         {{(1000 - (getCampaignsCount$ | async)) <= 0 ? 'All Golden Uruks were distributed' : 'Secure Your Golden Uruk'}}
+        </button>
+      }
+
+      <p class="text-secondary mb-0 text-center" utText>
+        * Campaign active until maximum participant quota is reached..
+      </p>
+      <p class="text-secondary mb-0 text-center" utText>
+        * One claim per wallet address allowed.
+      </p>
+    </div>
+  </div>
+  <div class="bg"></div>
+</div>

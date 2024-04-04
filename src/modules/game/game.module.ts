@@ -1,5 +1,5 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -30,6 +30,8 @@ import { ShopComponent } from './activities/shop/shop.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
+import { RegisterReferralComponent } from './activities/campaigns/register-referral/register-referral.component';
+import { WalletService } from 'src/services/wallet.service';
 
 const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
 const components = [
@@ -46,11 +48,16 @@ const components = [
   ConfirmModalComponent,
   ShopComponent,
   DailyRollButtonComponent,
-  ConsumableModalComponent
+  ConsumableModalComponent,
 ];
 
 @NgModule({
-  declarations: [...components, ...directives, LeadeboardComponent],
+  declarations: [
+    ...components,
+    ...directives,
+    LeadeboardComponent,
+    RegisterReferralComponent,
+  ],
   imports: [
     CommonModule,
     GameRoutingModule,
@@ -69,4 +76,6 @@ const components = [
   exports: [GameLayoutComponent],
   providers: [DecimalPipe],
 })
-export class GameModule {}
+export class GameModule {
+
+}
