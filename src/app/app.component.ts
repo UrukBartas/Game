@@ -8,9 +8,10 @@ import { WalletService } from 'src/services/wallet.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  public account = inject(WalletService);
+  public walletService = inject(WalletService);
+
   constructor() {
-    this.account.initWalletConnect();
+    this.walletService.initWalletConnect();
     this.lockOrientation();
   }
   ngOnInit(): void {}
