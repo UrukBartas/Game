@@ -16,17 +16,22 @@ export class HttpUrukInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     let request = req.clone();
-    if (!!getNetwork() && !!getNetwork().chain) {
-      try {
-        request = req.clone({
-          setHeaders: {
-            chainId: getNetwork().chain.id.toString(),
-          },
-        });
-      } catch (error) {
-        console.error(error);
+    try {
+      if (!!getNetwork() && !!getNetwork().chain) {
+        try {
+          request = req.clone({
+            setHeaders: {
+              chainId: getNetwork().chain.id.toString(),
+            },
+          });
+        } catch (error) {
+          console.error(error);
+        }
       }
+    } catch (error) {
+      console.error(error);
     }
+
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error('Error HTTP:', error);

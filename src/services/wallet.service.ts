@@ -14,7 +14,19 @@ import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
 import { Event as Web3ModalEvent } from 'node_modules/@web3modal/core';
 import { Web3Modal } from '@web3modal/wagmi/dist/types/src/client';
 import { ToastrService } from 'ngx-toastr';
-import { debounceTime, interval, Subject, take } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  firstValueFrom,
+  from,
+  interval,
+  map,
+  of,
+  Subject,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
 import {
   ConnectWallet,
   DisconnectWallet,
@@ -99,7 +111,6 @@ export class WalletService {
   }
 
   private async controlWalletFlow(address: `0x${string}` | undefined) {
-    console.log('trigger', address);
     const state = this.store.selectSnapshot(MainState.getState);
 
     if (state.address) {
@@ -109,40 +120,46 @@ export class WalletService {
         this.store.dispatch(new RefreshPlayer());
       }
     } else {
-      this.logIn();
+      if (!this.router.url.includes('external')) this.logInVoid();
     }
   }
 
-  public logIn() {
-    this.authService
-      .getAuth()
-      .pipe(take(1))
-      .subscribe({
-        next: async ({ nonce }) => {
-          const message = `Sign this message to authenticate your Ethereum address: ${nonce}`;
-          const sign = await signMessage({ message });
-          const address: string = getAccount().address ?? '';
+  public logInVoid() {
+    firstValueFrom(this.logIn());
+  }
 
-          this.authService
-            .signAuth(sign, address, nonce)
-            .pipe(take(1))
-            .subscribe({
-              next: (exists) => {
-                this.store.dispatch(new ConnectWallet(address));
-                if (exists) {
-                  this.store.dispatch(new LoginPlayer());
-                } else {
-                  this.router.navigateByUrl('/create');
-                }
-              },
-              error: () => {
-                this.toastService.error('Couldnt verify the player');
-              },
-            });
-        },
-        error: () => {
-          this.toastService.error("Couldn't reach the server");
-        },
-      });
+  public logIn() {
+    return this.authService.getAuth().pipe(
+      take(1),
+      catchError((err) => {
+        this.toastService.error("Couldn't reach the server");
+        return of(err);
+      }),
+      switchMap(({ nonce }) => {
+        const message = `Sign this message to authenticate your Ethereum address: ${nonce}`;
+        return from(signMessage({ message })).pipe(
+          map((sign) => [sign, nonce])
+        );
+      }),
+      switchMap(([sign, nonce]) => {
+        const address: string = getAccount().address ?? '';
+        return this.authService.signAuth(sign, address, nonce).pipe(
+          take(1),
+          catchError((err) => {
+            this.toastService.error('Couldnt verify the player');
+            return of(err);
+          }),
+          tap((exists) => {
+            this.store.dispatch(new ConnectWallet(address));
+            if (exists) {
+              this.store.dispatch(new LoginPlayer());
+            } else {
+              if (!this.router.url.includes('external'))
+                this.router.navigateByUrl('/create');
+            }
+          })
+        );
+      })
+    );
   }
 }

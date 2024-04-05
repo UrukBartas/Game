@@ -1,0 +1,61 @@
+@import '../../../../../variables.scss';
+
+.wrapper {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+
+  .content-row {
+  }
+  .row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    #register-referral-modal {
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+    }
+  }
+
+  .bg {
+    background-color: $black;
+    background-image: url('../../../../../assets/backgrounds/field.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    filter: blur(5px);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+  }
+}
+
+#register-referral-modal {
+  padding: 20px 40px;
+  background: $black-300;
+  border-radius: 3%;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  -webkit-box-shadow: -1px 1px 19px 10px rgba(72, 255, 0, 0.56);
+  -moz-box-shadow: -1px 1px 19px 10px rgba(72, 255, 0, 0.56);
+  box-shadow: -1px 1px 19px 10px rgba(72, 255, 0, 0.56);
+
+  .bg-uruk {
+    background-image: url('../../../../../assets/goldenuruks.png');
+    background-repeat: no-repeat;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    z-index: -1;
+    left: -15%;
+    top: -30%;
+  }
+}
+.extra-large {
+  font-size: 80px !important;
+}

@@ -10,6 +10,7 @@ import { QuestRouterComponent } from './activities/quests/quest-router.component
 import { ShopComponent } from './activities/shop/shop.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
+import { RegisterReferralComponent } from './activities/campaigns/register-referral/register-referral.component';
 
 const routes: Routes = [
   {

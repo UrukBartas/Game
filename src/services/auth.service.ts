@@ -19,4 +19,12 @@ export class AuthService extends ApiBaseService {
   signAuth(sign: string, address: string, nonce: string): Observable<boolean> {
     return this.post('/sign-auth', { sign, address, nonce });
   }
+
+  checkSignature(
+    sign: string,
+    address: string,
+    nonce: string
+  ): Observable<boolean> {
+    return this.post('/check-signature', { sign, address, nonce });
+  }
 }
