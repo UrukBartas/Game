@@ -141,8 +141,7 @@ export class MainState {
           this.toastService.info('Session clossed.');
         });
     }
-
-    this.router.navigateByUrl('/');
+    if (!this.router.url.includes('external')) this.router.navigateByUrl('/');
 
     patchState({
       address: null,
