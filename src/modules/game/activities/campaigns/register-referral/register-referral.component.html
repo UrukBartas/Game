@@ -4,12 +4,12 @@
       <div class="bg-uruk"></div>
       <div class="row">
         <p class="text-third text-center mb-0" urTitle>
-          Get your Golden Uruk now!
+          Get your Golden Uruks now!
         </p>
       </div>
       <div class="row">
         <p class="text-third text-center extra-large mb-0" urTitle>
-          {{ 1000 - (getCampaignsCount$ | async) + ' remaining' }}
+          {{ 1000 - (getCampaignsCount$ | async) + ' claims remaining' }}
         </p>
       </div>
       @if (!(walletService.address$ | async)) {
@@ -30,7 +30,7 @@
           [disabled]="(1000 - (getCampaignsCount$ | async)) <= 0"
           [style.padding]="getResponsiveButtonSize()"
         >
-         {{(1000 - (getCampaignsCount$ | async)) <= 0 ? 'All Golden Uruks were distributed' : 'Secure Your Golden Uruk'}}
+         {{(1000 - (getCampaignsCount$ | async)) <= 0 ? 'All Golden Uruks were distributed' : 'Secure Your Golden Uruks'}}
         </button>
       }
 

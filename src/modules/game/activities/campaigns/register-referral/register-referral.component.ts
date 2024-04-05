@@ -57,7 +57,7 @@ export class RegisterReferralComponent {
           this.campaignService.generateCampaign({
             playerId: address,
             type: CampaignType.RegisterReferral,
-            data: { uruksToAdd: 1 },
+            data: { uruksToAdd: 5 },
           })
         );
         this.router.navigate(['/create'], {});
