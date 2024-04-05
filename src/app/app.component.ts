@@ -1,5 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
+import { StatusBar } from '@capacitor/status-bar';
+import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
 import { WalletService } from 'src/services/wallet.service';
 
 @Component({
@@ -20,6 +22,8 @@ export class AppComponent {
   async lockOrientation() {
     try {
       await ScreenOrientation.lock({ orientation: 'landscape' });
+      await StatusBar.hide();
+      await NavigationBar.hide();
     } catch (error) {}
   }
 }
