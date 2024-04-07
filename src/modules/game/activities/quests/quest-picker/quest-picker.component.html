@@ -13,6 +13,12 @@
               {{ quest.data.name }}
               <span class="level">{{ quest.level }}</span>
             </span>
+
+            <span urText class="badge mb-1">
+              <i class="fa-solid fa-clock"></i>
+              {{ getApproxTimeOfQuestBasedOnRarity(quest.data.rarity) }}
+            </span>
+
             <span
               urText
               class="badge mb-1"

@@ -9,6 +9,7 @@ import { ViewportService } from 'src/services/viewport.service';
 import { SetQuests } from 'src/store/main.store';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { QuestRouterModel } from '../models/quest-router.model';
+import { Rarity } from 'src/modules/core/models/items.model';
 
 @Component({
   selector: 'app-quest-picker',
@@ -21,6 +22,23 @@ export class QuestPickerComponent extends TemplatePage {
   quests: QuestModel[];
   getRarityColor = getRarityColor;
   activeSlideIndex = 0;
+
+  public getApproxTimeOfQuestBasedOnRarity = (rarity: Rarity) => {
+    switch (rarity) {
+      case 'COMMON':
+        return '10-15 minutes';
+      case 'UNCOMMON':
+        return '15-20 minutes';
+      case 'EPIC':
+        return '20-30 minutes';
+      case 'LEGENDARY':
+        return '30-60 minutes';
+      case 'MYTHIC':
+        return '1-4 hours';
+      default:
+        return '30 minutes';
+    }
+  };
 
   constructor(
     private store: Store,
