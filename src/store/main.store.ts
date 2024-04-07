@@ -61,16 +61,16 @@ export class MainStateModel {
   public quests: QuestModel[] | null;
   public fight: FightModel | null;
 }
-
+const defaultState = {
+  address: '',
+  player: null,
+  session: null,
+  quests: null,
+  fight: null,
+};
 @State<MainStateModel>({
   name: 'main',
-  defaults: {
-    address: '',
-    player: null,
-    session: null,
-    quests: null,
-    fight: null,
-  },
+  defaults: defaultState,
 })
 export class MainState {
   router = inject(Router);
@@ -143,11 +143,7 @@ export class MainState {
     }
     if (!this.router.url.includes('external')) this.router.navigateByUrl('/');
 
-    patchState({
-      address: null,
-      player: null,
-      session: null,
-    });
+    patchState(defaultState);
   }
 
   @Action(RefreshPlayer) async refreshPlayer({
