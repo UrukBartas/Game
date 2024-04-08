@@ -14,4 +14,5 @@ export class ItemBoxComponent {
   @Input() image: string = null;
   @Input() active = false;
   @Input() displayTooltip = true;
+  @Input() stack: number = 0;
 }
