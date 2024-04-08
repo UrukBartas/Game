@@ -17,5 +17,6 @@
       [height]="height"
       [ngClass]="{ selectedItem: active }"
     />
+    <span *ngIf="stack > 0" class="text-white">x{{ stack }}</span>
   }
 </div>

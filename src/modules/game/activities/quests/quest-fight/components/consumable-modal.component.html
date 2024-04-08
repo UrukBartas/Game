@@ -6,17 +6,22 @@
           (click)="selectItem(consumable)"
           [ngbTooltip]="consumableTooltip"
           [tooltipContext]="{ item: consumable }"
-          [image]="consumable.consumableData.image"
+          [image]="consumable.consumableData.image | toIpfsImageFromCid"
           [height]="getItemBoxSize()"
           [width]="getItemBoxSize()"
         ></app-item-box>
         <div class="check-icon" *ngIf="consumable.selected">
-          <i class="fa fa-check-circle"></i></div>
+          <i class="fa fa-check-circle"></i>
+        </div>
       </div>
     }
   </div>
   <div class="use-consumable">
-    <button (click)="useConsumable()" [disabled]="buttonDisabled" class="btn w-100 btn-lg btn-secondary">
+    <button
+      (click)="useConsumable()"
+      [disabled]="buttonDisabled"
+      class="btn w-100 btn-lg btn-secondary"
+    >
       <i class="fa fa-flask px-1"></i>
       USE
     </button>

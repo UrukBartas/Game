@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Consumable } from 'src/modules/core/models/consumable.model';
 import { Item } from 'src/modules/core/models/items.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
@@ -24,6 +25,9 @@ export class PlayerService extends ApiBaseService {
 
   getItems() {
     return this.get('/inventory');
+  }
+  getItemsConsumable(): Observable<Array<Consumable>> {
+    return this.get('/inventory-consumables');
   }
 
   getItemsDisabled() {

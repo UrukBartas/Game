@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
-import { Consumable } from 'src/modules/core/models/consumable.model';
+import { Consumable, ConsumableData } from 'src/modules/core/models/consumable.model';
 import { ToIpfsImageFromCidPipe } from 'src/modules/core/pipes/to-ipfs-image-from-cid.pipe';
 import { ViewportService } from 'src/services/viewport.service';
 
@@ -12,7 +12,7 @@ import { ViewportService } from 'src/services/viewport.service';
   styleUrl: './consumable-tooltip.component.scss',
 })
 export class ConsumableTooltipComponent {
-  @Input() item: Consumable;
+  @Input() item: ConsumableData;
 
   viewportService = inject(ViewportService);
 

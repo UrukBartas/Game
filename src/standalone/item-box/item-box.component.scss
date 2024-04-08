@@ -3,9 +3,15 @@
 .box {
   background-color: $black;
   border: 1px solid $primary;
+  position: relative;
   opacity: 0.9;
   &:hover {
     @extend .hovered;
+  }
+  span {
+    bottom: -5px;
+    right: 0px;
+    position: absolute;
   }
 }
 
