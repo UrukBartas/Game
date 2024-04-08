@@ -1,0 +1,24 @@
+<div class="consumables-inventory">
+  @for (box of boxes; track box.id; let indexConsumable = $index) {
+    <app-item-box
+      (click)="selectNewItem.emit(items[indexConsumable])"
+      [height]="40"
+      [width]="40"
+      [active]="!!selectedItem &&  !!items[indexConsumable] && selectedItem.id == items[indexConsumable].id"
+      [stack]="items[indexConsumable]?.stack ?? 0"
+      [image]="
+        items[indexConsumable]?.consumableData?.image
+          ? (items[indexConsumable].consumableData.image | toIpfsImageFromCid)
+          : null
+      "
+    >
+      @if (!!items[indexConsumable]) {
+        <div tooltip class="tooltip-uruk">
+          <app-consumable-tooltip
+            [item]="items[indexConsumable].consumableData"
+          ></app-consumable-tooltip>
+        </div>
+      }
+    </app-item-box>
+  }
+</div>

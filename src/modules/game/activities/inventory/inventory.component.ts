@@ -4,9 +4,15 @@ import { Store } from '@ngxs/store';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { NgxSpinnerService } from 'ngx-spinner';
 import {
-  BehaviorSubject, filter,
-  firstValueFrom, map, Observable, of, Subject, switchMap,
-  tap
+  BehaviorSubject,
+  filter,
+  firstValueFrom,
+  map,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+  tap,
 } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
@@ -15,7 +21,7 @@ import { InventoryService } from 'src/services/inventory.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
-
+import { groupBy } from 'lodash';
 @Component({
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
@@ -39,9 +45,11 @@ export class InventoryComponent extends TemplatePage {
   public currentInventory$ = this.playerService
     .getItems()
     .pipe(map((items) => this.sortInventory(items)));
+  public currentConsumableInventory$ = this.playerService.getItemsConsumable();
   public activeDragAndDropItemType: ItemType = null;
   public itemTypePublic = ItemType;
   private spinnerService = inject(NgxSpinnerService);
+  public groupByLodash = groupBy;
 
   public getPlayer$ = of(true).pipe(
     switchMap(() => {

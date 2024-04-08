@@ -11,7 +11,7 @@
   <div class="row">
     <div class="col-6">
       <img
-        [src]="item.image"
+        [src]="item.image | toIpfsImageFromCid"
         priority
         [width]="getItemBoxSize()"
         [height]="getItemBoxSize()"

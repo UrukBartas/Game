@@ -22,7 +22,10 @@
             ></i>
           </div>
         </div>
-        <div *ngIf="currentInventory$ | async as inventory" class="inventory">
+        <div
+          *ngIf="currentInventory$ | async as inventory"
+          class="inventory pb-4"
+        >
           <div class="item-inventory-topbar">
             <div class="description">
               <p>Items</p>
@@ -46,52 +49,35 @@
             </div>
           </div>
 
-          <div class="item-inventory">
-            <ng-container>
-              @for (
-                box of itemInventoryBoxes;
-                track box.id;
-                let index = $index
-              ) {
-                <app-item-box
-                  [dndDraggable]="inventory[index]"
-                  [dndEffectAllowed]="'all'"
-                  [dndDisableIf]="!inventory[index]"
-                  (dndStart)="onDragStart($event, inventory[index])"
-                  (dndEnd)="onDragEnd($event)"
-                  [height]="45"
-                  [width]="45"
-                  [displayTooltip]="!!inventory[index]"
-                  (appDoubleClick)="
-                    !!inventory[index] ? equipItem(inventory[index]) : false
-                  "
-                  [image]="
-                    inventory[index]?.itemData?.image
-                      ? (inventory[index].itemData.image | toIpfsImageFromCid)
-                      : null
-                  "
-                >
-                  @if (!!inventory[index]) {
-                    <div tooltip class="tooltip-uruk">
-                      <app-item-tooltip
-                        [item]="inventory[index]"
-                      ></app-item-tooltip>
-                    </div>
-                  }
-                </app-item-box>
-              }
-            </ng-container>
-          </div>
+          <app-item-inventory
+            [items]="inventory"
+            [boxes]="itemInventoryBoxes"
+            [disableDND]="false"
+            (onDragStart)="onDragStart($event.event, $event.data)"
+            (onDragEnd)="onDragEnd($event)"
+            (onDoubleClick)="!!$event ? equipItem($event) : false"
+          ></app-item-inventory>
 
-          <div class="description">
-            <p>Consumables</p>
-            <span>0/{{ consumablesInventoryBoxes.length }}</span>
-          </div>
-          <div class="consumables-inventory">
-            @for (box of consumablesInventoryBoxes; track box.id) {
-              <app-item-box [height]="40" [width]="40"></app-item-box>
-            }
-          </div>
+          <ng-container
+            *ngIf="
+              currentConsumableInventory$
+                | async
+                | stack: 'consumableData.name' as inventoryConsumables
+            "
+          >
+            <div class="description">
+              <p>Consumables</p>
+              <span
+                >{{ inventoryConsumables.length }}/{{
+                  consumablesInventoryBoxes.length
+                }}</span
+              >
+            </div>
+            <app-consumables-inventory
+              [items]="inventoryConsumables"
+              [boxes]="consumablesInventoryBoxes"
+            ></app-consumables-inventory>
+          </ng-container>
         </div>
       </slide>
       <slide>

@@ -1,0 +1,28 @@
+<div class="item-inventory" *ngIf="items">
+  @for (box of boxes; track box.id; let index = $index) {
+    <app-item-box
+      (click)="selectNewItem.emit(items[index])"
+      (dndStart)="onDragStart.emit({ event: $event, data: items[index] })"
+      (dndEnd)="onDragEnd.emit($event)"
+      (appDoubleClick)="onDoubleClick.emit(items[index])"
+      [dndDraggable]="items[index]"
+      [dndEffectAllowed]="'all'"
+      [dndDisableIf]="!items[index] || disableDND"
+      [height]="40"
+      [width]="40"
+      [active]="!!selectedItem && !!items[index] &&  selectedItem.id == items[index].id"
+      [displayTooltip]="!!items[index]"
+      [image]="
+        items[index]?.itemData?.image
+          ? (items[index]?.itemData?.image | toIpfsImageFromCid)
+          : null
+      "
+    >
+      @if (!!items[index]) {
+        <div tooltip class="tooltip-uruk">
+          <app-item-tooltip [item]="items[index]"></app-item-tooltip>
+        </div>
+      }
+    </app-item-box>
+  }
+</div>
