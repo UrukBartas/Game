@@ -32,6 +32,9 @@ import { StatsDetailComponent } from './components/stats-detail/stats-detail.com
 import { GameRoutingModule } from './game-routing.module';
 import { RegisterReferralComponent } from './activities/campaigns/register-referral/register-referral.component';
 import { WalletService } from 'src/services/wallet.service';
+import { StackPipe } from '../core/pipes/stack.pipe';
+import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
+import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
 
 const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
 const components = [
@@ -57,6 +60,8 @@ const components = [
     ...directives,
     LeadeboardComponent,
     RegisterReferralComponent,
+    ItemInventoryComponent,
+    ConsumablesInventoryComponent,
   ],
   imports: [
     CommonModule,
@@ -71,6 +76,7 @@ const components = [
     ConsumableTooltipComponent,
     DoubleClickDirective,
     ToIpfsImageFromCidPipe,
+    StackPipe,
     DndModule,
   ],
   exports: [GameLayoutComponent],

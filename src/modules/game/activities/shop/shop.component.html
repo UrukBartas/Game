@@ -33,9 +33,7 @@
           class="d-flex align-items-center justify-content-center w-100 gap-1"
         >
           <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
-          <span urText class="text-white">{{
-            getSelectedItemsPrice()
-          }}</span>
+          <span urText class="text-white">{{ getSelectedItemsPrice() }}</span>
         </div>
       </button>
     </div>
@@ -54,13 +52,11 @@
             [image]="
               item.itemData
                 ? (item.itemData.image | toIpfsImageFromCid)
-                : item.image
+                : (item.image | toIpfsImageFromCid)
             "
           ></app-item-box>
           <div class="item-price">
-            <span class="text-white">{{
-              item.price | number: '1.0-2'
-            }}</span>
+            <span class="text-white">{{ item.price | number: '1.0-2' }}</span>
           </div>
           <div class="check-icon" *ngIf="item.selected">
             <i class="fa fa-check-circle"></i>
