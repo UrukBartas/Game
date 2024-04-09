@@ -10,7 +10,9 @@
       [dndDisableIf]="!items[index] || disableDND"
       [height]="40"
       [width]="40"
-      [active]="!!selectedItem && !!items[index] &&  selectedItem.id == items[index].id"
+      [active]="
+        !!selectedItem && !!items[index] && selectedItem.id == items[index].id
+      "
       [displayTooltip]="!!items[index]"
       [image]="
         items[index]?.itemData?.image
@@ -25,4 +27,19 @@
       }
     </app-item-box>
   }
+  <app-item-box
+    *ngIf="addExpandInventory && (currentLevel$ | async) <= maxLevel"
+    [height]="40"
+    [width]="40"
+    (click)="confirmPurchase()"
+    [image]="'../assets/inventory-expand.jpg'"
+    [stack]="'Add'"
+  >
+    <div tooltip class="tooltip-uruk">
+      <app-expand-inventory-tooltip
+        [currentLevelInventory]="currentLevel$ | async"
+        [cost]="(currentLevel$ | async) * 50"
+      ></app-expand-inventory-tooltip>
+    </div>
+  </app-item-box>
 </div>

@@ -35,6 +35,7 @@ import { WalletService } from 'src/services/wallet.service';
 import { StackPipe } from '../core/pipes/stack.pipe';
 import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
 import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
+import { ExpandInventoryTooltipComponent } from 'src/standalone/expand-inventory-tooltip/expand-inventory-tooltip.component';
 
 const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
 const components = [
@@ -73,6 +74,7 @@ const components = [
     ProgressBarComponent,
     CarouselModule,
     ItemTooltipComponent,
+    ExpandInventoryTooltipComponent,
     ConsumableTooltipComponent,
     DoubleClickDirective,
     ToIpfsImageFromCidPipe,

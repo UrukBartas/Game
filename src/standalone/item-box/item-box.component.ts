@@ -14,5 +14,8 @@ export class ItemBoxComponent {
   @Input() image: string = null;
   @Input() active = false;
   @Input() displayTooltip = true;
-  @Input() stack: number = 0;
+  @Input() stack: any = 0;
+  public isNaNLocal = isNaN;
+
 }
+

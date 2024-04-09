@@ -34,18 +34,40 @@
               >
             </div>
 
-            <div class="d-flex w-100 justify-content-end">
-              <i
-                (click)="changeSortOrder()"
-                class="bi bi-caret-down-fill text-secondary px-1 pointer"
-                [ngClass]="{
-                  'bi-caret-down-fill': !sortOrderUp,
-                  'bi-caret-up-fill': sortOrderUp
-                }"
-              ></i>
-              <span class="pointer" (click)="changeSortType()">{{
-                sortType
-              }}</span>
+            <div
+              class="d-flex w-100 justify-content-end"
+              [ngClass]="{
+                'justify-content-end':
+                  inventory.length <= itemInventoryBoxes.length,
+                'justify-content-between':
+                  inventory.length > itemInventoryBoxes.length
+              }"
+            >
+              @if (inventory.length > itemInventoryBoxes.length) {
+                <div>
+                  <i
+                    class="bi bi-exclamation-triangle-fill text-secondary px-1 pointer"
+                  ></i>
+                  <span>
+                    You have more items than your backpack can hold. Expand your
+                    slots!
+                  </span>
+                </div>
+              }
+
+              <div>
+                <i
+                  (click)="changeSortOrder()"
+                  class="bi bi-caret-down-fill text-secondary px-1 pointer"
+                  [ngClass]="{
+                    'bi-caret-down-fill': !sortOrderUp,
+                    'bi-caret-up-fill': sortOrderUp
+                  }"
+                ></i>
+                <span class="pointer" (click)="changeSortType()">{{
+                  sortType
+                }}</span>
+              </div>
             </div>
           </div>
 
@@ -56,6 +78,7 @@
             (onDragStart)="onDragStart($event.event, $event.data)"
             (onDragEnd)="onDragEnd($event)"
             (onDoubleClick)="!!$event ? equipItem($event) : false"
+            [addExpandInventory]="!isViewingPlayer"
           ></app-item-inventory>
 
           <ng-container

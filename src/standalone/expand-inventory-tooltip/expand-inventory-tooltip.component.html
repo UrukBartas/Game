@@ -1,0 +1,32 @@
+<div class="item-tooltip-wrapper">
+  <div class="d-flex flex-column align-items-start gap-1">
+    <div class="description w-100">
+      <p
+        class="h6 m-0"
+        [ngStyle]="{ color: getRarityColor(RarityEnum.MYTHIC) }"
+      >
+        Inventory expander
+      </p>
+    </div>
+    <p class="h6 d-flex align-items-center gap-1">
+      <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+      <span urText class="text-white">{{ cost | number: '1.0-2' }}</span>
+    </p>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <img
+        [src]="'../assets/inventory-expand.jpg'"
+        priority
+        [width]="getItemBoxSize()"
+        [height]="getItemBoxSize()"
+      />
+    </div>
+    <div class="col-6">
+      <p>Expands the inventory by +20 slots.</p>
+      <p class="text-secondary">
+        Adds more space to your inventory so you can carry more items.
+      </p>
+    </div>
+  </div>
+</div>
