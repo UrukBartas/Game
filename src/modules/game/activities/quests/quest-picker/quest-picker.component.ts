@@ -1,15 +1,18 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { take } from 'rxjs';
+import { firstValueFrom, map, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { getRarityColor } from 'src/modules/utils';
 import { QuestService } from 'src/services/quest.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { SetQuests } from 'src/store/main.store';
+import { MainState, SetQuests } from 'src/store/main.store';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { QuestRouterModel } from '../models/quest-router.model';
 import { Rarity } from 'src/modules/core/models/items.model';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
+import { PlayerService } from 'src/services/player.service';
 
 @Component({
   selector: 'app-quest-picker',
@@ -22,6 +25,11 @@ export class QuestPickerComponent extends TemplatePage {
   quests: QuestModel[];
   getRarityColor = getRarityColor;
   activeSlideIndex = 0;
+  modalService = inject(BsModalService);
+
+  public slots$ = this.store
+    .select(MainState.getState)
+    .pipe(map((entry) => entry.player.sockets));
 
   public getApproxTimeOfQuestBasedOnRarity = (rarity: Rarity) => {
     switch (rarity) {
@@ -43,7 +51,8 @@ export class QuestPickerComponent extends TemplatePage {
   constructor(
     private store: Store,
     public viewportService: ViewportService,
-    private questService: QuestService
+    private questService: QuestService,
+    private playerService: PlayerService
   ) {
     super();
     this.getPlayerQuests();
@@ -78,7 +87,39 @@ export class QuestPickerComponent extends TemplatePage {
     }
   }
 
-  startQuest() {
+  confirmStartQuestWithFullInventory() {
+    return new Promise((resolve, reject) => {
+      const config: ModalOptions = {
+        initialState: {
+          title: 'Inventory Full!',
+          description: `Your inventory is full. Continuing this quest won't allow you to loot any additional items. Proceed anyway?`,
+          accept: async () => {
+            modalRef.hide();
+            resolve(true);
+          },
+          cancel: () => {
+            resolve(false);
+          },
+        },
+      };
+      const modalRef = this.modalService.show(ConfirmModalComponent, config);
+    }) as Promise<boolean>;
+  }
+
+  async startQuest() {
+    let proceedWithQuest = true;
+    try {
+      const slotsPlayer = await firstValueFrom(this.slots$);
+      const itemsPlayer = await firstValueFrom(
+        this.playerService.getItemsSize()
+      );
+      if (itemsPlayer > slotsPlayer) {
+        proceedWithQuest = await this.confirmStartQuestWithFullInventory();
+      }
+    } catch (error) {
+      console.error('Error calculating inventory size ', error);
+    }
+    if (!proceedWithQuest) return;
     this.questService
       .start(this.quests[this.activeSlideIndex].data.id)
       .subscribe(({ startedAt, finishedAt }) => {

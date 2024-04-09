@@ -237,27 +237,14 @@
   </div>
 
   <ng-template #inventory let-items$="itemsToLoad$">
-    <div class="item-inventory" *ngIf="items$ | async as inventory">
-      @for (box of itemInventoryBoxes; track box.id; let index = $index) {
-        <app-item-box
-          (click)="selectedItem = inventory[index]"
-          [height]="40"
-          [width]="40"
-          [active]="selectedItem == inventory[index] && !!selectedItem"
-          [displayTooltip]="!!inventory[index]"
-          [image]="
-            inventory[index]?.itemData?.image
-              ? (inventory[index]?.itemData?.image | toIpfsImageFromCid)
-              : null
-          "
-        >
-          @if (!!inventory[index]) {
-            <div tooltip class="tooltip-uruk">
-              <app-item-tooltip [item]="inventory[index]"></app-item-tooltip>
-            </div>
-          }
-        </app-item-box>
-      }
-    </div>
+    <app-item-inventory
+      [items]="items$ | async"
+      [boxes]="itemInventoryBoxes"
+      [disableDND]="true"
+      [addExpandInventory]="false"
+      (selectNewItem)="selectedItem = $event"
+      [selectedItem]="selectedItem"
+    >
+    </app-item-inventory>
   </ng-template>
 </div>

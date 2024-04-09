@@ -17,6 +17,8 @@
       [height]="height"
       [ngClass]="{ selectedItem: active }"
     />
-    <span *ngIf="stack > 0" class="text-white">x{{ stack }}</span>
+    <span *ngIf="!!stack" class="text-white"
+      >{{ !isNaNLocal(stack) ? 'x' + stack : stack }}
+    </span>
   }
 </div>
