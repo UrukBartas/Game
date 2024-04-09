@@ -10,7 +10,8 @@
       formControlName="userOrWallet"
     />
   </div>
-  <div class="mover col">
+  <div class="mover col d-flex align-items-center">
+    <span class="text-white px-2">Page: {{ activePage() + 1 }}</span>
     <i
       class="bi bi-caret-left-fill"
       [ngClass]="{ 'disabled-icon': activePage() == 0 }"
@@ -43,7 +44,7 @@
           />
         } @else {
           <div class="list-leaderboard-item-left-number-ranking">
-            {{ index + 1 + (chunkSize() * activePage()) }}
+            {{ index + 1 + chunkSize() * activePage() }}
           </div>
         }
         <div class="list-leaderboard-item-left-container">

@@ -82,9 +82,8 @@ ngb-tooltip-window {
     padding: 0px 20px;
   }
   .item-inventory {
-    height: 145px;
-    @include media-breakpoint-up(lg) {
-      height: 400px;
+    @include media-breakpoint-down(lg) {
+      height: 60vh;
     }
   }
   .consumables-inventory {

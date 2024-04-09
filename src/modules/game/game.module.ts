@@ -35,8 +35,14 @@ import { WalletService } from 'src/services/wallet.service';
 import { StackPipe } from '../core/pipes/stack.pipe';
 import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
 import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
+import { SubtitleSizeDirective } from '../core/directives/subtitle-size.directive';
 
-const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
+const directives = [
+  ValidInputDirective,
+  TextSizeDirective,
+  TitleSizeDirective,
+  SubtitleSizeDirective,
+];
 const components = [
   GameLayoutComponent,
   InventoryComponent,
@@ -82,6 +88,4 @@ const components = [
   exports: [GameLayoutComponent],
   providers: [DecimalPipe],
 })
-export class GameModule {
-
-}
+export class GameModule {}
