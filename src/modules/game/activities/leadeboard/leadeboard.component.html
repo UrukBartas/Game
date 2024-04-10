@@ -36,16 +36,19 @@
       [ngClass]="{ active: player.id == actualAddress }"
     >
       <div class="list-leaderboard-item-left">
-        @if (index >= 0 && index <= 2 && activePage() == 0) {
-          <img
-            [src]="getImgBasedOnRanking(index)"
-            class="list-leaderboard-item-left-image-ranking"
-          />
-        } @else {
-          <div class="list-leaderboard-item-left-number-ranking">
-            {{ index + 1 + (chunkSize() * activePage()) }}
-          </div>
+        @if (!formGroup.value.userOrWallet) {
+          @if (index >= 0 && index <= 2 && activePage() == 0) {
+            <img
+              [src]="getImgBasedOnRanking(index)"
+              class="list-leaderboard-item-left-image-ranking"
+            />
+          } @else {
+            <div class="list-leaderboard-item-left-number-ranking">
+              {{ index + 1 + chunkSize() * activePage() }}
+            </div>
+          }
         }
+
         <div class="list-leaderboard-item-left-container">
           <div class="list-leaderboard-item-name-container">
             <a [routerLink]="['/view-player', player.id]">{{
