@@ -1,5 +1,5 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
-import { NgModule, inject } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -11,10 +11,14 @@ import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.c
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
 import { DoubleClickDirective } from '../core/directives/double-click.directive';
+import { SubtitleSizeDirective } from '../core/directives/subtitle-size.directive';
 import { TextSizeDirective } from '../core/directives/text-size.directive';
 import { TitleSizeDirective } from '../core/directives/title-size.directive';
 import { ValidInputDirective } from '../core/directives/valid-input.directive';
+import { StackPipe } from '../core/pipes/stack.pipe';
 import { ToIpfsImageFromCidPipe } from '../core/pipes/to-ipfs-image-from-cid.pipe';
+import { BlacksmithComponent } from './activities/blacksmith/blacksmith.component';
+import { RegisterReferralComponent } from './activities/campaigns/register-referral/register-referral.component';
 import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { InventoryComponent } from './activities/inventory/inventory.component';
@@ -27,15 +31,11 @@ import { QuestResultComponent } from './activities/quests/quest-result/quest-res
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
 import { DailyRollButtonComponent } from './activities/shop/components/daily-roll-button.component';
 import { ShopComponent } from './activities/shop/shop.component';
+import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
+import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
-import { RegisterReferralComponent } from './activities/campaigns/register-referral/register-referral.component';
-import { WalletService } from 'src/services/wallet.service';
-import { StackPipe } from '../core/pipes/stack.pipe';
-import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
-import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
-import { SubtitleSizeDirective } from '../core/directives/subtitle-size.directive';
 
 const directives = [
   ValidInputDirective,
@@ -56,6 +56,7 @@ const components = [
   QuestResultComponent,
   ConfirmModalComponent,
   ShopComponent,
+  BlacksmithComponent,
   DailyRollButtonComponent,
   ConsumableModalComponent,
 ];
