@@ -6,7 +6,11 @@
 
     <div
       class="row pb-4"
-      *ngIf="fightResult.player?.level > player.level || fightResult.loot"
+      *ngIf="
+        fightResult.player?.level > player.level ||
+        fightResult.loot ||
+        fightResult.lostLoot
+      "
     >
       <div
         *ngIf="fightResult.player?.level > player.level"
@@ -25,30 +29,44 @@
           {{ player.stats.damage + 2 }}</span
         >
         <span urText class="text-white text-center"
-          >Defense {{ player.stats.armor }} →
-          {{ player.stats.armor + 2 }}</span
+          >Defense {{ player.stats.armor }} → {{ player.stats.armor + 2 }}</span
         >
       </div>
-      <div
-        *ngIf="fightResult.loot"
-        class="col col-md-12 d-flex flex-column gap-2"
-      >
-        <span urText class="text-rainbow text-center">Congratulations!</span>
-        <span urText class="text-white text-center">
-          Your enemy dropped something.</span
-        >
-        <app-item-box
-          #lootItem
-          class="d-flex justify-content-center w-100"
-          [height]="getItemBoxSize()"
-          [width]="getItemBoxSize()"
-          [image]="fightResult.loot.itemData.image | toIpfsImageFromCid"
-        >
-          <div tooltip class="tooltip-uruk">
-            <app-item-tooltip [item]="fightResult.loot"></app-item-tooltip>
-          </div>
-        </app-item-box>
-      </div>
+      <ng-container
+        *ngTemplateOutlet="
+          lootDrop;
+          context: {
+            loot: !!fightResult.lostLoot
+              ? fightResult.lostLoot
+              : fightResult.loot,
+            lost: !!fightResult.lostLoot
+          }
+        "
+      ></ng-container>
+      <ng-template #lootDrop let-loot="loot" let-lost="lost">
+        <div *ngIf="loot" class="col col-md-12 d-flex flex-column gap-2">
+          <span urText class="text-rainbow text-center">{{
+            lost ? 'Inventory is full' : 'Congratulations!'
+          }}</span>
+          <span urText class="text-white text-center">{{
+            lost
+              ? 'You cannot take this item with you, so you let it go.'
+              : 'Your enemy dropped something.'
+          }}</span>
+
+          <app-item-box
+            #lootItem
+            class="d-flex justify-content-center w-100"
+            [height]="getItemBoxSize()"
+            [width]="getItemBoxSize()"
+            [image]="loot.itemData.image | toIpfsImageFromCid"
+          >
+            <div tooltip class="tooltip-uruk">
+              <app-item-tooltip [item]="loot"></app-item-tooltip>
+            </div>
+          </app-item-box>
+        </div>
+      </ng-template>
     </div>
 
     <span urText *ngIf="fightResult.exp" class="text-white pb-2"

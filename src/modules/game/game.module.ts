@@ -1,12 +1,12 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { DndModule } from 'ngx-drag-drop';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { ConsumableTooltipComponent } from 'src/standalone/consumable-tooltip/consumable-tooltip.component';
+import { ExpandInventoryTooltipComponent } from 'src/standalone/expand-inventory-tooltip/expand-inventory-tooltip.component';
 import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
@@ -43,6 +43,7 @@ const directives = [
   TitleSizeDirective,
   SubtitleSizeDirective,
 ];
+
 const components = [
   GameLayoutComponent,
   InventoryComponent,
@@ -80,6 +81,7 @@ const components = [
     ProgressBarComponent,
     CarouselModule,
     ItemTooltipComponent,
+    ExpandInventoryTooltipComponent,
     ConsumableTooltipComponent,
     DoubleClickDirective,
     ToIpfsImageFromCidPipe,

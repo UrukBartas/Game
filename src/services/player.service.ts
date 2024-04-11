@@ -26,6 +26,11 @@ export class PlayerService extends ApiBaseService {
   getItems() {
     return this.get('/inventory');
   }
+
+  getItemsSize() {
+    return this.get('/inventory-size');
+  }
+
   getItemsConsumable(): Observable<Array<Consumable>> {
     return this.get('/inventory-consumables');
   }

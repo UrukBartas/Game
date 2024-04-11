@@ -38,11 +38,6 @@ export class GameLayoutComponent {
       icon: 'fa fa-shop',
     },
     {
-      path: '/blacksmith',
-      displayText: 'Blacksmith',
-      icon: 'fa fa-hammer',
-    },
-    {
       path: '/leaderboard',
       displayText: 'Leaderboards',
       icon: 'fas fa-users',

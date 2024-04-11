@@ -17,6 +17,7 @@ export interface PlayerModel {
   uruks: number;
   // Calculated stats with items
   stats: PlayerStatsModel;
+  sockets: number;
 
   // Base player stats
   health: number;
