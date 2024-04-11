@@ -33,6 +33,7 @@ export interface FightResultModel {
   newQuest: QuestModel;
   exp?: number;
   loot?: Item;
+  lostLoot?: Item;
   player?: PlayerModel;
   uruks?: number;
 }

@@ -16,6 +16,10 @@ export class ShopService extends ApiBaseService {
     return this.post('/buy', { itemIds });
   }
 
+  public buyInventoryExpand() {
+    return this.post('/increase-player-inventory', {});
+  }
+
   public dailyRoll() {
     return this.get('/daily-roll');
   }
@@ -31,7 +35,7 @@ export class ShopService extends ApiBaseService {
     return this.get('/premium-roll-data');
   }
 
-  public getDailyRollData(): Observable<{date: Date}> {
+  public getDailyRollData(): Observable<{ date: Date }> {
     return this.get('/daily-roll-data');
   }
 }

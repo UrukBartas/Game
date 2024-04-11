@@ -62,7 +62,13 @@ export class InventoryComponent extends TemplatePage {
           .select(MainState.getState)
           .pipe(map((entry) => entry.player));
       }
-    })
+    }),
+    tap(
+      (player: PlayerModel) =>
+        (this.itemInventoryBoxes = this.inventoryService.getInventoryStructure(
+          player?.sockets ?? 80
+        ))
+    )
   );
   public actualPlayer$ = new BehaviorSubject<PlayerModel>(null);
 

@@ -10,5 +10,6 @@ export class ConfirmModalComponent {
   title: string;
   description: string;
   accept;
+  cancel;
   modalRef = inject(BsModalRef);
 }
