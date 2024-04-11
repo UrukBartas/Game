@@ -6,7 +6,11 @@
 
     <div
       class="row pb-4"
-      *ngIf="fightResult.player?.level > player.level || fightResult.loot"
+      *ngIf="
+        fightResult.player?.level > player.level ||
+        fightResult.loot ||
+        fightResult.lostLoot
+      "
     >
       <div
         *ngIf="fightResult.player?.level > player.level"
