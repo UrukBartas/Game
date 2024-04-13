@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { StatusBar } from '@capacitor/status-bar';
 import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
+import { ContextMenuService } from 'src/services/context-menu.service';
 import { WalletService } from 'src/services/wallet.service';
 
 @Component({

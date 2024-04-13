@@ -1,12 +1,15 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { firstValueFrom, map } from 'rxjs';
+import { firstValueFrom, map, tap } from 'rxjs';
 import { Item } from 'src/modules/core/models/items.model';
 import { InventoryStructure } from 'src/services/inventory.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component';
 import { ShopService } from 'src/services/shop.service';
+import { ContextMenuService } from 'src/services/context-menu.service';
+import { PlayerService } from 'src/services/player.service';
+import { ItemService } from 'src/services/item.service';
 
 @Component({
   selector: 'app-item-inventory',
@@ -32,6 +35,10 @@ export class ItemInventoryComponent {
   //Level 4 is the default level. 80 is default socket size / 20 = 4. If it buys another it becomes 5 (100 /20)
   public currentLevel$ = this.currentSize$.pipe(map((sockets) => sockets / 20));
   public maxLevel = 10;
+  contextMenuService = inject(ContextMenuService);
+  itemService = inject(ItemService);
+
+  @Output() onDestroyItem = new EventEmitter<Item>();
 
   public confirmPurchase() {
     const config: ModalOptions = {
