@@ -36,6 +36,8 @@ import { StackPipe } from '../core/pipes/stack.pipe';
 import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
 import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
 import { ExpandInventoryTooltipComponent } from 'src/standalone/expand-inventory-tooltip/expand-inventory-tooltip.component';
+import { ContextMenuComponent } from 'src/standalone/context-menu/context-menu.component';
+import { ContextMenuInventoryOptionsComponent } from 'src/standalone/context-menu/context-menu-inventory-options/context-menu-inventory-options.component';
 
 const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
 const components = [
@@ -80,10 +82,10 @@ const components = [
     ToIpfsImageFromCidPipe,
     StackPipe,
     DndModule,
+    ContextMenuComponent,
+    ContextMenuInventoryOptionsComponent,
   ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe],
 })
-export class GameModule {
-
-}
+export class GameModule {}

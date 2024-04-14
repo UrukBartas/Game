@@ -6,6 +6,7 @@ import {
 import { inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { disconnect } from '@wagmi/core';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -13,8 +14,9 @@ import { MainState } from 'src/store/main.store';
 
 export class ApiBaseService {
   protected controllerPrefix = '';
-  private toast = inject(ToastrService);
-  private store = inject(Store);
+  protected toast = inject(ToastrService);
+  protected store = inject(Store);
+  protected spinnerService = inject(NgxSpinnerService);
 
   constructor(protected _http: HttpClient) {}
 

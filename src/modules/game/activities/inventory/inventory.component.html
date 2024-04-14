@@ -79,6 +79,7 @@
             (onDragEnd)="onDragEnd($event)"
             (onDoubleClick)="!!$event ? equipItem($event) : false"
             [addExpandInventory]="!isViewingPlayer"
+            (onDestroyItem)="destroyItem($event)"
           ></app-item-inventory>
 
           <ng-container

@@ -1,0 +1,11 @@
+<div
+  *ngIf="contextMenuService.menuVisible()"
+  [style.top.px]="contextMenuService.top()"
+  [style.left.px]="contextMenuService.left()"
+  class="menu"
+  id="contextMenu"
+>
+  <ng-container
+    *ngTemplateOutlet="contextMenuService.menuContent()"
+  ></ng-container>
+</div>

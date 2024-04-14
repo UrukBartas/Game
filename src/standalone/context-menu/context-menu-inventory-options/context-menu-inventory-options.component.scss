@@ -1,0 +1,20 @@
+@import "../../../../src/variables.scss";
+
+
+.list-options{
+  list-style: none;
+  display: flex;
+  padding: 0px;
+  margin: 0;
+  flex-direction: column;
+  gap: 1px;
+  background-color: $primary;
+  li{
+    cursor: pointer;
+    color: $third;
+    padding: 10px;
+    &:hover{
+      background-color: $secondary;
+    }
+  }
+}

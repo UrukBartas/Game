@@ -1,6 +1,17 @@
 <div class="item-inventory" *ngIf="items">
   @for (box of boxes; track box.id; let index = $index) {
+    <ng-template #contextOptions>
+      <app-context-menu-inventory-options
+        (clickEquip)="
+          onDoubleClick.emit(items[index]); contextMenuService.hideContextMenu()
+        "
+        (clickDestroy)="
+          onDestroyItem.emit(items[index]); contextMenuService.hideContextMenu()
+        "
+      ></app-context-menu-inventory-options>
+    </ng-template>
     <app-item-box
+      (contextmenu)="contextMenuService.onContextMenu($event, contextOptions)"
       (click)="selectNewItem.emit(items[index])"
       (dndStart)="onDragStart.emit({ event: $event, data: items[index] })"
       (dndEnd)="onDragEnd.emit($event)"
@@ -20,7 +31,7 @@
           : null
       "
     >
-      @if (!!items[index]) {
+      @if (!!items[index] && !contextMenuService.menuVisible()) {
         <div tooltip class="tooltip-uruk">
           <app-item-tooltip [item]="items[index]"></app-item-tooltip>
         </div>
