@@ -15,6 +15,7 @@ const routes: Routes = [
       {
         path: 'register-referral',
         component: RegisterReferralComponent,
+        title: 'Register referral',
       },
     ],
   },

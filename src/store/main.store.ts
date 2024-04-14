@@ -1,5 +1,7 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { App } from '@capacitor/app';
+import { Device } from '@capacitor/device';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { disconnect } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
@@ -135,10 +137,14 @@ export class MainState {
       this.sessionService
         .close()
         .pipe(take(1))
-        .subscribe(() => {
+        .subscribe(async () => {
           disconnect();
-          this.walletService.modal.close();
+          await this.walletService.modal.close();
           this.toastService.info('Session clossed.');
+          const info = await Device.getInfo();
+          if (info.platform == 'android') {
+            App.exitApp();
+          }
         });
     }
     if (!this.router.url.includes('external')) this.router.navigateByUrl('/');
