@@ -22,6 +22,9 @@ import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { groupBy } from 'lodash';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { ItemService } from 'src/services/item.service';
+import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
 @Component({
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
@@ -30,7 +33,9 @@ import { groupBy } from 'lodash';
 export class InventoryComponent extends TemplatePage {
   private inventoryService = inject(InventoryService);
   private store = inject(Store);
+  modalService = inject(BsModalService);
   private playerService = inject(PlayerService);
+  private itemsService = inject(ItemService);
   viewportService = inject(ViewportService);
   private route = inject(ActivatedRoute);
   public router = inject(Router);
@@ -167,20 +172,9 @@ export class InventoryComponent extends TemplatePage {
   }
 
   public async equipItem(item: Item) {
-    try {
-      this.spinnerService.show();
-      await firstValueFrom(
-        this.playerService.equipItem(item).pipe(
-          tap(() => {
-            this.store.dispatch(new RefreshPlayer());
-            this.inventoryUpdated$.next(true);
-          })
-        )
-      );
-      this.spinnerService.hide();
-    } catch (error) {
-      this.spinnerService.hide();
-    }
+    this.playerService.equipItemFlow(item, () => {
+      this.inventoryUpdated$.next(true);
+    });
   }
 
   onDrop(event: DndDropEvent) {
@@ -204,5 +198,31 @@ export class InventoryComponent extends TemplatePage {
   changeSortType() {
     this.sortType = this.sortType === 'rarity' ? 'level' : 'rarity';
     this.inventoryUpdated$.next(true);
+  }
+
+  public destroyItem(item: Item) {
+    const config: ModalOptions = {
+      initialState: {
+        title: 'Destroy item',
+        description: `This item will be destroyed forever. Do you want to proceed?`,
+        accept: async () => {
+          try {
+            await firstValueFrom(
+              this.itemsService.destroyItem(item.id).pipe(
+                tap(() => {
+                  this.store.dispatch(new RefreshPlayer());
+                  this.inventoryUpdated$.next(true);
+                })
+              )
+            );
+          } catch (error) {
+            console.error(error);
+          }
+
+          modalRef.hide();
+        },
+      },
+    };
+    const modalRef = this.modalService.show(ConfirmModalComponent, config);
   }
 }

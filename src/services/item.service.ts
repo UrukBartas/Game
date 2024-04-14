@@ -15,6 +15,10 @@ export class ItemService extends ApiBaseService {
     return this.get('/get-item/' + itemId);
   }
 
+  public destroyItem(itemId: number) {
+    return this.post('/destroy-item/' + itemId, {});
+  }
+
   public getItemData(itemIdData: number) {
     return this.get('/get-item-data/' + itemIdData);
   }
