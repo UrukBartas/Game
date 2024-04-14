@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "657642113527",
+    "project_id": "uruk-bartas-push",
+    "storage_bucket": "uruk-bartas-push.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:657642113527:android:d5dc03355fca081b5146f2",
+        "android_client_info": {
+          "package_name": "com.urukbartas.game"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDipgtyMjwOTLZ47G-VqbdwBkgt666X_I4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
