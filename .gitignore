@@ -44,3 +44,4 @@ Thumbs.db
 
 # Keys
 .env
+/src/firebase-messaging-sw.js

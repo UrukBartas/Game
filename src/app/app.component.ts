@@ -3,11 +3,11 @@ import { Capacitor } from '@capacitor/core';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { StatusBar } from '@capacitor/status-bar';
 import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
-import { ContextMenuService } from 'src/services/context-menu.service';
 import { WalletService } from 'src/services/wallet.service';
 import { initializeApp } from 'firebase/app';
 import { environment } from 'src/environments/environment';
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics } from 'firebase/analytics';
+import { PushNotificationsService } from 'src/services/push-notifications.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,11 +15,12 @@ import { getAnalytics } from "firebase/analytics";
 })
 export class AppComponent {
   public walletService = inject(WalletService);
-
+  public pushNotificationsService = inject(PushNotificationsService);
   constructor() {
     this.walletService.initWalletConnect();
     this.lockOrientation();
     this.initializeFirebase();
+    this.pushNotificationsService.init();
   }
   ngOnInit(): void {}
 

@@ -18,6 +18,7 @@ import { QuestService } from 'src/services/quest.service';
 import { take } from 'rxjs';
 import { QuestRouterModel } from '../models/quest-router.model';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-quest-result',
@@ -31,10 +32,16 @@ export class QuestResultComponent extends TemplatePage {
   store = inject(Store);
   viewportService = inject(ViewportService);
   questService = inject(QuestService);
+  titleService = inject(Title);
   victory = false;
   questStatusEnum = QuestStatusEnum;
   player = this.store.selectSnapshot(MainState.getState).player;
   getRarityColor = getRarityColor;
+
+  constructor() {
+    super();
+    this.titleService.setTitle('Quest result');
+  }
 
   @Output() questStatusChange = new EventEmitter<QuestRouterModel>();
   @Input() set result(fightResult: FightResultModel) {

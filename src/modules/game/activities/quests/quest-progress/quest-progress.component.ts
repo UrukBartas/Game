@@ -30,8 +30,6 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
   time: string;
   interval;
 
-  timeoutId: any;
-
   constructor(
     public viewportService: ViewportService,
     private store: Store,
@@ -49,8 +47,9 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
   }
 
   changeTitleRecursiveQuestIsReady(): void {
+    if (!this.questReady) return;
     this.title.setTitle('Quest Ready!');
-    this.timeoutId = setTimeout(() => {
+    setTimeout(() => {
       this.title.setTitle('Battle Incoming!');
       setTimeout(() => {
         this.changeTitleRecursiveQuestIsReady();
@@ -131,8 +130,6 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
 
   ngOnDestroy(): void {
     clearInterval(this.interval);
-    if (this.timeoutId) {
-      clearTimeout(this.timeoutId);
-    }
+    this.questReady = false;
   }
 }

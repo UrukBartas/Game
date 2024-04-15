@@ -160,20 +160,12 @@ export class MainState {
         .get('/')
         .pipe(take(1))
         .toPromise();
-      this.store.dispatch(new SetPlayer(player));
+      patchState({
+        player: player,
+      });
     } catch (error) {
       this.store.dispatch(new DisconnectWallet());
     }
-  }
-
-  @Action(SetPlayer)
-  setPlayer(
-    { patchState }: StateContext<MainStateModel>,
-    data: { payload: PlayerModel }
-  ) {
-    patchState({
-      player: data.payload,
-    });
   }
 
   @Action(StartFight)

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { firstValueFrom, map, tap } from 'rxjs';
+import { filter, firstValueFrom, map, tap } from 'rxjs';
 import { Item } from 'src/modules/core/models/items.model';
 import { InventoryStructure } from 'src/services/inventory.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
@@ -29,9 +29,10 @@ export class ItemInventoryComponent {
   private store = inject(Store);
   modalService = inject(BsModalService);
   private shopService = inject(ShopService);
-  public currentSize$ = this.store
-    .select(MainState.getState)
-    .pipe(map((entry) => entry.player.sockets));
+  public currentSize$ = this.store.select(MainState.getState).pipe(
+    filter((player) => !!player),
+    map((entry) => entry.player.sockets)
+  );
   //Level 4 is the default level. 80 is default socket size / 20 = 4. If it buys another it becomes 5 (100 /20)
   public currentLevel$ = this.currentSize$.pipe(map((sockets) => sockets / 20));
   public maxLevel = 10;

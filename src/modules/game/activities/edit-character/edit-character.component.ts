@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { PlayerService } from 'src/services/player.service';
+import { PushNotificationsService } from 'src/services/push-notifications.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { LoginPlayer, MainState, RefreshPlayer } from 'src/store/main.store';
 
@@ -20,7 +21,7 @@ export class EditCharacterComponent extends TemplatePage {
   store = inject(Store);
   formBuilder = inject(FormBuilder);
   toastService = inject(ToastrService);
-
+  public pushNotificationsService = inject(PushNotificationsService);
   images = [
     'assets/free-portraits/knight.png',
     'assets/free-portraits/knight-f.png',
@@ -47,7 +48,7 @@ export class EditCharacterComponent extends TemplatePage {
     }
   }
 
-  private load() {
+  private async load() {
     const player = this.store.selectSnapshot(MainState.getState).player;
     if (player) {
       const { image, name, email } = player;
