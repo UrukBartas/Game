@@ -14,7 +14,6 @@ import {
   forkJoin,
   from,
   map,
-  mergeMap,
   of,
   switchMap,
   tap,
@@ -24,7 +23,6 @@ import { ToastrService } from 'ngx-toastr';
 import { Store } from '@ngxs/store';
 import { MainState } from 'src/store/main.store';
 import { PlayerService } from './player.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Injectable({
   providedIn: 'root',
 })
@@ -105,7 +103,7 @@ export class PushNotificationsService {
   public async getToken(): Promise<string> {
     try {
       const options: GetTokenOptions = {
-        vapidKey: environment.firebase.vapidKey,
+        vapidKey: process.env['vapidKey'],
       };
       if (Capacitor.getPlatform() === 'web') {
         options.serviceWorkerRegistration =

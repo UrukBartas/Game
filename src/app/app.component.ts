@@ -5,7 +5,6 @@ import { StatusBar } from '@capacitor/status-bar';
 import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
 import { WalletService } from 'src/services/wallet.service';
 import { initializeApp } from 'firebase/app';
-import { environment } from 'src/environments/environment';
 import { getAnalytics } from 'firebase/analytics';
 import { PushNotificationsService } from 'src/services/push-notifications.service';
 @Component({
@@ -38,7 +37,16 @@ export class AppComponent {
     if (Capacitor.isNativePlatform()) {
       return;
     }
-    const app = initializeApp(environment.firebase);
+    const app = initializeApp({
+      apiKey: process.env['apiKey'],
+      authDomain: process.env['authDomain'],
+      projectId: process.env['projectId'],
+      storageBucket: process.env['storageBucket'],
+      messagingSenderId: process.env['messagingSenderId'],
+      appId: process.env['appId'],
+      measurementId: process.env['measurementId'],
+      vapidKey: process.env['vapidKey'],
+    } as any);
     getAnalytics(app);
   }
 }
