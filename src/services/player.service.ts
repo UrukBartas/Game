@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Consumable } from 'src/modules/core/models/consumable.model';
 import { Item } from 'src/modules/core/models/items.model';
+import { Material } from 'src/modules/core/models/material.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 
@@ -35,20 +36,16 @@ export class PlayerService extends ApiBaseService {
     return this.get('/inventory-consumables');
   }
 
+  getItemsMaterial(): Observable<Array<Material>> {
+    return this.get('/inventory-materials');
+  }
+
   getItemsDisabled() {
     return this.get('/inventory-disabled');
   }
 
   getNFTS() {
     return this.get('/get-nfts-items', true);
-  }
-
-  public unEquipItem(item: Item) {
-    return this.post('/unequip/' + item.id, {}) as Observable<Item>;
-  }
-
-  public equipItem(item: Item) {
-    return this.post('/equip/' + item.id, {}) as Observable<Item>;
   }
 
   public getLeaderboard(

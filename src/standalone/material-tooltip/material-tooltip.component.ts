@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
-import { ConsumableData } from 'src/modules/core/models/consumable.model';
+import { MaterialData } from 'src/modules/core/models/material.model';
 import { ToIpfsImageFromCidPipe } from 'src/modules/core/pipes/to-ipfs-image-from-cid.pipe';
 import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
-  selector: 'app-consumable-tooltip',
+  selector: 'app-material-tooltip',
   standalone: true,
   imports: [CommonModule, ToIpfsImageFromCidPipe],
-  templateUrl: './consumable-tooltip.component.html',
-  styleUrl: './consumable-tooltip.component.scss',
+  templateUrl: './material-tooltip.component.html',
+  styleUrl: './material-tooltip.component.scss',
 })
-export class ConsumableTooltipComponent {
-  @Input() item: ConsumableData;
+export class MaterialTooltipComponent {
+  @Input() item: MaterialData;
 
   viewportService = inject(ViewportService);
 

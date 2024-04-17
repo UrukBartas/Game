@@ -1,0 +1,22 @@
+<div class="materials-inventory">
+  @for (box of boxes; track box.id; let indexConsumable = $index) {
+    <app-item-box
+      [height]="40"
+      [width]="40"
+      [stack]="items[indexConsumable]?.quantity | compressNumber"
+      [image]="
+        items[indexConsumable]
+          ? (items[indexConsumable]?.materialData.image | toIpfsImageFromCid)
+          : null
+      "
+    >
+      @if (!!items[indexConsumable]) {
+        <div tooltip class="tooltip-uruk">
+          <app-material-tooltip
+            [item]="items[indexConsumable]?.materialData"
+          ></app-material-tooltip>
+        </div>
+      }
+    </app-item-box>
+  }
+</div>

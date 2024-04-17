@@ -101,6 +101,21 @@
               [boxes]="consumablesInventoryBoxes"
             ></app-consumables-inventory>
           </ng-container>
+
+          <ng-container *ngIf="currentMaterialsInventory$ | async as materials">
+            <div class="description">
+              <p>Materials</p>
+              <span
+                >{{ materials.length }}/{{
+                  materialsInventoryBoxes.length
+                }}</span
+              >
+            </div>
+            <app-materials-inventory
+              [items]="materials"
+              [boxes]="materialsInventoryBoxes"
+            ></app-materials-inventory>
+          </ng-container>
         </div>
       </slide>
       <slide>

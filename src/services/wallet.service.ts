@@ -149,13 +149,12 @@ export class WalletService {
             this.toastService.error('Couldnt verify the player');
             return of(err);
           }),
-          tap((exists) => {
-            this.store.dispatch(new ConnectWallet(address));
-            if (exists) {
+          tap((verificated) => {
+            if (verificated) {
+              this.store.dispatch(new ConnectWallet(address));
               this.store.dispatch(new LoginPlayer());
             } else {
-              if (!this.router.url.includes('external'))
-                this.router.navigateByUrl('/create');
+              this.toastService.error('Couldnt verify the player');
             }
           })
         );

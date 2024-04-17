@@ -22,6 +22,7 @@ import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { groupBy } from 'lodash';
+import { ItemService } from 'src/services/item.service';
 @Component({
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
@@ -31,12 +32,15 @@ export class InventoryComponent extends TemplatePage {
   private inventoryService = inject(InventoryService);
   private store = inject(Store);
   private playerService = inject(PlayerService);
+  private itemService = inject(ItemService);
   viewportService = inject(ViewportService);
   private route = inject(ActivatedRoute);
   public router = inject(Router);
   public activeSlideIndex = 0;
   public itemInventoryBoxes = this.inventoryService.getInventoryStructure();
   public consumablesInventoryBoxes =
+    this.inventoryService.getInventoryStructure(20);
+  public materialsInventoryBoxes =
     this.inventoryService.getInventoryStructure(20);
 
   public inventoryUpdated$ = new Subject();
@@ -46,6 +50,7 @@ export class InventoryComponent extends TemplatePage {
     .getItems()
     .pipe(map((items) => this.sortInventory(items)));
   public currentConsumableInventory$ = this.playerService.getItemsConsumable();
+  public currentMaterialsInventory$ = this.playerService.getItemsMaterial();
   public activeDragAndDropItemType: ItemType = null;
   public itemTypePublic = ItemType;
   private spinnerService = inject(NgxSpinnerService);
@@ -64,10 +69,9 @@ export class InventoryComponent extends TemplatePage {
       }
     }),
     tap(
-      (player: PlayerModel) =>
-        (this.itemInventoryBoxes = this.inventoryService.getInventoryStructure(
-          player?.sockets ?? 80
-        ))
+      () =>
+        (this.itemInventoryBoxes =
+          this.inventoryService.getInventoryStructure())
     )
   );
   public actualPlayer$ = new BehaviorSubject<PlayerModel>(null);
@@ -153,7 +157,7 @@ export class InventoryComponent extends TemplatePage {
     try {
       const item = await firstValueFrom(item$);
       await firstValueFrom(
-        this.playerService.unEquipItem(item).pipe(
+        this.itemService.unEquipItem(item).pipe(
           tap(() => {
             this.store.dispatch(new RefreshPlayer());
             this.inventoryUpdated$.next(true);
@@ -170,7 +174,7 @@ export class InventoryComponent extends TemplatePage {
     try {
       this.spinnerService.show();
       await firstValueFrom(
-        this.playerService.equipItem(item).pipe(
+        this.itemService.equipItem(item).pipe(
           tap(() => {
             this.store.dispatch(new RefreshPlayer());
             this.inventoryUpdated$.next(true);

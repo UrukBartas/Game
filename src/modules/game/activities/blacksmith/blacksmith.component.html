@@ -1,3 +1,58 @@
 <div id="blacksmith">
   <div class="blacksmith-bg"></div>
+  <div *ngIf="showDialog" class="blacksmith-dialog">
+    <span urTitle>{{ dialog }} </span>
+  </div>
+
+  <div class="inventory-container inventory">
+    <div class="description">
+      <span urSubtitle>Inventory</span>
+    </div>
+    <app-item-inventory
+      class="overflow-hidden"
+      [items]="currentInventory$ | async"
+      [boxes]="itemInventoryBoxes"
+      [disableDND]="false"
+      [boxSize]="getInventoryBoxSize()"
+      (onDragStart)="hovered = true"
+      (onDragEnd)="hovered = false"
+      (onDoubleClick)="!!$event ? (selectedItem = $event) : false"
+    ></app-item-inventory>
+  </div>
+
+  <div class="item-container">
+    <app-item-box
+      #anvil
+      [active]="hovered"
+      [ngbTooltip]="itemTooltip"
+      [tooltipContext]="{ item: selectedItem }"
+      [height]="getItemBoxSize()"
+      [width]="getItemBoxSize()"
+      [image]="
+        selectedItem
+          ? (selectedItem?.itemData.image | toIpfsImageFromCid)
+          : null
+      "
+    ></app-item-box>
+    <div class="flex">
+      <button
+        (click)="openModal(true)"
+        [class]="'btn btn-secondary mx-1 ' + getButtonSize()"
+      >
+        <i class="fa fa-gears pl-1 pb-1"></i>
+        Upgrade
+      </button>
+      <button
+        (click)="openModal(false)"
+        [class]="'btn btn-primary ' + getButtonSize()"
+      >
+        <i class="fa fa-recycle pl-1 pb-1"></i>
+        Recycle
+      </button>
+    </div>
+  </div>
 </div>
+
+<ng-template #itemTooltip let-item="item">
+  <app-item-tooltip *ngIf="selectedItem" [item]="item"></app-item-tooltip>
+</ng-template>

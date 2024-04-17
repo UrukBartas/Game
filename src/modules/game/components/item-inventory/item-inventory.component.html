@@ -8,8 +8,8 @@
       [dndDraggable]="items[index]"
       [dndEffectAllowed]="'all'"
       [dndDisableIf]="!items[index] || disableDND"
-      [height]="40"
-      [width]="40"
+      [height]="boxSize"
+      [width]="boxSize"
       [active]="
         !!selectedItem && !!items[index] && selectedItem.id == items[index].id
       "
@@ -29,8 +29,8 @@
   }
   <app-item-box
     *ngIf="addExpandInventory && (currentLevel$ | async) <= maxLevel"
-    [height]="40"
-    [width]="40"
+    [height]="boxSize"
+    [width]="boxSize"
     (click)="confirmPurchase()"
     [image]="'../assets/inventory-expand.jpg'"
     [stack]="'+2O'"

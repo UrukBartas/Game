@@ -16,6 +16,7 @@ import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component'
 export class ItemInventoryComponent {
   @Input() items: Item[] = [];
   @Input() boxes: Array<InventoryStructure> = [];
+  @Input() boxSize: number = 40;
   @Input() selectedItem: Item;
   @Input() disableDND = true;
   @Input() addExpandInventory = false;

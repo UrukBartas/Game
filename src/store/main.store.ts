@@ -114,16 +114,22 @@ export class MainState {
   async loginPlayer({ patchState }: StateContext<MainStateModel>) {
     // No cambiar a observables da problemas de syncro
     try {
-      const session = await this.sessionService
-        .open()
-        .pipe(take(1))
-        .toPromise();
       const player = await this.playerService
         .get('/')
         .pipe(take(1))
         .toPromise();
-      patchState({ player, session });
-      this.router.navigateByUrl('/inventory');
+
+      if (player) {
+        const session = await this.sessionService
+          .open()
+          .pipe(take(1))
+          .toPromise();
+
+        patchState({ player, session });
+        this.router.navigateByUrl('/inventory');
+      } else if (!this.router.url.includes('external')) {
+        this.router.navigateByUrl('/create');
+      }
     } catch (error) {
       this.store.dispatch(new DisconnectWallet());
     }

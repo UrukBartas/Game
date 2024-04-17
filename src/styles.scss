@@ -73,7 +73,8 @@ ngb-tooltip-window {
   flex-direction: column;
   gap: 20px;
   .item-inventory,
-  .consumables-inventory {
+  .consumables-inventory,
+  .materials-inventory {
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
@@ -82,11 +83,13 @@ ngb-tooltip-window {
     padding: 0px 20px;
   }
   .item-inventory {
-    @include media-breakpoint-down(lg) {
-      height: 60vh;
+    height: 50vh;
+    @include media-breakpoint-up(lg) {
+      height: 400px;
     }
   }
-  .consumables-inventory {
+  .consumables-inventory,
+  .materials-inventory {
     max-height: 120px;
     min-height: 55px;
   }
