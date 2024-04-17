@@ -12,6 +12,8 @@ import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { QuestRouterModel } from '../models/quest-router.model';
+import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-quest-progress',
@@ -31,7 +33,8 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
   constructor(
     public viewportService: ViewportService,
     private store: Store,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private title: Title
   ) {
     super();
     this.quest = this.store
@@ -41,6 +44,17 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
     if (this.quest) {
       this.setQuestTimer();
     }
+  }
+
+  changeTitleRecursiveQuestIsReady(): void {
+    if (!this.questReady) return;
+    this.title.setTitle('Quest Ready!');
+    setTimeout(() => {
+      this.title.setTitle('Battle Incoming!');
+      setTimeout(() => {
+        this.changeTitleRecursiveQuestIsReady();
+      }, 1000);
+    }, 1000);
   }
 
   setQuestTimer() {
@@ -55,6 +69,7 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
           clearInterval(this.interval);
           this.ngZone.run(() => {
             this.questReady = true;
+            this.changeTitleRecursiveQuestIsReady();
           });
         }
 
@@ -75,7 +90,7 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
         const formattedTime = `${String(hours).padStart(2, '0')}:${String(
           minutes
         ).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-
+        this.title.setTitle(this.time);
         this.ngZone.run(() => {
           this.time = formattedTime;
           this.percentage = (timeDifferenceMillis / totalTimeSpanMillis) * 100;
@@ -115,5 +130,6 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
 
   ngOnDestroy(): void {
     clearInterval(this.interval);
+    this.questReady = false;
   }
 }

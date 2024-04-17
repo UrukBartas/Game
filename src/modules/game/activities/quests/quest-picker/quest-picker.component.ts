@@ -13,6 +13,7 @@ import { Rarity } from 'src/modules/core/models/items.model';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { PlayerService } from 'src/services/player.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-quest-picker',
@@ -26,6 +27,7 @@ export class QuestPickerComponent extends TemplatePage {
   getRarityColor = getRarityColor;
   activeSlideIndex = 0;
   modalService = inject(BsModalService);
+  titleService = inject(Title);
 
   public slots$ = this.store
     .select(MainState.getState)
@@ -56,6 +58,7 @@ export class QuestPickerComponent extends TemplatePage {
   ) {
     super();
     this.getPlayerQuests();
+    this.titleService.setTitle('Pick an adventure');
   }
 
   getPlayerQuests() {

@@ -52,6 +52,9 @@ export class PlayerService extends ApiBaseService {
   getItemsConsumable(): Observable<Array<Consumable>> {
     return this.get('/inventory-consumables');
   }
+  updateFCMToken(fcmToken: string) {
+    return this.post('/add-fcm-token', { fcmToken });
+  }
 
   getItemsDisabled() {
     return this.get('/inventory-disabled');
