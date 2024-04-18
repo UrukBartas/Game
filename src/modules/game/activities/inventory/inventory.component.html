@@ -253,6 +253,7 @@
     [width]="getEquippedItemBoxSize() / (!!isSmallItem ? 2 : 1)"
     [active]="hovered"
     [displayTooltip]="!!(item$ | async)"
+    [rarity]="toItem(item$ | async)?.itemData?.rarity"
     [image]="
       toItem(item$ | async)?.itemData?.image
         ? (toItem(item$ | async).itemData.image | toIpfsImageFromCid)

@@ -5,7 +5,14 @@
   [ngbTooltip]="displayTooltip ? tipContent : null"
   container="body"
   class="box d-flex justify-content-center"
-  [ngClass]="{ selectedBox: active }"
+  [ngClass]="{
+    selectedBox: active,
+    'glowing-common': rarity === rarityEnum.COMMON,
+    'glowing-uncommon': rarity === rarityEnum.UNCOMMON,
+    'glowing-epic': rarity === rarityEnum.EPIC,
+    'glowing-legendary': rarity === rarityEnum.LEGENDARY,
+    'glowing-mythic': rarity === rarityEnum.MYTHIC
+  }"
   [ngStyle]="{ height: height + 'px', width: width + 'px' }"
 >
   @if (!!image) {

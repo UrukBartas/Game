@@ -262,10 +262,11 @@
       </ng-container>
     </ng-container>
 
-    <span urText *ngIf="fighterStatus.energy < 40" [ngbTooltip]="exhausted">😫</span>
+    <span urText *ngIf="fighterStatus.energy < 40" [ngbTooltip]="exhausted"
+      >😫</span
+    >
   </div>
 </ng-template>
-
 
 <ng-template #playerStats let-player="player" let-playerName="playerName">
   <ul class="px-3 py-2 m-0">
@@ -294,7 +295,7 @@
     </li>
     <li urText class="d-flex justify-content-between gap-2">
       <label class="text-third">Penetration:</label>
-      {{ player.penetration | number: '1.0-2' }}
+      {{ player.penetration | number: '1.0-2' }}%
     </li>
     <li urText class="d-flex justify-content-between gap-2">
       <label class="text-third">Crit:</label>
