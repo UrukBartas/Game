@@ -29,7 +29,6 @@
     align-items: center;
     justify-content: center;
     gap: 3%;
-    padding-bottom: 12%;
     padding-top: 1%;
 
     .player-image,
@@ -93,14 +92,11 @@
   }
 
   .action-buttons {
-    position: absolute;
-    bottom: 3%;
     display: flex;
     justify-content: center;
     flex-direction: row;
     gap: 3%;
-    transform: translate(-50%, -50%);
-    left: 50%;
+    height: fit-content;
   }
 
   .action-button {

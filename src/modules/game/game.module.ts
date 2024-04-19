@@ -38,6 +38,7 @@ import { ConsumablesInventoryComponent } from './components/consumables-inventor
 import { ExpandInventoryTooltipComponent } from 'src/standalone/expand-inventory-tooltip/expand-inventory-tooltip.component';
 import { ContextMenuComponent } from 'src/standalone/context-menu/context-menu.component';
 import { ContextMenuInventoryOptionsComponent } from 'src/standalone/context-menu/context-menu-inventory-options/context-menu-inventory-options.component';
+import { CompareItemPipe } from '../core/pipes/compare-item.pipe';
 
 const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
 const components = [

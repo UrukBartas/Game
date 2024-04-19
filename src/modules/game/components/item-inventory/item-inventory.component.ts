@@ -22,10 +22,12 @@ export class ItemInventoryComponent {
   @Input() selectedItem: Item;
   @Input() disableDND = true;
   @Input() addExpandInventory = false;
+  @Input() equippedItemOfType: Item;
   @Output() selectNewItem = new EventEmitter<Item>();
   @Output() onDragStart = new EventEmitter<any>();
   @Output() onDragEnd = new EventEmitter<any>();
   @Output() onDoubleClick = new EventEmitter<any>();
+  @Output() onHover = new EventEmitter<Item>();
   private store = inject(Store);
   modalService = inject(BsModalService);
   private shopService = inject(ShopService);

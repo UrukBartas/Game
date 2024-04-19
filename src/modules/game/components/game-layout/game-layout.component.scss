@@ -18,6 +18,9 @@ i {
   align-items: center;
   gap: 5px;
 }
+.collapse-item {
+  color: $white-100;
+}
 
 .sidebar {
   width: 240px;
@@ -77,6 +80,13 @@ nav a {
   &:hover {
     background-color: lighten($color: $secondary, $amount: 5);
   }
+  @include media-breakpoint-down(sm) {
+   height: 70px;
+   width: 300px;
+   span{
+    font-size: 20px;
+   }
+  }
 }
 
 .account-container {
@@ -110,5 +120,8 @@ nav a {
   app-progress-bar {
     height: 15px;
     width: 60%;
+    @include media-breakpoint-down(sm) {
+      width: 150px;
+    }
   }
 }
