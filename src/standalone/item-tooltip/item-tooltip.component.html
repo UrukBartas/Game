@@ -1,4 +1,13 @@
-<div class="item-tooltip-wrapper">
+<div
+  class="item-tooltip-wrapper"
+  [ngClass]="{
+    'glowing-common': item.itemData.rarity === rarityEnum.COMMON,
+    'glowing-uncommon': item.itemData.rarity === rarityEnum.UNCOMMON,
+    'glowing-epic': item.itemData.rarity === rarityEnum.EPIC,
+    'glowing-legendary': item.itemData.rarity === rarityEnum.LEGENDARY,
+    'glowing-mythic': item.itemData.rarity === rarityEnum.MYTHIC
+  }"
+>
   <div class="d-flex flex-column align-items-start gap-1">
     <div class="description w-100">
       <p

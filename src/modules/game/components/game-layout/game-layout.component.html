@@ -69,7 +69,7 @@
     @if (isMobile) {
       Menu
     }
-    <i
+    <i *ngIf="!isMobile"
       class="pointer {{
         isSidebarOpened()
           ? 'fa-solid fa-angles-up fa-rotate-90'

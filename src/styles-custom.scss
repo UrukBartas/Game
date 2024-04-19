@@ -89,3 +89,95 @@
     background-position: 100% 0;
   }
 }
+
+// RARITY GLOWINGS
+
+@keyframes glowing-common {
+  0% {
+    box-shadow: 0 0 2px 1px rgb(176, 181, 179, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 6px 3px rgb(176, 181, 179, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 2px 1px rgb(176, 181, 179, 0.4);
+  }
+}
+
+.glowing-common {
+  animation: glowing-common 4s infinite;
+  position: relative;
+  display: inline-block;
+}
+
+@keyframes glowing-uncommon {
+  0% {
+    box-shadow: 0 0 2px 1px rgb(61, 116, 184, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 6px 3px rgb(61, 116, 184, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 2px 1px rgb(61, 116, 184, 0.4);
+  }
+}
+
+.glowing-uncommon {
+  animation: glowing-uncommon 4s infinite;
+  position: relative;
+  display: inline-block;
+}
+
+@keyframes glowing-epic {
+  0% {
+    box-shadow: 0 0 2px 1px rgb(157, 68, 181, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 6px 3px rgb(157, 68, 181, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 2px 1px rgb(157, 68, 181, 0.4);
+  }
+}
+
+.glowing-epic {
+  animation: glowing-epic 4s infinite;
+  position: relative;
+  display: inline-block;
+}
+
+@keyframes glowing-legendary {
+  0% {
+    box-shadow: 0 0 2px 1px rgb(255, 127, 17, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 6px 3px rgb(255, 127, 17, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 2px 1px rgb(255, 127, 17, 0.4);
+  }
+}
+
+.glowing-legendary {
+  animation: glowing-legendary 4s infinite;
+  position: relative;
+  display: inline-block;
+}
+
+@keyframes glowing-mythic {
+  0% {
+    box-shadow: 0 0 2px 1px rgb(243, 66, 19, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 6px 3px rgb(243, 66, 19, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 2px 1px rgb(243, 66, 19, 0.4);
+  }
+}
+
+.glowing-mythic {
+  animation: glowing-mythic 4s infinite;
+  position: relative;
+  display: inline-block;
+}

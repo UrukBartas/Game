@@ -1,4 +1,4 @@
-<div class="item-inventory" *ngIf="items">
+<div class="item-inventory pt-1" *ngIf="items">
   @for (box of boxes; track box.id; let index = $index) {
     <div class="box-wrapper">
       <ng-template #contextOptions>
@@ -26,6 +26,7 @@
         [dndDisableIf]="!items[index] || disableDND"
         [height]="40"
         [width]="40"
+        [rarity]="items[index]?.itemData?.rarity"
         [active]="
           !!selectedItem && !!items[index] && selectedItem.id == items[index].id
         "
