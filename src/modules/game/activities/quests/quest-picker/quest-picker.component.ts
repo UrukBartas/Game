@@ -147,4 +147,20 @@ export class QuestPickerComponent extends TemplatePage {
         return '0.3em 1em';
     }
   }
+
+  getResponsiveButtonFontSize() {
+    switch (this.viewportService.screenSize) {
+      case 'xxl':
+        return 'calc(1.325rem + 0.9vw)';
+      case 'xl':
+      case 'lg':
+        return 'calc(1.3rem + 0.6vw)';
+      case 'md':
+        return 'calc(1.275rem + 0.3vw)';
+      case 'xs':
+      case 'sm':
+      default:
+        return '3.25rem';
+    }
+  }
 }

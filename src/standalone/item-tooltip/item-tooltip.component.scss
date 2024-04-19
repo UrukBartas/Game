@@ -1,7 +1,14 @@
 @import '../../variables.scss';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
 
 .item-tooltip-wrapper {
   width: 400px;
+  @include media-breakpoint-down(sm) {
+    background-position: 'right';
+    width: 300px;
+  }
   background-color: $black;
   padding: 15px;
   border-radius: 3px;
@@ -22,5 +29,27 @@
   .uruks-icon {
     max-width: 30px;
     max-height: 30px;
+  }
+
+  .value {
+    color: $third;
+  }
+  .negative {
+    color: $red;
+  }
+  .neutral {
+    color: inherit;
+  }
+
+  .value,
+  .negative,
+  .neutral {
+    font-size: 12px;
+  }
+
+  .list-item-stat {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
   }
 }
