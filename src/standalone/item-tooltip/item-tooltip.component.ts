@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
-import { Item } from 'src/modules/core/models/items.model';
+import { Item, Rarity } from 'src/modules/core/models/items.model';
+import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
 import { ToIpfsImageFromCidPipe } from 'src/modules/core/pipes/to-ipfs-image-from-cid.pipe';
 import { getRarityColor, getRarityText } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
@@ -8,16 +9,19 @@ import { ViewportService } from 'src/services/viewport.service';
 @Component({
   selector: 'app-item-tooltip',
   standalone: true,
-  imports: [CommonModule, ToIpfsImageFromCidPipe],
+  imports: [CommonModule, ToIpfsImageFromCidPipe, CompareItemPipe],
   templateUrl: './item-tooltip.component.html',
   styleUrl: './item-tooltip.component.scss',
 })
 export class ItemTooltipComponent {
   @Input() item: Item;
+  @Input() compareWith: Item;
+  @Input() isBeingCompared = false;
 
   public getRarityColor = getRarityColor;
   public getRarityText = getRarityText;
   public viewportService = inject(ViewportService);
+  public rarityEnum = Rarity;
 
   public getLoopableStatsKeys(): Array<string> {
     if (!this.item) return [];
@@ -46,12 +50,15 @@ export class ItemTooltipComponent {
   }
 
   public getPercentage(key: string) {
-    return ['dodge', 'accuracy', 'block', 'crit'].includes(key) ? '%' : '';
+    return ['dodge', 'accuracy', 'block', 'crit', 'penetration'].includes(key)
+      ? '%'
+      : '';
   }
 
   public getItemBoxSize() {
-    if (
-      this.viewportService.screenSize == 'xs' ||
+    if (this.viewportService.screenSize == 'xs') {
+      return 100;
+    } else if (
       this.viewportService.screenSize == 'sm' ||
       this.viewportService.screenSize == 'md'
     ) {

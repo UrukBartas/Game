@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { Rarity } from 'src/modules/core/models/items.model';
 @Component({
   selector: 'app-item-box',
   standalone: true,
@@ -15,7 +16,8 @@ export class ItemBoxComponent {
   @Input() active = false;
   @Input() displayTooltip = true;
   @Input() stack: any = 0;
+  @Input() rarity: Rarity;
+
   public isNaNLocal = isNaN;
-
+  rarityEnum = Rarity;
 }
-

@@ -20,10 +20,10 @@
   </div>
   <div *ngIf="questReady">
     <button
-      urTitle
       (click)="questStatusChange.emit({ status: questStatusEnum.FIGHT })"
       class="button-rainbow"
       [style.padding]="getResponsiveButtonSize()"
+      [style.fontSize]="getResponsiveButtonFontSize()"
     >
       FIGHT
     </button>

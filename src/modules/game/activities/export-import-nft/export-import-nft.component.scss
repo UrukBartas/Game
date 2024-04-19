@@ -1,5 +1,7 @@
 @import '../../../../variables.scss';
-
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
 .selection {
   display: flex;
   flex-direction: row;
@@ -58,4 +60,11 @@
     justify-content: center;
     gap: 10px;
   }
+}
+
+.row-section{
+  @include media-breakpoint-down(sm) {
+    gap: 10px;
+  }
+
 }

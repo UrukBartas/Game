@@ -1,5 +1,5 @@
 <div class="row h-100">
-  <div class="col-6 h-100">
+  <div class="col-12 col-md-6 order-1 order-sm-0">
     <carousel
       [isAnimated]="true"
       [(activeSlide)]="activeSlideIndex"
@@ -73,10 +73,16 @@
 
           <app-item-inventory
             [items]="inventory"
+            [equippedItemOfType]="
+              !!hoveredItem
+                ? (this.getItem$(hoveredItem.itemData.itemType) | async)
+                : null
+            "
             [boxes]="itemInventoryBoxes"
             [disableDND]="false"
             (onDragStart)="onDragStart($event.event, $event.data)"
             (onDragEnd)="onDragEnd($event)"
+            (onHover)="onHoverItem($event)"
             (onDoubleClick)="!!$event ? equipItem($event) : false"
             [addExpandInventory]="!isViewingPlayer"
             (onDestroyItem)="destroyItem($event)"
@@ -125,7 +131,7 @@
       </slide>
     </carousel>
   </div>
-  <div class="col-6 equipped h-100">
+  <div class="col-12 col-md-6 equipped order-0 order-sm-1">
     <div class="description">
       <p urTitle>Character</p>
       <button
@@ -253,6 +259,7 @@
     [width]="getEquippedItemBoxSize() / (!!isSmallItem ? 2 : 1)"
     [active]="hovered"
     [displayTooltip]="!!(item$ | async)"
+    [rarity]="toItem(item$ | async)?.itemData?.rarity"
     [image]="
       toItem(item$ | async)?.itemData?.image
         ? (toItem(item$ | async).itemData.image | toIpfsImageFromCid)

@@ -62,7 +62,7 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
       this.interval = setInterval(() => {
         const startedAt = new Date(this.quest.startedAt);
         const finishedAt = new Date(this.quest.finishedAt);
-        //finishedAt.setMinutes(finishedAt.getMinutes() - 30);
+        //finishedAt.setMinutes(finishedAt.getMinutes() - 320);
         const currentDate = new Date();
 
         if (currentDate > finishedAt) {
@@ -90,7 +90,7 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
         const formattedTime = `${String(hours).padStart(2, '0')}:${String(
           minutes
         ).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        this.title.setTitle(this.time);
+        this.title.setTitle(`${this.time} - ${this.quest.data.name}`);
         this.ngZone.run(() => {
           this.time = formattedTime;
           this.percentage = (timeDifferenceMillis / totalTimeSpanMillis) * 100;
@@ -125,6 +125,22 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
       case 'sm':
       default:
         return '0.3em 1em';
+    }
+  }
+
+  getResponsiveButtonFontSize() {
+    switch (this.viewportService.screenSize) {
+      case 'xxl':
+        return 'calc(1.325rem + 0.9vw)';
+      case 'xl':
+      case 'lg':
+        return 'calc(1.3rem + 0.6vw)';
+      case 'md':
+        return 'calc(1.275rem + 0.3vw)';
+      case 'xs':
+      case 'sm':
+      default:
+        return '3.25rem';
     }
   }
 

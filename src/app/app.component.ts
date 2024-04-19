@@ -14,12 +14,12 @@ import { PushNotificationsService } from 'src/services/push-notifications.servic
 })
 export class AppComponent {
   public walletService = inject(WalletService);
-  public pushNotificationsService = inject(PushNotificationsService);
+  //public pushNotificationsService = inject(PushNotificationsService);
   constructor() {
     this.walletService.initWalletConnect();
     this.lockOrientation();
-    this.initializeFirebase();
-    this.pushNotificationsService.init();
+    //this.initializeFirebase();
+   // this.pushNotificationsService.init();
   }
   ngOnInit(): void {}
 

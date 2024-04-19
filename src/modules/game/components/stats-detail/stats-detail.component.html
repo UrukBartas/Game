@@ -53,43 +53,133 @@
           <p>Combat</p>
           <ul>
             <li class="d-flex justify-content-between gap-2">
-              <label class="text-third">Life:</label>
+              <label class="text-third"
+                >Life:
+                <i
+                  class="fa-solid fa-circle-info text-third fa-sm px-1"
+                  [ngbTooltip]="statExplanation"
+                  [tooltipContext]="{
+                    text: 'Total health points of the character'
+                  }"
+                ></i>
+              </label>
               {{ player.stats.health | number: '1.0-2' }}
             </li>
             <li class="d-flex justify-content-between gap-2">
-              <label class="text-third">Armor:</label>
+              <label class="text-third"
+                >Armor:
+                <i
+                  class="fa-solid fa-circle-info text-third fa-sm px-1"
+                  [ngbTooltip]="statExplanation"
+                  [tooltipContext]="{
+                    text: 'Reduce incoming damage, reduction is correlated to health (max 50%)'
+                  }"
+                ></i>
+              </label>
               {{ player.stats.armor | number: '1.0-2' }}
             </li>
             <li class="d-flex justify-content-between gap-2">
-              <label class="text-third">Energy:</label>
+              <label class="text-third"
+                >Energy:
+                <i
+                  class="fa-solid fa-circle-info text-third fa-sm px-1"
+                  [ngbTooltip]="statExplanation"
+                  [tooltipContext]="{
+                    text: 'Consumed when attacking (40), lack of it reduces damage dealt'
+                  }"
+                ></i>
+              </label>
               {{ player.stats.energy | number: '1.0-2' }}
             </li>
             <li class="d-flex justify-content-between gap-2">
-              <label class="text-third">Damage:</label>
+              <label class="text-third"
+                >Damage:
+                <i
+                  class="fa-solid fa-circle-info text-third fa-sm px-1"
+                  [ngbTooltip]="statExplanation"
+                  [tooltipContext]="{
+                    text: 'Base damage points'
+                  }"
+                ></i>
+              </label>
               {{ player.stats.damage | number: '1.0-2' }}
             </li>
             <li class="d-flex justify-content-between gap-2">
-              <label class="text-third">Speed:</label>
+              <label class="text-third"
+                >Speed:
+                <i
+                  class="fa-solid fa-circle-info text-third fa-sm px-1"
+                  [ngbTooltip]="statExplanation"
+                  [tooltipContext]="{
+                    text: 'In a tie context, will decide the winner'
+                  }"
+                ></i>
+              </label>
               {{ player.stats.speed | number: '1.0-2' }}
             </li>
             <li class="d-flex justify-content-between gap-2">
-              <label class="text-third">Penetration:</label>
-              {{ player.stats.penetration | number: '1.0-2' }}
+              <label class="text-third"
+                >Penetration:
+                <i
+                  class="fa-solid fa-circle-info text-third fa-sm px-1"
+                  [ngbTooltip]="statExplanation"
+                  [tooltipContext]="{
+                    text: 'Reduce in a percent the armor of the oponent (deal more damage)'
+                  }"
+                ></i>
+              </label>
+              {{ player.stats.penetration | number: '1.0-2' }}%
             </li>
             <li class="d-flex justify-content-between gap-2">
-              <label class="text-third">Crit:</label>
+              <label class="text-third"
+                >Crit:
+                <i
+                  class="fa-solid fa-circle-info text-third fa-sm px-1"
+                  [ngbTooltip]="statExplanation"
+                  [tooltipContext]="{
+                    text: 'Chance of doubling the final calculated damage'
+                  }"
+                ></i>
+              </label>
               {{ player.stats.crit | number: '1.0-2' }}%
             </li>
             <li class="d-flex justify-content-between gap-2">
-              <label class="text-third">Dodge:</label>
+              <label class="text-third"
+                >Dodge:
+                <i
+                  class="fa-solid fa-circle-info text-third fa-sm px-1"
+                  [ngbTooltip]="statExplanation"
+                  [tooltipContext]="{
+                    text: 'Chance of making an opponent miss an attack'
+                  }"
+                ></i>
+              </label>
               {{ player.stats.dodge | number: '1.0-2' }}%
             </li>
             <li class="d-flex justify-content-between gap-2">
-              <label class="text-third">Block:</label>
+              <label class="text-third"
+                >Block:
+                <i
+                  class="fa-solid fa-circle-info text-third fa-sm px-1"
+                  [ngbTooltip]="statExplanation"
+                  [tooltipContext]="{
+                    text: 'Chance of blocking an opponent attack'
+                  }"
+                ></i>
+              </label>
               {{ player.stats.block | number: '1.0-2' }}%
             </li>
             <li class="d-flex justify-content-between gap-2">
-              <label class="text-third">Accuracy:</label>
+              <label class="text-third"
+                >Accuracy:
+                <i
+                  class="fa-solid fa-circle-info text-third fa-sm px-1"
+                  [ngbTooltip]="statExplanation"
+                  [tooltipContext]="{
+                    text: 'Reduces the chance of missing an attack'
+                  }"
+                ></i>
+              </label>
               {{ player.stats.accuracy | number: '1.0-2' }}%
             </li>
           </ul>
@@ -100,3 +190,9 @@
 } @else {
   Loading...
 }
+
+<ng-template #statExplanation let-text="text">
+  <div class="p-2">
+    <span class="text-white bg-black">{{ text }}</span>
+  </div>
+</ng-template>

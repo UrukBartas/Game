@@ -1,4 +1,7 @@
 @import '../../../../variables.scss';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
 
 #shop {
   position: relative;
@@ -14,6 +17,9 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    @include media-breakpoint-down(sm) {
+      background-position: 'right';
+    }
   }
 
   .item-rack-bg {
@@ -24,6 +30,9 @@
     background-image: url('../../../../assets/shop/wood.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
+    @include media-breakpoint-down(sm) {
+      height: 330px !important;
+    }
   }
 
   .uruks-icon {
@@ -39,6 +48,9 @@
     background: $black-transparent;
     height: fit-content;
     width: 30vw;
+    @include media-breakpoint-down(sm) {
+      width: 85%;
+    }
     max-height: 400px;
     overflow: auto;
     .item-list {
@@ -53,6 +65,9 @@
     right: 10px;
     display: flex;
     gap: 5px;
+    @include media-breakpoint-down(sm) {
+      bottom: 335px;
+    }
   }
 
   .item-price {
@@ -65,10 +80,13 @@
     align-items: center;
     .uruks-icon {
       max-width: 2vw;
-      max-height: 2vw
+      max-height: 2vw;
     }
     span {
       font-size: 1.2vw;
+      @include media-breakpoint-down(sm) {
+        font-size: 17px;
+      }
     }
   }
 
@@ -78,6 +96,9 @@
     right: 5px;
     color: $white-100;
     font-size: 2vw;
+    @include media-breakpoint-down(sm) {
+      font-size: 17px;
+    }
   }
 
   .shop-tender-dialog {
@@ -123,7 +144,14 @@
       .box {
         width: 8vw !important;
         height: 8vw !important;
+        @include media-breakpoint-down(sm) {
+          width: 100px !important;
+          height: 100px !important;
+        }
       }
+    }
+    @include media-breakpoint-down(sm) {
+      padding: 10px;
     }
   }
 

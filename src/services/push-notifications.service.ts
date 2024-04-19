@@ -17,6 +17,7 @@ import {
   of,
   switchMap,
   tap,
+  take,
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
@@ -39,7 +40,8 @@ export class PushNotificationsService {
       .pipe(
         tap(([, token]) =>
           firstValueFrom(this.playerService.updateFCMToken(token))
-        )
+        ),
+        take(1)
       )
       .subscribe();
   }

@@ -1,42 +1,57 @@
-<div class="item-inventory" *ngIf="items">
+<div class="item-inventory pt-1" *ngIf="items">
   @for (box of boxes; track box.id; let index = $index) {
-    <ng-template #contextOptions>
-      <app-context-menu-inventory-options
-        (clickEquip)="
-          onDoubleClick.emit(items[index]); contextMenuService.hideContextMenu()
+    <div class="box-wrapper">
+      <ng-template #contextOptions>
+        <app-context-menu-inventory-options
+          (clickEquip)="
+            onDoubleClick.emit(items[index]);
+            contextMenuService.hideContextMenu()
+          "
+          (clickDestroy)="
+            onDestroyItem.emit(items[index]);
+            contextMenuService.hideContextMenu()
+          "
+        ></app-context-menu-inventory-options>
+      </ng-template>
+      <app-item-box
+        (contextmenu)="contextMenuService.onContextMenu($event, contextOptions)"
+        (click)="selectNewItem.emit(items[index])"
+        (mouseover)="onHover.emit(items[index])"
+        (mouseout)="onHover.emit(null)"
+        (dndStart)="onDragStart.emit({ event: $event, data: items[index] })"
+        (dndEnd)="onDragEnd.emit($event)"
+        (appDoubleClick)="onDoubleClick.emit(items[index])"
+        [dndDraggable]="items[index]"
+        [dndEffectAllowed]="'all'"
+        [dndDisableIf]="!items[index] || disableDND"
+        [height]="40"
+        [width]="40"
+        [rarity]="items[index]?.itemData?.rarity"
+        [active]="
+          !!selectedItem && !!items[index] && selectedItem.id == items[index].id
         "
-        (clickDestroy)="
-          onDestroyItem.emit(items[index]); contextMenuService.hideContextMenu()
+        [displayTooltip]="!!items[index]"
+        [image]="
+          items[index]?.itemData?.image
+            ? (items[index]?.itemData?.image | toIpfsImageFromCid)
+            : null
         "
-      ></app-context-menu-inventory-options>
-    </ng-template>
-    <app-item-box
-      (contextmenu)="contextMenuService.onContextMenu($event, contextOptions)"
-      (click)="selectNewItem.emit(items[index])"
-      (dndStart)="onDragStart.emit({ event: $event, data: items[index] })"
-      (dndEnd)="onDragEnd.emit($event)"
-      (appDoubleClick)="onDoubleClick.emit(items[index])"
-      [dndDraggable]="items[index]"
-      [dndEffectAllowed]="'all'"
-      [dndDisableIf]="!items[index] || disableDND"
-      [height]="40"
-      [width]="40"
-      [active]="
-        !!selectedItem && !!items[index] && selectedItem.id == items[index].id
-      "
-      [displayTooltip]="!!items[index]"
-      [image]="
-        items[index]?.itemData?.image
-          ? (items[index]?.itemData?.image | toIpfsImageFromCid)
-          : null
-      "
-    >
-      @if (!!items[index] && !contextMenuService.menuVisible()) {
-        <div tooltip class="tooltip-uruk">
-          <app-item-tooltip [item]="items[index]"></app-item-tooltip>
-        </div>
-      }
-    </app-item-box>
+      >
+        @if (!!items[index] && !contextMenuService.menuVisible()) {
+          <div tooltip class="tooltip-uruk">
+            <app-item-tooltip
+              [item]="items[index]"
+              [compareWith]="equippedItemOfType"
+            ></app-item-tooltip>
+            <app-item-tooltip
+              *ngIf="equippedItemOfType"
+              [item]="equippedItemOfType"
+              [isBeingCompared]="true"
+            ></app-item-tooltip>
+          </div>
+        }
+      </app-item-box>
+    </div>
   }
   <app-item-box
     *ngIf="addExpandInventory && (currentLevel$ | async) <= maxLevel"

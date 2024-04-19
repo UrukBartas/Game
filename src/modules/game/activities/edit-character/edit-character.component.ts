@@ -21,7 +21,7 @@ export class EditCharacterComponent extends TemplatePage {
   store = inject(Store);
   formBuilder = inject(FormBuilder);
   toastService = inject(ToastrService);
-  public pushNotificationsService = inject(PushNotificationsService);
+  //public pushNotificationsService = inject(PushNotificationsService);
   images = [
     'assets/free-portraits/knight.png',
     'assets/free-portraits/knight-f.png',

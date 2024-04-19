@@ -10,7 +10,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { MainState } from 'src/store/main.store';
+import { DisconnectWallet, MainState } from 'src/store/main.store';
 
 export class ApiBaseService {
   protected controllerPrefix = '';
@@ -46,7 +46,7 @@ export class ApiBaseService {
   ): Observable<Object> {
     const { address } = this.store.selectSnapshot(MainState.getState);
     if (address && response.status === 401) {
-      disconnect();
+      this.store.dispatch(new DisconnectWallet());
     } else if (response.status !== 500 && response.error?.message) {
       if (!ignoreError) this.toast.error(response.error.message);
     }
