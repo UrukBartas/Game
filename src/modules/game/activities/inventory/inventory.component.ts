@@ -55,6 +55,7 @@ export class InventoryComponent extends TemplatePage {
   public itemTypePublic = ItemType;
   private spinnerService = inject(NgxSpinnerService);
   public groupByLodash = groupBy;
+  public hoveredItem: Item;
 
   public getPlayer$ = of(true).pipe(
     switchMap(() => {
@@ -175,6 +176,11 @@ export class InventoryComponent extends TemplatePage {
     this.playerService.equipItemFlow(item, () => {
       this.inventoryUpdated$.next(true);
     });
+  }
+
+  public onHoverItem(item: Item) {
+    this.hoveredItem = item;
+    console.log(item)
   }
 
   onDrop(event: DndDropEvent) {
