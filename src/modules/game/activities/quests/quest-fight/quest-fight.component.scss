@@ -1,4 +1,7 @@
 @import '../../../../../variables.scss';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
 
 #fight-container {
   position: fixed;
@@ -35,6 +38,9 @@
     .enemy-image {
       aspect-ratio: 1 / 1;
       width: 50%;
+      @include media-breakpoint-down(sm) {
+        width: 30%;
+      }
       border-radius: 20%;
       max-width: 300px;
     }
@@ -101,6 +107,9 @@
 
   .action-button {
     background-color: rgb(222 222 222 / 25%) !important;
+    @include media-breakpoint-down(sm) {
+     font-size: 13px;
+    }
   }
 
   .surrender-button {

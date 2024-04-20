@@ -1,5 +1,19 @@
 @import '../../../../variables.scss';
-
+.list-leaderboard-item-left-container {
+  width: 100%;
+}
+.list-leaderboard-item-name-container {
+  flex-wrap: wrap;
+}
+.wrapper-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  .form-group {
+    width: 100%;
+    max-width: 350px;
+  }
+}
 .list-leaderboard {
   display: flex;
   max-height: 73vh;

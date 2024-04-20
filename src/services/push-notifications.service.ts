@@ -35,16 +35,7 @@ export class PushNotificationsService {
   private store = inject(Store);
   private playerService = inject(PlayerService);
 
-  constructor() {
-    combineLatest([this.getLoggedPlayer(), this.tokenChanged$])
-      .pipe(
-        tap(([, token]) =>
-          firstValueFrom(this.playerService.updateFCMToken(token))
-        ),
-        take(1)
-      )
-      .subscribe();
-  }
+  constructor() {}
 
   private getLoggedPlayer() {
     return this.store.select(MainState.getState).pipe(
@@ -78,13 +69,23 @@ export class PushNotificationsService {
   }
 
   public init() {
-    FirebaseMessaging.addListener('notificationReceived', (event) => {
-      console.log('notificationReceived: ', { event });
-    });
-    FirebaseMessaging.addListener('notificationActionPerformed', (event) => {
-      console.log('notificationActionPerformed: ', { event });
-    });
+    combineLatest([this.getLoggedPlayer(), this.tokenChanged$])
+      .pipe(
+        tap(([, token]) =>
+          firstValueFrom(this.playerService.updateFCMToken(token))
+        ),
+        take(1)
+      )
+      .subscribe();
+    //Only activate for web for now
     if (Capacitor.getPlatform() === 'web') {
+      FirebaseMessaging.addListener('notificationReceived', (event) => {
+        console.log('notificationReceived: ', { event });
+      });
+      FirebaseMessaging.addListener('notificationActionPerformed', (event) => {
+        console.log('notificationActionPerformed: ', { event });
+      });
+
       navigator.serviceWorker.addEventListener('message', (event: any) => {
         console.log('serviceWorker message: ', { event });
         const notification = new Notification(event.data.notification.title, {
