@@ -9,12 +9,16 @@ import { Material } from 'src/modules/core/models/material.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 import { RefreshPlayer } from 'src/store/main.store';
+import { ItemService } from './item.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlayerService extends ApiBaseService {
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private itemService: ItemService
+  ) {
     super(http);
     this.controllerPrefix = '/player';
   }
@@ -23,7 +27,7 @@ export class PlayerService extends ApiBaseService {
     try {
       this.spinnerService.show();
       await firstValueFrom(
-        this.equipItem(item).pipe(
+        this.itemService.equipItem(item).pipe(
           tap(() => {
             this.store.dispatch(new RefreshPlayer());
             onEquip();
