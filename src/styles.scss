@@ -148,6 +148,8 @@ ngb-tooltip-window {
 ngb-tooltip-window {
   .tooltip-inner {
     display: table;
+    padding: 0;
+    background: $black-400 !important;
   }
 }
 
@@ -190,4 +192,8 @@ ngb-tooltip-window {
 .disabled-icon {
   cursor: disabled;
   color: gray !important;
+}
+
+.bg-black {
+  background: $black-400;
 }

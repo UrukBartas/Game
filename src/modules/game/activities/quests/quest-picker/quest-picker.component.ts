@@ -1,4 +1,5 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { firstValueFrom, map, take } from 'rxjs';
@@ -26,6 +27,7 @@ export class QuestPickerComponent extends TemplatePage {
   getRarityColor = getRarityColor;
   activeSlideIndex = 0;
   modalService = inject(BsModalService);
+  titleService = inject(Title);
 
   public slots$ = this.store
     .select(MainState.getState)
@@ -56,6 +58,7 @@ export class QuestPickerComponent extends TemplatePage {
   ) {
     super();
     this.getPlayerQuests();
+    this.titleService.setTitle('Pick an adventure');
   }
 
   getPlayerQuests() {
@@ -142,6 +145,22 @@ export class QuestPickerComponent extends TemplatePage {
       case 'sm':
       default:
         return '0.3em 1em';
+    }
+  }
+
+  getResponsiveButtonFontSize() {
+    switch (this.viewportService.screenSize) {
+      case 'xxl':
+        return 'calc(1.325rem + 0.9vw)';
+      case 'xl':
+      case 'lg':
+        return 'calc(1.3rem + 0.6vw)';
+      case 'md':
+        return 'calc(1.275rem + 0.3vw)';
+      case 'xs':
+      case 'sm':
+      default:
+        return '3.25rem';
     }
   }
 }

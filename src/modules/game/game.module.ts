@@ -6,6 +6,8 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { DndModule } from 'ngx-drag-drop';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { ConsumableTooltipComponent } from 'src/standalone/consumable-tooltip/consumable-tooltip.component';
+import { ContextMenuInventoryOptionsComponent } from 'src/standalone/context-menu/context-menu-inventory-options/context-menu-inventory-options.component';
+import { ContextMenuComponent } from 'src/standalone/context-menu/context-menu.component';
 import { ExpandInventoryTooltipComponent } from 'src/standalone/expand-inventory-tooltip/expand-inventory-tooltip.component';
 import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
 import { MaterialTooltipComponent } from 'src/standalone/material-tooltip/material-tooltip.component';
@@ -75,7 +77,7 @@ const components = [
     RegisterReferralComponent,
     ItemInventoryComponent,
     ConsumablesInventoryComponent,
-    MaterialsInventoryComponent
+    MaterialsInventoryComponent,
   ],
   imports: [
     CommonModule,
@@ -95,6 +97,8 @@ const components = [
     StackPipe,
     CompressNumberPipe,
     DndModule,
+    ContextMenuComponent,
+    ContextMenuInventoryOptionsComponent,
   ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe],

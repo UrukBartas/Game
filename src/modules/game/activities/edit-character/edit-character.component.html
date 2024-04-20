@@ -55,4 +55,35 @@
       <button (click)="save()" class="btn btn-primary save-button">Save</button>
     </div>
   </div>
+
+  <div class="row justify-content-center" *ngIf="!!editing">
+    <div class="description">
+      <p urTitle>Settings</p>
+    </div>
+    <div class="row row-buttons">
+      <div class="col-12 col-sm-6">
+        <a
+          type="submit"
+          class="btn btn-lg btn-primary save-button w-100"
+          href="https://github.com/UrukBartas/Game/issues"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Give feedback or report an issue
+          <i class="fa-brands fa-github pl-2 text-white"></i>
+        </a>
+      </div>
+      <!-- <div class="col-12 col-sm-6">
+        <button
+          type="submit"
+          class="btn btn-lg btn-primary save-button w-100"
+          [disabled]="pushNotificationsService.grantedPermission"
+          (click)="pushNotificationsService.autoGetToken()"
+        >
+          Receive notifications
+          <i class="fa-solid fa-bell pl-2"></i>
+        </button>
+      </div> -->
+    </div>
+  </div>
 </div>

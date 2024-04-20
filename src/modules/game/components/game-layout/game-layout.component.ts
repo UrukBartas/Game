@@ -1,8 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, TemplateRef, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { disconnect } from '@wagmi/core';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { calculateXPForLevel } from 'src/modules/utils';
@@ -71,9 +71,19 @@ export class GameLayoutComponent {
   public viewportService = inject(ViewportService);
   public store = inject(Store);
   public modalService = inject(BsModalService);
+  public displayingFullScreenModal = false;
+  modalRef?: BsModalRef;
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);
+  }
+
+  public displayFullScreenDialog(template: TemplateRef<void>): void {
+    this.displayingFullScreenModal = true;
+    this.modalRef = this.modalService.show(template, { backdrop: true });
+    this.modalRef.onHide.subscribe(
+      () => (this.displayingFullScreenModal = false)
+    );
   }
 
   private logout() {

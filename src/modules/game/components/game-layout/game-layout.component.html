@@ -6,41 +6,17 @@
   >
     <img class="logo" src="./assets/white-uruk.png" alt="" srcset="" />
 
-    <ul class="list-group flex-grow-1">
-      @for (route of routesNavigation; track route.path) {
-        @if (route.path) {
-          <li
-            class="list-group-item bg-primary"
-            [ngClass]="{ active: router.url == route.path }"
-            [routerLink]="[route.path]"
-          >
-            <i class="{{ route.icon }}"></i>
-            @if (!isSidebarOpened()) {
-              <span class="d-none d-sm-flex">{{ route.displayText }}</span>
-            }
-          </li>
-        } @else {
-          <li class="list-group-item bg-primary" (click)="route.click()">
-            <i class="{{ route.icon }}"></i>
-            @if (!isSidebarOpened()) {
-              <span class="d-none d-sm-flex">{{ route.displayText }}</span>
-            }
-          </li>
+    <ng-container
+      *ngTemplateOutlet="
+        menu;
+        context: {
+          isMobile: false
         }
-      }
-    </ul>
+      "
+    ></ng-container>
     <hr />
     <div class="last-row">
-      <div class="collapse-item d-none d-sm-block">
-        <i
-          (click)="toggleSidebarOpened()"
-          class="pointer {{
-            isSidebarOpened()
-              ? 'fa-solid fa-angles-up fa-rotate-90'
-              : 'fa-solid fa-angles-up fa-rotate-270'
-          }}"
-        ></i>
-      </div>
+      <ng-container *ngTemplateOutlet="itemmenu"></ng-container>
     </div>
   </div>
   <div class="d-flex flex-column h-100">
@@ -63,6 +39,16 @@
         [text]="getProgressBarData(player).text"
         [style.height]="getProgressBarHeight() + 'px'"
       ></app-progress-bar>
+      <div class="d-flex d-sm-none">
+        <ng-container
+          *ngTemplateOutlet="
+            itemmenu;
+            context: {
+              isMobile: true
+            }
+          "
+        ></ng-container>
+      </div>
       <span urText class="level text-white px-4">Level {{ player.level }}</span>
     </div>
     <div
@@ -74,3 +60,48 @@
     </div>
   </div>
 </div>
+
+<ng-template #itemmenu let-isMobile="isMobile">
+  <div
+    class="collapse-item"
+    (click)="isMobile ? displayFullScreenDialog(menu) : toggleSidebarOpened()"
+  >
+    @if (isMobile) {
+      Menu
+    }
+    <i *ngIf="!isMobile"
+      class="pointer {{
+        isSidebarOpened()
+          ? 'fa-solid fa-angles-up fa-rotate-90'
+          : 'fa-solid fa-angles-up fa-rotate-270'
+      }}"
+    ></i>
+  </div>
+</ng-template>
+
+<ng-template #menu>
+  <ul class="list-group flex-grow-1">
+    @for (route of routesNavigation; track route.path) {
+      @if (route.path) {
+        <li
+          class="list-group-item bg-primary"
+          (click)="modalRef ? modalRef.hide() : true"
+          [ngClass]="{ active: router.url == route.path }"
+          [routerLink]="[route.path]"
+        >
+          <i class="{{ route.icon }}"></i>
+          @if (!isSidebarOpened() || displayingFullScreenModal) {
+            <span class="d-sm-flex">{{ route.displayText }}</span>
+          }
+        </li>
+      } @else {
+        <li class="list-group-item bg-primary" (click)="route.click()">
+          <i class="{{ route.icon }}"></i>
+          @if (!isSidebarOpened() || displayingFullScreenModal) {
+            <span class="d-sm-flex">{{ route.displayText }}</span>
+          }
+        </li>
+      }
+    }
+  </ul>
+</ng-template>

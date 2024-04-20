@@ -1,6 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
+import { groupBy } from 'lodash';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { NgxSpinnerService } from 'ngx-spinner';
 import {
@@ -18,11 +20,12 @@ import { TemplatePage } from 'src/modules/core/components/template-page.componen
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { InventoryService } from 'src/services/inventory.service';
+import { ItemService } from 'src/services/item.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
-import { groupBy } from 'lodash';
-import { ItemService } from 'src/services/item.service';
+import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
+
 @Component({
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
@@ -31,6 +34,7 @@ import { ItemService } from 'src/services/item.service';
 export class InventoryComponent extends TemplatePage {
   private inventoryService = inject(InventoryService);
   private store = inject(Store);
+  modalService = inject(BsModalService);
   private playerService = inject(PlayerService);
   private itemService = inject(ItemService);
   viewportService = inject(ViewportService);
@@ -55,6 +59,7 @@ export class InventoryComponent extends TemplatePage {
   public itemTypePublic = ItemType;
   private spinnerService = inject(NgxSpinnerService);
   public groupByLodash = groupBy;
+  public hoveredItem: Item;
 
   public getPlayer$ = of(true).pipe(
     switchMap(() => {
@@ -171,20 +176,14 @@ export class InventoryComponent extends TemplatePage {
   }
 
   public async equipItem(item: Item) {
-    try {
-      this.spinnerService.show();
-      await firstValueFrom(
-        this.itemService.equipItem(item).pipe(
-          tap(() => {
-            this.store.dispatch(new RefreshPlayer());
-            this.inventoryUpdated$.next(true);
-          })
-        )
-      );
-      this.spinnerService.hide();
-    } catch (error) {
-      this.spinnerService.hide();
-    }
+    this.playerService.equipItemFlow(item, () => {
+      this.inventoryUpdated$.next(true);
+    });
+  }
+
+  public onHoverItem(item: Item) {
+    this.hoveredItem = item;
+    console.log(item);
   }
 
   onDrop(event: DndDropEvent) {
@@ -208,5 +207,31 @@ export class InventoryComponent extends TemplatePage {
   changeSortType() {
     this.sortType = this.sortType === 'rarity' ? 'level' : 'rarity';
     this.inventoryUpdated$.next(true);
+  }
+
+  public destroyItem(item: Item) {
+    const config: ModalOptions = {
+      initialState: {
+        title: 'Destroy item',
+        description: `This item will be destroyed forever. Do you want to proceed?`,
+        accept: async () => {
+          try {
+            await firstValueFrom(
+              this.itemService.destroyItem(item.id).pipe(
+                tap(() => {
+                  this.store.dispatch(new RefreshPlayer());
+                  this.inventoryUpdated$.next(true);
+                })
+              )
+            );
+          } catch (error) {
+            console.error(error);
+          }
+
+          modalRef.hide();
+        },
+      },
+    };
+    const modalRef = this.modalService.show(ConfirmModalComponent, config);
   }
 }

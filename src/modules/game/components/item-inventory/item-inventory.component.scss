@@ -1,0 +1,13 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
+
+.tooltip-uruk {
+  display: flex;
+  gap: 5px;
+  flex-direction: row;
+  @include media-breakpoint-down(sm) {
+    flex-direction: column;
+  }
+
+}

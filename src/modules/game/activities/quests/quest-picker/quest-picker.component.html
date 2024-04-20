@@ -8,20 +8,20 @@
         [class.active]="i === activeSlideIndex"
       >
         <div class="slide-text">
-          <div class="slide-title">
-            <span urTitle class="text-third">
+          <div class="slide-title row">
+            <span urTitle class="text-third col-12 col-md-4 text-center">
               {{ quest.data.name }}
-              <span class="level">{{ quest.level }}</span>
+              <span class="level">Level {{ quest.level }}</span>
             </span>
 
-            <span urText class="badge mb-1">
+            <span urText class="badge mb-1 col-12 col-md-4">
               <i class="fa-solid fa-clock"></i>
               {{ getApproxTimeOfQuestBasedOnRarity(quest.data.rarity) }}
             </span>
 
             <span
               urText
-              class="badge mb-1"
+              class="badge mb-1 col-12 col-md-4"
               [ngStyle]="{ color: getRarityColor(quest.data.rarity) }"
             >
               <i class="fa-solid fa-certificate"></i> {{ quest.data.rarity }}
@@ -37,6 +37,7 @@
       (click)="startQuest()"
       class="button-rainbow"
       [style.padding]="getResponsiveButtonSize()"
+      [style.fontSize]="getResponsiveButtonFontSize()"
     >
       START QUEST
     </button>

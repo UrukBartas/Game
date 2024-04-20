@@ -12,6 +12,8 @@ import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { QuestRouterModel } from '../models/quest-router.model';
+import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-quest-progress',
@@ -31,7 +33,8 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
   constructor(
     public viewportService: ViewportService,
     private store: Store,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private title: Title
   ) {
     super();
     this.quest = this.store
@@ -43,18 +46,30 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
     }
   }
 
+  changeTitleRecursiveQuestIsReady(): void {
+    if (!this.questReady) return;
+    this.title.setTitle('Quest Ready!');
+    setTimeout(() => {
+      this.title.setTitle('Battle Incoming!');
+      setTimeout(() => {
+        this.changeTitleRecursiveQuestIsReady();
+      }, 1000);
+    }, 1000);
+  }
+
   setQuestTimer() {
     this.ngZone.runOutsideAngular(() => {
       this.interval = setInterval(() => {
         const startedAt = new Date(this.quest.startedAt);
         const finishedAt = new Date(this.quest.finishedAt);
-        //finishedAt.setMinutes(finishedAt.getMinutes() - 30);
+        //finishedAt.setMinutes(finishedAt.getMinutes() - 320);
         const currentDate = new Date();
 
         if (currentDate > finishedAt) {
           clearInterval(this.interval);
           this.ngZone.run(() => {
             this.questReady = true;
+            this.changeTitleRecursiveQuestIsReady();
           });
         }
 
@@ -75,7 +90,7 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
         const formattedTime = `${String(hours).padStart(2, '0')}:${String(
           minutes
         ).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-
+        this.title.setTitle(`${this.time} - ${this.quest.data.name}`);
         this.ngZone.run(() => {
           this.time = formattedTime;
           this.percentage = (timeDifferenceMillis / totalTimeSpanMillis) * 100;
@@ -113,7 +128,24 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
     }
   }
 
+  getResponsiveButtonFontSize() {
+    switch (this.viewportService.screenSize) {
+      case 'xxl':
+        return 'calc(1.325rem + 0.9vw)';
+      case 'xl':
+      case 'lg':
+        return 'calc(1.3rem + 0.6vw)';
+      case 'md':
+        return 'calc(1.275rem + 0.3vw)';
+      case 'xs':
+      case 'sm':
+      default:
+        return '3.25rem';
+    }
+  }
+
   ngOnDestroy(): void {
     clearInterval(this.interval);
+    this.questReady = false;
   }
 }

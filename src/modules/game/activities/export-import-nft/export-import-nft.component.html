@@ -19,9 +19,9 @@
     </div>
   </div>
 
-  <div class="row justify-content-center pb-2">
+  <div class="row justify-content-center pb-2 row-section">
     <div
-      class="col-6 item-to-export-import"
+      class="col-12 col-md-6 equipped order-0 order-sm-1 item-to-export-import"
       [ngClass]="{ 'col-12': exportingObjectTypeActive != 'nft' }"
     >
       <div class="row justify-content-center">
@@ -211,7 +211,7 @@
       }
     </div>
     <div
-      class="col-6 inventory h-100"
+      class="col-12 col-md-6 order-1 order-sm-0 inventory h-100"
       *ngIf="exportingObjectTypeActive == 'nft'"
     >
       @if (exportTypeActive == 'export') {

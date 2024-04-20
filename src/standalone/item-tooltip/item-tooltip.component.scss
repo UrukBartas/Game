@@ -1,16 +1,27 @@
 @import '../../variables.scss';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
 
 .item-tooltip-wrapper {
   width: 400px;
+  @include media-breakpoint-down(sm) {
+    background-position: 'right';
+    width: 300px;
+  }
   background-color: $black;
-  padding: 10px;
-  border-radius: 10px;
-  li {
-    list-style-type: none;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
+  padding: 15px;
+  border-radius: 3px;
+  ul {
+    max-width: 100%;
+    li {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      list-style-type: none;
+      display: block;
+      text-align: start;
+    }
   }
   img {
     border-radius: 20px;
@@ -18,5 +29,27 @@
   .uruks-icon {
     max-width: 30px;
     max-height: 30px;
+  }
+
+  .value {
+    color: $third;
+  }
+  .negative {
+    color: $red;
+  }
+  .neutral {
+    color: inherit;
+  }
+
+  .value,
+  .negative,
+  .neutral {
+    font-size: 12px;
+  }
+
+  .list-item-stat {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
   }
 }

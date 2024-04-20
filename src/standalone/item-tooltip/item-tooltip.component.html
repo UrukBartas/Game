@@ -1,4 +1,13 @@
-<div class="item-tooltip-wrapper">
+<div
+  class="item-tooltip-wrapper"
+  [ngClass]="{
+    'glowing-common': item.itemData.rarity === rarityEnum.COMMON,
+    'glowing-uncommon': item.itemData.rarity === rarityEnum.UNCOMMON,
+    'glowing-epic': item.itemData.rarity === rarityEnum.EPIC,
+    'glowing-legendary': item.itemData.rarity === rarityEnum.LEGENDARY,
+    'glowing-mythic': item.itemData.rarity === rarityEnum.MYTHIC
+  }"
+>
   <div class="d-flex flex-column align-items-start gap-1">
     <div class="description w-100">
       <p
@@ -6,6 +15,7 @@
         [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }"
       >
         {{ item.itemData.name }}
+        <span class="text-light" *ngIf="isBeingCompared">(equipped)</span>
       </p>
       <p urTitle class="text-white m-0">Level {{ item.level }}</p>
     </div>
@@ -15,7 +25,7 @@
     </p>
   </div>
   <div class="row">
-    <div class="col-6">
+    <div class="col-4 col-sm-6">
       <img
         [src]="item.itemData?.image | toIpfsImageFromCid"
         priority
@@ -23,10 +33,10 @@
         [height]="getItemBoxSize()"
       />
     </div>
-    <div class="col-6">
+    <div class="col-8 col-sm-6">
       <div class="description stat">
         <ul>
-          <li *ngFor="let key of getLoopableStatsKeys()">
+          <li *ngFor="let key of getLoopableStatsKeys()" class="list-item-stat">
             {{
               '+ ' +
                 item[key] +
@@ -34,6 +44,21 @@
                 ' ' +
                 parseKeyPascalCase(key)
             }}
+            @if (compareWith) {
+              <span
+                class="value"
+                [ngClass]="{
+                  negative:
+                    (item | compareItem: compareWith : key).charAt(0) == '-',
+                  neutral:
+                    (item | compareItem: compareWith : key).charAt(0) == '0'
+                }"
+              >
+                {{
+                  (item | compareItem: compareWith : key) + getPercentage(key)
+                }}</span
+              >
+            }
           </li>
           <li [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }">
             {{ item.itemData.itemType }}
