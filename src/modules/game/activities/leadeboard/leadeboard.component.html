@@ -1,8 +1,8 @@
 <div class="description">
   <p urTitle>Hall of Uruks</p>
 </div>
-<div class="row py-3">
-  <div class="form-group col" [formGroup]="formGroup">
+<div class="py-3 wrapper-search">
+  <div class="form-group" [formGroup]="formGroup">
     <input
       type="text"
       class="form-control"
@@ -10,7 +10,7 @@
       formControlName="userOrWallet"
     />
   </div>
-  <div class="mover col">
+  <div class="mover">
     <i
       class="bi bi-caret-left-fill"
       [ngClass]="{ 'disabled-icon': activePage() == 0 }"
@@ -54,7 +54,7 @@
             <a [routerLink]="['/view-player', player.id]">{{
               truncateAddress(player.id)
             }}</a>
-            ( {{ player.name }} )
+            <span>( {{ player.name }} )</span>
           </div>
 
           <span class="list-leaderboard-item-badge"

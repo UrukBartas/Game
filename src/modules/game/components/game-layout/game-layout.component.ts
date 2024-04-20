@@ -75,7 +75,10 @@ export class GameLayoutComponent {
 
   public displayFullScreenDialog(template: TemplateRef<void>): void {
     this.displayingFullScreenModal = true;
-    this.modalRef = this.modalService.show(template, { backdrop: true });
+    this.modalRef = this.modalService.show(template, {
+      class: 'mobile-menu',
+      backdrop: true,
+    });
     this.modalRef.onHide.subscribe(
       () => (this.displayingFullScreenModal = false)
     );

@@ -43,6 +43,7 @@
                   inventory.length > itemInventoryBoxes.length
               }"
             >
+
               @if (inventory.length > itemInventoryBoxes.length) {
                 <div>
                   <i
@@ -70,6 +71,8 @@
               </div>
             </div>
           </div>
+
+
 
           <app-item-inventory
             [items]="inventory"
@@ -108,6 +111,8 @@
               [boxes]="consumablesInventoryBoxes"
             ></app-consumables-inventory>
           </ng-container>
+
+
         </div>
       </slide>
       <slide>

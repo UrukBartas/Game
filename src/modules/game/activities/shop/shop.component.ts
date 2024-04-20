@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { firstValueFrom, map, take } from 'rxjs';
+import { filter, firstValueFrom, map, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { Rarity } from 'src/modules/core/models/items.model';
+import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { animateElement } from 'src/modules/utils';
 import { ShopService } from 'src/services/shop.service';
 import { ViewportService } from 'src/services/viewport.service';
@@ -39,6 +39,18 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
     .select(MainState.getState)
     .pipe(map((entry) => entry.player));
 
+  public getItem$ = (itemType: ItemType) => {
+    return this.player$.pipe(
+      filter((player) => !!player),
+      map((player) => player.items),
+      map((items: Array<Item>) => {
+        const foundItem = items.find(
+          (item) => item.itemData.itemType == itemType && item.equipped
+        );
+        return foundItem;
+      })
+    );
+  };
   constructor() {
     super();
     this.loadItems();
@@ -183,7 +195,10 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
                 this.player$.pipe(map((player) => player.uruks))
               );
               if (actualUruks < rollData.price) {
-                this.triggerDialog("Come back with more Golden Uruks, ya bastard! 💀", 3000);
+                this.triggerDialog(
+                  'Come back with more Golden Uruks, ya bastard! 💀',
+                  3000
+                );
               } else {
                 this.rollAnimation = 'hide-items';
                 this.shopService
