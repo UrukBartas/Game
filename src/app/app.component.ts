@@ -14,12 +14,12 @@ import { PushNotificationsService } from 'src/services/push-notifications.servic
 })
 export class AppComponent {
   public walletService = inject(WalletService);
-  //public pushNotificationsService = inject(PushNotificationsService);
+  public pushNotificationsService = inject(PushNotificationsService);
   constructor() {
     this.walletService.initWalletConnect();
     this.lockOrientation();
-    //this.initializeFirebase();
-    //this.pushNotificationsService.init();
+    this.initializeFirebase();
+    this.pushNotificationsService.init();
   }
   ngOnInit(): void {}
 
@@ -27,26 +27,31 @@ export class AppComponent {
 
   async lockOrientation() {
     try {
-      await ScreenOrientation.lock({ orientation: 'landscape' });
+      await ScreenOrientation.lock({ orientation: 'landscape-primary' });
+      await ScreenOrientation.unlock();
       await StatusBar.hide();
       await NavigationBar.hide();
     } catch (error) {}
   }
 
   public async initializeFirebase(): Promise<void> {
-    if (Capacitor.isNativePlatform()) {
-      return;
+    try {
+      if (Capacitor.isNativePlatform()) {
+        return;
+      }
+      const app = initializeApp({
+        apiKey: process.env['apiKey'],
+        authDomain: process.env['authDomain'],
+        projectId: process.env['projectId'],
+        storageBucket: process.env['storageBucket'],
+        messagingSenderId: process.env['messagingSenderId'],
+        appId: process.env['appId'],
+        measurementId: process.env['measurementId'],
+        vapidKey: process.env['vapidKey'],
+      } as any);
+      getAnalytics(app);
+    } catch (error) {
+      console.error('An error happened while initializing Firebase', error);
     }
-    const app = initializeApp({
-      apiKey: process.env['apiKey'],
-      authDomain: process.env['authDomain'],
-      projectId: process.env['projectId'],
-      storageBucket: process.env['storageBucket'],
-      messagingSenderId: process.env['messagingSenderId'],
-      appId: process.env['appId'],
-      measurementId: process.env['measurementId'],
-      vapidKey: process.env['vapidKey'],
-    } as any);
-    getAnalytics(app);
   }
 }

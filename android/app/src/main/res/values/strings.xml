@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">GameApp</string>
-    <string name="title_activity_main">GameApp</string>
+    <string name="app_name">Uruk Bartas - Play &amp; Earn RPG</string>
+    <string name="title_activity_main">Uruk Bartas - Play &amp; Earn RPG</string>
     <string name="package_name">com.urukbartas.game</string>
     <string name="custom_url_scheme">com.urukbartas.game</string>
 </resources>

@@ -117,7 +117,10 @@ export class PushNotificationsService {
       this.tokenChanged$.next(token);
       return token;
     } catch (error: any) {
-      this.toastService.error(error);
+      console.error(
+        'An error happened while getting the token for Firebase',
+        error
+      );
       return null;
     }
   }

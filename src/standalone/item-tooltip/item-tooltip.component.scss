@@ -4,9 +4,9 @@
 @import 'node_modules/bootstrap/scss/mixins';
 
 .item-tooltip-wrapper {
-  width: 400px;
+  width: 500px;
   @include media-breakpoint-down(sm) {
-    background-position: 'right';
+    background-position: right;
     width: 300px;
   }
   background-color: $black;

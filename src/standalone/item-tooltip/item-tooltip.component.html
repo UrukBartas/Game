@@ -24,8 +24,8 @@
       <span urText class="text-white">{{ item.price | number: '1.0-2' }}</span>
     </p>
   </div>
-  <div class="row">
-    <div class="col-4 col-sm-6">
+  <div class="row wrapper-row">
+    <div class="col-4 ">
       <img
         [src]="item.itemData?.image | toIpfsImageFromCid"
         priority
@@ -33,8 +33,8 @@
         [height]="getItemBoxSize()"
       />
     </div>
-    <div class="col-8 col-sm-6">
-      <div class="description stat">
+    <div class="col-8">
+      <div class="description stat px-3">
         <ul>
           <li *ngFor="let key of getLoopableStatsKeys()" class="list-item-stat">
             {{

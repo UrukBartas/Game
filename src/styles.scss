@@ -107,6 +107,9 @@ ngb-tooltip-window {
   display: flex;
   justify-content: center;
   align-items: center;
+  @include media-breakpoint-down(sm) {
+    width: 93% !important;
+  }
 
   .modal-content {
     background: transparent !important;
