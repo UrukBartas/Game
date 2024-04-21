@@ -9,7 +9,7 @@
       <span urSubtitle>Inventory</span>
     </div>
     <app-item-inventory
-      class="overflow-hidden"
+      class="overflow-auto"
       [items]="currentInventory$ | async"
       [boxes]="itemInventoryBoxes"
       [disableDND]="false"
@@ -36,18 +36,18 @@
     ></app-item-box>
     <div class="flex">
       <button
-        (click)="openModal(true)"
-        [class]="'btn btn-secondary mx-1 ' + getButtonSize()"
-      >
-        <i class="fa fa-gears pl-1 pb-1"></i>
-        Upgrade
-      </button>
-      <button
         (click)="openModal(false)"
         [class]="'btn btn-primary ' + getButtonSize()"
       >
         <i class="fa fa-recycle pl-1 pb-1"></i>
         Recycle
+      </button>
+      <button
+        (click)="openModal(true)"
+        [class]="'btn btn-secondary mx-1 ' + getButtonSize()"
+      >
+        <i class="fa fa-gears pl-1 pb-1"></i>
+        Upgrade
       </button>
     </div>
   </div>

@@ -10,6 +10,7 @@ import { ViewportService } from 'src/services/viewport.service';
 
 @Directive({
   selector: '[urText]',
+  standalone: true,
 })
 export class TextSizeDirective implements OnInit, OnDestroy {
   screenSizeChanges$: Subscription;

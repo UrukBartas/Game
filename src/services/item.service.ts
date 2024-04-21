@@ -14,15 +14,15 @@ export class ItemService extends ApiBaseService {
   }
 
   public getItem(itemId: number) {
-    return this.get('/get-item/' + itemId);
+    return this.get('/' + itemId + '/get-item/');
   }
 
   public destroyItem(itemId: number) {
-    return this.post('/destroy-item/' + itemId, {});
+    return this.post('/' + itemId + '/destroy-item/', {});
   }
 
   public getItemData(itemIdData: number) {
-    return this.get('/get-item-data/' + itemIdData);
+    return this.get('/' + itemIdData + '/get-item-data/');
   }
 
   public getMultipleItemsAtOnce(ids: { ids: Array<number> }) {
@@ -30,26 +30,26 @@ export class ItemService extends ApiBaseService {
   }
 
   public unEquipItem(item: Item) {
-    return this.post('/unequip/' + item.id, {}) as Observable<Item>;
+    return this.post('/' + item.id + '/unequip/', {}) as Observable<Item>;
   }
 
   public equipItem(item: Item) {
-    return this.post('/equip/' + item.id, {}) as Observable<Item>;
+    return this.post('/' + item.id + '/equip/', {}) as Observable<Item>;
   }
 
   public upgradeItem(itemId: number) {
-    return this.get('/upgrade-item/' + itemId);
+    return this.get('/' + itemId + '/upgrade-item/');
   }
 
   public getUpgradeItemPreview(itemId: number) {
-    return this.get('/upgrade-item-preview/' + itemId);
+    return this.get('/' + itemId + '/upgrade-item-preview/');
   }
 
   public recycleItem(itemId: number) {
-    return this.get('/recycle-item/' + itemId);
+    return this.get('/' + itemId + '/recycle-item/');
   }
 
   public getRecycleItemPreview(itemId: number) {
-    return this.get('/recycle-item-preview/' + itemId);
+    return this.get('/' + itemId + '/recycle-item-preview/');
   }
 }

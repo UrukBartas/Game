@@ -43,17 +43,16 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
     const config: ModalOptions = {
       initialState: {
         upgrade,
-        itemId: this.selectedItem.id,
-        onJobDone: () => {
-          if (!upgrade) {
-            this.selectedItem = null;
-          }
+        item: this.selectedItem,
+        onJobDone: (result) => {
+          this.selectedItem = upgrade ? result : null;
           this.currentInventory$ = this.playerService.getItems();
           this.triggerDialog("Ain't nothin' but a peanut", 1500);
           this.store.dispatch(new RefreshPlayer());
           setTimeout(() => {
-            party.sparkles(this.anvil.nativeElement, {
-              count: party.variation.range(20, 40),
+            const effect = upgrade ? party.confetti : party.sparkles;
+            effect(this.anvil.nativeElement, {
+              count: party.variation.range(40, 100),
             });
           }, 100);
         },
@@ -110,12 +109,12 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
       case 'xxl':
       case 'xl':
       case 'lg':
-        return 50;
+        return 60;
       case 'md':
       case 'xs':
       case 'sm':
       default:
-        return 30;
+        return 40;
     }
   }
 

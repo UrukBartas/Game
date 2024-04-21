@@ -72,7 +72,6 @@ const components = [
 @NgModule({
   declarations: [
     ...components,
-    ...directives,
     LeadeboardComponent,
     RegisterReferralComponent,
     ItemInventoryComponent,
@@ -80,6 +79,7 @@ const components = [
     MaterialsInventoryComponent,
   ],
   imports: [
+    ...directives,
     CommonModule,
     GameRoutingModule,
     NgbModule,

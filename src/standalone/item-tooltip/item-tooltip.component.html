@@ -15,6 +15,7 @@
         [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }"
       >
         {{ item.itemData.name }}
+        {{ item.upgradeLevel ? '+' + item.upgradeLevel : null }}
         <span class="text-light" *ngIf="isBeingCompared">(equipped)</span>
       </p>
       <p urTitle class="text-white m-0">Level {{ item.level }}</p>
@@ -25,7 +26,7 @@
     </p>
   </div>
   <div class="row">
-    <div class="col-4 col-sm-6">
+    <div class="col-5">
       <img
         [src]="item.itemData?.image | toIpfsImageFromCid"
         priority
@@ -33,7 +34,7 @@
         [height]="getItemBoxSize()"
       />
     </div>
-    <div class="col-8 col-sm-6">
+    <div class="col-7">
       <div class="description stat">
         <ul>
           <li *ngFor="let key of getLoopableStatsKeys()" class="list-item-stat">

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { groupBy } from 'lodash';
@@ -30,6 +30,7 @@ import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.mo
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class InventoryComponent extends TemplatePage {
   private inventoryService = inject(InventoryService);
@@ -183,7 +184,6 @@ export class InventoryComponent extends TemplatePage {
 
   public onHoverItem(item: Item) {
     this.hoveredItem = item;
-    console.log(item);
   }
 
   onDrop(event: DndDropEvent) {

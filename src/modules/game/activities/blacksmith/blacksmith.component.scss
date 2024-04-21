@@ -44,6 +44,10 @@
     height: fit-content;
     width: 30vw;
     height: 75vh;
+    @include media-breakpoint-down(sm) {
+      height: 50vh;
+      width: 88vw;
+    }
   }
 
   .blacksmith-dialog {

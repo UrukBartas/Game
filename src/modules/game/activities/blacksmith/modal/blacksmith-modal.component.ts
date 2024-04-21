@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { take } from 'rxjs';
+import { Item } from 'src/modules/core/models/items.model';
 import { ItemService } from 'src/services/item.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { RefreshPlayer } from 'src/store/main.store';
@@ -13,32 +14,32 @@ import { RefreshPlayer } from 'src/store/main.store';
 })
 export class BlacksmithModalComponent implements OnInit {
   upgrade: boolean; //or recycle
-  itemId: number;
+  item: Item;
   modalRef = inject(BsModalRef);
   itemService = inject(ItemService);
   storeService = inject(Store);
   viewportService = inject(ViewportService);
-  onJobDone: () => {};
+  onJobDone: (result) => void;
   preview;
 
   ngOnInit() {
-    if (this.itemId) {
+    if (this.item) {
       const observable = this.upgrade
-        ? this.itemService.getUpgradeItemPreview(this.itemId)
-        : this.itemService.getRecycleItemPreview(this.itemId);
+        ? this.itemService.getUpgradeItemPreview(this.item.id)
+        : this.itemService.getRecycleItemPreview(this.item.id);
 
       observable.pipe(take(1)).subscribe((preview) => (this.preview = preview));
     }
   }
 
   accept() {
-    if (this.itemId) {
+    if (this.item) {
       const observable = this.upgrade
-        ? this.itemService.upgradeItem(this.itemId)
-        : this.itemService.recycleItem(this.itemId);
+        ? this.itemService.upgradeItem(this.item.id)
+        : this.itemService.recycleItem(this.item.id);
 
-      observable.pipe(take(1)).subscribe(() => {
-        this.onJobDone();
+      observable.pipe(take(1)).subscribe((result) => {
+        this.onJobDone(result);
         this.modalRef.hide();
       });
     }

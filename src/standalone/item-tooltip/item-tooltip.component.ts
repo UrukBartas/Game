@@ -30,6 +30,7 @@ export class ItemTooltipComponent {
         ![
           'id',
           'level',
+          'upgradeLevel',
           'playerId',
           'player',
           'itemDataId',
@@ -64,6 +65,6 @@ export class ItemTooltipComponent {
     ) {
       return 150;
     }
-    return 200;
+    return 180;
   }
 }

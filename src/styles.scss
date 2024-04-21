@@ -72,27 +72,6 @@ ngb-tooltip-window {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  .item-inventory,
-  .consumables-inventory,
-  .materials-inventory {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    gap: 10px;
-    overflow: auto;
-    padding: 0px 20px;
-  }
-  .item-inventory {
-    height: 50vh;
-    @include media-breakpoint-up(lg) {
-      height: 400px;
-    }
-  }
-  .consumables-inventory,
-  .materials-inventory {
-    max-height: 120px;
-    min-height: 55px;
-  }
 }
 
 .remove-arrow-sliders {
@@ -196,4 +175,8 @@ ngb-tooltip-window {
 
 .bg-black {
   background: $black-400;
+}
+
+.h-fit {
+  height: fit-content;
 }
