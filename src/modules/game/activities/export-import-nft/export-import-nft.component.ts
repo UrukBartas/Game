@@ -33,7 +33,11 @@ import { ItemService } from 'src/services/item.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
-import { WalletService, allowedChains } from 'src/services/wallet.service';
+import {
+  WalletService,
+  allowedChains,
+  getChainById,
+} from 'src/services/wallet.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -138,7 +142,6 @@ export class ExportImportNftComponent extends TemplatePage {
     })
   );
 
-
   constructor() {
     super();
     this.whiteListedItemsInterval$
@@ -231,6 +234,32 @@ export class ExportImportNftComponent extends TemplatePage {
       );
       this.spinnerService.hide();
     }
+  }
+
+  public async addAssetToWallet() {
+    this.toastService.info('Discovering NFT in wallet, can take a while...');
+    await (window.ethereum as any).request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC721',
+        options: {
+          address: getChainById(getNetwork().chain.id).NFT,
+          tokenId: this.selectedItem.id + '',
+        },
+      },
+    });
+  }
+
+  public async addERC20ToWallet() {
+    await (window.ethereum as any).request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: getChainById(getNetwork().chain.id).ERC20,
+        },
+      },
+    });
   }
 
   public async triggerActionForNFT() {

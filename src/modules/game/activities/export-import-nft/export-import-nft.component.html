@@ -193,6 +193,15 @@
       @if (exportingObjectTypeActive == 'nft') {
         <button
           type="button"
+          *ngIf="exportTypeActive == 'import'"
+          class="btn btn-dark btn-lg btn-block w-100"
+          [disabled]="!selectedItem || activeNetworkId() == 0"
+          (click)="addAssetToWallet()"
+        >
+          Add asset to wallet
+        </button>
+        <button
+          type="button"
           class="btn btn-primary btn-lg btn-block w-100"
           [disabled]="!selectedItem || activeNetworkId() == 0"
           (click)="triggerActionForNFT()"
@@ -200,6 +209,15 @@
           {{ exportTypeActive == 'export' ? 'Export' : 'Import' }}
         </button>
       } @else {
+        <button
+          type="button"
+          *ngIf="exportTypeActive == 'import'"
+          class="btn btn-dark btn-lg btn-block w-100"
+          [disabled]="activeNetworkId() == 0"
+          (click)="addERC20ToWallet()"
+        >
+          Add asset to wallet
+        </button>
         <button
           type="button"
           class="btn btn-primary btn-lg btn-block w-100"

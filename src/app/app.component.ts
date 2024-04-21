@@ -19,7 +19,7 @@ export class AppComponent {
     this.walletService.initWalletConnect();
     this.lockOrientation();
     //this.initializeFirebase();
-   // this.pushNotificationsService.init();
+    //this.pushNotificationsService.init();
   }
   ngOnInit(): void {}
 

@@ -95,6 +95,16 @@ ngb-tooltip-window {
   }
 }
 
+.mobile-menu {
+  left: 50%;
+  top: 50%;
+  margin: 0 !important;
+  li {
+    background-color: $secondary !important;
+    border: 1px solid $primary !important;
+  }
+}
+
 /* scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
@@ -150,7 +160,7 @@ ngb-tooltip-window {
 @import 'node_modules/ngx-bootstrap/datepicker/bs-datepicker';
 
 .carousel-inner {
-  padding: 0px 45px;
+  padding: 0px;
   @include media-breakpoint-up(lg) {
     padding: 0px 90px;
   }
