@@ -1,4 +1,4 @@
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { AsyncPipe, CommonModule, DecimalPipe } from '@angular/common';
 import { NgModule, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -39,6 +39,7 @@ import { ExpandInventoryTooltipComponent } from 'src/standalone/expand-inventory
 import { ContextMenuComponent } from 'src/standalone/context-menu/context-menu.component';
 import { ContextMenuInventoryOptionsComponent } from 'src/standalone/context-menu/context-menu-inventory-options/context-menu-inventory-options.component';
 import { CompareItemPipe } from '../core/pipes/compare-item.pipe';
+import { ConnectComponent } from './activities/connect/connect.component';
 
 const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
 const components = [
@@ -56,6 +57,7 @@ const components = [
   ShopComponent,
   DailyRollButtonComponent,
   ConsumableModalComponent,
+  ConnectComponent,
 ];
 
 @NgModule({
@@ -87,6 +89,6 @@ const components = [
     ContextMenuInventoryOptionsComponent,
   ],
   exports: [GameLayoutComponent],
-  providers: [DecimalPipe],
+  providers: [DecimalPipe, AsyncPipe],
 })
 export class GameModule {}

@@ -72,6 +72,7 @@ export class WalletService {
     event: 'MODAL_CREATED',
   });
   public address$ = new Subject<`0x${string}` | undefined>();
+  public walletConnectIsLoggedIn$ = this.address$.pipe(map((entry) => !!entry));
 
   initWalletConnect() {
     const projectId = process.env['WALLET_CONNECT_PROJECT_ID'] ?? '';
