@@ -44,7 +44,7 @@
               [compareWith]="equippedItemOfType"
             ></app-item-tooltip>
             <app-item-tooltip
-              *ngIf="equippedItemOfType"
+              *ngIf="equippedItemOfType && getShowItemCompare()"
               [item]="equippedItemOfType"
               [isBeingCompared]="true"
             ></app-item-tooltip>

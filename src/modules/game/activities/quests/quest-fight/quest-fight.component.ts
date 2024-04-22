@@ -95,7 +95,7 @@ export class QuestFightComponent extends TemplatePage {
   doAction(action: TurnActionEnum, consumableId?: number) {
     const currentTime = Date.now();
 
-    if (currentTime - this.lastClickTime < 1000) {
+    if (currentTime - this.lastClickTime < 1000 || this.fight.result) {
       return;
     }
     this.lastClickTime = currentTime;
@@ -142,9 +142,10 @@ export class QuestFightComponent extends TemplatePage {
       lastEnemyAction === TurnActionEnum.ATTACK ||
       lastEnemyAction === TurnActionEnum.CRIT
     ) {
-      this.handleEnemyAnimation( this.viewportService.screenSize == 'xs'
-      ? 'attack-up'
-      : 'attack-left', 1);
+      this.handleEnemyAnimation(
+        this.viewportService.screenSize == 'xs' ? 'attack-up' : 'attack-left',
+        1
+      );
       if (lastTurn.enemyTurn.damage > 0) {
         this.showReceivedPlayerDamage = true;
         setTimeout(() => {

@@ -180,7 +180,6 @@ export class InventoryComponent extends TemplatePage {
 
   public onHoverItem(item: Item) {
     this.hoveredItem = item;
-    console.log(item)
   }
 
   onDrop(event: DndDropEvent) {

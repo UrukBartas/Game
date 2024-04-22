@@ -74,7 +74,9 @@
       [compareWith]="this.getItem$(item.itemData.itemType) | async"
     ></app-item-tooltip>
     <app-item-tooltip
-      *ngIf="this.getItem$(item.itemData.itemType) | async"
+      *ngIf="
+        (this.getItem$(item.itemData.itemType) | async) && getShowItemCompare()
+      "
       [item]="this.getItem$(item.itemData.itemType) | async"
       [isBeingCompared]="true"
     ></app-item-tooltip>
