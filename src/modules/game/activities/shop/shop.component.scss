@@ -18,7 +18,8 @@
     background-repeat: no-repeat;
     background-size: cover;
     @include media-breakpoint-down(sm) {
-      background-position: 'right';
+      background-position-x: 65%;
+      top: -20px;
     }
   }
 
@@ -152,7 +153,10 @@
     }
     @include media-breakpoint-down(sm) {
       padding: 10px;
+      overflow: auto;
+      max-height: 325px;
     }
+
   }
 
   .show-items {

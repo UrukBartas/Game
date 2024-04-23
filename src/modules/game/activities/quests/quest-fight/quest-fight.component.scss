@@ -108,7 +108,7 @@
   .action-button {
     background-color: rgb(222 222 222 / 25%) !important;
     @include media-breakpoint-down(sm) {
-     font-size: 13px;
+      font-size: 13px;
     }
   }
 
@@ -166,6 +166,23 @@
     }
   }
 
+  @keyframes attack-down {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    15% {
+      transform: translate(0px, 25vh);
+      transform: rotateZ(45deg);
+    }
+    50% {
+      transform: translate(0px, 50vh);
+    }
+    100% {
+      transform: translate(0px, 0px);
+      transform: rotateZ(0);
+    }
+  }
+
   @keyframes attack-left {
     0% {
       transform: translate(0px, 0px);
@@ -176,6 +193,23 @@
     }
     50% {
       transform: translate(-50vw, 0px);
+    }
+    100% {
+      transform: translate(0px, 0px);
+      transform: rotateZ(0);
+    }
+  }
+
+  @keyframes attack-up {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    15% {
+      transform: translate(0px, -25vh);
+      transform: rotateZ(-45deg);
+    }
+    50% {
+      transform: translate(0px, -50vh);
     }
     100% {
       transform: translate(0px, 0px);

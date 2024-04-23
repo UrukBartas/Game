@@ -1,5 +1,8 @@
 <div class="w-100 h-100 d-flex justify-content-center align-items-center">
-  @if (walletService.latestModalEvent().event == 'CONNECT_SUCCESS') {
+  @if (
+    walletService.latestModalEvent().event == 'CONNECT_SUCCESS' ||
+    (walletService.walletConnectIsLoggedIn$ | async) == true
+  ) {
     <button
       (click)="walletService.logInVoid()"
       type="submit"

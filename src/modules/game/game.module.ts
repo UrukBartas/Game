@@ -1,4 +1,4 @@
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { AsyncPipe, CommonModule, DecimalPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -24,6 +24,7 @@ import { ToIpfsImageFromCidPipe } from '../core/pipes/to-ipfs-image-from-cid.pip
 import { BlacksmithComponent } from './activities/blacksmith/blacksmith.component';
 import { BlacksmithModalComponent } from './activities/blacksmith/modal/blacksmith-modal.component';
 import { RegisterReferralComponent } from './activities/campaigns/register-referral/register-referral.component';
+import { ConnectComponent } from './activities/connect/connect.component';
 import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { InventoryComponent } from './activities/inventory/inventory.component';
@@ -67,6 +68,7 @@ const components = [
   BlacksmithModalComponent,
   DailyRollButtonComponent,
   ConsumableModalComponent,
+  ConnectComponent,
 ];
 
 @NgModule({
@@ -101,6 +103,6 @@ const components = [
     ContextMenuInventoryOptionsComponent,
   ],
   exports: [GameLayoutComponent],
-  providers: [DecimalPipe],
+  providers: [DecimalPipe, AsyncPipe],
 })
 export class GameModule {}

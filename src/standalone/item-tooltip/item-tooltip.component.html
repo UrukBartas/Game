@@ -1,5 +1,5 @@
 <div
-  class="item-tooltip-wrapper"
+  id="item-tooltip-wrapper"
   [ngClass]="{
     'glowing-common': item.itemData.rarity === rarityEnum.COMMON,
     'glowing-uncommon': item.itemData.rarity === rarityEnum.UNCOMMON,
@@ -25,50 +25,47 @@
       <span urText class="text-white">{{ item.price | number: '1.0-2' }}</span>
     </p>
   </div>
-  <div class="row">
-    <div class="col-5">
+  <div class="d-flex flex-row pt-2">
+    <div class="d-flex align-items-center">
       <img
+        class="item-image"
         [src]="item.itemData?.image | toIpfsImageFromCid"
         priority
-        [width]="getItemBoxSize()"
-        [height]="getItemBoxSize()"
       />
     </div>
-    <div class="col-7">
-      <div class="description stat">
-        <ul>
-          <li *ngFor="let key of getLoopableStatsKeys()" class="list-item-stat">
-            {{
-              '+ ' +
-                item[key] +
-                getPercentage(key) +
-                ' ' +
-                parseKeyPascalCase(key)
-            }}
-            @if (compareWith) {
-              <span
-                class="value"
-                [ngClass]="{
-                  negative:
-                    (item | compareItem: compareWith : key).charAt(0) == '-',
-                  neutral:
-                    (item | compareItem: compareWith : key).charAt(0) == '0'
-                }"
-              >
-                {{
-                  (item | compareItem: compareWith : key) + getPercentage(key)
-                }}</span
-              >
-            }
-          </li>
-          <li [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }">
-            {{ item.itemData.itemType }}
-          </li>
-          <li [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }">
-            {{ getRarityText(item.itemData.rarity) }}
-          </li>
-        </ul>
-      </div>
+    <div class="description stat px-3">
+      <ul>
+        <li *ngFor="let key of getLoopableStatsKeys()" class="list-item-stat">
+          {{
+            '+ ' +
+              item[key] +
+              getPercentage(key) +
+              ' ' +
+              parseKeyPascalCase(key)
+          }}
+          @if (compareWith) {
+            <span
+              class="value"
+              [ngClass]="{
+                negative:
+                  (item | compareItem: compareWith : key).charAt(0) == '-',
+                neutral:
+                  (item | compareItem: compareWith : key).charAt(0) == '0'
+              }"
+            >
+              {{
+                (item | compareItem: compareWith : key) + getPercentage(key)
+              }}</span
+            >
+          }
+        </li>
+        <li [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }">
+          {{ item.itemData.itemType }}
+        </li>
+        <li [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }">
+          {{ getRarityText(item.itemData.rarity) }}
+        </li>
+      </ul>
     </div>
   </div>
 </div>
