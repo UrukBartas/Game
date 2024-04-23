@@ -45,11 +45,22 @@ export class ApiBaseService {
     ignoreError: boolean
   ): Observable<Object> {
     const { address } = this.store.selectSnapshot(MainState.getState);
+    let message;
+
+    if (response.error?.message) {
+      if (typeof response.error?.message === 'string') {
+        message = response.error?.message;
+      } else {
+        message = response.error?.message.message;
+      }
+    }
+
     if (address && response.status === 401) {
       this.store.dispatch(new DisconnectWallet());
-    } else if (response.status !== 500 && response.error?.message) {
-      if (!ignoreError) this.toast.error(response.error.message);
+    } else if (response.status !== 500 && message) {
+      if (!ignoreError) this.toast.error(message);
     }
-    return throwError(() => new Error(response.error.message));
+
+    return throwError(() => new Error(message));
   }
 }

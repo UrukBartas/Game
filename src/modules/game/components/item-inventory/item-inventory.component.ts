@@ -1,15 +1,15 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { filter, firstValueFrom, map, tap } from 'rxjs';
+import { filter, firstValueFrom, map } from 'rxjs';
 import { Item } from 'src/modules/core/models/items.model';
+import { ContextMenuService } from 'src/services/context-menu.service';
 import { InventoryStructure } from 'src/services/inventory.service';
+import { ItemService } from 'src/services/item.service';
+import { ShopService } from 'src/services/shop.service';
+import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component';
-import { ShopService } from 'src/services/shop.service';
-import { ContextMenuService } from 'src/services/context-menu.service';
-import { PlayerService } from 'src/services/player.service';
-import { ItemService } from 'src/services/item.service';
 
 @Component({
   selector: 'app-item-inventory',
@@ -30,6 +30,7 @@ export class ItemInventoryComponent {
   @Output() onHover = new EventEmitter<Item>();
   private store = inject(Store);
   modalService = inject(BsModalService);
+  viewportService = inject(ViewportService);
   private shopService = inject(ShopService);
   public currentSize$ = this.store.select(MainState.getState).pipe(
     filter((player) => !!player),
@@ -61,5 +62,19 @@ export class ItemInventoryComponent {
       },
     };
     const modalRef = this.modalService.show(ConfirmModalComponent, config);
+  }
+
+  getShowItemCompare(): boolean {
+    switch (this.viewportService.screenSize) {
+      case 'xxl':
+      case 'xl':
+      case 'lg':
+        return true;
+      case 'md':
+      case 'xs':
+      case 'sm':
+      default:
+        return false;
+    }
   }
 }

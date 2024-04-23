@@ -270,4 +270,18 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
         return 'btn-md';
     }
   }
+
+  getShowItemCompare(): boolean {
+    switch (this.viewportService.screenSize) {
+      case 'xxl':
+      case 'xl':
+      case 'lg':
+        return true;
+      case 'md':
+      case 'xs':
+      case 'sm':
+      default:
+        return false;
+    }
+  }
 }

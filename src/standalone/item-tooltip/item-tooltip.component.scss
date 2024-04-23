@@ -3,17 +3,13 @@
 @import 'node_modules/bootstrap/scss/variables';
 @import 'node_modules/bootstrap/scss/mixins';
 
-.item-tooltip-wrapper {
-  width: 500px;
-  @include media-breakpoint-down(sm) {
-    background-position: right;
-    width: 300px;
-  }
+#item-tooltip-wrapper {
   background-color: $black;
   padding: 15px;
   border-radius: 3px;
   ul {
-    max-width: 100%;
+    min-width: 180px;
+    padding-left: 0;
     li {
       white-space: nowrap;
       overflow: hidden;
@@ -23,9 +19,14 @@
       text-align: start;
     }
   }
-  img {
-    border-radius: 20px;
+  .item-image {
+    border-radius: 10px;
+    height: 150px;
+    width: 150px;
+    max-width: 15vw;
+    max-height: 15vw;
   }
+
   .uruks-icon {
     max-width: 30px;
     max-height: 30px;
