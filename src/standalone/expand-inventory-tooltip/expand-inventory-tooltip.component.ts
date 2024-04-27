@@ -22,7 +22,7 @@ export class ExpandInventoryTooltipComponent {
   public viewportService = inject(ViewportService);
 
   @Input() currentLevelInventory = 4;
-  @Input() cost = 200;
+  @Input() cost = 100;
 
   ngOnInit(): void {}
 
