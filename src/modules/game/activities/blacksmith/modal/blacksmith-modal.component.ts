@@ -5,7 +5,6 @@ import { take } from 'rxjs';
 import { Item } from 'src/modules/core/models/items.model';
 import { ItemService } from 'src/services/item.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { RefreshPlayer } from 'src/store/main.store';
 
 @Component({
   selector: 'app-blacksmith-modal',
@@ -41,6 +40,18 @@ export class BlacksmithModalComponent implements OnInit {
       observable.pipe(take(1)).subscribe((result) => {
         this.onJobDone(result);
         this.modalRef.hide();
+      });
+    }
+  }
+
+  doAction() {
+    if (this.item) {
+      const observable = this.upgrade
+        ? this.itemService.upgradeItem(this.item.id)
+        : this.itemService.recycleItem(this.item.id);
+
+      observable.pipe(take(1)).subscribe((result) => {
+        this.onJobDone(result);
       });
     }
   }

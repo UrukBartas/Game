@@ -13,7 +13,7 @@
       [items]="currentInventory$ | async"
       [boxes]="itemInventoryBoxes"
       [disableDND]="false"
-      [boxSize]="getInventoryBoxSize()"
+      [boxSize]="40"
       (onDragStart)="hovered = true"
       (onDragEnd)="hovered = false"
       (onDoubleClick)="!!$event ? (selectedItem = $event) : false"
@@ -28,6 +28,7 @@
       [tooltipContext]="{ item: selectedItem }"
       [height]="getItemBoxSize()"
       [width]="getItemBoxSize()"
+      [upgradeLevel]="selectedItem?.upgradeLevel"
       [image]="
         selectedItem
           ? (selectedItem?.itemData.image | toIpfsImageFromCid)
@@ -51,6 +52,44 @@
       </button>
     </div>
   </div>
+
+  <ng-container *ngIf="resultItem">
+    <div class="result-item" (click)="closeResult()">
+      <div class="animate__animated animate__jackInTheBox delay_4">
+        <app-item-box
+          #result
+          [ngbTooltip]="itemTooltip"
+          [tooltipContext]="{ item: resultItem }"
+          [height]="200"
+          [width]="200"
+          [upgradeLevel]="selectedItem?.upgradeLevel"
+          [image]="
+            resultItem
+              ? (selectedItem?.itemData.image | toIpfsImageFromCid)
+              : null
+          "
+        ></app-item-box>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="resultItem === false">
+    <div class="result-item" (click)="closeResult()">
+      <span urTitle class="text-white">Upgrade failed 💀</span>
+      <div class="animate__animated animate__hinge delay_4">
+        <app-item-box
+          #result
+          [height]="200"
+          [width]="200"
+          [upgradeLevel]="selectedItem?.upgradeLevel"
+          [image]="
+            selectedItem
+              ? (selectedItem?.itemData.image | toIpfsImageFromCid)
+              : null
+          "
+        ></app-item-box>
+      </div>
+    </div>
+  </ng-container>
 </div>
 
 <ng-template #itemTooltip let-item="item">

@@ -1,4 +1,4 @@
-<div class="d-flex flex-column gap-2">
+<div class="d-flex flex-column gap-2 overflow-x-hidden">
   <ng-container *ngIf="fightResult">
     <div class="description">
       <p urTitle>{{ victory ? 'Victory!' : 'Defeat!' }}</p>
@@ -8,15 +8,18 @@
       class="row pb-4"
       *ngIf="
         fightResult.player?.level > player.level ||
-        fightResult.loot ||
-        fightResult.lostLoot
+        fightResult.item ||
+        fightResult.lostItem ||
+        fightResult.material
       "
     >
       <div
         *ngIf="fightResult.player?.level > player.level"
         class="col pb-md-4 col-md-12 d-flex flex-column gap-2"
       >
-        <span #levelUp urText class="text-rainbow text-center">LEVEL UP!</span>
+        <span #levelUp urSubtitle class="text-rainbow text-center"
+          >LEVEL UP!</span
+        >
         <span urText class="text-white text-center"
           >Level {{ player.level }} → {{ fightResult.player.level }}</span
         >
@@ -32,41 +35,49 @@
           >Defense {{ player.stats.armor }} → {{ player.stats.armor + 2 }}</span
         >
       </div>
-      <ng-container
-        *ngTemplateOutlet="
-          lootDrop;
-          context: {
-            loot: !!fightResult.lostLoot
-              ? fightResult.lostLoot
-              : fightResult.loot,
-            lost: !!fightResult.lostLoot
-          }
-        "
-      ></ng-container>
-      <ng-template #lootDrop let-loot="loot" let-lost="lost">
-        <div *ngIf="loot" class="col col-md-12 d-flex flex-column gap-2">
-          <span urText class="text-rainbow text-center">{{
-            lost ? 'Inventory is full' : 'Congratulations!'
-          }}</span>
-          <span urText class="text-white text-center">{{
-            lost
-              ? 'You cannot take this item with you, so you let it go.'
-              : 'Your enemy dropped something.'
-          }}</span>
+      <div
+        *ngIf="fightResult.item || fightResult.material"
+        class="col col-md-12 d-flex flex-column gap-2"
+      >
+        <span urSubtitle class="text-rainbow text-center">{{
+          fightResult.lostItem ? 'Inventory is full' : 'Congratulations!'
+        }}</span>
+        <span urText class="text-white text-center">{{
+          fightResult.lostItem
+            ? 'You cannot take this item with you, so you let it go.'
+            : 'Your enemy dropped something.'
+        }}</span>
 
+        <div class="d-flex py-4 justify-content-center gap-4">
           <app-item-box
             #lootItem
-            class="d-flex justify-content-center w-100"
+            *ngIf="fightResult.item"
             [height]="getItemBoxSize()"
             [width]="getItemBoxSize()"
-            [image]="loot.itemData.image | toIpfsImageFromCid"
+            [image]="fightResult.item.itemData.image | toIpfsImageFromCid"
           >
             <div tooltip class="tooltip-uruk">
-              <app-item-tooltip [item]="loot"></app-item-tooltip>
+              <app-item-tooltip [item]="fightResult.item"></app-item-tooltip>
+            </div>
+          </app-item-box>
+
+          <app-item-box
+            *ngIf="fightResult.material"
+            [height]="getItemBoxSize()"
+            [width]="getItemBoxSize()"
+            [image]="
+              fightResult.material.materialData.image | toIpfsImageFromCid
+            "
+            [stack]="fightResult.material.quantity"
+          >
+            <div tooltip class="tooltip-uruk">
+              <app-material-tooltip
+                [item]="fightResult.material.materialData"
+              ></app-material-tooltip>
             </div>
           </app-item-box>
         </div>
-      </ng-template>
+      </div>
     </div>
 
     <span urText *ngIf="fightResult.exp" class="text-white pb-2"

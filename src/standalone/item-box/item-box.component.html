@@ -33,7 +33,10 @@
     <span
       [style.font-size]="width / 4 + 'px'"
       *ngIf="!!upgradeLevel"
-      class="text-white"
+      [ngClass]="{
+        'text-white': upgradeLevel < 5,
+        'text-rainbow': upgradeLevel >= 5
+      }"
       >{{ !isNaNLocal(upgradeLevel) ? '+' + upgradeLevel : upgradeLevel }}
     </span>
   }

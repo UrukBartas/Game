@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { round2Decimals } from 'src/modules/utils';
 
 @Pipe({
   name: 'compressNumber',
@@ -10,6 +11,7 @@ export class CompressNumberPipe implements PipeTransform {
 
     const suffixes = ['', 'k', 'M', 'G', 'T', 'P', 'E'];
     const tier = (Math.log10(Math.abs(value)) / 3) | 0;
+    value = round2Decimals(value);
 
     if (tier === 0) return value.toString();
 

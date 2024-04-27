@@ -84,5 +84,8 @@
 </ng-template>
 
 <ng-template #consumableTooltip let-item="item">
-  <app-consumable-tooltip [item]="item"></app-consumable-tooltip>
+  <app-consumable-tooltip
+    [showPrice]="true"
+    [item]="item"
+  ></app-consumable-tooltip>
 </ng-template>

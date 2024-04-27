@@ -4,6 +4,7 @@ import {
   ElementRef,
   inject,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
@@ -21,9 +22,11 @@ import { RefreshPlayer } from 'src/store/main.store';
   selector: 'app-blacksmith',
   templateUrl: './blacksmith.component.html',
   styleUrl: './blacksmith.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
   @ViewChild('anvil', { read: ElementRef }) anvil: ElementRef;
+  @ViewChild('result', { read: ElementRef }) result: ElementRef;
 
   private playerService = inject(PlayerService);
   private inventoryService = inject(InventoryService);
@@ -34,10 +37,22 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
   dialog: string;
   showDialog = false;
   selectedItem: Item;
+  resultItem;
   hovered = false;
 
   public itemInventoryBoxes = this.inventoryService.getInventoryStructure();
   public currentInventory$ = this.playerService.getItems();
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      const random = Math.floor(Math.random() * 2);
+      if (random === 0) {
+        this.triggerDialog("Welcome to Coleman's workshop 🛠️", 1500);
+      } else if (random === 1) {
+        this.triggerDialog('Create or destroy. You decide.', 1500);
+      }
+    }, 250);
+  }
 
   openModal(upgrade: boolean) {
     const config: ModalOptions = {
@@ -45,33 +60,53 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
         upgrade,
         item: this.selectedItem,
         onJobDone: (result) => {
-          this.selectedItem = upgrade ? result : null;
-          this.currentInventory$ = this.playerService.getItems();
-          this.triggerDialog("Ain't nothin' but a peanut", 1500);
-          this.store.dispatch(new RefreshPlayer());
-          setTimeout(() => {
-            const effect = upgrade ? party.confetti : party.sparkles;
-            effect(this.anvil.nativeElement, {
-              count: party.variation.range(40, 100),
-            });
-          }, 100);
+          if (upgrade) {
+            this.onUpgradeDone(result);
+          } else {
+            this.onRecycleDone();
+          }
         },
       },
     };
     this.modalService.show(BlacksmithModalComponent, config);
   }
 
-  ngAfterViewInit() {
+  private onRecycleDone() {
+    this.selectedItem = null;
+    this.currentInventory$ = this.playerService.getItems();
+    this.triggerDialog("Ain't nothin' but a peanut", 1500);
+    this.store.dispatch(new RefreshPlayer());
     setTimeout(() => {
-      const random = Math.floor(Math.random() * 3);
-      if (random === 0) {
-        this.triggerDialog("Welcome to Coleman's workshop 🛠️", 1500);
-      } else if (random === 1) {
-        this.triggerDialog('LIGHTWEIGHT BABY!!', 1500);
-      } else if (random === 2) {
-        this.triggerDialog('Create or destroy. You decide.', 1500);
-      }
-    }, 250);
+      party.sparkles(this.anvil.nativeElement, {
+        count: party.variation.range(40, 100),
+      });
+    }, 100);
+  }
+
+  private onUpgradeDone(result: Item) {
+    this.resultItem = result;
+    if (result) {
+      this.selectedItem = result;
+      setTimeout(() => {
+        party.confetti(this.result.nativeElement, {
+          count: party.variation.range(100, 200),
+        });
+      }, 100);
+    }
+
+    this.store.dispatch(new RefreshPlayer());
+    this.currentInventory$ = this.playerService.getItems();
+  }
+
+  public closeResult() {
+    if (!this.resultItem) {
+      this.selectedItem = null;
+    }
+    this.triggerDialog(
+      !this.resultItem ? 'OH BABY THAT HURTS!!' : 'LIGHTWEIGHT BABY!!',
+      1500
+    );
+    this.resultItem = null;
   }
 
   triggerDialog(text: string, duration: number) {
@@ -101,20 +136,6 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
       case 'sm':
       default:
         return 'btn-md';
-    }
-  }
-
-  getInventoryBoxSize(): number {
-    switch (this.viewportService.screenSize) {
-      case 'xxl':
-      case 'xl':
-      case 'lg':
-        return 60;
-      case 'md':
-      case 'xs':
-      case 'sm':
-      default:
-        return 40;
     }
   }
 

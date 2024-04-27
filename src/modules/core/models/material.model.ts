@@ -1,3 +1,5 @@
+import { Rarity } from "./items.model";
+
 export interface Material {
   id: number;
   playerId: string;
@@ -11,4 +13,5 @@ export interface MaterialData {
   image: string;
   name: string;
   description: string;
+  rarity: Rarity;
 }

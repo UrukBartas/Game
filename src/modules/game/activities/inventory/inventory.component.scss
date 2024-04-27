@@ -4,9 +4,6 @@
 @import 'node_modules/bootstrap/scss/mixins';
 
 #inventory {
-  * {
-    color: $white-100;
-  }
   .equipped {
     display: flex;
     flex-direction: column;

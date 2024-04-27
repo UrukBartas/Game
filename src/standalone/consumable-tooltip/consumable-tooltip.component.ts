@@ -13,6 +13,7 @@ import { ViewportService } from 'src/services/viewport.service';
 })
 export class ConsumableTooltipComponent {
   @Input() item: ConsumableData;
+  @Input() showPrice = false;
 
   viewportService = inject(ViewportService);
 

@@ -37,16 +37,16 @@ export class SubtitleSizeDirective implements OnInit, OnDestroy {
   private getResponsiveTitleSize() {
     switch (this.viewportService.screenSize) {
       case 'xxl':
-        return 'calc(1.1rem + 0.9vw)';
+        return 'calc(1.2rem + 0.9vw)';
       case 'xl':
       case 'lg':
-        return 'calc(1rem + 0.6vw)';
+        return 'calc(1.15rem + 0.6vw)';
       case 'md':
-        return 'calc(0.9rem + 0.3vw)';
+        return 'calc(1.1rem + 0.3vw)';
       case 'xs':
       case 'sm':
       default:
-        return '0.8rem';
+        return '1.1rem';
     }
   }
 

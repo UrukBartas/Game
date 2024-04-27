@@ -64,7 +64,7 @@
                     'bi-caret-up-fill': sortOrderUp
                   }"
                 ></i>
-                <span class="pointer" (click)="changeSortType()">{{
+                <span class="pointer text-white" (click)="changeSortType()">{{
                   sortType
                 }}</span>
               </div>
@@ -275,6 +275,7 @@
     [active]="hovered"
     [displayTooltip]="!!(item$ | async)"
     [rarity]="toItem(item$ | async)?.itemData?.rarity"
+    [upgradeLevel]="toItem(item$ | async)?.upgradeLevel"
     [image]="
       toItem(item$ | async)?.itemData?.image
         ? (toItem(item$ | async).itemData.image | toIpfsImageFromCid)

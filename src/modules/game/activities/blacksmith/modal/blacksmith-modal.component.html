@@ -7,13 +7,20 @@
     </p>
   </div>
   <div class="row">
-    <p class="text-white" urText>
-      {{
-        upgrade
-          ? 'Upgrading the item will enhance its stats, but will consume the following materials:'
-          : 'Recycling will destroy this item, but will give you the following materials:'
-      }}
+    <p *ngIf="!upgrade" class="text-white" urText>
+      Recycling will destroy this item, but will give you the following
+      materials:
     </p>
+    <div *ngIf="upgrade" class="col-12 col-sm-6 text-secondary pb-2" urText>
+      Required materials:
+    </div>
+    <div
+      *ngIf="upgrade"
+      class="col-4 text-secondary pb-2 d-none d-sm-flex"
+      urText
+    >
+      Result:
+    </div>
   </div>
   <div *ngIf="!upgrade && preview" class="row">
     <app-item-box
@@ -30,9 +37,10 @@
     </app-item-box>
   </div>
   <div *ngIf="upgrade && preview" class="row">
-    <div class="col-12 col-sm-6 d-flex pb-2">
+    <div class="col-12 col-sm-6 d-flex pb-2 overflow-auto">
       @for (material of preview.materials; track material.id) {
         <app-item-box
+          class="pr-1"
           [height]="getItemBoxSize()"
           [width]="getItemBoxSize()"
           [stack]="material.quantity"
@@ -81,6 +89,14 @@
       Price is {{ preview?.price }}
       <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
     </p>
+    <p *ngIf="upgrade" class="text-white" urText>
+      Current chance of <span class="text-warning">failing</span>
+      {{ (item?.upgradeLevel + 1) * 5 }} %
+      <i
+        class="fa-solid fa-circle-info text-warning fa-sm px-1"
+        [ngbTooltip]="failExplanation"
+      ></i>
+    </p>
     <p class="text-white" urText>Do you wish to continue?</p>
   </div>
   <div class="d-flex w-100 justify-content-end pt-3">
@@ -90,3 +106,11 @@
     <button class="btn btn-secondary" (click)="accept()">Accept</button>
   </div>
 </div>
+
+<ng-template #failExplanation>
+  <div class="p-2">
+    <span class="text-white bg-black"
+      >Failing will destroy the item and consume the materials and uruks!</span
+    >
+  </div>
+</ng-template>
