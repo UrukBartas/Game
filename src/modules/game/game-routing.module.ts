@@ -11,6 +11,7 @@ import { ShopComponent } from './activities/shop/shop.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { RegisterReferralComponent } from './activities/campaigns/register-referral/register-referral.component';
+import { AdventuresComponent } from './activities/adventures/adventures.component';
 
 const routes: Routes = [
   {
@@ -43,6 +44,12 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         component: QuestRouterComponent,
         title: 'Quests',
+      },
+      {
+        path: 'adventures',
+        canActivate: [AuthGuard],
+        component: AdventuresComponent,
+        title: 'Adventures',
       },
       {
         path: 'shop',

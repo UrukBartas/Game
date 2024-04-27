@@ -1,0 +1,69 @@
+<div class="container-fluid h-100">
+  <div class="carousel-container">
+    <div class="carousel">
+      <div
+        class="slide"
+        [style.background-image]="'url(' + selectedAdventure.image + ')'"
+        [class.active]="true"
+      >
+        <div class="slide-text">
+          <div class="row">
+            <span urText class="mb-0">{{ selectedAdventure.name }}</span>
+          </div>
+          <div class="row mb-4">
+            <span urText class="mb-0">{{ selectedAdventure.description }}</span>
+          </div>
+          <span urTitle class="text-third">Rewards</span>
+          <div class="possible-rewards">
+            @for (
+              itemReward of selectedAdventure.possibleItemRewardsData;
+              track itemReward.id
+            ) {
+              <app-item-box
+                #lootItem
+                class="d-flex justify-content-center w-100"
+                [height]="getItemBoxSize()"
+                [width]="getItemBoxSize()"
+                [image]="itemReward.image | toIpfsImageFromCid"
+              >
+                <div tooltip class="tooltip-uruk">
+                  <app-item-tooltip
+                    [item]="itemReward | itemdataToItem"
+                  ></app-item-tooltip>
+                </div>
+              </app-item-box>
+            }
+            @for (
+              consumableReward of selectedAdventure.possibleConsumablesRewardsData;
+              track consumableReward.id
+            ) {
+              <app-item-box
+                #lootItem
+                class="d-flex justify-content-center w-100"
+                [height]="getItemBoxSize()"
+                [width]="getItemBoxSize()"
+                [image]="consumableReward.image | toIpfsImageFromCid"
+              >
+                <div tooltip class="tooltip-uruk">
+                  <app-consumable-tooltip
+                    [external]="true"
+                    [item]="consumableReward"
+                  ></app-consumable-tooltip>
+                </div>
+              </app-item-box>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      urTitle
+      (click)="startAdventure()"
+      class="button-rainbow"
+      [style.padding]="getResponsiveButtonSize()"
+      [style.fontSize]="getResponsiveButtonFontSize()"
+    >
+      START ADVENTURE
+    </button>
+  </div>
+</div>

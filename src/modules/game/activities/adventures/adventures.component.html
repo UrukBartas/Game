@@ -1,0 +1,26 @@
+<div class="adventures-wrapper">
+  <div class="adventure-slider">
+    @for (adventure of availableAdventures$ | async; track adventure.id) {
+      <div class="adventure">
+        <app-item-box
+          [height]="150"
+          [width]="150"
+          [image]="adventure.image"
+          (click)="selectedAdventure = adventure"
+          [active]="selectedAdventure ?  selectedAdventure.id == adventure.id : false"
+        >
+        </app-item-box>
+      </div>
+    }
+  </div>
+  <div class="content">
+    @if (!!selectedAdventure) {
+      <app-adventure-router
+        (onAdventureStarted)="refreshAdventures()"
+        [selectedAdventure]="selectedAdventure"
+      ></app-adventure-router>
+    } @else {
+      <span class="text-white">Select an adventure to start!</span>
+    }
+  </div>
+</div>

@@ -1,15 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { MainState } from 'src/store/main.store';
 import { QuestStatusEnum } from './enums/quest-status.enum';
 import { QuestRouterModel } from './models/quest-router.model';
+import { AdventureData } from 'src/services/adventures-data.service';
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-quest-router',
   template: `
     <ng-container [ngSwitch]="questRouter.status">
       <app-quest-picker
+        [adventure]="adventure"
         *ngSwitchCase="questStatusEnum.PICKING"
         (questStatusChange)="questRouter = $event"
       ></app-quest-picker>
@@ -32,10 +35,34 @@ import { QuestRouterModel } from './models/quest-router.model';
 export class QuestRouterComponent extends TemplatePage {
   questStatusEnum = QuestStatusEnum;
   questRouter: QuestRouterModel = { status: QuestStatusEnum.PICKING };
-
+  @Input() public set adventure(data: AdventureData) {
+    this._data = cloneDeep(data);
+    this.getQuestStatus();
+  }
+  public get adventure() {
+    return this._data;
+  }
+  private _data: AdventureData;
   constructor(private store: Store) {
     super();
-    const quests = this.store.selectSnapshot(MainState.getState).quests ?? [];
+  }
+
+  ngOnInit(): void {
+    this.getQuestStatus();
+  }
+
+  private getQuestStatus() {
+    let quests = this.store.selectSnapshot(MainState.getState).quests ?? [];
+    if (this.adventure) {
+      quests = this.adventure?.Adventure[0]?.quests ?? [];
+    } else {
+      quests = quests.filter(
+        (entry) =>
+          (!entry.adventures || entry.adventures.length == 0) &&
+          !entry.data.isAdventurePhase
+      );
+    }
+    console.log(quests);
     const activeQuest = quests.find((quest) => quest.startedAt !== null);
     const activeFight = this.store.selectSnapshot(MainState.getState).fight;
 

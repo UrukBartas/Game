@@ -40,6 +40,10 @@ import { ContextMenuComponent } from 'src/standalone/context-menu/context-menu.c
 import { ContextMenuInventoryOptionsComponent } from 'src/standalone/context-menu/context-menu-inventory-options/context-menu-inventory-options.component';
 import { CompareItemPipe } from '../core/pipes/compare-item.pipe';
 import { ConnectComponent } from './activities/connect/connect.component';
+import { AdventuresComponent } from './activities/adventures/adventures.component';
+import { AdventurePickerComponent } from './activities/adventures/adventure-picker/adventure-picker.component';
+import { AdventuresRouterComponent } from './activities/adventures/adventures-router.component';
+import { ItemdataToItemPipe } from '../core/pipes/itemdata-to-item.pipe';
 
 const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
 const components = [
@@ -68,6 +72,9 @@ const components = [
     RegisterReferralComponent,
     ItemInventoryComponent,
     ConsumablesInventoryComponent,
+    AdventuresComponent,
+    AdventurePickerComponent,
+    AdventuresRouterComponent,
   ],
   imports: [
     CommonModule,
@@ -85,6 +92,7 @@ const components = [
     ToIpfsImageFromCidPipe,
     StackPipe,
     DndModule,
+    ItemdataToItemPipe,
     ContextMenuComponent,
     ContextMenuInventoryOptionsComponent,
   ],

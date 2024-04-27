@@ -1,0 +1,18 @@
+.adventures-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  height: 100%;
+  .adventure-slider {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+  }
+  .content {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

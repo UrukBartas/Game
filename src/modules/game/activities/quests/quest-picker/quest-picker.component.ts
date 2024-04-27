@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { firstValueFrom, map, take } from 'rxjs';
+import { firstValueFrom, interval, map, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { getRarityColor } from 'src/modules/utils';
@@ -14,6 +14,8 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { PlayerService } from 'src/services/player.service';
 import { Title } from '@angular/platform-browser';
+import { Adventure } from 'src/services/adventures.service';
+import { AdventureData } from 'src/services/adventures-data.service';
 
 @Component({
   selector: 'app-quest-picker',
@@ -21,6 +23,14 @@ import { Title } from '@angular/platform-browser';
   styleUrl: './quest-picker.component.scss',
 })
 export class QuestPickerComponent extends TemplatePage {
+  @Input() public set adventure(data: AdventureData) {
+    this._adventure = data;
+    this.getPlayerQuests();
+  }
+  public get adventure() {
+    return this._adventure;
+  }
+  private _adventure: AdventureData;
   @Output() questStatusChange = new EventEmitter<QuestRouterModel>();
 
   quests: QuestModel[];
@@ -57,18 +67,36 @@ export class QuestPickerComponent extends TemplatePage {
     private playerService: PlayerService
   ) {
     super();
-    this.getPlayerQuests();
     this.titleService.setTitle('Pick an adventure');
   }
 
+  ngOnInit(): void {
+    this.getPlayerQuests();
+  }
+
   getPlayerQuests() {
+    // if (this.adventure) {
+    //   this.quests = this.adventure.quests;
+    //   return;
+    // }
     this.questService
       .getActive()
       .pipe(take(1))
       .subscribe((quests) => {
-        this.quests = quests;
+        this.quests = quests.filter((quest) => {
+          if (!!this.adventure) {
+            return (
+              !!quest.data?.isAdventurePhase &&
+              !!quest.adventures &&
+              quest.adventures.length > 0 &&
+              quest.adventures[0].adventureDataId == this.adventure.id
+            );
+          } else {
+            return !quest.data.isAdventurePhase;
+          }
+        });
         this.store.dispatch(new SetQuests(quests));
-        if (quests.find((quest) => quest.startedAt !== null)) {
+        if (this.quests.find((quest) => quest.startedAt !== null)) {
           this.questStatusChange.emit({ status: QuestStatusEnum.IN_PROGRESS });
         }
       });
@@ -83,6 +111,10 @@ export class QuestPickerComponent extends TemplatePage {
   }
 
   nextSlide() {
+    // if (!!this.adventure &&  this.activeSlideIndex + 1 > this.adventure.currentPhase) {
+    //   return;
+    // }
+
     if (this.activeSlideIndex < this.quests.length - 1) {
       this.activeSlideIndex++;
       const carousel: HTMLElement = document.querySelector('.carousel');

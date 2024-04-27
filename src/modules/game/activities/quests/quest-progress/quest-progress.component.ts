@@ -1,6 +1,7 @@
 import {
   Component,
   EventEmitter,
+  Input,
   NgZone,
   OnDestroy,
   Output,
@@ -14,6 +15,7 @@ import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { QuestRouterModel } from '../models/quest-router.model';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { Adventure } from 'src/services/adventures.service';
 
 @Component({
   selector: 'app-quest-progress',
@@ -37,10 +39,20 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
     private title: Title
   ) {
     super();
+  }
+
+  ngOnInit(): void {
+    // if (!!this.adventure) {
+    //   const quests = this.adventure.quests;
+    //   this.quest = quests.find((quest) => quest.startedAt !== null);
+    // } else {
+    //   this.quest = this.store
+    //     .selectSnapshot(MainState.getState)
+    //     .quests.find((quest) => quest.startedAt !== null);
+    // }
     this.quest = this.store
       .selectSnapshot(MainState.getState)
       .quests.find((quest) => quest.startedAt !== null);
-
     if (this.quest) {
       this.setQuestTimer();
     }

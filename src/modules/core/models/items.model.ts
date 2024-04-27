@@ -25,7 +25,7 @@ export interface Item {
   price?: number;
 }
 
-interface ItemData {
+export interface ItemData {
   id: number;
   name: string;
   image: string;

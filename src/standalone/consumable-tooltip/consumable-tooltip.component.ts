@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, input, Input } from '@angular/core';
 import { Consumable, ConsumableData } from 'src/modules/core/models/consumable.model';
 import { ToIpfsImageFromCidPipe } from 'src/modules/core/pipes/to-ipfs-image-from-cid.pipe';
 import { ViewportService } from 'src/services/viewport.service';
@@ -13,7 +13,7 @@ import { ViewportService } from 'src/services/viewport.service';
 })
 export class ConsumableTooltipComponent {
   @Input() item: ConsumableData;
-
+  @Input() external = false
   viewportService = inject(ViewportService);
 
   public getItemBoxSize() {

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
-import { Item, Rarity } from 'src/modules/core/models/items.model';
+import { Item, ItemData, Rarity } from 'src/modules/core/models/items.model';
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
 import { ToIpfsImageFromCidPipe } from 'src/modules/core/pipes/to-ipfs-image-from-cid.pipe';
 import { getRarityColor, getRarityText } from 'src/modules/utils';
@@ -15,6 +15,7 @@ import { ViewportService } from 'src/services/viewport.service';
 })
 export class ItemTooltipComponent {
   @Input() item: Item;
+
   @Input() compareWith: Item;
   @Input() isBeingCompared = false;
 
