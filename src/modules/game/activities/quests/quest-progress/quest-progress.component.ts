@@ -62,7 +62,7 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
       this.interval = setInterval(() => {
         const startedAt = new Date(this.quest.startedAt);
         const finishedAt = new Date(this.quest.finishedAt);
-        finishedAt.setMinutes(finishedAt.getMinutes() - 320);
+        //finishedAt.setMinutes(finishedAt.getMinutes() - 320);
         const currentDate = new Date();
 
         if (currentDate > finishedAt) {
