@@ -19,14 +19,12 @@ export enum AdventureState {
   template: `
     @switch (adventureState) {
       @case (adventureStateEnum.STARTED) {
-        <!-- @if (questRouter == questStatusEnum.PICKING) {
-          <app-quest-picker></app-quest-picker>
-        } @else if (questRouter == questStatusEnum.IN_PROGRESS) {
-          <app-quest-progress></app-quest-progress>
-        } @else {
-          AH
-        } -->
         <app-quest-router [adventure]="selectedAdventure"></app-quest-router>
+      }
+      @case (adventureStateEnum.FINISHED) {
+        <span class="text-white">
+          {{ selectedAdventure.name }} is completed!</span
+        >
       }
       @default {
         <app-adventure-picker
@@ -35,26 +33,6 @@ export enum AdventureState {
         ></app-adventure-picker>
       }
     }
-
-    <!-- <ng-container [ngSwitch]="questRouter.status">
-      <app-quest-picker
-        *ngSwitchCase="questStatusEnum.PICKING"
-        (questStatusChange)="questRouter = $event"
-      ></app-quest-picker>
-      <app-quest-progress
-        *ngSwitchCase="questStatusEnum.IN_PROGRESS"
-        (questStatusChange)="questRouter = $event"
-      ></app-quest-progress>
-      <app-quest-fight
-        *ngSwitchCase="questStatusEnum.FIGHT"
-        (questStatusChange)="questRouter = $event"
-      ></app-quest-fight>
-      <app-quest-result
-        *ngSwitchCase="questStatusEnum.RESULT"
-        [result]="questRouter.data"
-        (questStatusChange)="questRouter = $event"
-      ></app-quest-result>
-    </ng-container> -->
   `,
 })
 export class AdventuresRouterComponent extends TemplatePage {
@@ -63,13 +41,12 @@ export class AdventuresRouterComponent extends TemplatePage {
 
   @Input() public set selectedAdventure(data: AdventureData) {
     this._selectedAdventure = cloneDeep(data);
-    console.log(data)
     this.adventureState = AdventureState.NON_STARTED;
-    if (data.Adventure.length > 0) {
+    if (data.Adventure.length > 0 && !data.Adventure[0].completed) {
       this.adventureState = AdventureState.STARTED;
-      // const quests = data.Adventure[0].quests;
-      // const activeQuest = quests.find((quest) => quest.startedAt !== null);
-      // if (activeQuest) this.questRouter = QuestStatusEnum.IN_PROGRESS;
+    }
+    if (data.Adventure.length > 0 && !!data.Adventure[0].completed) {
+      this.adventureState = AdventureState.FINISHED;
     }
   }
   public get selectedAdventure() {

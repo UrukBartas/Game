@@ -3,7 +3,10 @@
     <div class="carousel">
       <div
         class="slide"
-        *ngFor="let quest of quests; let i = index"
+        *ngFor="
+          let quest of quests | orderBy: 'data.phase' : 'asc';
+          let i = index
+        "
         [style.background-image]="'url(' + quest.data.image + ')'"
         [class.active]="i === activeSlideIndex"
       >

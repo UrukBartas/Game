@@ -44,6 +44,7 @@ import { AdventuresComponent } from './activities/adventures/adventures.componen
 import { AdventurePickerComponent } from './activities/adventures/adventure-picker/adventure-picker.component';
 import { AdventuresRouterComponent } from './activities/adventures/adventures-router.component';
 import { ItemdataToItemPipe } from '../core/pipes/itemdata-to-item.pipe';
+import { OrderByPipe } from '../core/pipes/order-by.pipe';
 
 const directives = [ValidInputDirective, TextSizeDirective, TitleSizeDirective];
 const components = [
@@ -93,6 +94,7 @@ const components = [
     StackPipe,
     DndModule,
     ItemdataToItemPipe,
+    OrderByPipe,
     ContextMenuComponent,
     ContextMenuInventoryOptionsComponent,
   ],

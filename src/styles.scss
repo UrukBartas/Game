@@ -208,3 +208,7 @@ ngb-tooltip-window {
 .bg-black {
   background: $black-400;
 }
+
+.busted-effect div {
+  filter: grayscale(100%) contrast(150%) brightness(50%) sepia(100%);
+}

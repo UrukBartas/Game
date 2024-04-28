@@ -53,17 +53,23 @@ export class QuestRouterComponent extends TemplatePage {
 
   private getQuestStatus() {
     let quests = this.store.selectSnapshot(MainState.getState).quests ?? [];
+    let activeQuest = null;
     if (this.adventure) {
       quests = this.adventure?.Adventure[0]?.quests ?? [];
+      activeQuest = quests.find(
+        (quest) =>
+          this.adventure.Adventure[0].currentPhase + 1 == quest.data.phase &&
+          quest.startedAt !== null
+      );
     } else {
       quests = quests.filter(
         (entry) =>
           (!entry.adventures || entry.adventures.length == 0) &&
           !entry.data.isAdventurePhase
       );
+      activeQuest = quests.find((quest) => quest.startedAt !== null);
     }
-    console.log(quests);
-    const activeQuest = quests.find((quest) => quest.startedAt !== null);
+
     const activeFight = this.store.selectSnapshot(MainState.getState).fight;
 
     if (activeQuest) {

@@ -1,6 +1,6 @@
 <div class="d-flex flex-column gap-2">
   <ng-container *ngIf="fightResult">
-    <div class="description">
+    <div class="description justify-content-center">
       <p urTitle>{{ victory ? 'Victory!' : 'Defeat!' }}</p>
     </div>
 
@@ -9,7 +9,9 @@
       *ngIf="
         fightResult.player?.level > player.level ||
         fightResult.loot ||
-        fightResult.lostLoot
+        fightResult.lostLoot ||
+        fightResult.consumableLoot ||
+        fightResult.consumableLostLoot
       "
     >
       <div
@@ -39,32 +41,68 @@
             loot: !!fightResult.lostLoot
               ? fightResult.lostLoot
               : fightResult.loot,
-            lost: !!fightResult.lostLoot
+            lost: !!fightResult.lostLoot,
+            type: 'item'
           }
         "
       ></ng-container>
-      <ng-template #lootDrop let-loot="loot" let-lost="lost">
+
+      <ng-container
+        *ngTemplateOutlet="
+          lootDrop;
+          context: {
+            loot: !!fightResult.consumableLostLoot
+              ? fightResult.consumableLostLoot
+              : fightResult.consumableLoot,
+            lost: !!fightResult.consumableLostLoot,
+            type: 'consumible'
+          }
+        "
+      >
+      </ng-container>
+
+      <ng-template #lootDrop let-loot="loot" let-lost="lost" let-type="type">
         <div *ngIf="loot" class="col col-md-12 d-flex flex-column gap-2">
           <span urText class="text-rainbow text-center">{{
             lost ? 'Inventory is full' : 'Congratulations!'
           }}</span>
           <span urText class="text-white text-center">{{
             lost
-              ? 'You cannot take this item with you, so you let it go.'
+              ? 'You cannot take this ' + type + ' with you, so you let it go.'
               : 'Your enemy dropped something.'
           }}</span>
-
-          <app-item-box
-            #lootItem
-            class="d-flex justify-content-center w-100"
-            [height]="getItemBoxSize()"
-            [width]="getItemBoxSize()"
-            [image]="loot.itemData.image | toIpfsImageFromCid"
-          >
-            <div tooltip class="tooltip-uruk">
-              <app-item-tooltip [item]="loot"></app-item-tooltip>
-            </div>
-          </app-item-box>
+          @if (type == 'item') {
+            @for (lootItem of loot; track lootItem.id) {
+              <app-item-box
+                #lootItem
+                class="d-flex justify-content-center w-100"
+                [height]="getItemBoxSize()"
+                [width]="getItemBoxSize()"
+                [image]="lootItem.itemData.image | toIpfsImageFromCid"
+              >
+                <div tooltip class="tooltip-uruk">
+                  <app-item-tooltip [item]="lootItem"></app-item-tooltip>
+                </div>
+              </app-item-box>
+            }
+          } @else if (type == 'consumible') {
+            @for (lootItem of loot; track lootItem.id) {
+              <app-item-box
+                #lootItem
+                class="d-flex justify-content-center w-100"
+                [height]="getItemBoxSize()"
+                [width]="getItemBoxSize()"
+                [image]="lootItem.consumableData.image | toIpfsImageFromCid"
+              >
+                <div tooltip class="tooltip-uruk">
+                  <app-consumable-tooltip [item]="lootItem.consumableData">
+                  </app-consumable-tooltip>
+                </div>
+              </app-item-box>
+            }
+          } @else {
+            Non compatible item type
+          }
         </div>
       </ng-template>
     </div>
@@ -77,19 +115,36 @@
       >You gained
       <span class="text-secondary">{{ fightResult.uruks }}</span> Uruks</span
     >
-    <span urText class="text-white pb-2"
-      >New quest unlocked:
+    <span urText class="text-white pb-2" *ngIf="!!fightResult.newQuest"
+      >{{
+        fightResult.newQuest.data.isAdventurePhase
+          ? 'New adventure phase unlocked:'
+          : 'New quest unlocked:'
+      }}
       <span
         [ngStyle]="{ color: getRarityColor(fightResult.newQuest.data.rarity) }"
         >{{ fightResult.newQuest.data.name }}</span
       ></span
     >
+    <span
+      urText
+      class="text-white pb-2"
+      *ngIf="!!fightResult.completedAdventure"
+    >
+      Congratulations! You have completed an adventure!
+    </span>
     <div class="pb-2">
       <button
         (click)="questStatusChange.emit({ status: questStatusEnum.PICKING })"
         class="btn btn-primary"
       >
-        <i class="fa fa-arrow-left px-2 pb-1"></i>Quests
+        <i class="fa fa-arrow-left px-2 pb-1"></i
+        >{{
+          fightResult.completedAdventure ||
+          fightResult.newQuest.data.isAdventurePhase
+            ? 'Adventures'
+            : 'Quests'
+        }}
       </button>
     </div>
   </ng-container>
