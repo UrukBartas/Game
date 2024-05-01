@@ -17,6 +17,7 @@ import { BlacksmithModalComponent } from './modal/blacksmith-modal.component';
 import * as party from 'party-js';
 import { Store } from '@ngxs/store';
 import { RefreshPlayer } from 'src/store/main.store';
+import { DndDropEvent } from 'ngx-drag-drop';
 
 @Component({
   selector: 'app-blacksmith',
@@ -107,6 +108,10 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
       1500
     );
     this.resultItem = null;
+  }
+
+  onAnvilDrop(event: DndDropEvent) {
+    this.selectedItem = event.data;
   }
 
   triggerDialog(text: string, duration: number) {
