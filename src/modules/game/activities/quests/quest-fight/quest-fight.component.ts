@@ -128,9 +128,7 @@ export class QuestFightComponent extends TemplatePage {
       lastPlayerAction === TurnActionEnum.CRIT
     ) {
       this.handlePlayerAnimation(
-        this.viewportService.screenSize == 'xs'
-          ? 'attack-down'
-          : 'attack-right',
+        this.viewportService.screenSize == 'xs' ? 'attack-up' : 'attack-right',
         1
       );
       this.showReceivedEnemyDamage = true;
@@ -143,7 +141,7 @@ export class QuestFightComponent extends TemplatePage {
       lastEnemyAction === TurnActionEnum.CRIT
     ) {
       this.handleEnemyAnimation(
-        this.viewportService.screenSize == 'xs' ? 'attack-up' : 'attack-left',
+        this.viewportService.screenSize == 'xs' ? 'attack-down' : 'attack-left',
         1
       );
       if (lastTurn.enemyTurn.damage > 0) {

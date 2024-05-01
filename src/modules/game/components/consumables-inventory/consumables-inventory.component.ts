@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { interval } from 'rxjs';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Consumable } from 'src/modules/core/models/consumable.model';
 import { InventoryStructure } from 'src/services/inventory.service';
 export interface ConsumableWithStack extends Consumable {
@@ -15,6 +14,5 @@ export class ConsumablesInventoryComponent {
   @Input() boxes: Array<InventoryStructure> = [];
   @Input() selectedItem: ConsumableWithStack;
   @Output() selectNewItem = new EventEmitter<Consumable>();
-  constructor(){
-  }
+  constructor() {}
 }

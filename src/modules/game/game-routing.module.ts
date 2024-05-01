@@ -11,6 +11,7 @@ import { ShopComponent } from './activities/shop/shop.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { RegisterReferralComponent } from './activities/campaigns/register-referral/register-referral.component';
+import { BlacksmithComponent } from './activities/blacksmith/blacksmith.component';
 
 const routes: Routes = [
   {
@@ -49,6 +50,11 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         component: ShopComponent,
         title: 'Shop',
+      },
+      {
+        path: 'blacksmith',
+        canActivate: [AuthGuard],
+        component: BlacksmithComponent,
       },
       {
         path: 'edit',

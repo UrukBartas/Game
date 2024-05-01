@@ -3,6 +3,7 @@ import { PlayerModel } from './player.model';
 export interface Item {
   id: number;
   level: number;
+  upgradeLevel: number;
 
   playerId?: string;
   player?: PlayerModel | null;

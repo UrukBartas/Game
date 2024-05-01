@@ -1,4 +1,5 @@
 import { Item } from './items.model';
+import { Material } from './material.model';
 import { FighterStats } from './player-stats.model';
 import { PlayerModel } from './player.model';
 import { QuestModel } from './quest.model';
@@ -32,8 +33,9 @@ export interface FighterStatusModel {
 export interface FightResultModel {
   newQuest: QuestModel;
   exp?: number;
-  loot?: Item;
-  lostLoot?: Item;
+  item?: Item;
+  lostItem?: boolean;
+  material?: Material;
   player?: PlayerModel;
   uruks?: number;
 }

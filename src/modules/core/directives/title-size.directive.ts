@@ -10,6 +10,7 @@ import { ViewportService } from 'src/services/viewport.service';
 
 @Directive({
   selector: '[urTitle]',
+  standalone: true,
 })
 export class TitleSizeDirective implements OnInit, OnDestroy {
   screenSizeChanges$: Subscription;

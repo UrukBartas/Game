@@ -2,6 +2,15 @@
 @import 'node_modules/bootstrap/scss/variables';
 @import 'node_modules/bootstrap/scss/mixins';
 
+.item-inventory {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 10px;
+  overflow: auto;
+  padding: 0px 20px;
+}
+
 .tooltip-uruk {
   display: flex;
   gap: 5px;
@@ -9,5 +18,4 @@
   @include media-breakpoint-down(sm) {
     flex-direction: column;
   }
-
 }

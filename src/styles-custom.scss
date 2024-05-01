@@ -1,3 +1,5 @@
+@import './variables.scss';
+
 .button-rainbow {
   border: none;
   outline: none;
@@ -180,4 +182,24 @@
   animation: glowing-mythic 4s infinite;
   position: relative;
   display: inline-block;
+}
+
+.text-warning {
+  color: $orange;
+}
+
+.text-danger {
+  color: $red;
+}
+
+@for $i from 1 through 5 {
+  .pr-#{$i} {
+    padding-right: $i * 0.25rem !important;
+  }
+  .pl-#{$i} {
+    padding-left: $i * 0.25rem !important;
+  }
+  .delay-#{$i} {
+    animation-delay: $i * 0.25s !important;
+  }
 }

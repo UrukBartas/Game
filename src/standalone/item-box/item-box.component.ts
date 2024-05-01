@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { Rarity } from 'src/modules/core/models/items.model';
 @Component({
@@ -10,6 +10,7 @@ import { Rarity } from 'src/modules/core/models/items.model';
   styleUrl: './item-box.component.scss',
 })
 export class ItemBoxComponent {
+  @HostBinding('class') class = 'h-fit';
   @Input() height = 30;
   @Input() width = 30;
   @Input() image: string = null;
@@ -17,6 +18,7 @@ export class ItemBoxComponent {
   @Input() displayTooltip = true;
   @Input() stack: any = 0;
   @Input() rarity: Rarity;
+  @Input() upgradeLevel: number;
 
   public isNaNLocal = isNaN;
   rarityEnum = Rarity;

@@ -27,17 +27,21 @@
           urTitle
           (click)="generateCampaign()"
           class="button-rainbow w-100 mb-2"
-          [disabled]="(1000 - (getCampaignsCount$ | async)) <= 0"
+          [disabled]="1000 - (getCampaignsCount$ | async) <= 0"
           [style.padding]="getResponsiveButtonSize()"
         >
-         {{(1000 - (getCampaignsCount$ | async)) <= 0 ? 'All Golden Uruks were distributed' : 'Secure Your Golden Uruks'}}
+          {{
+            1000 - (getCampaignsCount$ | async) <= 0
+              ? 'All Golden Uruks were distributed'
+              : 'Secure Your Golden Uruks'
+          }}
         </button>
       }
 
-      <p class="text-secondary mb-0 text-center" utText>
+      <p class="text-secondary mb-0 text-center" urText>
         * Campaign active until maximum participant quota is reached.
       </p>
-      <p class="text-secondary mb-0 text-center" utText>
+      <p class="text-secondary mb-0 text-center" urText>
         * One claim per wallet address allowed.
       </p>
     </div>

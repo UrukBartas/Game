@@ -1,12 +1,12 @@
 export interface Consumable {
   consumableData: ConsumableData;
-  consumableDataId: number;
+  consumableDataId: string;
   id: number;
   playerId: string;
 }
 
 export interface ConsumableData {
-  id: number;
+  id: string;
   image: string;
   name: string;
   description: string;

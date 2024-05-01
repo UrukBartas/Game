@@ -1,19 +1,19 @@
-import { Component, EventEmitter, Output, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Store } from '@ngxs/store';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { firstValueFrom, map, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
+import { Rarity } from 'src/modules/core/models/items.model';
 import { QuestModel } from 'src/modules/core/models/quest.model';
+import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { getRarityColor } from 'src/modules/utils';
+import { PlayerService } from 'src/services/player.service';
 import { QuestService } from 'src/services/quest.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, SetQuests } from 'src/store/main.store';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { QuestRouterModel } from '../models/quest-router.model';
-import { Rarity } from 'src/modules/core/models/items.model';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
-import { PlayerService } from 'src/services/player.service';
-import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-quest-picker',

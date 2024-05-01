@@ -29,7 +29,7 @@
       <div class="uruks gap-2 px-4">
         <img class="navbar-uruks-icon pb-1" src="assets/goldenuruks.png" />
         <span urText class="text-white">{{
-          player.uruks | number: '1.0-2'
+          player.uruks | compressNumber
         }}</span>
       </div>
       <app-progress-bar
@@ -52,7 +52,7 @@
       <span urText class="level text-white px-4">Level {{ player.level }}</span>
     </div>
     <div
-      class="container-fluid h-100 d-flex justify-content-center align-items-center p-4 content {{
+      class="container-fluid h-100 d-flex justify-content-center align-items-center p-2 p-md-3 p-lg-4 content {{
         !isSidebarOpened() ? 'content-extended' : 'content-collapsed'
       }}"
     >

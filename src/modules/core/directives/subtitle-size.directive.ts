@@ -9,10 +9,10 @@ import { Subscription } from 'rxjs';
 import { ViewportService } from 'src/services/viewport.service';
 
 @Directive({
-  selector: '[urText]',
+  selector: '[urSubtitle]',
   standalone: true,
 })
-export class TextSizeDirective implements OnInit, OnDestroy {
+export class SubtitleSizeDirective implements OnInit, OnDestroy {
   screenSizeChanges$: Subscription;
   constructor(
     private el: ElementRef,
@@ -21,31 +21,32 @@ export class TextSizeDirective implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.updateTextSize();
+    this.updateTitleSize();
     this.screenSizeChanges$ = this.viewportService.screenSizeChanges.subscribe(
       () => {
-        this.updateTextSize();
+        this.updateTitleSize();
       }
     );
   }
 
-  private updateTextSize() {
-    const textSize = this.getResponsiveTextSize();
+  private updateTitleSize() {
+    const textSize = this.getResponsiveTitleSize();
     this.renderer.setStyle(this.el.nativeElement, 'font-size', textSize);
   }
 
-  private getResponsiveTextSize() {
+  private getResponsiveTitleSize() {
     switch (this.viewportService.screenSize) {
       case 'xxl':
+        return 'calc(1.2rem + 0.9vw)';
       case 'xl':
       case 'lg':
-        return '1.4rem';
+        return 'calc(1.15rem + 0.6vw)';
       case 'md':
-        return '1.2rem';
+        return 'calc(1.1rem + 0.3vw)';
       case 'xs':
       case 'sm':
       default:
-        return '0.9rem';
+        return '1.1rem';
     }
   }
 
