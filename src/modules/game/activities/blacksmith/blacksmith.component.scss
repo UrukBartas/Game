@@ -33,7 +33,7 @@
     align-items: center;
     background: rgba(0, 0, 0, 0.4392156863);
     padding: 20px;
-    @include media-breakpoint-up(lg) {
+    @include media-breakpoint-up(md) {
       right: 12vw;
       bottom: 25%;
     }

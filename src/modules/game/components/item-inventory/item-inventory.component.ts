@@ -24,6 +24,7 @@ export class ItemInventoryComponent {
   @Input() disableDND = true;
   @Input() addExpandInventory = false;
   @Input() equippedItemOfType: Item;
+  @Input() showContextualMenu = false;
   @Output() selectNewItem = new EventEmitter<Item>();
   @Output() onDragStart = new EventEmitter<any>();
   @Output() onDragEnd = new EventEmitter<any>();

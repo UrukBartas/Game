@@ -78,6 +78,7 @@
                 ? (this.getItem$(hoveredItem.itemData.itemType) | async)
                 : null
             "
+            [showContextualMenu]="true"
             [boxes]="itemInventoryBoxes"
             [disableDND]="false"
             (onDragStart)="onDragStart($event.event, $event.data)"

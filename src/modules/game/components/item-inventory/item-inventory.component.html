@@ -3,6 +3,7 @@
     <div class="box-wrapper">
       <ng-template #contextOptions>
         <app-context-menu-inventory-options
+          *ngIf="showContextualMenu"
           (clickEquip)="
             onDoubleClick.emit(items[index]);
             contextMenuService.hideContextMenu()
