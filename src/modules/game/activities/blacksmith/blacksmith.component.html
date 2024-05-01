@@ -10,6 +10,8 @@
     </div>
     <app-item-inventory
       class="overflow-auto"
+      [showContextualMenu]="true"
+      [contextMenuTemplate]="'anvil'"
       [items]="currentInventory$ | async"
       [boxes]="itemInventoryBoxes"
       [disableDND]="false"
@@ -17,7 +19,8 @@
       (onDragStart)="hovered = true"
       (onDragEnd)="hovered = false"
       (onDoubleClick)="!!$event ? (selectedItem = $event) : false"
-    ></app-item-inventory>
+    >
+    </app-item-inventory>
   </div>
 
   <div class="item-container">

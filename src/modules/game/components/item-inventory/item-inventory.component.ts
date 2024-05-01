@@ -25,6 +25,7 @@ export class ItemInventoryComponent {
   @Input() addExpandInventory = false;
   @Input() equippedItemOfType: Item;
   @Input() showContextualMenu = false;
+  @Input() contextMenuTemplate: 'anvil' | 'default' = 'default';
   @Output() selectNewItem = new EventEmitter<Item>();
   @Output() onDragStart = new EventEmitter<any>();
   @Output() onDragEnd = new EventEmitter<any>();

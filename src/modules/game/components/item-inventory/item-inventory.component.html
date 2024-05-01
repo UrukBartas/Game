@@ -2,17 +2,29 @@
   @for (box of boxes; track box.id; let index = $index) {
     <div class="box-wrapper">
       <ng-template #contextOptions>
-        <app-context-menu-inventory-options
-          *ngIf="showContextualMenu"
-          (clickEquip)="
-            onDoubleClick.emit(items[index]);
-            contextMenuService.hideContextMenu()
-          "
-          (clickDestroy)="
-            onDestroyItem.emit(items[index]);
-            contextMenuService.hideContextMenu()
-          "
-        ></app-context-menu-inventory-options>
+        @if (contextMenuTemplate == 'default') {
+          <app-context-menu-inventory-options
+            *ngIf="showContextualMenu"
+            (clickEquip)="
+              onDoubleClick.emit(items[index]);
+              contextMenuService.hideContextMenu()
+            "
+            (clickDestroy)="
+              onDestroyItem.emit(items[index]);
+              contextMenuService.hideContextMenu()
+            "
+          >
+          </app-context-menu-inventory-options>
+        } @else {
+          <app-blacksmith-context-menu
+            *ngIf="showContextualMenu"
+            (anvilIt)="
+              onDoubleClick.emit(items[index]);
+              contextMenuService.hideContextMenu()
+            "
+          >
+          </app-blacksmith-context-menu>
+        }
       </ng-template>
       <app-item-box
         (contextmenu)="contextMenuService.onContextMenu($event, contextOptions)"

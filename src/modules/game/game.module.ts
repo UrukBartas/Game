@@ -43,6 +43,7 @@ import { ItemInventoryComponent } from './components/item-inventory/item-invento
 import { MaterialsInventoryComponent } from './components/materials-inventory/materials-inventory.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
+import { BlacksmithContextMenuComponent } from 'src/standalone/context-menu/blacksmith-context-menu/blacksmith-context-menu.component';
 
 const directives = [
   ValidInputDirective,
@@ -101,6 +102,7 @@ const components = [
     DndModule,
     ContextMenuComponent,
     ContextMenuInventoryOptionsComponent,
+    BlacksmithContextMenuComponent,
   ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe],
