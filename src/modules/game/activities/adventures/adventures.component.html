@@ -10,14 +10,16 @@
         <span
           *ngIf="(player$ | async).level < adventure.minLevel"
           class="blocked-adventure text-danger pointer"
-          (click)="selectedAdventure = adventure"
-          >BLOCKED</span
+          (click)="selectedAdventure = adventure; refreshAdventures()"
         >
+          <span>BLOCKED</span>
+          <span>Level {{ adventure.minLevel }}</span>
+        </span>
         <app-item-box
           [height]="150"
           [width]="150"
           [image]="adventure.image"
-          (click)="selectedAdventure = adventure"
+          (click)="selectedAdventure = adventure; refreshAdventures()"
           [active]="
             selectedAdventure ? selectedAdventure.id == adventure.id : false
           "
@@ -40,6 +42,7 @@
     @if (!!selectedAdventure) {
       <app-adventure-router
         (onAdventureStarted)="refreshAdventures()"
+        (updateAdventures)="refreshAdventures()"
         [selectedAdventure]="selectedAdventure"
       ></app-adventure-router>
     } @else {

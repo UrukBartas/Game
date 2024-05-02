@@ -55,7 +55,7 @@ export class AdventuresComponent extends TemplatePage {
     if (adventureSelected && !adventureSelected?.completed) {
       return `${adventureSelected.currentPhase + 1}/${adventureSelected.quests.length}`;
     } else if (adventureSelected?.completed) {
-      return `Completed`;
+      return `Done`;
     } else {
       return '';
     }

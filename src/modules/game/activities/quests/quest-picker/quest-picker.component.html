@@ -42,7 +42,7 @@
       [style.padding]="getResponsiveButtonSize()"
       [style.fontSize]="getResponsiveButtonFontSize()"
     >
-      START QUEST
+      {{ !!adventure ? 'START PHASE' : 'START QUEST' }}
     </button>
     <a (click)="previousSlide()" class="carousel-control-prev" role="button">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>

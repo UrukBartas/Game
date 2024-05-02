@@ -9,6 +9,9 @@ import { Adventure, AdventuresService } from 'src/services/adventures.service';
 import { QuestStatusEnum } from '../quests/enums/quest-status.enum';
 import { QuestRouterModel } from '../quests/models/quest-router.model';
 import { cloneDeep } from 'lodash';
+import { QuestService } from 'src/services/quest.service';
+import { take } from 'rxjs';
+import { SetQuests } from 'src/store/main.store';
 export enum AdventureState {
   NON_STARTED,
   STARTED,
@@ -19,7 +22,10 @@ export enum AdventureState {
   template: `
     @switch (adventureState) {
       @case (adventureStateEnum.STARTED) {
-        <app-quest-router [adventure]="selectedAdventure"></app-quest-router>
+        <app-quest-router
+          [adventure]="selectedAdventure"
+          (statusChanged)="statusChangedQuest($event)"
+        ></app-quest-router>
       }
       @case (adventureStateEnum.FINISHED) {
         <span class="text-white">
@@ -38,6 +44,8 @@ export enum AdventureState {
 export class AdventuresRouterComponent extends TemplatePage {
   adventureService = inject(AdventuresService);
   adventureDataService = inject(AdventuresDataService);
+  questService = inject(QuestService);
+  store = inject(Store);
 
   @Input() public set selectedAdventure(data: AdventureData) {
     this._selectedAdventure = cloneDeep(data);
@@ -54,14 +62,25 @@ export class AdventuresRouterComponent extends TemplatePage {
   }
 
   @Output() onAdventureStarted = new EventEmitter<Adventure>();
+  @Output() updateAdventures = new EventEmitter<void>();
 
   private _selectedAdventure: AdventureData;
   public adventureState: AdventureState = AdventureState.NON_STARTED;
   public adventureStateEnum = AdventureState;
-  // questStatusEnum = QuestStatusEnum;
-  // questRouter: QuestStatusEnum = QuestStatusEnum.PICKING;
 
-  constructor(private store: Store) {
+  constructor() {
     super();
+    this.questService
+      .getActive()
+      .pipe(take(1))
+      .subscribe((quests) => {
+        this.store.dispatch(new SetQuests(quests));
+      });
+  }
+
+  public statusChangedQuest(router: QuestRouterModel) {
+    if (router.status == QuestStatusEnum.PICKING) {
+      this.updateAdventures.emit();
+    }
   }
 }

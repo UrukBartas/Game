@@ -16,6 +16,7 @@ import { QuestRouterModel } from '../models/quest-router.model';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Adventure } from 'src/services/adventures.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-quest-progress',
@@ -50,12 +51,15 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
     //     .selectSnapshot(MainState.getState)
     //     .quests.find((quest) => quest.startedAt !== null);
     // }
-    this.quest = this.store
-      .selectSnapshot(MainState.getState)
-      .quests.find((quest) => quest.startedAt !== null);
-    if (this.quest) {
-      this.setQuestTimer();
-    }
+    this.store
+      .select(MainState.getState)
+      .pipe(filter((entry) => !!entry.quests))
+      .subscribe((state) => {
+        this.quest = state.quests.find((quest) => quest.startedAt !== null);
+        if (this.quest) {
+          this.setQuestTimer();
+        }
+      });
   }
 
   changeTitleRecursiveQuestIsReady(): void {

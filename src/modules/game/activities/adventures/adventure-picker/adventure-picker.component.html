@@ -16,7 +16,7 @@
           <span urTitle class="text-third">Rewards</span>
           <div class="possible-rewards">
             @for (
-              itemReward of selectedAdventure.possibleItemRewardsData;
+              itemReward of selectedAdventure.itemData;
               track itemReward.id
             ) {
               <app-item-box
@@ -34,7 +34,7 @@
               </app-item-box>
             }
             @for (
-              consumableReward of selectedAdventure.possibleConsumablesRewardsData;
+              consumableReward of selectedAdventure.consumablesData;
               track consumableReward.id
             ) {
               <app-item-box
@@ -46,9 +46,28 @@
               >
                 <div tooltip class="tooltip-uruk">
                   <app-consumable-tooltip
-                    [external]="true"
+                    [showPrice]="false"
                     [item]="consumableReward"
                   ></app-consumable-tooltip>
+                </div>
+              </app-item-box>
+            }
+
+            @for (
+              materialReward of selectedAdventure.materialsData;
+              track materialReward.id
+            ) {
+              <app-item-box
+                #lootItem
+                class="d-flex justify-content-center w-100"
+                [height]="getItemBoxSize()"
+                [width]="getItemBoxSize()"
+                [image]="materialReward.image | toIpfsImageFromCid"
+              >
+                <div tooltip class="tooltip-uruk">
+                  <app-material-tooltip
+                    [item]="materialReward"
+                  ></app-material-tooltip>
                 </div>
               </app-item-box>
             }

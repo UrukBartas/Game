@@ -38,6 +38,8 @@ export interface FightResultModel {
   lostLoot?: Array<Item>;
   consumableLoot?: Array<Consumable>;
   consumableLostLoot?: Array<Consumable>;
+  materialLoot?: Array<Material>;
+  materialLostLoot?: Array<Material>;
   material?: Material;
   player?: PlayerModel;
   uruks?: number;

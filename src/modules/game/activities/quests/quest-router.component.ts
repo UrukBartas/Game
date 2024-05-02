@@ -1,4 +1,11 @@
-import { Component, Input } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  effect,
+  signal,
+} from '@angular/core';
 import { Store } from '@ngxs/store';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { MainState } from 'src/store/main.store';
@@ -10,31 +17,34 @@ import { cloneDeep } from 'lodash';
 @Component({
   selector: 'app-quest-router',
   template: `
-    <ng-container [ngSwitch]="questRouter.status">
+    <ng-container [ngSwitch]="questRouter().status">
       <app-quest-picker
         [adventure]="adventure"
         *ngSwitchCase="questStatusEnum.PICKING"
-        (questStatusChange)="questRouter = $event"
+        (questStatusChange)="questRouter.set($event)"
       ></app-quest-picker>
       <app-quest-progress
         *ngSwitchCase="questStatusEnum.IN_PROGRESS"
-        (questStatusChange)="questRouter = $event"
+        (questStatusChange)="questRouter.set($event)"
       ></app-quest-progress>
       <app-quest-fight
         *ngSwitchCase="questStatusEnum.FIGHT"
-        (questStatusChange)="questRouter = $event"
+        (questStatusChange)="questRouter.set($event)"
       ></app-quest-fight>
       <app-quest-result
         *ngSwitchCase="questStatusEnum.RESULT"
-        [result]="questRouter.data"
-        (questStatusChange)="questRouter = $event"
+        [result]="questRouter().data"
+        (questStatusChange)="questRouter.set($event)"
       ></app-quest-result>
     </ng-container>
   `,
 })
 export class QuestRouterComponent extends TemplatePage {
   questStatusEnum = QuestStatusEnum;
-  questRouter: QuestRouterModel = { status: QuestStatusEnum.PICKING };
+  questRouter = signal<QuestRouterModel>({ status: QuestStatusEnum.PICKING });
+  questRouterEffect = effect(() => {
+    this.statusChanged.emit(this.questRouter());
+  });
   @Input() public set adventure(data: AdventureData) {
     this._data = cloneDeep(data);
     this.getQuestStatus();
@@ -42,6 +52,9 @@ export class QuestRouterComponent extends TemplatePage {
   public get adventure() {
     return this._data;
   }
+
+  @Output() statusChanged = new EventEmitter<QuestRouterModel>();
+
   private _data: AdventureData;
   constructor(private store: Store) {
     super();
@@ -74,12 +87,12 @@ export class QuestRouterComponent extends TemplatePage {
 
     if (activeQuest) {
       if (!activeFight) {
-        this.questRouter.status = QuestStatusEnum.IN_PROGRESS;
+        this.questRouter().status = QuestStatusEnum.IN_PROGRESS;
       } else {
-        this.questRouter.status = QuestStatusEnum.FIGHT;
+        this.questRouter().status = QuestStatusEnum.FIGHT;
       }
     } else {
-      this.questRouter.status = QuestStatusEnum.PICKING;
+      this.questRouter().status = QuestStatusEnum.PICKING;
     }
   }
 }

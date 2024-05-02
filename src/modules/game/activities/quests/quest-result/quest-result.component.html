@@ -12,7 +12,8 @@
         fightResult.lostLoot ||
         fightResult.consumableLoot ||
         fightResult.consumableLostLoot ||
-        fightResult.material
+        fightResult.materialLoot ||
+        fightResult.materialLostLoot
       "
     >
       <div
@@ -68,10 +69,10 @@
         *ngTemplateOutlet="
           lootDrop;
           context: {
-            loot: !!fightResult.consumableLostLoot
-              ? fightResult.consumableLostLoot
-              : fightResult.consumableLoot,
-            lost: !!fightResult.consumableLostLoot,
+            loot: !!fightResult.materialLostLoot
+              ? fightResult.materialLostLoot
+              : fightResult.materialLoot,
+            lost: !!fightResult.materialLostLoot,
             type: 'material'
           }
         "
@@ -118,21 +119,22 @@
               </app-item-box>
             }
           } @else if (type == 'material') {
-            <app-item-box
-              *ngIf="fightResult.material"
-              [height]="getItemBoxSize()"
-              [width]="getItemBoxSize()"
-              [image]="
-                fightResult.material.materialData.image | toIpfsImageFromCid
-              "
-              [stack]="fightResult.material.quantity"
-            >
-              <div tooltip class="tooltip-uruk">
-                <app-material-tooltip
-                  [item]="fightResult.material.materialData"
-                ></app-material-tooltip>
-              </div>
-            </app-item-box>
+            @for (lootItem of loot; track lootItem.id) {
+              <app-item-box
+                #lootItem
+                class="d-flex justify-content-center w-100"
+                [height]="getItemBoxSize()"
+                [width]="getItemBoxSize()"
+                [image]="lootItem.materialData.image | toIpfsImageFromCid"
+                [stack]="lootItem.quantity"
+              >
+                <div tooltip class="tooltip-uruk">
+                  <app-material-tooltip
+                    [item]="lootItem.materialData"
+                  ></app-material-tooltip>
+                </div>
+              </app-item-box>
+            }
           } @else {
             Non compatible item type
           }
