@@ -9,6 +9,7 @@ import { NgControl, ValidationErrors } from '@angular/forms';
 
 @Directive({
   selector: '[validInput]',
+  standalone: true,
 })
 export class ValidInputDirective {
   @Input('validInput') controlName: string;

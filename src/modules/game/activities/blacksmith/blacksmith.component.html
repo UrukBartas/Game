@@ -1,0 +1,102 @@
+<div id="blacksmith">
+  <div class="blacksmith-bg"></div>
+  <div *ngIf="showDialog" class="blacksmith-dialog">
+    <span urTitle>{{ dialog }} </span>
+  </div>
+
+  <div class="inventory-container inventory">
+    <div class="description">
+      <span urSubtitle>Inventory</span>
+    </div>
+    <app-item-inventory
+      class="overflow-auto"
+      [showContextualMenu]="true"
+      [contextMenuTemplate]="'anvil'"
+      [items]="currentInventory$ | async"
+      [boxes]="itemInventoryBoxes"
+      [disableDND]="false"
+      [boxSize]="40"
+      (onDragStart)="hovered = true"
+      (onDragEnd)="hovered = false"
+      (onDoubleClick)="!!$event ? (selectedItem = $event) : false"
+    >
+    </app-item-inventory>
+  </div>
+
+  <div class="item-container">
+    <app-item-box
+      #anvil
+      dndDropzone
+      (dndDrop)="onAnvilDrop($event)"
+      [active]="hovered"
+      [ngbTooltip]="itemTooltip"
+      [tooltipContext]="{ item: selectedItem }"
+      [height]="getItemBoxSize()"
+      [width]="getItemBoxSize()"
+      [upgradeLevel]="selectedItem?.upgradeLevel"
+      [image]="
+        selectedItem
+          ? (selectedItem?.itemData.image | toIpfsImageFromCid)
+          : null
+      "
+    ></app-item-box>
+    <div class="flex">
+      <button
+        (click)="openModal(false)"
+        [class]="'btn btn-primary ' + getButtonSize()"
+      >
+        <i class="fa fa-recycle pl-1 pb-1"></i>
+        Recycle
+      </button>
+      <button
+        (click)="openModal(true)"
+        [class]="'btn btn-secondary mx-1 ' + getButtonSize()"
+      >
+        <i class="fa fa-gears pl-1 pb-1"></i>
+        Upgrade
+      </button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="resultItem">
+    <div class="result-item" (click)="closeResult()">
+      <div class="animate__animated animate__jackInTheBox delay_4">
+        <app-item-box
+          #result
+          [ngbTooltip]="itemTooltip"
+          [tooltipContext]="{ item: resultItem }"
+          [height]="200"
+          [width]="200"
+          [upgradeLevel]="selectedItem?.upgradeLevel"
+          [image]="
+            resultItem
+              ? (selectedItem?.itemData.image | toIpfsImageFromCid)
+              : null
+          "
+        ></app-item-box>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="resultItem === false">
+    <div class="result-item" (click)="closeResult()">
+      <span urTitle class="text-white">Upgrade failed 💀</span>
+      <div class="animate__animated animate__hinge delay_4">
+        <app-item-box
+          #result
+          [height]="200"
+          [width]="200"
+          [upgradeLevel]="selectedItem?.upgradeLevel"
+          [image]="
+            selectedItem
+              ? (selectedItem?.itemData.image | toIpfsImageFromCid)
+              : null
+          "
+        ></app-item-box>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template #itemTooltip let-item="item">
+  <app-item-tooltip *ngIf="selectedItem" [item]="item"></app-item-tooltip>
+</ng-template>

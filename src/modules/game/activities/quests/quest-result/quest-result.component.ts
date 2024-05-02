@@ -50,7 +50,7 @@ export class QuestResultComponent extends TemplatePage {
       this.victory = !!fightResult.player;
       this.updateQuests();
       if (this.victory) {
-        if (fightResult.loot) {
+        if (fightResult.item && !fightResult.lostItem) {
           setTimeout(() => {
             party.confetti(this.loot.nativeElement, {
               count: party.variation.range(20, 40),

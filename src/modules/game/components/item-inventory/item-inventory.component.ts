@@ -19,10 +19,13 @@ import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component'
 export class ItemInventoryComponent {
   @Input() items: Item[] = [];
   @Input() boxes: Array<InventoryStructure> = [];
+  @Input() boxSize: number = 40;
   @Input() selectedItem: Item;
   @Input() disableDND = true;
   @Input() addExpandInventory = false;
   @Input() equippedItemOfType: Item;
+  @Input() showContextualMenu = false;
+  @Input() contextMenuTemplate: 'anvil' | 'default' = 'default';
   @Output() selectNewItem = new EventEmitter<Item>();
   @Output() onDragStart = new EventEmitter<any>();
   @Output() onDragEnd = new EventEmitter<any>();

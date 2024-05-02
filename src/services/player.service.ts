@@ -5,15 +5,20 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, firstValueFrom, tap } from 'rxjs';
 import { Consumable } from 'src/modules/core/models/consumable.model';
 import { Item } from 'src/modules/core/models/items.model';
+import { Material } from 'src/modules/core/models/material.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 import { RefreshPlayer } from 'src/store/main.store';
+import { ItemService } from './item.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlayerService extends ApiBaseService {
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private itemService: ItemService
+  ) {
     super(http);
     this.controllerPrefix = '/player';
   }
@@ -22,7 +27,7 @@ export class PlayerService extends ApiBaseService {
     try {
       this.spinnerService.show();
       await firstValueFrom(
-        this.equipItem(item).pipe(
+        this.itemService.equipItem(item).pipe(
           tap(() => {
             this.store.dispatch(new RefreshPlayer());
             onEquip();
@@ -46,14 +51,20 @@ export class PlayerService extends ApiBaseService {
   getItems() {
     return this.get('/inventory');
   }
+
   getItemsSize() {
     return this.get('/inventory-size');
   }
+
   getItemsConsumable(): Observable<Array<Consumable>> {
     return this.get('/inventory-consumables');
   }
   updateFCMToken(fcmToken: string) {
     return this.post('/add-fcm-token', { fcmToken });
+  }
+
+  getItemsMaterial(): Observable<Array<Material>> {
+    return this.get('/inventory-materials');
   }
 
   getItemsDisabled() {
@@ -62,14 +73,6 @@ export class PlayerService extends ApiBaseService {
 
   getNFTS() {
     return this.get('/get-nfts-items', true);
-  }
-
-  public unEquipItem(item: Item) {
-    return this.post('/unequip/' + item.id, {}) as Observable<Item>;
-  }
-
-  public equipItem(item: Item) {
-    return this.post('/equip/' + item.id, {}) as Observable<Item>;
   }
 
   public getLeaderboard(

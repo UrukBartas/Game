@@ -1,0 +1,147 @@
+@import '../../../../variables.scss';
+@import 'node_modules/bootstrap/scss/mixins';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
+#blacksmith {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+
+  .blacksmith-bg {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../../../../assets/blacksmith/blacksmith.webp');
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-x: 80%;
+    @include media-breakpoint-down(sm) {
+      background-position-x: 65%;
+    }
+  }
+
+  .item-container {
+    position: absolute;
+    right: 5vw;
+    bottom: 5vh;
+    display: flex;
+    flex-direction: column;
+    gap: 5vh;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4392156863);
+    padding: 20px;
+    @include media-breakpoint-up(md) {
+      right: 12vw;
+      bottom: 25%;
+    }
+    @include media-breakpoint-down(sm) {
+      right: 0;
+      left: 0;
+    }
+  }
+
+  .inventory-container {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    padding: 10px;
+    background: $black-transparent;
+    height: fit-content;
+    width: 30vw;
+    height: 75vh;
+    @include media-breakpoint-down(sm) {
+      height: 50vh;
+      width: 88vw;
+    }
+  }
+
+  @keyframes glowing-upgrade {
+    0% {
+      box-shadow: 0 0 10vw 10vw rgba(204, 209, 207, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 15vw 15vw rgba(201, 206, 204, 0.6);
+    }
+    100% {
+      box-shadow: 0 0 10vw 10vw rgba(206, 211, 209, 0.4);
+    }
+  }
+
+  .result-item {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #0000004a;
+    flex-direction: column;
+    z-index: 10;
+    app-item-box {
+      animation: glowing-upgrade 4s infinite;
+      position: relative;
+      display: inline-block;
+      border-radius: 20px;
+      .box {
+        border-radius: 20px !important;
+        img {
+          border-radius: 20px !important;
+        }
+      }
+    }
+  }
+
+  .blacksmith-dialog {
+    position: absolute;
+    top: 20%;
+    right: 40%;
+    max-width: 40vw;
+    background-color: $white-100;
+    border: 2px solid $black-500;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    z-index: 10;
+
+    @include media-breakpoint-up(xl) {
+      top: 28%;
+      right: 50%;
+    }
+
+    @include media-breakpoint-up(xl) {
+      top: 28%;
+      right: 46%;
+    }
+
+    @include media-breakpoint-up(xxl) {
+      top: 28%;
+      right: 42%;
+    }
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: -20px;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      transform: translateY(-50%);
+    }
+
+    &::before {
+      border-left: 20px solid $black-500;
+      right: -22px;
+    }
+
+    &::after {
+      border-left: 20px solid $white-100;
+      z-index: 1;
+    }
+  }
+}

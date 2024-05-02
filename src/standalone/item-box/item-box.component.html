@@ -24,8 +24,20 @@
       [height]="height"
       [ngClass]="{ selectedItem: active }"
     />
-    <span *ngIf="!!stack" class="text-white"
+    <span
+      [style.font-size]="width / 4 + 'px'"
+      *ngIf="!!stack"
+      class="text-white"
       >{{ !isNaNLocal(stack) ? 'x' + stack : stack }}
+    </span>
+    <span
+      [style.font-size]="width / 4 + 'px'"
+      *ngIf="!!upgradeLevel"
+      [ngClass]="{
+        'text-white': upgradeLevel < 5,
+        'text-rainbow': upgradeLevel >= 5
+      }"
+      >{{ !isNaNLocal(upgradeLevel) ? '+' + upgradeLevel : upgradeLevel }}
     </span>
   }
 </div>

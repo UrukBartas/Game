@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { firstValueFrom, interval, map, take } from 'rxjs';
+import { firstValueFrom, map, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { getRarityColor } from 'src/modules/utils';
@@ -14,7 +14,6 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { PlayerService } from 'src/services/player.service';
 import { Title } from '@angular/platform-browser';
-import { Adventure } from 'src/services/adventures.service';
 import { AdventureData } from 'src/services/adventures-data.service';
 
 @Component({

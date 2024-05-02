@@ -3,13 +3,16 @@
     <p class="h6">
       {{ item.name }}
     </p>
-    <p *ngIf="item.price && !external" class="h6 d-flex align-items-center gap-1">
+    <p
+      *ngIf="item.price && showPrice"
+      class="h6 d-flex align-items-center gap-1"
+    >
       <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
       <span urText class="text-white">{{ item.price | number: '1.0-2' }}</span>
     </p>
   </div>
-  <div class="row">
-    <div class="col-6">
+  <div class="d-flex flex-row pt-2">
+    <div class="d-flex align-items-center">
       <img
         [src]="item.image | toIpfsImageFromCid"
         priority
@@ -17,8 +20,8 @@
         [height]="getItemBoxSize()"
       />
     </div>
-    <div class="col-6">
-      <div class="description">
+    <div class="px-3">
+      <div class="description mx-2">
         <ul class="p-0">
           <li>
             {{ item.description }}

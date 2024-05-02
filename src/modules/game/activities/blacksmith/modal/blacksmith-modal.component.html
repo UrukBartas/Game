@@ -1,0 +1,116 @@
+<div id="confirm-modal">
+  <div class="row">
+    <p class="text-third" urTitle>
+      {{ upgrade ? 'Upgrade item' : 'Recycle item' }}
+      <i *ngIf="upgrade" class="fa fa-gears pl-1 pb-1"></i>
+      <i *ngIf="!upgrade" class="fa fa-recycle pl-1 pb-1"></i>
+    </p>
+  </div>
+  <div class="row">
+    <p *ngIf="!upgrade" class="text-white" urText>
+      Recycling will destroy this item, but will give you the following
+      materials:
+    </p>
+    <div *ngIf="upgrade" class="col-12 col-sm-6 text-secondary pb-2" urText>
+      Required materials:
+    </div>
+    <div
+      *ngIf="upgrade"
+      class="col-4 text-secondary pb-2 d-none d-sm-flex"
+      urText
+    >
+      Result:
+    </div>
+  </div>
+  <div *ngIf="!upgrade && preview" class="row">
+    <app-item-box
+      [height]="getItemBoxSize()"
+      [width]="getItemBoxSize()"
+      [stack]="preview.result.quantity"
+      [image]="preview.result.material.image | toIpfsImageFromCid"
+    >
+      <div tooltip class="tooltip-uruk">
+        <app-material-tooltip
+          [item]="preview.result.material"
+        ></app-material-tooltip>
+      </div>
+    </app-item-box>
+  </div>
+  <div *ngIf="upgrade && preview" class="row">
+    <div class="col-12 col-sm-6 d-flex pb-2 overflow-auto">
+      @for (material of preview.materials; track material.id) {
+        <app-item-box
+          class="pr-1"
+          [height]="getItemBoxSize()"
+          [width]="getItemBoxSize()"
+          [stack]="material.quantity"
+          [image]="material.material.image | toIpfsImageFromCid"
+        >
+          <div tooltip class="tooltip-uruk">
+            <app-material-tooltip
+              [item]="material.material"
+            ></app-material-tooltip>
+          </div>
+        </app-item-box>
+      }
+    </div>
+    <div class="col-12 col-sm-4 d-flex justify-content-between">
+      <app-item-box
+        [height]="getItemBoxSize()"
+        [width]="getItemBoxSize()"
+        [image]="item.itemData.image | toIpfsImageFromCid"
+        [upgradeLevel]="item.upgradeLevel"
+      >
+        <div tooltip class="tooltip-uruk">
+          <app-item-tooltip [item]="item"></app-item-tooltip>
+        </div>
+      </app-item-box>
+      <i
+        class="d-flex fa-solid fa-xl align-items-center text-white fa-chevron-right"
+      ></i>
+      <app-item-box
+        class="button-rainbow"
+        [height]="getItemBoxSize()"
+        [width]="getItemBoxSize()"
+        [image]="preview.item.itemData.image | toIpfsImageFromCid"
+        [upgradeLevel]="preview.item.upgradeLevel"
+      >
+        <div tooltip class="tooltip-uruk">
+          <app-item-tooltip
+            [item]="preview.item"
+            [compareWith]="item"
+          ></app-item-tooltip>
+        </div>
+      </app-item-box>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <p class="text-white" urText>
+      Price is {{ preview?.price }}
+      <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+    </p>
+    <p *ngIf="upgrade" class="text-white" urText>
+      Current chance of <span class="text-warning">failing</span>
+      {{ (item?.upgradeLevel + 1) * 5 }} %
+      <i
+        class="fa-solid fa-circle-info text-warning fa-sm px-1"
+        [ngbTooltip]="failExplanation"
+      ></i>
+    </p>
+    <p class="text-white" urText>Do you wish to continue?</p>
+  </div>
+  <div class="d-flex w-100 justify-content-end pt-3">
+    <button class="btn btn-secondary btn-transparent" (click)="modalRef.hide()">
+      Cancel
+    </button>
+    <button class="btn btn-secondary" (click)="accept()">Accept</button>
+  </div>
+</div>
+
+<ng-template #failExplanation>
+  <div class="p-2">
+    <span class="text-white bg-black"
+      >Failing will destroy the item and consume the materials and uruks!</span
+    >
+  </div>
+</ng-template>

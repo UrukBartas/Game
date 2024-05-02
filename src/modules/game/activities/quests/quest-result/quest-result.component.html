@@ -1,4 +1,4 @@
-<div class="d-flex flex-column gap-2">
+<div class="d-flex flex-column gap-2 overflow-x-hidden">
   <ng-container *ngIf="fightResult">
     <div class="description justify-content-center">
       <p urTitle>{{ victory ? 'Victory!' : 'Defeat!' }}</p>
@@ -11,14 +11,17 @@
         fightResult.loot ||
         fightResult.lostLoot ||
         fightResult.consumableLoot ||
-        fightResult.consumableLostLoot
+        fightResult.consumableLostLoot ||
+        fightResult.material
       "
     >
       <div
         *ngIf="fightResult.player?.level > player.level"
         class="col pb-md-4 col-md-12 d-flex flex-column gap-2"
       >
-        <span #levelUp urText class="text-rainbow text-center">LEVEL UP!</span>
+        <span #levelUp urSubtitle class="text-rainbow text-center"
+          >LEVEL UP!</span
+        >
         <span urText class="text-white text-center"
           >Level {{ player.level }} → {{ fightResult.player.level }}</span
         >
@@ -56,6 +59,20 @@
               : fightResult.consumableLoot,
             lost: !!fightResult.consumableLostLoot,
             type: 'consumible'
+          }
+        "
+      >
+      </ng-container>
+
+      <ng-container
+        *ngTemplateOutlet="
+          lootDrop;
+          context: {
+            loot: !!fightResult.consumableLostLoot
+              ? fightResult.consumableLostLoot
+              : fightResult.consumableLoot,
+            lost: !!fightResult.consumableLostLoot,
+            type: 'material'
           }
         "
       >
@@ -100,6 +117,22 @@
                 </div>
               </app-item-box>
             }
+          } @else if (type == 'material') {
+            <app-item-box
+              *ngIf="fightResult.material"
+              [height]="getItemBoxSize()"
+              [width]="getItemBoxSize()"
+              [image]="
+                fightResult.material.materialData.image | toIpfsImageFromCid
+              "
+              [stack]="fightResult.material.quantity"
+            >
+              <div tooltip class="tooltip-uruk">
+                <app-material-tooltip
+                  [item]="fightResult.material.materialData"
+                ></app-material-tooltip>
+              </div>
+            </app-item-box>
           } @else {
             Non compatible item type
           }

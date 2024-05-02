@@ -1,4 +1,4 @@
-<div class="row h-100">
+<div id="inventory" class="row h-100">
   <div class="col-12 col-md-6 order-1 order-sm-0">
     <carousel
       [isAnimated]="true"
@@ -43,7 +43,6 @@
                   inventory.length > itemInventoryBoxes.length
               }"
             >
-
               @if (inventory.length > itemInventoryBoxes.length) {
                 <div>
                   <i
@@ -65,14 +64,12 @@
                     'bi-caret-up-fill': sortOrderUp
                   }"
                 ></i>
-                <span class="pointer" (click)="changeSortType()">{{
+                <span class="pointer text-white" (click)="changeSortType()">{{
                   sortType
                 }}</span>
               </div>
             </div>
           </div>
-
-
 
           <app-item-inventory
             [items]="inventory"
@@ -81,6 +78,7 @@
                 ? (this.getItem$(hoveredItem.itemData.itemType) | async)
                 : null
             "
+            [showContextualMenu]="true"
             [boxes]="itemInventoryBoxes"
             [disableDND]="false"
             (onDragStart)="onDragStart($event.event, $event.data)"
@@ -112,7 +110,20 @@
             ></app-consumables-inventory>
           </ng-container>
 
-
+          <ng-container *ngIf="currentMaterialsInventory$ | async as materials">
+            <div class="description">
+              <p>Materials</p>
+              <span
+                >{{ materials.length }}/{{
+                  materialsInventoryBoxes.length
+                }}</span
+              >
+            </div>
+            <app-materials-inventory
+              [items]="materials"
+              [boxes]="materialsInventoryBoxes"
+            ></app-materials-inventory>
+          </ng-container>
         </div>
       </slide>
       <slide>
@@ -265,6 +276,7 @@
     [active]="hovered"
     [displayTooltip]="!!(item$ | async)"
     [rarity]="toItem(item$ | async)?.itemData?.rarity"
+    [upgradeLevel]="toItem(item$ | async)?.upgradeLevel"
     [image]="
       toItem(item$ | async)?.itemData?.image
         ? (toItem(item$ | async).itemData.image | toIpfsImageFromCid)

@@ -2,10 +2,6 @@
   <div class="row">
     <div class="description">
       <p urTitle>Export section</p>
-    </div>
-  </div>
-  <div class="selection py-3">
-    <div>
       <div class="form-check form-switch">
         <input
           class="form-check-input"
@@ -31,7 +27,7 @@
       <div class="row justify-content-center">
         <div class="chains py-3">
           <div class="description justify-content-center">
-            <p urTitle>Select compatible network</p>
+            <p urSubtitle>Select compatible network</p>
           </div>
           <div class="chain-list">
             @for (
@@ -53,7 +49,7 @@
           </div>
         </div>
         <div class="description justify-content-center">
-          <p urTitle>Select type of export</p>
+          <p urSubtitle>Select type of export</p>
         </div>
 
         <app-item-box
@@ -78,7 +74,7 @@
       @if (exportingObjectTypeActive == 'coins') {
         <div class="row">
           <div class="description justify-content-center">
-            <p urTitle>
+            <p urSubtitle>
               Current
               {{ exportTypeActive == 'export' ? 'in-game' : 'wallet' }} balance:
               {{
