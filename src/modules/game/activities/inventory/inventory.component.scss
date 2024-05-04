@@ -53,7 +53,9 @@
     width: fit-content;
   }
 
-  .item-inventory {
+  .item-inventory,
+  .consumables-inventory,
+  .materials-inventory {
     height: 50vh;
     @include media-breakpoint-up(lg) {
       height: 400px;

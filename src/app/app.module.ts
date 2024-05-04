@@ -15,7 +15,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { HttpUrukInterceptor } from 'src/services/http-uruk.interceptor';
 import { ContextMenuComponent } from 'src/standalone/context-menu/context-menu.component';
-
+import { TabsModule } from 'ngx-bootstrap/tabs';
 @NgModule({
   declarations: [AppComponent, TemplatePage],
   imports: [
@@ -24,6 +24,7 @@ import { ContextMenuComponent } from 'src/standalone/context-menu/context-menu.c
     AppRoutingModule,
     NgbModule,
     HttpClientModule,
+    TabsModule.forRoot(),
     NgxsModule.forRoot([MainState]),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsStoragePluginModule.forRoot({
@@ -32,7 +33,7 @@ import { ContextMenuComponent } from 'src/standalone/context-menu/context-menu.c
     ToastrModule.forRoot(),
     NgxSpinnerModule,
     ModalModule.forRoot(),
-    ContextMenuComponent
+    ContextMenuComponent,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpUrukInterceptor, multi: true },

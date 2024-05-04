@@ -44,6 +44,7 @@ import { MaterialsInventoryComponent } from './components/materials-inventory/ma
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
 import { BlacksmithContextMenuComponent } from 'src/standalone/context-menu/blacksmith-context-menu/blacksmith-context-menu.component';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 const directives = [
   ValidInputDirective,
@@ -84,6 +85,7 @@ const components = [
   imports: [
     ...directives,
     CommonModule,
+    TabsModule,
     GameRoutingModule,
     NgbModule,
     ItemBoxComponent,

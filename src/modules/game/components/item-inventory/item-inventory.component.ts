@@ -22,7 +22,6 @@ export class ItemInventoryComponent {
   @Input() boxSize: number = 40;
   @Input() selectedItem: Item;
   @Input() disableDND = true;
-  @Input() addExpandInventory = false;
   @Input() equippedItemOfType: Item;
   @Input() showContextualMenu = false;
   @Input() contextMenuTemplate: 'anvil' | 'default' = 'default';
@@ -31,41 +30,12 @@ export class ItemInventoryComponent {
   @Output() onDragEnd = new EventEmitter<any>();
   @Output() onDoubleClick = new EventEmitter<any>();
   @Output() onHover = new EventEmitter<Item>();
-  private store = inject(Store);
   modalService = inject(BsModalService);
   viewportService = inject(ViewportService);
-  private shopService = inject(ShopService);
-  public currentSize$ = this.store.select(MainState.getState).pipe(
-    filter((player) => !!player),
-    map((entry) => entry.player.sockets)
-  );
-  //Level 4 is the default level. 80 is default socket size / 20 = 4. If it buys another it becomes 5 (100 /20)
-  public currentLevel$ = this.currentSize$.pipe(map((sockets) => sockets / 20));
-  public maxLevel = 10;
   contextMenuService = inject(ContextMenuService);
   itemService = inject(ItemService);
 
   @Output() onDestroyItem = new EventEmitter<Item>();
-
-  public confirmPurchase() {
-    const config: ModalOptions = {
-      initialState: {
-        title: 'Purchase',
-        description: `This will add 20 more slots to your inventory. Do you want to proceed?`,
-        accept: async () => {
-          try {
-            await firstValueFrom(this.shopService.buyInventoryExpand());
-            this.store.dispatch(new RefreshPlayer());
-          } catch (error) {
-            console.error(error);
-          }
-
-          modalRef.hide();
-        },
-      },
-    };
-    const modalRef = this.modalService.show(ConfirmModalComponent, config);
-  }
 
   getShowItemCompare(): boolean {
     switch (this.viewportService.screenSize) {

@@ -4,7 +4,11 @@
       (click)="selectNewItem.emit(items[indexConsumable])"
       [height]="40"
       [width]="40"
-      [active]="!!selectedItem &&  !!items[indexConsumable] && selectedItem.id == items[indexConsumable].id"
+      [active]="
+        !!selectedItem &&
+        !!items[indexConsumable] &&
+        selectedItem.id == items[indexConsumable].id
+      "
       [stack]="items[indexConsumable]?.stack ?? 0"
       [image]="
         items[indexConsumable]?.consumableData?.image
@@ -21,4 +25,5 @@
       }
     </app-item-box>
   }
+  <ng-content select="[extraItemBoxes]"></ng-content>
 </div>

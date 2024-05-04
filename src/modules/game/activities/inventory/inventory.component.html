@@ -1,5 +1,23 @@
 <div id="inventory" class="row h-100">
   <div class="col-12 col-md-6 order-1 order-sm-0">
+    <ng-template #inventoryExpander>
+      <app-item-box
+        *ngIf="!isViewingPlayer && (currentLevel$ | async) <= maxLevel"
+        [height]="40"
+        [width]="40"
+        (click)="confirmPurchase()"
+        [image]="'../assets/inventory-expand.jpg'"
+        [stack]="'+2O'"
+      >
+        <div tooltip class="tooltip-uruk">
+          <app-expand-inventory-tooltip
+            [currentLevelInventory]="currentLevel$ | async"
+            [cost]="(currentLevel$ | async) * 25"
+          ></app-expand-inventory-tooltip>
+        </div>
+      </app-item-box>
+    </ng-template>
+
     <carousel
       [isAnimated]="true"
       [(activeSlide)]="activeSlideIndex"
@@ -12,8 +30,7 @@
           <p urTitle>Inventory</p>
           <div class="mover">
             <i
-              class="bi bi-caret-left-fill"
-              [ngClass]="{ 'disabled-icon': activeSlideIndex == 0 }"
+              class="bi bi-caret-left-fill disabled-icon"
               (click)="activeSlideIndex = 0"
             ></i>
             <i
@@ -22,108 +39,132 @@
             ></i>
           </div>
         </div>
-        <div
-          *ngIf="currentInventory$ | async as inventory"
-          class="inventory pb-4"
-        >
-          <div class="item-inventory-topbar">
-            <div class="description">
-              <p>Items</p>
-              <span
-                >{{ inventory.length }}/{{ itemInventoryBoxes.length }}</span
-              >
-            </div>
+        <div class="inventory pb-4">
+          <tabset>
+            <tab heading="Armory" id="tab1">
+              <ng-container *ngIf="currentInventory$ | async as inventory">
+                <div class="item-inventory-topbar">
+                  <div class="description mb-2">
+                    <div
+                      class="d-flex justify-content-end"
+                      [ngClass]="{
+                        'justify-content-end':
+                          inventory.length <= itemInventoryBoxes.length,
+                        'justify-content-between':
+                          inventory.length > itemInventoryBoxes.length
+                      }"
+                    >
+                      @if (inventory.length > itemInventoryBoxes.length) {
+                        <div>
+                          <i
+                            class="bi bi-exclamation-triangle-fill text-secondary px-1 pointer"
+                          ></i>
+                          <span>
+                            You have more items than your backpack can hold.
+                            Expand your slots!
+                          </span>
+                        </div>
+                      }
 
-            <div
-              class="d-flex w-100 justify-content-end"
-              [ngClass]="{
-                'justify-content-end':
-                  inventory.length <= itemInventoryBoxes.length,
-                'justify-content-between':
-                  inventory.length > itemInventoryBoxes.length
-              }"
-            >
-              @if (inventory.length > itemInventoryBoxes.length) {
-                <div>
-                  <i
-                    class="bi bi-exclamation-triangle-fill text-secondary px-1 pointer"
-                  ></i>
-                  <span>
-                    You have more items than your backpack can hold. Expand your
-                    slots!
-                  </span>
+                      <div>
+                        <i
+                          (click)="changeSortOrder()"
+                          class="bi bi-caret-down-fill text-secondary px-1 pointer"
+                          [ngClass]="{
+                            'bi-caret-down-fill': !sortOrderUp,
+                            'bi-caret-up-fill': sortOrderUp
+                          }"
+                        ></i>
+                        <span
+                          class="pointer text-white"
+                          (click)="changeSortType()"
+                          >{{ sortType }}</span
+                        >
+                      </div>
+                    </div>
+                    <span
+                      >{{ inventory.length }}/{{
+                        itemInventoryBoxes.length
+                      }}</span
+                    >
+                  </div>
                 </div>
-              }
 
-              <div>
-                <i
-                  (click)="changeSortOrder()"
-                  class="bi bi-caret-down-fill text-secondary px-1 pointer"
-                  [ngClass]="{
-                    'bi-caret-down-fill': !sortOrderUp,
-                    'bi-caret-up-fill': sortOrderUp
-                  }"
-                ></i>
-                <span class="pointer text-white" (click)="changeSortType()">{{
-                  sortType
-                }}</span>
-              </div>
-            </div>
-          </div>
-
-          <app-item-inventory
-            [items]="inventory"
-            [equippedItemOfType]="
-              !!hoveredItem
-                ? (this.getItem$(hoveredItem.itemData.itemType) | async)
-                : null
-            "
-            [showContextualMenu]="true"
-            [boxes]="itemInventoryBoxes"
-            [disableDND]="false"
-            (onDragStart)="onDragStart($event.event, $event.data)"
-            (onDragEnd)="onDragEnd($event)"
-            (onHover)="onHoverItem($event)"
-            (onDoubleClick)="!!$event ? equipItem($event) : false"
-            [addExpandInventory]="!isViewingPlayer"
-            (onDestroyItem)="destroyItem($event)"
-          ></app-item-inventory>
-
-          <ng-container
-            *ngIf="
-              currentConsumableInventory$
-                | async
-                | stack: 'consumableData.name' as inventoryConsumables
-            "
-          >
-            <div class="description">
-              <p>Consumables</p>
-              <span
-                >{{ inventoryConsumables.length }}/{{
-                  consumablesInventoryBoxes.length
-                }}</span
+                <app-item-inventory
+                  [items]="inventory"
+                  [equippedItemOfType]="
+                    !!hoveredItem
+                      ? (this.getItem$(hoveredItem.itemData.itemType) | async)
+                      : null
+                  "
+                  [showContextualMenu]="true"
+                  [boxes]="itemInventoryBoxes"
+                  [disableDND]="false"
+                  (onDragStart)="onDragStart($event.event, $event.data)"
+                  (onDragEnd)="onDragEnd($event)"
+                  (onHover)="onHoverItem($event)"
+                  (onDoubleClick)="!!$event ? equipItem($event) : false"
+                  (onDestroyItem)="destroyItem($event)"
+                >
+                  <ng-container
+                    extraItemBoxes
+                    *ngTemplateOutlet="inventoryExpander"
+                  >
+                  </ng-container>
+                </app-item-inventory>
+              </ng-container>
+            </tab>
+            <tab heading="Consumables">
+              <ng-container
+                *ngIf="
+                  currentConsumableInventory$
+                    | async
+                    | stack: 'consumableData.name' as inventoryConsumables
+                "
               >
-            </div>
-            <app-consumables-inventory
-              [items]="inventoryConsumables"
-              [boxes]="consumablesInventoryBoxes"
-            ></app-consumables-inventory>
-          </ng-container>
-
-          <ng-container *ngIf="currentMaterialsInventory$ | async as materials">
-            <div class="description">
-              <p>Materials</p>
-              <span
-                >{{ materials.length }}/{{
-                  materialsInventoryBoxes.length
-                }}</span
+                <div class="description mb-2">
+                  <p></p>
+                  <span
+                    >{{ inventoryConsumables.length }}/{{
+                      consumablesInventoryBoxes.length
+                    }}</span
+                  >
+                </div>
+                <app-consumables-inventory
+                  [items]="inventoryConsumables"
+                  [boxes]="consumablesInventoryBoxes"
+                >
+                  <ng-container
+                    extraItemBoxes
+                    *ngTemplateOutlet="inventoryExpander"
+                  >
+                  </ng-container>
+                </app-consumables-inventory>
+              </ng-container>
+            </tab>
+            <tab heading="Materials">
+              <ng-container
+                *ngIf="currentMaterialsInventory$ | async as materials"
               >
-            </div>
-            <app-materials-inventory
-              [items]="materials"
-              [boxes]="materialsInventoryBoxes"
-            ></app-materials-inventory>
-          </ng-container>
+                <div class="description mb-2">
+                  <p></p>
+                  <span
+                    >{{ materials.length }}/{{
+                      materialsInventoryBoxes.length
+                    }}</span
+                  >
+                </div>
+                <app-materials-inventory
+                  [items]="materials"
+                  [boxes]="materialsInventoryBoxes"
+                >
+                  <ng-container
+                    extraItemBoxes
+                    *ngTemplateOutlet="inventoryExpander"
+                  >
+                  </ng-container> </app-materials-inventory></ng-container
+            ></tab>
+          </tabset>
         </div>
       </slide>
       <slide>
@@ -134,10 +175,7 @@
               class="bi bi-caret-left-fill"
               (click)="activeSlideIndex = activeSlideIndex - 1"
             ></i>
-            <i
-              class="bi bi-caret-right-fill"
-              [ngClass]="{ 'disabled-icon': activeSlideIndex == 1 }"
-            ></i>
+            <i class="bi bi-caret-right-fill disabled-icon"></i>
           </div>
         </div>
         <app-stats-detail
