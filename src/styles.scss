@@ -174,15 +174,16 @@ ngb-tooltip-window {
 }
 
 .mover {
+  font-size: 25px;
   display: flex;
   justify-content: flex-end;
   i {
+    color: white;
     @extend .pointer;
   }
 }
 
 .disabled-icon {
-  cursor: disabled;
   color: gray !important;
 }
 
@@ -214,6 +215,25 @@ app-blacksmith-context-menu {
       &:hover {
         background-color: $secondary;
       }
+    }
+  }
+}
+.tab-content {
+  tab {
+    padding: 10px 0px;
+  }
+}
+
+.tab-container {
+  ul {
+    border: 0px;
+    padding: 10px 0px;
+    a {
+      border-radius: 10px;
+      border: hidden !important;
+    }
+    a.active {
+      background-color: $third !important;
     }
   }
 }

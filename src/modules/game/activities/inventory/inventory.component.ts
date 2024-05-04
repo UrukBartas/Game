@@ -25,6 +25,7 @@ import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
+import { ShopService } from 'src/services/shop.service';
 
 @Component({
   selector: 'app-inventory',
@@ -42,11 +43,19 @@ export class InventoryComponent extends TemplatePage {
   private route = inject(ActivatedRoute);
   public router = inject(Router);
   public activeSlideIndex = 0;
+  public maxLevel = 10;
   public itemInventoryBoxes = this.inventoryService.getInventoryStructure();
   public consumablesInventoryBoxes =
-    this.inventoryService.getInventoryStructure(20);
+    this.inventoryService.getInventoryStructure();
   public materialsInventoryBoxes =
-    this.inventoryService.getInventoryStructure(20);
+    this.inventoryService.getInventoryStructure();
+
+  public currentSize$ = this.store.select(MainState.getState).pipe(
+    filter((player) => !!player),
+    map((entry) => entry.player.sockets)
+  );
+  //Level 4 is the default level. 80 is default socket size / 20 = 4. If it buys another it becomes 5 (100 /20)
+  public currentLevel$ = this.currentSize$.pipe(map((sockets) => sockets / 20));
 
   public inventoryUpdated$ = new Subject();
   public sortOrderUp = false;
@@ -61,6 +70,7 @@ export class InventoryComponent extends TemplatePage {
   private spinnerService = inject(NgxSpinnerService);
   public groupByLodash = groupBy;
   public hoveredItem: Item;
+  private shopService = inject(ShopService);
 
   public getPlayer$ = of(true).pipe(
     switchMap(() => {
@@ -224,6 +234,26 @@ export class InventoryComponent extends TemplatePage {
                 })
               )
             );
+          } catch (error) {
+            console.error(error);
+          }
+
+          modalRef.hide();
+        },
+      },
+    };
+    const modalRef = this.modalService.show(ConfirmModalComponent, config);
+  }
+
+  public confirmPurchase() {
+    const config: ModalOptions = {
+      initialState: {
+        title: 'Purchase',
+        description: `This will add 20 more slots to your inventory. Do you want to proceed?`,
+        accept: async () => {
+          try {
+            await firstValueFrom(this.shopService.buyInventoryExpand());
+            this.store.dispatch(new RefreshPlayer());
           } catch (error) {
             console.error(error);
           }

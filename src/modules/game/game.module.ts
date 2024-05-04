@@ -49,6 +49,7 @@ import { AdventuresRouterComponent } from './activities/adventures/adventures-ro
 import { ItemdataToItemPipe } from '../core/pipes/itemdata-to-item.pipe';
 import { OrderByPipe } from '../core/pipes/order-by.pipe';
 import { BlacksmithContextMenuComponent } from 'src/standalone/context-menu/blacksmith-context-menu/blacksmith-context-menu.component';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 const directives = [
   ValidInputDirective,
@@ -92,6 +93,7 @@ const components = [
   imports: [
     ...directives,
     CommonModule,
+    TabsModule,
     GameRoutingModule,
     NgbModule,
     ItemBoxComponent,
