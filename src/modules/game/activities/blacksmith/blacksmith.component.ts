@@ -34,7 +34,9 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
   private viewportService = inject(ViewportService);
   private modalService = inject(BsModalService);
   private store = inject(Store);
-
+  public currentMaterialsInventory$ = this.playerService.getItemsMaterial();
+  public materialsInventoryBoxes =
+    this.inventoryService.getInventoryStructure();
   dialog: string;
   showDialog = false;
   selectedItem: Item;

@@ -5,22 +5,30 @@
   </div>
 
   <div class="inventory-container inventory">
-    <div class="description">
-      <span urSubtitle>Inventory</span>
-    </div>
-    <app-item-inventory
-      class="overflow-auto"
-      [showContextualMenu]="true"
-      [contextMenuTemplate]="'anvil'"
-      [items]="currentInventory$ | async"
-      [boxes]="itemInventoryBoxes"
-      [disableDND]="false"
-      [boxSize]="40"
-      (onDragStart)="hovered = true"
-      (onDragEnd)="hovered = false"
-      (onDoubleClick)="!!$event ? (selectedItem = $event) : false"
-    >
-    </app-item-inventory>
+    <tabset>
+      <tab heading="Armory" id="tab1">
+        <app-item-inventory
+          class="overflow-auto"
+          [showContextualMenu]="true"
+          [contextMenuTemplate]="'anvil'"
+          [items]="currentInventory$ | async"
+          [boxes]="itemInventoryBoxes"
+          [disableDND]="false"
+          [boxSize]="40"
+          (onDragStart)="hovered = true"
+          (onDragEnd)="hovered = false"
+          (onDoubleClick)="!!$event ? (selectedItem = $event) : false"
+        >
+        </app-item-inventory>
+      </tab>
+      <tab heading="Materials">
+        <app-materials-inventory
+          [items]="currentMaterialsInventory$ | async"
+          [boxes]="materialsInventoryBoxes"
+        >
+        </app-materials-inventory>
+      </tab>
+    </tabset>
   </div>
 
   <div class="item-container">
