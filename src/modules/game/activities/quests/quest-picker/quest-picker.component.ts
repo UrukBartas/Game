@@ -37,6 +37,7 @@ export class QuestPickerComponent extends TemplatePage {
   activeSlideIndex = 0;
   modalService = inject(BsModalService);
   titleService = inject(Title);
+  @Output() questChanged = new EventEmitter<QuestModel>();
 
   public slots$ = this.store
     .select(MainState.getState)
@@ -106,6 +107,7 @@ export class QuestPickerComponent extends TemplatePage {
       this.activeSlideIndex--;
       const carousel: HTMLElement = document.querySelector('.carousel');
       carousel.style.transform = `translateX(-${this.activeSlideIndex * 100}%)`;
+      this.questChanged.emit(this.quests[this.activeSlideIndex]);
     }
   }
 
@@ -118,6 +120,7 @@ export class QuestPickerComponent extends TemplatePage {
       this.activeSlideIndex++;
       const carousel: HTMLElement = document.querySelector('.carousel');
       carousel.style.transform = `translateX(-${this.activeSlideIndex * 100}%)`;
+      this.questChanged.emit(this.quests[this.activeSlideIndex]);
     }
   }
 

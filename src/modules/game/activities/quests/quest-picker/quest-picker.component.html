@@ -7,7 +7,10 @@
           let quest of quests | orderBy: 'data.phase' : 'asc';
           let i = index
         "
-        [style.background-image]="'url(' + quest.data.image + ')'"
+        [style.background]="!!adventure ? 'transparent' : 'none'"
+        [style.background-image]="
+          !adventure ? 'url(' + quest.data.image + ')' : 'none'
+        "
         [class.active]="i === activeSlideIndex"
       >
         <div class="slide-text">

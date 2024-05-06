@@ -3,17 +3,56 @@
     <div class="carousel">
       <div
         class="slide"
-        [style.background-image]="'url(' + selectedAdventure.image + ')'"
+        [style.background]="'transparent'"
         [class.active]="true"
       >
-        <div class="slide-text">
+        <div class="slide-text glowing-epic">
           <div class="row">
-            <span urText class="mb-0">{{ selectedAdventure.name }}</span>
+            <span urTitle class="mb-0 text-third">{{
+              selectedAdventure.name
+            }}</span>
           </div>
-          <div class="row mb-4">
-            <span urText class="mb-0">{{ selectedAdventure.description }}</span>
+          <div class="row d-flex justify-content-center">
+            <span urText class="badge mb-1 col-12 col-md-4">
+              <i class="fa-solid fa-certificate"></i>
+              Level {{ selectedAdventure.minLevel }}
+            </span>
+
+            <span urText class="badge mb-1 col-12 col-md-4">
+              <i class="fa-solid fa-clock"></i>
+              {{ selectedAdventure.questsData.length }} phases
+            </span>
           </div>
-          <span urTitle class="text-third">Rewards</span>
+
+          <div class="row description-adventure">
+            <ng-container
+              *ngFor="
+                let paragraph of separateByParagraph(
+                  selectedAdventure.description
+                );
+                let i = index
+              "
+            >
+              <p
+                *ngIf="i < 2 || !!selectedAdventure.readMore"
+                data-aos="fade-right"
+                [attr.data-aos-duration]="500 * i"
+              >
+                {{ paragraph }}
+                <ng-container *ngIf="i == 1 && !selectedAdventure.readMore">
+                  ...
+                  <span
+                    urText
+                    (click)="selectedAdventure.readMore = true"
+                    class="text-third"
+                    >Discover more</span
+                  >
+                </ng-container>
+              </p>
+            </ng-container>
+          </div>
+
+          <span urSubtitle class="text-third">Rewards</span>
           <div class="possible-rewards">
             @for (
               itemReward of selectedAdventure.itemData;
@@ -73,16 +112,16 @@
             }
           </div>
         </div>
+        <button
+          urTitle
+          (click)="startAdventure()"
+          class="button-rainbow"
+          [style.padding]="getResponsiveButtonSize()"
+          [style.fontSize]="getResponsiveButtonFontSize()"
+        >
+          START ADVENTURE
+        </button>
       </div>
     </div>
-    <button
-      urTitle
-      (click)="startAdventure()"
-      class="button-rainbow"
-      [style.padding]="getResponsiveButtonSize()"
-      [style.fontSize]="getResponsiveButtonFontSize()"
-    >
-      START ADVENTURE
-    </button>
   </div>
 </div>

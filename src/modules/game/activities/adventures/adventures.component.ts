@@ -17,11 +17,11 @@ export class AdventuresComponent extends TemplatePage {
   adventureData = inject(AdventuresDataService);
   store = inject(Store);
   public availableAdventures$ = new BehaviorSubject<AdventureData[]>([]);
-  //public availableAdventures$ = this.adventureData.getAvailableAdventures();
   public selectedAdventure!: AdventureData;
   public player$ = this.store
     .select(MainState.getState)
     .pipe(map((entry) => entry.player));
+  public activeWallpaper = '../../../../assets/backgrounds/adventures.png';
   constructor() {
     super();
     this.refreshAdventures();
@@ -43,6 +43,11 @@ export class AdventuresComponent extends TemplatePage {
       this.selectedAdventure = adventures.find(
         (adventure) => adventure.id == this.selectedAdventure.id
       );
+      this.activeWallpaper = this.selectedAdventure.image;
+      const activeQuest = this.selectedAdventure.Adventure[0].quests.find(
+        (quest) => quest.active
+      );
+      if (!!activeQuest) this.activeWallpaper = activeQuest.data.image;
     }
     this.availableAdventures$.next(adventures);
   }

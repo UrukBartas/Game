@@ -14,10 +14,17 @@
   left: 50%;
 }
 
-.possible-rewards{
+.possible-rewards,
+.phases {
   display: flex;
   overflow: auto;
   gap: 20px;
+}
+
+.description-adventure {
+  max-height: 185px;
+  overflow: auto;
+  text-align: center;
 }
 
 .adventure-title {
@@ -65,7 +72,11 @@
       background: #00000045;
       padding: 3%;
       border-radius: 4px;
-      width: 100%;
+      width: 95%;
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
       .slide-title {
         display: flex;
         flex-direction: row;

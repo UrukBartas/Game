@@ -237,3 +237,14 @@ app-blacksmith-context-menu {
     }
   }
 }
+
+.adventure-slider {
+  img {
+    filter: blur(2px);
+  }
+  app-item-box{
+    .stack{
+      font-size: 25px !important;
+    }
+  }
+}

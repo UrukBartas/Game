@@ -19,6 +19,7 @@ export interface AdventureData {
   consumablesData: ConsumableData[];
   materialsData: MaterialData[];
   Adventure: Adventure[];
+  readMore?:boolean;
 }
 
 @Injectable({

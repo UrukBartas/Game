@@ -12,6 +12,7 @@ import { cloneDeep } from 'lodash';
 import { QuestService } from 'src/services/quest.service';
 import { take } from 'rxjs';
 import { SetQuests } from 'src/store/main.store';
+import { QuestModel } from 'src/modules/core/models/quest.model';
 export enum AdventureState {
   NON_STARTED,
   STARTED,
@@ -24,6 +25,7 @@ export enum AdventureState {
       @case (adventureStateEnum.STARTED) {
         <app-quest-router
           [adventure]="selectedAdventure"
+          (questPickChanged)="questPickChanged.emit($event)"
           (statusChanged)="statusChangedQuest($event)"
         ></app-quest-router>
       }
@@ -63,6 +65,7 @@ export class AdventuresRouterComponent extends TemplatePage {
 
   @Output() onAdventureStarted = new EventEmitter<Adventure>();
   @Output() updateAdventures = new EventEmitter<void>();
+  @Output() questPickChanged = new EventEmitter<QuestModel>();
 
   private _selectedAdventure: AdventureData;
   public adventureState: AdventureState = AdventureState.NON_STARTED;
@@ -79,8 +82,6 @@ export class AdventuresRouterComponent extends TemplatePage {
   }
 
   public statusChangedQuest(router: QuestRouterModel) {
-    if (router.status == QuestStatusEnum.PICKING) {
-      this.updateAdventures.emit();
-    }
+    this.updateAdventures.emit();
   }
 }

@@ -13,6 +13,7 @@ import { QuestStatusEnum } from './enums/quest-status.enum';
 import { QuestRouterModel } from './models/quest-router.model';
 import { AdventureData } from 'src/services/adventures-data.service';
 import { cloneDeep } from 'lodash';
+import { QuestModel } from 'src/modules/core/models/quest.model';
 
 @Component({
   selector: 'app-quest-router',
@@ -22,6 +23,7 @@ import { cloneDeep } from 'lodash';
         [adventure]="adventure"
         *ngSwitchCase="questStatusEnum.PICKING"
         (questStatusChange)="questRouter.set($event)"
+        (questChanged)="questPickChanged.emit($event)"
       ></app-quest-picker>
       <app-quest-progress
         *ngSwitchCase="questStatusEnum.IN_PROGRESS"
@@ -45,6 +47,7 @@ export class QuestRouterComponent extends TemplatePage {
   questRouterEffect = effect(() => {
     this.statusChanged.emit(this.questRouter());
   });
+  @Output() questPickChanged = new EventEmitter<QuestModel>();
   @Input() public set adventure(data: AdventureData) {
     this._data = cloneDeep(data);
     this.getQuestStatus();

@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostBinding,
+  Input,
+  Output,
+  inject,
+} from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -77,8 +84,16 @@ export class AdventurePickerComponent extends TemplatePage {
       this.viewportService.screenSize == 'sm' ||
       this.viewportService.screenSize == 'md'
     ) {
-      return 62.5;
+      return 50;
     }
-    return 125;
+    return 100;
+  }
+
+  public separateByParagraph(description: string) {
+    return description
+      .replace(/\n/g, '')
+      .trim()
+      .split('.')
+      .filter((p) => p.length > 5);
   }
 }
