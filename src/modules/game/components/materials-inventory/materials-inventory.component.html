@@ -4,11 +4,7 @@
       [height]="40"
       [width]="40"
       [stack]="items[indexConsumable]?.quantity | compressNumber"
-      [image]="
-        items[indexConsumable]
-          ? (items[indexConsumable]?.materialData.image | toIpfsImageFromCid)
-          : null
-      "
+      [image]="items[indexConsumable]?.materialData.imageLocal"
     >
       @if (!!items[indexConsumable]) {
         <div tooltip class="tooltip-uruk">

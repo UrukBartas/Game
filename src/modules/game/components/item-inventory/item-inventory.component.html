@@ -44,11 +44,7 @@
           !!selectedItem && !!items[index] && selectedItem.id == items[index].id
         "
         [displayTooltip]="!!items[index]"
-        [image]="
-          items[index]?.itemData?.image
-            ? (items[index]?.itemData?.image | toIpfsImageFromCid)
-            : null
-        "
+        [image]="items[index]?.itemData?.imageLocal"
       >
         @if (!!items[index] && !contextMenuService.menuVisible()) {
           <div tooltip class="tooltip-uruk">

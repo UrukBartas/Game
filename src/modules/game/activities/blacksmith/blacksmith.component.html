@@ -34,11 +34,7 @@
       [height]="getItemBoxSize()"
       [width]="getItemBoxSize()"
       [upgradeLevel]="selectedItem?.upgradeLevel"
-      [image]="
-        selectedItem
-          ? (selectedItem?.itemData.image | toIpfsImageFromCid)
-          : null
-      "
+      [image]="selectedItem?.itemData?.imageLocal"
     ></app-item-box>
     <div class="flex">
       <button
@@ -68,11 +64,7 @@
           [height]="200"
           [width]="200"
           [upgradeLevel]="selectedItem?.upgradeLevel"
-          [image]="
-            resultItem
-              ? (selectedItem?.itemData.image | toIpfsImageFromCid)
-              : null
-          "
+          [image]="selectedItem?.itemData?.imageLocal"
         ></app-item-box>
       </div>
     </div>
@@ -86,11 +78,7 @@
           [height]="200"
           [width]="200"
           [upgradeLevel]="selectedItem?.upgradeLevel"
-          [image]="
-            selectedItem
-              ? (selectedItem?.itemData.image | toIpfsImageFromCid)
-              : null
-          "
+          [image]="selectedItem?.itemData?.imageLocal"
         ></app-item-box>
       </div>
     </div>

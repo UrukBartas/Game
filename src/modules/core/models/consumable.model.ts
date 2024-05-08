@@ -8,6 +8,7 @@ export interface Consumable {
 export interface ConsumableData {
   id: string;
   image: string;
+  imageLocal: string;
   name: string;
   description: string;
   premium: boolean;

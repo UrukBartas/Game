@@ -2,14 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { Item, Rarity } from 'src/modules/core/models/items.model';
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
-import { ToIpfsImageFromCidPipe } from 'src/modules/core/pipes/to-ipfs-image-from-cid.pipe';
 import { getRarityColor, getRarityText } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
   selector: 'app-item-tooltip',
   standalone: true,
-  imports: [CommonModule, ToIpfsImageFromCidPipe, CompareItemPipe],
+  imports: [CommonModule, CompareItemPipe],
   templateUrl: './item-tooltip.component.html',
   styleUrl: './item-tooltip.component.scss',
 })

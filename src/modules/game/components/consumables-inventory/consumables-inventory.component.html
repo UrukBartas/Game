@@ -12,7 +12,7 @@
       [stack]="items[indexConsumable]?.stack ?? 0"
       [image]="
         items[indexConsumable]?.consumableData?.image
-          ? (items[indexConsumable].consumableData.image | toIpfsImageFromCid)
+          ? items[indexConsumable].consumableData.image
           : null
       "
     >

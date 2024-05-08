@@ -20,7 +20,6 @@ import { TitleSizeDirective } from '../core/directives/title-size.directive';
 import { ValidInputDirective } from '../core/directives/valid-input.directive';
 import { CompressNumberPipe } from '../core/pipes/compress-number.pipe';
 import { StackPipe } from '../core/pipes/stack.pipe';
-import { ToIpfsImageFromCidPipe } from '../core/pipes/to-ipfs-image-from-cid.pipe';
 import { BlacksmithComponent } from './activities/blacksmith/blacksmith.component';
 import { BlacksmithModalComponent } from './activities/blacksmith/modal/blacksmith-modal.component';
 import { RegisterReferralComponent } from './activities/campaigns/register-referral/register-referral.component';
@@ -98,7 +97,6 @@ const components = [
     ConsumableTooltipComponent,
     MaterialTooltipComponent,
     DoubleClickDirective,
-    ToIpfsImageFromCidPipe,
     StackPipe,
     CompressNumberPipe,
     DndModule,
