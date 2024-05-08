@@ -1,0 +1,15 @@
+.form-control {
+  height: 30px;
+  color: white;
+  background-color: transparent;
+  border: 1px solid #ffffff39;
+}
+
+.form-control::placeholder {
+  color: lightgray;
+}
+
+.description {
+  gap: 30px;
+  align-items: center;
+}

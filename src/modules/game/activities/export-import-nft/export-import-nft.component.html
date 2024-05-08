@@ -254,9 +254,8 @@
     <app-item-inventory
       [items]="items$ | async"
       [boxes]="itemInventoryBoxes"
+      [(selectedItems)]="selectedMultipleItems"
       [disableDND]="true"
-      (selectNewItem)="selectedItem = $event"
-      [selectedItem]="selectedItem"
     >
     </app-item-inventory>
   </ng-template>

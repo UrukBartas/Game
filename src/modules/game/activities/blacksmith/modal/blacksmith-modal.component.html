@@ -23,21 +23,23 @@
     </div>
   </div>
   <div *ngIf="!upgrade && preview" class="row">
-    <app-item-box
-      [height]="getItemBoxSize()"
-      [width]="getItemBoxSize()"
-      [stack]="preview.result.quantity"
-      [image]="preview.result.material.image | toIpfsImageFromCid"
-    >
-      <div tooltip class="tooltip-uruk">
-        <app-material-tooltip
-          [item]="preview.result.material"
-        ></app-material-tooltip>
-      </div>
-    </app-item-box>
+    <ng-container *ngFor="let previewMaterial of preview.result">
+      <app-item-box
+        [height]="getItemBoxSize()"
+        [width]="getItemBoxSize()"
+        [stack]="previewMaterial.quantity"
+        [image]="previewMaterial.material.image | toIpfsImageFromCid"
+      >
+        <div tooltip class="tooltip-uruk">
+          <app-material-tooltip
+            [item]="previewMaterial.material"
+          ></app-material-tooltip>
+        </div>
+      </app-item-box>
+    </ng-container>
   </div>
   <div *ngIf="upgrade && preview" class="row">
-    <div class="col-12 col-sm-6 d-flex pb-2 overflow-auto">
+    <div class="col-12 col-sm-6 d-flex pb-2 overflow-auto flex-wrap">
       @for (material of preview.materials; track material.id) {
         <app-item-box
           class="pr-1"
@@ -45,6 +47,7 @@
           [width]="getItemBoxSize()"
           [stack]="material.quantity"
           [image]="material.material.image | toIpfsImageFromCid"
+          [active]="userHasThisMaterial(material)"
         >
           <div tooltip class="tooltip-uruk">
             <app-material-tooltip
@@ -58,11 +61,11 @@
       <app-item-box
         [height]="getItemBoxSize()"
         [width]="getItemBoxSize()"
-        [image]="item.itemData.image | toIpfsImageFromCid"
-        [upgradeLevel]="item.upgradeLevel"
+        [image]="items[0].itemData.image | toIpfsImageFromCid"
+        [upgradeLevel]="items[0].upgradeLevel"
       >
         <div tooltip class="tooltip-uruk">
-          <app-item-tooltip [item]="item"></app-item-tooltip>
+          <app-item-tooltip [item]="items[0]"></app-item-tooltip>
         </div>
       </app-item-box>
       <i
@@ -78,7 +81,7 @@
         <div tooltip class="tooltip-uruk">
           <app-item-tooltip
             [item]="preview.item"
-            [compareWith]="item"
+            [compareWith]="items[0]"
           ></app-item-tooltip>
         </div>
       </app-item-box>
@@ -86,12 +89,12 @@
   </div>
   <div class="row mt-3">
     <p class="text-white" urText>
-      Price is {{ preview?.price }}
+      Price is {{ preview?.totalPrice ?? preview?.price ?? 0 }}
       <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
     </p>
     <p *ngIf="upgrade" class="text-white" urText>
       Current chance of <span class="text-warning">failing</span>
-      {{ (item?.upgradeLevel + 1) * 5 }} %
+      {{ (items[0]?.upgradeLevel + 1) * 5 }} %
       <i
         class="fa-solid fa-circle-info text-warning fa-sm px-1"
         [ngbTooltip]="failExplanation"

@@ -45,11 +45,11 @@ export class ItemService extends ApiBaseService {
     return this.get('/' + itemId + '/upgrade-item-preview/');
   }
 
-  public recycleItem(itemId: number) {
-    return this.get('/' + itemId + '/recycle-item/');
+  public recycleItems(itemIds: Array<number>) {
+    return this.post('/recycle-items/', { ids: itemIds });
   }
 
-  public getRecycleItemPreview(itemId: number) {
-    return this.get('/' + itemId + '/recycle-item-preview/');
+  public getRecycleItemsPreview(itemsIds: Array<number>) {
+    return this.post('/recycle-items-preview/', { ids: itemsIds });
   }
 }

@@ -55,10 +55,6 @@ app-item-box {
   width: fit-content !important;
 }
 
-ngb-tooltip-window {
-  position: fixed !important;
-}
-
 .description {
   display: flex;
   justify-content: space-between;
@@ -234,9 +230,14 @@ app-blacksmith-context-menu {
   }
 }
 
-
-tabset{
-  .item-inventory{
+tabset {
+  .item-inventory {
     padding-top: 10px;
   }
+}
+
+ngb-tooltip-window,
+.tooltip {
+  position: fixed !important;
+  z-index: 100000 !important;
 }

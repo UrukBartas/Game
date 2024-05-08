@@ -1,0 +1,44 @@
+<div class="item-inventory-topbar my-2">
+  <div class="description">
+    <div
+      class="d-flex justify-content-end"
+      [ngClass]="{
+        'justify-content-end': inventory.length <= itemInventoryBoxes.length,
+        'justify-content-between': inventory.length > itemInventoryBoxes.length
+      }"
+    >
+      @if (inventory.length > itemInventoryBoxes.length) {
+        <div>
+          <i
+            class="bi bi-exclamation-triangle-fill text-secondary px-1 pointer"
+          ></i>
+          <span>
+            You have more items than your backpack can hold. Expand your slots!
+          </span>
+        </div>
+      }
+
+      <div *ngIf="!disableSort" class="d-flex">
+        <i
+          (click)="changeSortOrder()"
+          class="bi bi-caret-down-fill text-secondary px-1 pointer"
+          [ngClass]="{
+            'bi-caret-down-fill': !sortOrderUp,
+            'bi-caret-up-fill': sortOrderUp
+          }"
+        ></i>
+        <span class="pointer text-white" (click)="changeSortType()">{{
+          sortType
+        }}</span>
+      </div>
+    </div>
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Search by name..."
+      [formControl]="searchControl"
+    />
+
+    <span>{{ inventory.length }}/{{ itemInventoryBoxes.length }}</span>
+  </div>
+</div>
