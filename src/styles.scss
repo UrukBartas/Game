@@ -137,7 +137,21 @@ ngb-tooltip-window {
   .tooltip-inner {
     display: table;
     padding: 0;
+    width: fit-content;
+    @include media-breakpoint-down(sm) {
+      transform: scale(0.8);
+    }
     background: $black-400 !important;
+  }
+}
+.item-tooltip-wrapper {
+  div {
+    @include media-breakpoint-down(sm) {
+      display: flex;
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
   }
 }
 
@@ -234,10 +248,4 @@ tabset {
   .item-inventory {
     padding-top: 10px;
   }
-}
-
-ngb-tooltip-window,
-.tooltip {
-  position: fixed !important;
-  z-index: 100000 !important;
 }

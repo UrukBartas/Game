@@ -25,9 +25,7 @@
 
 <div id="shop">
   <div class="shop-bg"></div>
-  <div
-    class="col-12 position-relative wrapper-shop h-100 pb-lg-4 pb-sm-2"
-  >
+  <div class="col-12 position-relative wrapper-shop h-100 pb-lg-4 pb-sm-2">
     <div class="shop-section-bg"></div>
     <div *ngIf="showDialog" class="shop-tender-dialog">
       <span urTitle>{{ dialog }} </span>
@@ -46,9 +44,15 @@
     </div>
     <div *ngIf="getSelectedItems().length > 0" class="shop-cart">
       <div class="d-flex flex-column gap-2 mb-2 item-list">
-        @for (item of getSelectedItems(); track $index) {
+        @if (getShowItemCompare()) {
+          @for (item of getSelectedItems(); track $index) {
+            <div urText class="text-white">
+              {{ item.name ? item.name : item.itemData.name }}
+            </div>
+          }
+        } @else {
           <div urText class="text-white">
-            {{ item.name ? item.name : item.itemData.name }}
+            {{ getSelectedItems().length + ' items selected' }}
           </div>
         }
       </div>
