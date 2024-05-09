@@ -55,10 +55,6 @@ app-item-box {
   width: fit-content !important;
 }
 
-ngb-tooltip-window {
-  position: fixed !important;
-}
-
 .description {
   display: flex;
   justify-content: space-between;
@@ -141,7 +137,21 @@ ngb-tooltip-window {
   .tooltip-inner {
     display: table;
     padding: 0;
+    width: fit-content;
+    @include media-breakpoint-down(sm) {
+      transform: scale(0.8);
+    }
     background: $black-400 !important;
+  }
+}
+.item-tooltip-wrapper {
+  div {
+    @include media-breakpoint-down(sm) {
+      display: flex;
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
   }
 }
 
@@ -234,9 +244,8 @@ app-blacksmith-context-menu {
   }
 }
 
-
-tabset{
-  .item-inventory{
+tabset {
+  .item-inventory {
     padding-top: 10px;
   }
 }

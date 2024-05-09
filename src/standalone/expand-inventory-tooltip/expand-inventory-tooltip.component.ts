@@ -29,7 +29,7 @@ export class ExpandInventoryTooltipComponent {
       this.viewportService.screenSize == 'sm' ||
       this.viewportService.screenSize == 'md'
     ) {
-      return 150;
+      return 100;
     }
     return 200;
   }

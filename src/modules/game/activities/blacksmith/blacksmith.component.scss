@@ -8,6 +8,11 @@
   height: 100%;
   overflow: hidden;
 
+  .form-switch{
+    display: flex;
+    gap: 10px;
+  }
+
   .blacksmith-bg {
     position: absolute;
     top: 0;
@@ -41,10 +46,17 @@
       right: 0;
       left: 0;
     }
+    .container-multiple{
+      display: flex;
+      gap: 10px;
+      overflow: auto;
+      max-width: 375px;
+    }
   }
 
   .inventory-container {
-    position: absolute;
+    overflow: auto;
+    position: relative;
     top: 5%;
     left: 5%;
     padding: 10px;
@@ -53,7 +65,7 @@
     width: 30vw;
     height: 75vh;
     @include media-breakpoint-down(sm) {
-      height: 50vh;
+      height: 58vh;
       width: 88vw;
     }
   }

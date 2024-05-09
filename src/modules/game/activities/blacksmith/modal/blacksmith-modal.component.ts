@@ -1,9 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { take } from 'rxjs';
+import { firstValueFrom, take } from 'rxjs';
 import { Item } from 'src/modules/core/models/items.model';
+import { Material, MaterialData } from 'src/modules/core/models/material.model';
 import { ItemService } from 'src/services/item.service';
+import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
@@ -13,29 +15,33 @@ import { ViewportService } from 'src/services/viewport.service';
 })
 export class BlacksmithModalComponent implements OnInit {
   upgrade: boolean; //or recycle
-  item: Item;
+  items: Array<Item>;
   modalRef = inject(BsModalRef);
+  playerService = inject(PlayerService);
   itemService = inject(ItemService);
   storeService = inject(Store);
   viewportService = inject(ViewportService);
   onJobDone: (result) => void;
   preview;
-
+  public currentMaterials: Array<Material> = [];
   ngOnInit() {
-    if (this.item) {
+    if (this.items) {
+      this.getCurrentUserMaterials();
       const observable = this.upgrade
-        ? this.itemService.getUpgradeItemPreview(this.item.id)
-        : this.itemService.getRecycleItemPreview(this.item.id);
+        ? this.itemService.getUpgradeItemPreview(this.items[0].id)
+        : this.itemService.getRecycleItemsPreview(
+            this.items.map((entry) => entry.id)
+          );
 
       observable.pipe(take(1)).subscribe((preview) => (this.preview = preview));
     }
   }
 
   accept() {
-    if (this.item) {
+    if (this.items) {
       const observable = this.upgrade
-        ? this.itemService.upgradeItem(this.item.id)
-        : this.itemService.recycleItem(this.item.id);
+        ? this.itemService.upgradeItem(this.items[0].id)
+        : this.itemService.recycleItems(this.items.map((entry) => entry.id));
 
       observable.pipe(take(1)).subscribe((result) => {
         this.onJobDone(result);
@@ -45,10 +51,10 @@ export class BlacksmithModalComponent implements OnInit {
   }
 
   doAction() {
-    if (this.item) {
+    if (this.items) {
       const observable = this.upgrade
-        ? this.itemService.upgradeItem(this.item.id)
-        : this.itemService.recycleItem(this.item.id);
+        ? this.itemService.upgradeItem(this.items[0].id)
+        : this.itemService.recycleItems(this.items.map((entry) => entry.id));
 
       observable.pipe(take(1)).subscribe((result) => {
         this.onJobDone(result);
@@ -68,5 +74,22 @@ export class BlacksmithModalComponent implements OnInit {
       default:
         return 60;
     }
+  }
+
+  private async getCurrentUserMaterials() {
+    this.currentMaterials = await firstValueFrom(
+      this.playerService.getItemsMaterial()
+    );
+  }
+
+  public userHasThisMaterial(material: {
+    quantity: number;
+    material: MaterialData;
+  }) {
+    const userHasTheMaterialRes = this.currentMaterials.find(
+      (userMaterial) => userMaterial.materialDataId == material.material.id
+    );
+    if (!userHasTheMaterialRes) return false;
+    return userHasTheMaterialRes.quantity >= material.quantity;
   }
 }

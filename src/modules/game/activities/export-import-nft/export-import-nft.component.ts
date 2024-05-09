@@ -87,7 +87,11 @@ export class ExportImportNftComponent extends TemplatePage {
     })
   );
 
-  public selectedItem: Item;
+  public selectedMultipleItems: Item[] = [];
+
+  public get selectedItem() {
+    return this.selectedMultipleItems ? this.selectedMultipleItems[0] : null;
+  }
 
   public whiteListedItems$ = new BehaviorSubject([]);
   public whiteListedItemsInterval$ = interval(5000).pipe(
@@ -203,7 +207,7 @@ export class ExportImportNftComponent extends TemplatePage {
     event.target.checked
       ? (this.exportTypeActive = 'export')
       : (this.exportTypeActive = 'import');
-    this.selectedItem = null;
+    this.selectedMultipleItems = [];
     this.selectedUruksToExport = 0;
   }
 
@@ -226,7 +230,7 @@ export class ExportImportNftComponent extends TemplatePage {
       this.toastService.success(
         'The item got exported, you will receive your NFT in your wallet soon!'
       );
-      this.selectedItem = null;
+      this.selectedMultipleItems = [];
     } catch (error: any) {
       this.toastService.error(
         error?.error?.message ?? undefined,
@@ -244,7 +248,7 @@ export class ExportImportNftComponent extends TemplatePage {
         type: 'ERC721',
         options: {
           address: getChainById(getNetwork().chain.id).NFT,
-          tokenId: this.selectedItem.id + '',
+          tokenId: this.selectedMultipleItems[0].id + '',
         },
       },
     });
@@ -267,7 +271,7 @@ export class ExportImportNftComponent extends TemplatePage {
     try {
       if (this.exportTypeActive == 'export') {
         const staticItemfornow = await firstValueFrom(
-          this.itemService.getItem(this.selectedItem.id)
+          this.itemService.getItem(this.selectedMultipleItems[0].id)
         );
 
         await firstValueFrom(
@@ -277,14 +281,14 @@ export class ExportImportNftComponent extends TemplatePage {
           )
         );
 
-        this.exportItem(this.selectedItem.id);
+        this.exportItem(this.selectedMultipleItems[0].id);
       } else {
         await this.contractService.executewriteContractOnUrukNFT(
           'importNftToItem',
-          [this.selectedItem.id + '']
+          [this.selectedMultipleItems[0].id + '']
         );
         this.spinnerService.hide();
-        this.selectedItem = null;
+        this.selectedMultipleItems = [];
         this.toastService.success(
           'The item got imported, you will receive your item in your in-game inventory soon!'
         );

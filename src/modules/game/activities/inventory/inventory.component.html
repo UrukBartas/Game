@@ -42,56 +42,9 @@
         <div class="inventory pb-4">
           <tabset>
             <tab heading="Armory" id="tab1">
-              <ng-container *ngIf="currentInventory$ | async as inventory">
-                <div class="item-inventory-topbar">
-                  <div class="description mb-2">
-                    <div
-                      class="d-flex justify-content-end"
-                      [ngClass]="{
-                        'justify-content-end':
-                          inventory.length <= itemInventoryBoxes.length,
-                        'justify-content-between':
-                          inventory.length > itemInventoryBoxes.length
-                      }"
-                    >
-                      @if (inventory.length > itemInventoryBoxes.length) {
-                        <div>
-                          <i
-                            class="bi bi-exclamation-triangle-fill text-secondary px-1 pointer"
-                          ></i>
-                          <span>
-                            You have more items than your backpack can hold.
-                            Expand your slots!
-                          </span>
-                        </div>
-                      }
-
-                      <div>
-                        <i
-                          (click)="changeSortOrder()"
-                          class="bi bi-caret-down-fill text-secondary px-1 pointer"
-                          [ngClass]="{
-                            'bi-caret-down-fill': !sortOrderUp,
-                            'bi-caret-up-fill': sortOrderUp
-                          }"
-                        ></i>
-                        <span
-                          class="pointer text-white"
-                          (click)="changeSortType()"
-                          >{{ sortType }}</span
-                        >
-                      </div>
-                    </div>
-                    <span
-                      >{{ inventory.length }}/{{
-                        itemInventoryBoxes.length
-                      }}</span
-                    >
-                  </div>
-                </div>
-
+              <ng-container *ngIf="!!currentInventory">
                 <app-item-inventory
-                  [items]="inventory"
+                  [items]="currentInventory"
                   [equippedItemOfType]="
                     !!hoveredItem
                       ? (this.getItem$(hoveredItem.itemData.itemType) | async)
@@ -122,14 +75,6 @@
                     | stack: 'consumableData.name' as inventoryConsumables
                 "
               >
-                <div class="description mb-2">
-                  <p></p>
-                  <span
-                    >{{ inventoryConsumables.length }}/{{
-                      consumablesInventoryBoxes.length
-                    }}</span
-                  >
-                </div>
                 <app-consumables-inventory
                   [items]="inventoryConsumables"
                   [boxes]="consumablesInventoryBoxes"
@@ -143,26 +88,15 @@
               </ng-container>
             </tab>
             <tab heading="Materials">
-              <ng-container
-                *ngIf="currentMaterialsInventory$ | async as materials"
+              <app-materials-inventory
+                [items]="currentMaterials"
+                [boxes]="materialsInventoryBoxes"
               >
-                <div class="description mb-2">
-                  <p></p>
-                  <span
-                    >{{ materials.length }}/{{
-                      materialsInventoryBoxes.length
-                    }}</span
-                  >
-                </div>
-                <app-materials-inventory
-                  [items]="materials"
-                  [boxes]="materialsInventoryBoxes"
+                <ng-container
+                  extraItemBoxes
+                  *ngTemplateOutlet="inventoryExpander"
                 >
-                  <ng-container
-                    extraItemBoxes
-                    *ngTemplateOutlet="inventoryExpander"
-                  >
-                  </ng-container> </app-materials-inventory></ng-container
+                </ng-container> </app-materials-inventory
             ></tab>
           </tabset>
         </div>

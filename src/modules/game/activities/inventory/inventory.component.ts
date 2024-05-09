@@ -26,6 +26,8 @@ import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
 import { ShopService } from 'src/services/shop.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Material } from 'src/modules/core/models/material.model';
 
 @Component({
   selector: 'app-inventory',
@@ -58,13 +60,11 @@ export class InventoryComponent extends TemplatePage {
   public currentLevel$ = this.currentSize$.pipe(map((sockets) => sockets / 20));
 
   public inventoryUpdated$ = new Subject();
-  public sortOrderUp = false;
-  public sortType: 'rarity' | 'level' = 'rarity';
-  public currentInventory$ = this.playerService
-    .getItems()
-    .pipe(map((items) => this.sortInventory(items)));
+  public materialUpdated$ = new Subject();
+  public currentInventory: Array<Item> = [];
+  public currentMaterials: Array<Material> = [];
+
   public currentConsumableInventory$ = this.playerService.getItemsConsumable();
-  public currentMaterialsInventory$ = this.playerService.getItemsMaterial();
   public activeDragAndDropItemType: ItemType = null;
   public itemTypePublic = ItemType;
   private spinnerService = inject(NgxSpinnerService);
@@ -128,33 +128,18 @@ export class InventoryComponent extends TemplatePage {
     this.getPlayer$.subscribe((player) => {
       this.actualPlayer$.next(player);
     });
-    this.inventoryUpdated$.subscribe(() => {
-      this.currentInventory$ = this.playerService
-        .getItems()
-        .pipe(map((items) => this.sortInventory(items)));
+    this.inventoryUpdated$.pipe(takeUntilDestroyed()).subscribe(async () => {
+      this.currentInventory = await firstValueFrom(
+        this.playerService.getItems()
+      );
     });
-  }
-
-  private sortInventory(items: Item[]) {
-    const rarityOrder = [
-      Rarity.COMMON,
-      Rarity.UNCOMMON,
-      Rarity.EPIC,
-      Rarity.LEGENDARY,
-      Rarity.MYTHIC,
-    ];
-    const sortedItems = items.sort((a, b) => {
-      let comparison = 0;
-      if (this.sortType === 'level') {
-        comparison = a.level - b.level;
-      } else if (this.sortType === 'rarity') {
-        comparison =
-          rarityOrder.indexOf(a.itemData.rarity) -
-          rarityOrder.indexOf(b.itemData.rarity);
-      }
-      return this.sortOrderUp ? comparison : -comparison;
+    this.materialUpdated$.pipe(takeUntilDestroyed()).subscribe(async () => {
+      this.currentMaterials = await firstValueFrom(
+        this.playerService.getItemsMaterial()
+      );
     });
-    return sortedItems;
+    this.inventoryUpdated$.next(true);
+    this.materialUpdated$.next(true);
   }
 
   public getEquippedItemBoxSize() {
@@ -207,16 +192,6 @@ export class InventoryComponent extends TemplatePage {
 
   onDragEnd(event: DragEvent) {
     this.activeDragAndDropItemType = null;
-  }
-
-  changeSortOrder() {
-    this.sortOrderUp = !this.sortOrderUp;
-    this.inventoryUpdated$.next(true);
-  }
-
-  changeSortType() {
-    this.sortType = this.sortType === 'rarity' ? 'level' : 'rarity';
-    this.inventoryUpdated$.next(true);
   }
 
   public destroyItem(item: Item) {

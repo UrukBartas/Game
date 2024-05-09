@@ -13,6 +13,15 @@ export interface ConsumableWithStack extends Consumable {
 export class MaterialsInventoryComponent {
   @Input() items: Material[] = [];
   @Input() boxes: Array<InventoryStructure> = [];
-  constructor(){
+
+  public get filteredItems() {
+    return this.items.filter((item) =>
+      item?.materialData?.name
+        .toLowerCase()
+        .includes(this.searchTerm.toLowerCase())
+    );
   }
+
+  public searchTerm = '';
+  constructor() {}
 }

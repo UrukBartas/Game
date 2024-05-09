@@ -18,14 +18,14 @@ export class MaterialTooltipComponent {
   viewportService = inject(ViewportService);
   public getRarityColor = getRarityColor;
   public rarityEnum = Rarity;
-  
+
   public getItemBoxSize() {
     if (
       this.viewportService.screenSize == 'xs' ||
       this.viewportService.screenSize == 'sm' ||
       this.viewportService.screenSize == 'md'
     ) {
-      return 150;
+      return 100;
     }
     return 200;
   }

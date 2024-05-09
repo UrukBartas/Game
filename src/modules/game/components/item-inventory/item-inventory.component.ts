@@ -1,15 +1,19 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { Store } from '@ngxs/store';
+import {
+  Component,
+  effect,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  signal,
+} from '@angular/core';
+import { includes } from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { filter, firstValueFrom, map } from 'rxjs';
 import { Item } from 'src/modules/core/models/items.model';
 import { ContextMenuService } from 'src/services/context-menu.service';
 import { InventoryStructure } from 'src/services/inventory.service';
 import { ItemService } from 'src/services/item.service';
-import { ShopService } from 'src/services/shop.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { MainState, RefreshPlayer } from 'src/store/main.store';
-import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component';
 
 @Component({
   selector: 'app-item-inventory',
@@ -20,12 +24,11 @@ export class ItemInventoryComponent {
   @Input() items: Item[] = [];
   @Input() boxes: Array<InventoryStructure> = [];
   @Input() boxSize: number = 40;
-  @Input() selectedItem: Item;
   @Input() disableDND = true;
   @Input() equippedItemOfType: Item;
   @Input() showContextualMenu = false;
+  @Input() multipleSelection = false;
   @Input() contextMenuTemplate: 'anvil' | 'default' = 'default';
-  @Output() selectNewItem = new EventEmitter<Item>();
   @Output() onDragStart = new EventEmitter<any>();
   @Output() onDragEnd = new EventEmitter<any>();
   @Output() onDoubleClick = new EventEmitter<any>();
@@ -34,8 +37,18 @@ export class ItemInventoryComponent {
   viewportService = inject(ViewportService);
   contextMenuService = inject(ContextMenuService);
   itemService = inject(ItemService);
-
+  @Input() public selectedItems: Array<Item> = [];
+  @Output() selectedItemsChange = new EventEmitter<Array<Item>>();
   @Output() onDestroyItem = new EventEmitter<Item>();
+
+  public get filteredItems() {
+    return this.items.filter(
+      (item) =>
+        item?.itemData?.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+
+  public searchTerm = '';
 
   getShowItemCompare(): boolean {
     switch (this.viewportService.screenSize) {
@@ -50,4 +63,30 @@ export class ItemInventoryComponent {
         return false;
     }
   }
+
+  public addToSelectedItems(item: Item) {
+    if (!item) return;
+    if (!this.multipleSelection) {
+      this.selectedItems = [item];
+    } else {
+      const foundItem = this.selectedItems.findIndex(
+        (selectedItem) => selectedItem.id == item.id
+      );
+      if (foundItem >= 0) {
+        this.selectedItems.splice(foundItem, 1);
+      } else {
+        this.selectedItems.push(item);
+      }
+    }
+    this.selectedItemsChange.emit(this.selectedItems);
+  }
+
+  public isMultipleSelected(item: Item): boolean {
+    if (!item) return false;
+    return !!this.selectedItems.find(
+      (selectedItem) => selectedItem.id == item.id
+    );
+  }
+
+  public filterByName() {}
 }

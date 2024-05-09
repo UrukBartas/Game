@@ -14,5 +14,15 @@ export class ConsumablesInventoryComponent {
   @Input() boxes: Array<InventoryStructure> = [];
   @Input() selectedItem: ConsumableWithStack;
   @Output() selectNewItem = new EventEmitter<Consumable>();
+
+  public get filteredItems() {
+    return this.items.filter((item) =>
+      item?.consumableData?.name
+        .toLowerCase()
+        .includes(this.searchTerm.toLowerCase())
+    );
+  }
+
+  public searchTerm = '';
   constructor() {}
 }

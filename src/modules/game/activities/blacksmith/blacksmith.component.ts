@@ -18,6 +18,10 @@ import * as party from 'party-js';
 import { Store } from '@ngxs/store';
 import { RefreshPlayer } from 'src/store/main.store';
 import { DndDropEvent } from 'ngx-drag-drop';
+import { FormControl } from '@angular/forms';
+import { firstValueFrom, Subject } from 'rxjs';
+import { Material } from 'src/modules/core/models/material.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-blacksmith',
@@ -34,17 +38,36 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
   private viewportService = inject(ViewportService);
   private modalService = inject(BsModalService);
   private store = inject(Store);
-  public currentMaterialsInventory$ = this.playerService.getItemsMaterial();
   public materialsInventoryBoxes =
     this.inventoryService.getInventoryStructure();
   dialog: string;
   showDialog = false;
-  selectedItem: Item;
   resultItem;
   hovered = false;
 
   public itemInventoryBoxes = this.inventoryService.getInventoryStructure();
-  public currentInventory$ = this.playerService.getItems();
+  public inventoryUpdated$ = new Subject();
+  public materialUpdated$ = new Subject();
+  public currentInventory: Array<Item> = [];
+  public currentMaterials: Array<Material> = [];
+  public multipleSelection = new FormControl(false);
+  public selectedMultipleItems: Array<Item> = [];
+
+  constructor() {
+    super();
+    this.inventoryUpdated$.pipe(takeUntilDestroyed()).subscribe(async () => {
+      this.currentInventory = await firstValueFrom(
+        this.playerService.getItems()
+      );
+    });
+    this.materialUpdated$.pipe(takeUntilDestroyed()).subscribe(async () => {
+      this.currentMaterials = await firstValueFrom(
+        this.playerService.getItemsMaterial()
+      );
+    });
+    this.inventoryUpdated$.next(true);
+    this.materialUpdated$.next(true);
+  }
 
   ngAfterViewInit() {
     setTimeout(() => {
@@ -61,7 +84,7 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
     const config: ModalOptions = {
       initialState: {
         upgrade,
-        item: this.selectedItem,
+        items: this.selectedMultipleItems,
         onJobDone: (result) => {
           if (upgrade) {
             this.onUpgradeDone(result);
@@ -75,9 +98,25 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
   }
 
   private onRecycleDone() {
-    this.selectedItem = null;
-    this.currentInventory$ = this.playerService.getItems();
-    this.triggerDialog("Ain't nothin' but a peanut", 1500);
+    this.selectedMultipleItems = [];
+    this.inventoryUpdated$.next(true);
+    this.materialUpdated$.next(true);
+    const random = Math.floor(Math.random() * 5);
+    if (random === 0) {
+      this.triggerDialog('Light weight ... Yeah buddy! 🛠️', 1500);
+    } else if (random === 1) {
+      this.triggerDialog(`Ain't nuttin' to it, but ta do it!😎`, 1500);
+    } else if (random === 2) {
+      this.triggerDialog("Ain't nothin' but a peanut", 1500);
+    } else if (random === 3) {
+      this.triggerDialog(
+        `Give it to me, and I will forge something nice!.🛠️😎`,
+        1500
+      );
+    } else if (random === 4) {
+      this.triggerDialog(`That orc aint nothing but a goblin! 😎`, 1500);
+    }
+
     this.store.dispatch(new RefreshPlayer());
     setTimeout(() => {
       party.sparkles(this.anvil.nativeElement, {
@@ -89,7 +128,7 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
   private onUpgradeDone(result: Item) {
     this.resultItem = result;
     if (result) {
-      this.selectedItem = result;
+      this.selectedMultipleItems = [];
       setTimeout(() => {
         party.confetti(this.result.nativeElement, {
           count: party.variation.range(100, 200),
@@ -98,12 +137,12 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
     }
 
     this.store.dispatch(new RefreshPlayer());
-    this.currentInventory$ = this.playerService.getItems();
+    this.inventoryUpdated$.next(true);
   }
 
   public closeResult() {
     if (!this.resultItem) {
-      this.selectedItem = null;
+      this.selectedMultipleItems = [];
     }
     this.triggerDialog(
       !this.resultItem ? 'OH BABY THAT HURTS!!' : 'LIGHTWEIGHT BABY!!',
@@ -113,7 +152,7 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
   }
 
   onAnvilDrop(event: DndDropEvent) {
-    this.selectedItem = event.data;
+    this.selectedMultipleItems = [event.data];
   }
 
   triggerDialog(text: string, duration: number) {
