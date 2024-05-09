@@ -1,14 +1,7 @@
 <div class="item-tooltip-wrapper">
   <div class="description flex-column align-items-start">
-    <p class="h6">
+    <p class="h6" [ngStyle]="{ color: getRarityColor(anyfy(item).rarity) }">
       {{ item.name }}
-    </p>
-    <p
-      *ngIf="item.price && showPrice"
-      class="h6 d-flex align-items-center gap-1"
-    >
-      <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
-      <span urText class="text-white">{{ item.price | number: '1.0-2' }}</span>
     </p>
   </div>
   <div class="d-flex flex-row pt-2">
@@ -29,5 +22,15 @@
         </ul>
       </div>
     </div>
+  </div>
+  <div class="d-flex justify-content-around">
+    <p></p>
+    <p
+      *ngIf="item.price && showPrice"
+      class="h6 d-flex align-items-center gap-1"
+    >
+      <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+      <span urText class="text-white">{{ item.price | number: '1.0-2' }}</span>
+    </p>
   </div>
 </div>

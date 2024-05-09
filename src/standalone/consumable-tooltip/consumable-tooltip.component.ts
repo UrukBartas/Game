@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { ConsumableData } from 'src/modules/core/models/consumable.model';
+import { getRarityColor } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
@@ -15,7 +16,8 @@ export class ConsumableTooltipComponent {
   @Input() showPrice = false;
 
   viewportService = inject(ViewportService);
-
+  public anyfy = (anything) => anything as any;
+  public getRarityColor = getRarityColor;
   public getItemBoxSize() {
     if (
       this.viewportService.screenSize == 'xs' ||

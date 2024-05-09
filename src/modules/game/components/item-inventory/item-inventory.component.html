@@ -1,4 +1,4 @@
-<div class="item-inventory pt-1" *ngIf="items">
+<div class="item-inventory " *ngIf="items">
   @for (box of boxes; track box.id; let index = $index) {
     <div class="box-wrapper">
       <ng-template #contextOptions>
