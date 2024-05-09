@@ -50,6 +50,7 @@ import { ItemdataToItemPipe } from '../core/pipes/itemdata-to-item.pipe';
 import { OrderByPipe } from '../core/pipes/order-by.pipe';
 import { BlacksmithContextMenuComponent } from 'src/standalone/context-menu/blacksmith-context-menu/blacksmith-context-menu.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { InventoryTopbarComponent } from './components/inventory-topbar/inventory-topbar.component';
 
 const directives = [
   ValidInputDirective,
@@ -89,6 +90,7 @@ const components = [
     AdventurePickerComponent,
     AdventuresRouterComponent,
     MaterialsInventoryComponent,
+    InventoryTopbarComponent,
   ],
   imports: [
     ...directives,

@@ -18,12 +18,7 @@
         {{ item.upgradeLevel ? '+' + item.upgradeLevel : null }}
         <span class="text-light" *ngIf="isBeingCompared">(equipped)</span>
       </p>
-      <p urTitle class="text-white m-0">Level {{ item.level }}</p>
     </div>
-    <p *ngIf="item.price" class="h6 d-flex align-items-center gap-1">
-      <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
-      <span urText class="text-white">{{ item.price | number: '1.0-2' }}</span>
-    </p>
   </div>
   <div class="d-flex flex-row pt-2">
     <div class="d-flex align-items-center">
@@ -67,5 +62,12 @@
         </li>
       </ul>
     </div>
+  </div>
+  <div class="d-flex align-items-center justify-content-around">
+    <p urTitle class="text-white m-0">Level {{ item.level }}</p>
+    <p *ngIf="item.price" class="h6 d-flex align-items-center gap-1">
+      <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+      <span urText class="text-white">{{ item.price | number: '1.0-2' }}</span>
+    </p>
   </div>
 </div>

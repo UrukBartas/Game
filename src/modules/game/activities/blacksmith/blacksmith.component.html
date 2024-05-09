@@ -5,41 +5,80 @@
   </div>
 
   <div class="inventory-container inventory">
-    <div class="description">
-      <span urSubtitle>Inventory</span>
-    </div>
-    <app-item-inventory
-      class="overflow-auto"
-      [showContextualMenu]="true"
-      [contextMenuTemplate]="'anvil'"
-      [items]="currentInventory$ | async"
-      [boxes]="itemInventoryBoxes"
-      [disableDND]="false"
-      [boxSize]="40"
-      (onDragStart)="hovered = true"
-      (onDragEnd)="hovered = false"
-      (onDoubleClick)="!!$event ? (selectedItem = $event) : false"
-    >
-    </app-item-inventory>
+    <tabset>
+      <tab heading="Armory" id="tab1">
+        <div
+          class="form-check form-switch"
+          (click)="
+            multipleSelection.patchValue(!multipleSelection.value);
+            selectedMultipleItems = []
+          "
+        >
+          <input
+            class="form-check-input"
+            type="checkbox"
+            [formControl]="multipleSelection"
+          />
+          <label
+            class="form-check-label text-light"
+            for="flexSwitchCheckChecked"
+            >Multiple selection</label
+          >
+        </div>
+
+        <app-item-inventory
+          class="overflow-auto"
+          [showContextualMenu]="true"
+          [multipleSelection]="!!multipleSelection.value"
+          [contextMenuTemplate]="'anvil'"
+          [items]="currentInventory"
+          [boxes]="itemInventoryBoxes"
+          [disableDND]="false"
+          [boxSize]="40"
+          (onDragStart)="hovered = true"
+          (onDragEnd)="hovered = false"
+          (onDoubleClick)="
+            !!$event ? (selectedMultipleItems = [$event]) : false
+          "
+          [(selectedItems)]="selectedMultipleItems"
+        >
+        </app-item-inventory>
+      </tab>
+      <tab heading="Materials">
+        <app-materials-inventory
+          [items]="currentMaterials"
+          [boxes]="materialsInventoryBoxes"
+        >
+        </app-materials-inventory>
+      </tab>
+    </tabset>
   </div>
 
   <div class="item-container">
-    <app-item-box
-      #anvil
-      dndDropzone
-      (dndDrop)="onAnvilDrop($event)"
-      [active]="hovered"
-      [ngbTooltip]="itemTooltip"
-      [tooltipContext]="{ item: selectedItem }"
-      [height]="getItemBoxSize()"
-      [width]="getItemBoxSize()"
-      [upgradeLevel]="selectedItem?.upgradeLevel"
-      [image]="
-        selectedItem
-          ? (selectedItem?.itemData.image | toIpfsImageFromCid)
-          : null
-      "
-    ></app-item-box>
+    <div class="container-multiple">
+      @for (
+        selectedMultipleItem of selectedMultipleItems;
+        track selectedMultipleItem.id
+      ) {
+        <app-item-box
+          #anvil
+          dndDropzone
+          (dndDrop)="onAnvilDrop($event)"
+          [active]="hovered"
+          [ngbTooltip]="itemTooltip"
+          [tooltipContext]="{ item: selectedMultipleItem }"
+          [height]="getItemBoxSize()"
+          [width]="getItemBoxSize()"
+          [upgradeLevel]="selectedMultipleItem?.upgradeLevel"
+          [image]="
+            selectedMultipleItem
+              ? (selectedMultipleItem?.itemData.image | toIpfsImageFromCid)
+              : null
+          "
+        ></app-item-box>
+      }
+    </div>
+
     <div class="flex">
       <button
         (click)="openModal(false)"
@@ -50,6 +89,7 @@
       </button>
       <button
         (click)="openModal(true)"
+        [disabled]="!!multipleSelection.value"
         [class]="'btn btn-secondary mx-1 ' + getButtonSize()"
       >
         <i class="fa fa-gears pl-1 pb-1"></i>
@@ -67,10 +107,10 @@
           [tooltipContext]="{ item: resultItem }"
           [height]="200"
           [width]="200"
-          [upgradeLevel]="selectedItem?.upgradeLevel"
+          [upgradeLevel]="resultItem?.upgradeLevel"
           [image]="
             resultItem
-              ? (selectedItem?.itemData.image | toIpfsImageFromCid)
+              ? (resultItem?.itemData.image | toIpfsImageFromCid)
               : null
           "
         ></app-item-box>
@@ -85,10 +125,10 @@
           #result
           [height]="200"
           [width]="200"
-          [upgradeLevel]="selectedItem?.upgradeLevel"
+          [upgradeLevel]="selectedMultipleItems[0]?.upgradeLevel"
           [image]="
-            selectedItem
-              ? (selectedItem?.itemData.image | toIpfsImageFromCid)
+            selectedMultipleItems[0]
+              ? (selectedMultipleItems[0]?.itemData.image | toIpfsImageFromCid)
               : null
           "
         ></app-item-box>
@@ -98,5 +138,5 @@
 </div>
 
 <ng-template #itemTooltip let-item="item">
-  <app-item-tooltip *ngIf="selectedItem" [item]="item"></app-item-tooltip>
+  <app-item-tooltip *ngIf="item" [item]="item"></app-item-tooltip>
 </ng-template>

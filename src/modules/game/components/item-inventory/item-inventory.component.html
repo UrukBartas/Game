@@ -1,4 +1,8 @@
-<div class="item-inventory pt-1" *ngIf="items">
+<app-inventory-topbar
+  [(inventory)]="items"
+  [(searchTerm)]="searchTerm"
+></app-inventory-topbar>
+<div class="item-inventory" *ngIf="items">
   @for (box of boxes; track box.id; let index = $index) {
     <div class="box-wrapper">
       <ng-template #contextOptions>
@@ -6,11 +10,11 @@
           <app-context-menu-inventory-options
             *ngIf="showContextualMenu"
             (clickEquip)="
-              onDoubleClick.emit(items[index]);
+              onDoubleClick.emit(filteredItems[index]);
               contextMenuService.hideContextMenu()
             "
             (clickDestroy)="
-              onDestroyItem.emit(items[index]);
+              onDestroyItem.emit(filteredItems[index]);
               contextMenuService.hideContextMenu()
             "
           >
@@ -19,7 +23,7 @@
           <app-blacksmith-context-menu
             *ngIf="showContextualMenu"
             (anvilIt)="
-              onDoubleClick.emit(items[index]);
+              onDoubleClick.emit(filteredItems[index]);
               contextMenuService.hideContextMenu()
             "
           >
@@ -28,32 +32,32 @@
       </ng-template>
       <app-item-box
         (contextmenu)="contextMenuService.onContextMenu($event, contextOptions)"
-        (click)="selectNewItem.emit(items[index])"
-        (mouseover)="onHover.emit(items[index])"
+        (click)="addToSelectedItems(filteredItems[index])"
+        (mouseover)="onHover.emit(filteredItems[index])"
         (mouseout)="onHover.emit(null)"
-        (dndStart)="onDragStart.emit({ event: $event, data: items[index] })"
+        (dndStart)="
+          onDragStart.emit({ event: $event, data: filteredItems[index] })
+        "
         (dndEnd)="onDragEnd.emit($event)"
-        (appDoubleClick)="onDoubleClick.emit(items[index])"
-        [dndDraggable]="items[index]"
+        (appDoubleClick)="onDoubleClick.emit(filteredItems[index])"
+        [dndDraggable]="filteredItems[index]"
         [dndEffectAllowed]="'all'"
-        [dndDisableIf]="!items[index] || disableDND"
+        [dndDisableIf]="!filteredItems[index] || disableDND"
         [height]="boxSize"
         [width]="boxSize"
-        [rarity]="items[index]?.itemData?.rarity"
-        [active]="
-          !!selectedItem && !!items[index] && selectedItem.id == items[index].id
-        "
-        [displayTooltip]="!!items[index]"
+        [rarity]="filteredItems[index]?.itemData?.rarity"
+        [active]="isMultipleSelected(filteredItems[index])"
+        [displayTooltip]="!!filteredItems[index]"
         [image]="
-          items[index]?.itemData?.image
-            ? (items[index]?.itemData?.image | toIpfsImageFromCid)
+          filteredItems[index]?.itemData?.image
+            ? (filteredItems[index]?.itemData?.image | toIpfsImageFromCid)
             : null
         "
       >
-        @if (!!items[index] && !contextMenuService.menuVisible()) {
+        @if (!!filteredItems[index] && !contextMenuService.menuVisible()) {
           <div tooltip class="tooltip-uruk">
             <app-item-tooltip
-              [item]="items[index]"
+              [item]="filteredItems[index]"
               [compareWith]="equippedItemOfType"
             ></app-item-tooltip>
             <app-item-tooltip
