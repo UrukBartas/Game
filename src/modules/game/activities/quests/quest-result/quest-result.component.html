@@ -65,9 +65,7 @@
             *ngIf="fightResult.material"
             [height]="getItemBoxSize()"
             [width]="getItemBoxSize()"
-            [image]="
-              fightResult.material.materialData.image
-            "
+            [image]="fightResult.material.materialData.imageLocal"
             [stack]="fightResult.material.quantity"
           >
             <div tooltip class="tooltip-uruk">
