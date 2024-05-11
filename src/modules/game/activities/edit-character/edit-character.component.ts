@@ -23,12 +23,12 @@ export class EditCharacterComponent extends TemplatePage {
   toastService = inject(ToastrService);
   //public pushNotificationsService = inject(PushNotificationsService);
   images = [
-    'assets/free-portraits/knight.png',
-    'assets/free-portraits/knight-f.png',
-    'assets/free-portraits/bartender.png',
-    'assets/free-portraits/bartender-f.png',
-    'assets/free-portraits/blacksmith.png',
-    'assets/free-portraits/hairdresser.png',
+    'assets/free-portraits/knight.webp',
+    'assets/free-portraits/knight-f.webp',
+    'assets/free-portraits/bartender.webp',
+    'assets/free-portraits/bartender-f.webp',
+    'assets/free-portraits/blacksmith.webp',
+    'assets/free-portraits/blacksmith-f.webp',
   ];
 
   editing = false;
@@ -39,7 +39,7 @@ export class EditCharacterComponent extends TemplatePage {
     const currentRoute = this.route.snapshot.url.join('/');
     this.editing = currentRoute.includes('edit');
     this.form = this.formBuilder.group({
-      image: ['assets/free-portraits/knight.png', [Validators.required]],
+      image: ['assets/free-portraits/knight.webp', [Validators.required]],
       name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
     });
