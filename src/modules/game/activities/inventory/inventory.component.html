@@ -249,11 +249,7 @@
     [displayTooltip]="!!(item$ | async)"
     [rarity]="toItem(item$ | async)?.itemData?.rarity"
     [upgradeLevel]="toItem(item$ | async)?.upgradeLevel"
-    [image]="
-      toItem(item$ | async)?.itemData?.image
-        ? (toItem(item$ | async).itemData.image | toIpfsImageFromCid)
-        : null
-    "
+    [image]="toItem(item$ | async)?.itemData?.imageLocal"
   >
     @if (!!(item$ | async)) {
       <div tooltip class="tooltip-uruk">

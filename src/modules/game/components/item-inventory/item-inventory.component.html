@@ -49,8 +49,8 @@
         [active]="isMultipleSelected(filteredItems[index])"
         [displayTooltip]="!!filteredItems[index]"
         [image]="
-          filteredItems[index]?.itemData?.image
-            ? (filteredItems[index]?.itemData?.image | toIpfsImageFromCid)
+          filteredItems[index]?.itemData?.imageLocal
+            ? (filteredItems[index]?.itemData?.imageLocal)
             : null
         "
       >

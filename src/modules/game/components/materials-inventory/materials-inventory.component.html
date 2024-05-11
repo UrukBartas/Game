@@ -11,8 +11,7 @@
       [rarity]="filteredItems[indexConsumable]?.materialData?.rarity"
       [image]="
         filteredItems[indexConsumable]
-          ? (filteredItems[indexConsumable]?.materialData.image
-            | toIpfsImageFromCid)
+          ? filteredItems[indexConsumable]?.materialData.imageLocal
           : null
       "
     >

@@ -2,14 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { Rarity } from 'src/modules/core/models/items.model';
 import { MaterialData } from 'src/modules/core/models/material.model';
-import { ToIpfsImageFromCidPipe } from 'src/modules/core/pipes/to-ipfs-image-from-cid.pipe';
 import { getRarityColor } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
   selector: 'app-material-tooltip',
   standalone: true,
-  imports: [CommonModule, ToIpfsImageFromCidPipe],
+  imports: [CommonModule],
   templateUrl: './material-tooltip.component.html',
   styleUrl: './material-tooltip.component.scss',
 })

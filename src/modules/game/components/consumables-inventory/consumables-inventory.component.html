@@ -16,8 +16,8 @@
       "
       [stack]="filteredItems[indexConsumable]?.stack ?? 0"
       [image]="
-        filteredItems[indexConsumable]?.consumableData?.image
-          ? (filteredItems[indexConsumable].consumableData.image | toIpfsImageFromCid)
+        filteredItems[indexConsumable]?.consumableData?.imageLocal
+          ? filteredItems[indexConsumable].consumableData.imageLocal
           : null
       "
     >

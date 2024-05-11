@@ -1,15 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { ConsumableData } from 'src/modules/core/models/consumable.model';
-import { MaterialData } from 'src/modules/core/models/material.model';
-import { ToIpfsImageFromCidPipe } from 'src/modules/core/pipes/to-ipfs-image-from-cid.pipe';
 import { getRarityColor } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
   selector: 'app-consumable-tooltip',
   standalone: true,
-  imports: [CommonModule, ToIpfsImageFromCidPipe],
+  imports: [CommonModule],
   templateUrl: './consumable-tooltip.component.html',
   styleUrl: './consumable-tooltip.component.scss',
 })

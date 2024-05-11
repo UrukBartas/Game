@@ -121,11 +121,7 @@
         <app-item-box
           [height]="200"
           [width]="200"
-          [image]="
-            selectedItem?.itemData?.image
-              ? (selectedItem?.itemData?.image | toIpfsImageFromCid)
-              : null
-          "
+          [image]="selectedItem?.itemData?.imageLocal"
         >
           @if (!!selectedItem) {
             <div tooltip class="tooltip-uruk">
@@ -171,11 +167,7 @@
               <app-item-box
                 [height]="100"
                 [width]="100"
-                [image]="
-                  whiteListedItemId?.itemData?.image
-                    ? (whiteListedItemId?.itemData?.image | toIpfsImageFromCid)
-                    : null
-                "
+                [image]="whiteListedItemId?.itemData?.imageLocal"
               >
                 @if (!!whiteListedItemId) {
                   <div tooltip class="tooltip-uruk">

@@ -72,7 +72,7 @@
           [upgradeLevel]="selectedMultipleItem?.upgradeLevel"
           [image]="
             selectedMultipleItem
-              ? (selectedMultipleItem?.itemData.image | toIpfsImageFromCid)
+              ? selectedMultipleItem?.itemData.imageLocal
               : null
           "
         ></app-item-box>
@@ -108,11 +108,7 @@
           [height]="200"
           [width]="200"
           [upgradeLevel]="resultItem?.upgradeLevel"
-          [image]="
-            resultItem
-              ? (resultItem?.itemData.image | toIpfsImageFromCid)
-              : null
-          "
+          [image]="resultItem ? resultItem?.itemData.imageLocal : null"
         ></app-item-box>
       </div>
     </div>
@@ -128,7 +124,7 @@
           [upgradeLevel]="selectedMultipleItems[0]?.upgradeLevel"
           [image]="
             selectedMultipleItems[0]
-              ? (selectedMultipleItems[0]?.itemData.image | toIpfsImageFromCid)
+              ? selectedMultipleItems[0]?.itemData.imageLocal
               : null
           "
         ></app-item-box>
