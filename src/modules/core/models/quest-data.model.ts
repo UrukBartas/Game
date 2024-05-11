@@ -9,6 +9,7 @@ export interface QuestDataModel {
   enemyImage: string;
   level: number;
   rarity: Rarity;
-  phase:number;
+  phase: number;
   isAdventurePhase?: boolean;
+  type: 'Default' | 'Passive';
 }

@@ -70,15 +70,23 @@ export class QuestPickerComponent extends TemplatePage {
     this.titleService.setTitle('Pick an adventure');
   }
 
+  public isCurrentQuestTheNextPhase() {
+    if (!this.adventure || !this.quests) return false;
+    let adventureSelected = null;
+    if (this.adventure?.Adventure?.length > 0) {
+      adventureSelected = this.adventure.Adventure[0];
+    }
+    return (
+      adventureSelected.currentPhase + 1 ==
+      this.quests[this.activeSlideIndex].data.phase
+    );
+  }
+
   ngOnInit(): void {
     this.getPlayerQuests();
   }
 
   getPlayerQuests() {
-    // if (this.adventure) {
-    //   this.quests = this.adventure.quests;
-    //   return;
-    // }
     this.questService
       .getActive()
       .pipe(take(1))

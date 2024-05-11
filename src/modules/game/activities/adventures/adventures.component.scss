@@ -1,3 +1,7 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
+
 .adventures-wrapper {
   display: flex;
   flex-direction: row;
@@ -6,6 +10,10 @@
   background-size: cover;
   background-repeat: no-repeat;
   .adventure-slider {
+    @include media-breakpoint-down(sm) {
+      min-width: 100px;
+      width: 100px;
+    }
     min-width: 250px;
     padding: 5px;
     background-image: url('../../../../assets/fight-screens/flag3short.png');
@@ -20,7 +28,9 @@
       flex-direction: column;
       height: 80%;
       gap: 50px;
-
+      @include media-breakpoint-down(sm) {
+        gap: 40px;
+      }
       overflow: auto;
     }
   }

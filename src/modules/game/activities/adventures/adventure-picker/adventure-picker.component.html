@@ -1,4 +1,4 @@
-<div class="container-fluid h-100">
+<div class="pl-1 container-fluid h-100">
   <div class="carousel-container">
     <div class="carousel">
       <div
@@ -6,7 +6,7 @@
         [style.background]="'transparent'"
         [class.active]="true"
       >
-        <div class="slide-text glowing-epic">
+        <div class="slide-text">
           <div class="row">
             <span urTitle class="mb-0 text-third">{{
               selectedAdventure.name
@@ -52,75 +52,78 @@
             </ng-container>
           </div>
 
-          <span urSubtitle class="text-third">Rewards</span>
-          <div class="possible-rewards">
-            @for (
-              itemReward of selectedAdventure.itemData;
-              track itemReward.id
-            ) {
-              <app-item-box
-                #lootItem
-                class="d-flex justify-content-center w-100"
-                [height]="getItemBoxSize()"
-                [width]="getItemBoxSize()"
-                [image]="itemReward.image | toIpfsImageFromCid"
-              >
-                <div tooltip class="tooltip-uruk">
-                  <app-item-tooltip
-                    [item]="itemReward | itemdataToItem"
-                  ></app-item-tooltip>
+          <div
+            class="possible-rewards d-flex justify-content-center align-items-center"
+          >
+            <ng-template #tooltipChest>
+              <div class="item-tooltip-wrapper">
+                <div class="d-flex flex-column align-items-start gap-1">
+                  <div class="description w-100">
+                    <p
+                      class="h6 m-0 text-center w-100"
+                      [ngStyle]="{ color: getRarityColor(RarityEnum.MYTHIC) }"
+                    >
+                      Adventure chest
+                    </p>
+                  </div>
                 </div>
-              </app-item-box>
-            }
-            @for (
-              consumableReward of selectedAdventure.consumablesData;
-              track consumableReward.id
-            ) {
-              <app-item-box
-                #lootItem
-                class="d-flex justify-content-center w-100"
-                [height]="getItemBoxSize()"
-                [width]="getItemBoxSize()"
-                [image]="consumableReward.image | toIpfsImageFromCid"
-              >
-                <div tooltip class="tooltip-uruk">
-                  <app-consumable-tooltip
-                    [showPrice]="false"
-                    [item]="consumableReward"
-                  ></app-consumable-tooltip>
-                </div>
-              </app-item-box>
-            }
+                <div class="row">
+                  <div class="col-12">
+                    <p>
+                      When completed the adventure successfully, this chest will
+                      open and will contain the following rewards:
+                    </p>
 
-            @for (
-              materialReward of selectedAdventure.materialsData;
-              track materialReward.id
-            ) {
-              <app-item-box
-                #lootItem
-                class="d-flex justify-content-center w-100"
-                [height]="getItemBoxSize()"
-                [width]="getItemBoxSize()"
-                [image]="materialReward.image | toIpfsImageFromCid"
-              >
-                <div tooltip class="tooltip-uruk">
-                  <app-material-tooltip
-                    [item]="materialReward"
-                  ></app-material-tooltip>
+                    <span class="value">
+                      {{ selectedAdventure.itemData.length + ' items' }}
+                    </span>
+                    +
+                    <span class="value">
+                      {{
+                        selectedAdventure.consumablesData.length +
+                          ' consumables'
+                      }}
+                    </span>
+                    +
+                    <span class="value">
+                      {{ selectedAdventure.materialsData.length + ' items' }}
+                    </span>
+                    +
+                    <span class="value"> ??????? </span>
+                  </div>
                 </div>
-              </app-item-box>
-            }
+              </div>
+            </ng-template>
+
+            <img
+              [ngbTooltip]="tooltipChest"
+              src="../../../../../assets/misc/closed_chest.png"
+              [ngStyle]="{
+                height: viewportService.getResponsiveSizeChestImg()[1] + 'px',
+                width: viewportService.getResponsiveSizeChestImg()[0] + 'px'
+              }"
+            />
+            <span urSubtitle class="text-third">X1 Adventure Chest!</span>
+            <button
+              urTitle
+              [disabled]="(player$ | async).level < selectedAdventure.minLevel"
+              (click)="startAdventure()"
+              class="{{
+                (player$ | async).level < selectedAdventure.minLevel
+                  ? 'button-rainbow-disabled'
+                  : 'button-rainbow'
+              }}"
+              [style.padding]="getResponsiveButtonSize()"
+              [style.fontSize]="getResponsiveButtonFontSize()"
+            >
+              {{
+                (player$ | async).level < selectedAdventure.minLevel
+                  ? 'YOU ARE NOT READY'
+                  : 'START ADVENTURE'
+              }}
+            </button>
           </div>
         </div>
-        <button
-          urTitle
-          (click)="startAdventure()"
-          class="button-rainbow"
-          [style.padding]="getResponsiveButtonSize()"
-          [style.fontSize]="getResponsiveButtonFontSize()"
-        >
-          START ADVENTURE
-        </button>
       </div>
     </div>
   </div>

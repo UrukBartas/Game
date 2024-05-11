@@ -43,14 +43,6 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
   }
 
   ngOnInit(): void {
-    // if (!!this.adventure) {
-    //   const quests = this.adventure.quests;
-    //   this.quest = quests.find((quest) => quest.startedAt !== null);
-    // } else {
-    //   this.quest = this.store
-    //     .selectSnapshot(MainState.getState)
-    //     .quests.find((quest) => quest.startedAt !== null);
-    // }
     this.store
       .select(MainState.getState)
       .pipe(filter((entry) => !!entry.quests))
@@ -76,6 +68,10 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
   setQuestTimer() {
     this.ngZone.runOutsideAngular(() => {
       this.interval = setInterval(() => {
+        if (!this.quest) {
+          clearInterval(this.interval);
+          return;
+        }
         const startedAt = new Date(this.quest.startedAt);
         const finishedAt = new Date(this.quest.finishedAt);
         //finishedAt.setMinutes(finishedAt.getMinutes() - 320);

@@ -20,12 +20,19 @@
   </div>
   <div *ngIf="questReady">
     <button
-      (click)="questStatusChange.emit({ status: questStatusEnum.FIGHT })"
+      (click)="
+        questStatusChange.emit({
+          status:
+            quest.data.type == 'Passive'
+              ? questStatusEnum.RESULT
+              : questStatusEnum.FIGHT
+        })
+      "
       urTitle
       class="button-rainbow"
       [style.padding]="getResponsiveButtonSize()"
     >
-      FIGHT
+      {{ quest.data.type == 'Passive' ? 'RESOLVE' : 'FIGHT' }}
     </button>
   </div>
 </div>

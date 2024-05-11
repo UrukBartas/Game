@@ -13,6 +13,7 @@ import { QuestService } from 'src/services/quest.service';
 import { take } from 'rxjs';
 import { SetQuests } from 'src/store/main.store';
 import { QuestModel } from 'src/modules/core/models/quest.model';
+import { ViewportService } from 'src/services/viewport.service';
 export enum AdventureState {
   NON_STARTED,
   STARTED,
@@ -30,9 +31,25 @@ export enum AdventureState {
         ></app-quest-router>
       }
       @case (adventureStateEnum.FINISHED) {
-        <span class="text-white">
-          {{ selectedAdventure.name }} is completed!</span
+        <div
+          class="d-flex justify-content-center align-items-center flex-column h-100"
         >
+          <span class="text-white" urSubtitle>Good job!</span>
+          <span class="text-third" urTitle>
+            {{ selectedAdventure.name }} is completed!</span
+          >
+          <img
+            src="../../../../../assets/misc/opened_chest.png"
+            [ngStyle]="{
+              height: viewportService.getResponsiveSizeChestImg()[1] + 'px',
+              width: viewportService.getResponsiveSizeChestImg()[0] + 'px'
+            }"
+          />
+          <span class="text-white" urText>Rewards harvested</span>
+          <button class="btn btn-primary" (click)="goNextAdventure.emit()">
+            <i class="fa fa-arrow-left px-2 pb-1"></i>Continue to next adventure
+          </button>
+        </div>
       }
       @default {
         <app-adventure-picker
@@ -48,6 +65,7 @@ export class AdventuresRouterComponent extends TemplatePage {
   adventureDataService = inject(AdventuresDataService);
   questService = inject(QuestService);
   store = inject(Store);
+  viewportService = inject(ViewportService);
 
   @Input() public set selectedAdventure(data: AdventureData) {
     this._selectedAdventure = cloneDeep(data);
@@ -66,6 +84,7 @@ export class AdventuresRouterComponent extends TemplatePage {
   @Output() onAdventureStarted = new EventEmitter<Adventure>();
   @Output() updateAdventures = new EventEmitter<void>();
   @Output() questPickChanged = new EventEmitter<QuestModel>();
+  @Output() goNextAdventure = new EventEmitter<void>();
 
   private _selectedAdventure: AdventureData;
   public adventureState: AdventureState = AdventureState.NON_STARTED;
@@ -82,6 +101,6 @@ export class AdventuresRouterComponent extends TemplatePage {
   }
 
   public statusChangedQuest(router: QuestRouterModel) {
-    this.updateAdventures.emit();
+    if (!!router.force) this.updateAdventures.emit();
   }
 }

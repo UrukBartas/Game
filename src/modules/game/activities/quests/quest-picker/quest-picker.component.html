@@ -15,37 +15,53 @@
       >
         <div class="slide-text">
           <div class="slide-title row">
-            <span urTitle class="text-third col-12 col-md-4 text-center">
+            <span urTitle class="text-third col-12 text-center">
               {{ quest.data.name }}
               <span class="level">Level {{ quest.level }}</span>
             </span>
 
-            <span urText class="badge mb-1 col-12 col-md-4">
-              <i class="fa-solid fa-clock"></i>
-              {{ getApproxTimeOfQuestBasedOnRarity(quest.data.rarity) }}
-            </span>
+            <div class="col-12 mb-1 justify-content-center d-flex">
+              <span urText class="badge">
+                <i class="fa-solid fa-clock"></i>
+                {{ getApproxTimeOfQuestBasedOnRarity(quest.data.rarity) }}
+              </span>
 
-            <span
-              urText
-              class="badge mb-1 col-12 col-md-4"
-              [ngStyle]="{ color: getRarityColor(quest.data.rarity) }"
-            >
-              <i class="fa-solid fa-certificate"></i> {{ quest.data.rarity }}
-            </span>
+              <span
+                urText
+                class="badge"
+                [ngStyle]="{ color: getRarityColor(quest.data.rarity) }"
+              >
+                <i class="fa-solid fa-certificate"></i> {{ quest.data.rarity }}
+              </span>
+            </div>
           </div>
-
-          <span urText class="mb-0">{{ quest.data.description }}</span>
+          <div class="col-12 justify-content-center d-flex">
+            <span urText class="mb-0 text-center">{{
+              quest.data.description
+            }}</span>
+          </div>
         </div>
       </div>
     </div>
     <button
       urTitle
       (click)="startQuest()"
-      class="button-rainbow"
+      [disabled]="!!adventure ? !isCurrentQuestTheNextPhase() : false"
+      class="{{
+        !!adventure && !isCurrentQuestTheNextPhase()
+          ? 'button-rainbow-disabled'
+          : 'button-rainbow'
+      }}"
       [style.padding]="getResponsiveButtonSize()"
       [style.fontSize]="getResponsiveButtonFontSize()"
     >
-      {{ !!adventure ? 'START PHASE' : 'START QUEST' }}
+      {{
+        !!adventure
+          ? isCurrentQuestTheNextPhase()
+            ? 'START PHASE'
+            : 'YOU ARE NOT READY YET'
+          : 'START QUEST'
+      }}
     </button>
     <a (click)="previousSlide()" class="carousel-control-prev" role="button">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>

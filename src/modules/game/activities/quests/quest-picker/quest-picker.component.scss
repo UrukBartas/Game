@@ -14,6 +14,13 @@
   left: 50%;
 }
 
+.button-rainbow-disabled {
+  @extend .button-rainbow;
+  &::before {
+    animation: ease;
+  }
+}
+
 .carousel {
   display: flex;
   transition: transform 0.5s ease-in-out;

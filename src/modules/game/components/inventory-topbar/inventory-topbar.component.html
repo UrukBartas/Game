@@ -7,17 +7,6 @@
         'justify-content-between': inventory.length > itemInventoryBoxes.length
       }"
     >
-      @if (inventory.length > itemInventoryBoxes.length) {
-        <div>
-          <i
-            class="bi bi-exclamation-triangle-fill text-secondary px-1 pointer"
-          ></i>
-          <span>
-            You have more items than your backpack can hold. Expand your slots!
-          </span>
-        </div>
-      }
-
       <div *ngIf="!disableSort" class="d-flex">
         <i
           (click)="changeSortOrder()"
@@ -41,4 +30,14 @@
 
     <span>{{ inventory.length }}/{{ itemInventoryBoxes.length }}</span>
   </div>
+  @if (inventory.length > itemInventoryBoxes.length) {
+    <div class="text-warning">
+      <i
+        class="bi bi-exclamation-triangle-fill text-secondary px-1 pointer"
+      ></i>
+      <span>
+        You have more items than your backpack can hold. Expand your slots!
+      </span>
+    </div>
+  }
 </div>

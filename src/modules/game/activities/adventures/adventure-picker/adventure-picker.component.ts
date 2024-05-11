@@ -19,6 +19,9 @@ import { QuestService } from 'src/services/quest.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Adventure, AdventuresService } from 'src/services/adventures.service';
+import { MainState } from 'src/store/main.store';
+import { map, take } from 'rxjs';
+import { Rarity } from 'src/modules/core/models/items.model';
 
 @Component({
   selector: 'app-adventure-picker',
@@ -29,12 +32,18 @@ export class AdventurePickerComponent extends TemplatePage {
   @Input() selectedAdventure: AdventureData;
   @Output() onStartedAdventure = new EventEmitter<Adventure>();
   startedAdventure = false;
+
   getRarityColor = getRarityColor;
   activeSlideIndex = 0;
   modalService = inject(BsModalService);
   titleService = inject(Title);
   adventureService = inject(AdventuresService);
   adventureDataService = inject(AdventuresDataService);
+  store = inject(Store);
+  public player$ = this.store
+    .select(MainState.getState)
+    .pipe(map((entry) => entry.player));
+  public RarityEnum = Rarity;
 
   constructor(public viewportService: ViewportService) {
     super();
@@ -43,7 +52,7 @@ export class AdventurePickerComponent extends TemplatePage {
 
   async startAdventure() {
     this.adventureService
-      .startAdventure(this.selectedAdventure.id)
+      .startAdventure(this.selectedAdventure.id).pipe(take(1))
       .subscribe((data) => this.onStartedAdventure.emit(data));
   }
 
@@ -77,6 +86,8 @@ export class AdventurePickerComponent extends TemplatePage {
         return '3.25rem';
     }
   }
+
+
 
   public getItemBoxSize() {
     if (

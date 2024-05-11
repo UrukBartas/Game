@@ -1,4 +1,201 @@
+<ng-template #pickingButton>
+  <button
+    (click)="
+      questStatusChange.emit({
+        status: questStatusEnum.PICKING,
+        force: !!fightResult.completedAdventure
+      })
+    "
+    class="btn btn-primary"
+  >
+    <i class="fa fa-arrow-left px-2 pb-1"></i
+    >{{
+      fightResult.completedAdventure ||
+      fightResult.newQuest.data.isAdventurePhase
+        ? 'Adventures'
+        : 'Quests'
+    }}
+  </button>
+</ng-template>
+<ng-template #itemLootDrop let-loot="loot">
+  @for (lootItem of loot; track lootItem.id) {
+    <app-item-box
+      #lootItem
+      [height]="getItemBoxSize()"
+      [width]="getItemBoxSize()"
+      [image]="lootItem.itemData.image | toIpfsImageFromCid"
+    >
+      <div tooltip class="tooltip-uruk">
+        <app-item-tooltip [item]="lootItem"></app-item-tooltip>
+      </div>
+    </app-item-box>
+  }
+</ng-template>
+
+<ng-template #consumableLootDrop let-loot="loot">
+  @for (lootItem of loot; track lootItem.id) {
+    <app-item-box
+      #lootItem
+      [height]="getItemBoxSize()"
+      [width]="getItemBoxSize()"
+      [image]="lootItem.consumableData.image | toIpfsImageFromCid"
+    >
+      <div tooltip class="tooltip-uruk">
+        <app-consumable-tooltip [item]="lootItem.consumableData">
+        </app-consumable-tooltip>
+      </div>
+    </app-item-box>
+  }
+</ng-template>
+
+<ng-template #materialLootDrop let-loot="loot">
+  @for (lootItem of loot; track lootItem.id) {
+    <app-item-box
+      #lootItem
+      [height]="getItemBoxSize()"
+      [width]="getItemBoxSize()"
+      [image]="lootItem.materialData.image | toIpfsImageFromCid"
+      [stack]="lootItem.quantity"
+    >
+      <div tooltip class="tooltip-uruk">
+        <app-material-tooltip
+          [item]="lootItem.materialData"
+        ></app-material-tooltip>
+      </div>
+    </app-item-box>
+  }
+</ng-template>
+
+<ng-template #lootLostDisplay>
+  @if (
+    fightResult?.materialLostLoot?.length > 0 ||
+    fightResult?.consumableLostLoot?.length > 0 ||
+    fightResult?.lostLoot?.length > 0
+  ) {
+    <span urText class="text-danger text-center">Inventory is full!</span>
+    <span urText class="text-white text-center">
+      You cannot take some items with you, so you let them go..</span
+    >
+  }
+  <div class="container-loot">
+    <ng-container
+      *ngTemplateOutlet="
+        itemLootDrop;
+        context: {
+          loot: fightResult?.lostLoot
+        }
+      "
+    ></ng-container>
+
+    <ng-container
+      *ngTemplateOutlet="
+        consumableLootDrop;
+        context: {
+          loot: fightResult?.consumableLostLoot
+        }
+      "
+    ></ng-container>
+
+    <ng-container
+      *ngTemplateOutlet="
+        materialLootDrop;
+        context: {
+          loot: fightResult?.materialLostLoot
+        }
+      "
+    ></ng-container>
+  </div>
+</ng-template>
+<ng-template #lootWonDisplay>
+  @if (
+    fightResult?.materialLoot?.length > 0 ||
+    fightResult?.consumableLoot?.length > 0 ||
+    fightResult?.loot?.length > 0
+  ) {
+    <span urText class="text-rainbow text-center">Congratulations!</span>
+    <span urText class="text-white text-center">
+      {{
+        fightResult.completedAdventure
+          ? 'You opened the adventure chest!'
+          : 'Your enemy dropped something.'
+      }}
+    </span>
+  }
+  <div class="container-loot" #loot>
+    <ng-container
+      *ngTemplateOutlet="
+        itemLootDrop;
+        context: {
+          loot: fightResult?.loot
+        }
+      "
+    ></ng-container>
+
+    <ng-container
+      *ngTemplateOutlet="
+        consumableLootDrop;
+        context: {
+          loot: fightResult?.consumableLoot
+        }
+      "
+    ></ng-container>
+
+    <ng-container
+      *ngTemplateOutlet="
+        materialLootDrop;
+        context: {
+          loot: fightResult?.materialLoot
+        }
+      "
+    ></ng-container>
+  </div>
+</ng-template>
+
 <div class="d-flex flex-column gap-2 overflow-x-hidden">
+  @if (!!fightResult.completedAdventure && !closedChest) {
+    <div class="result-item-showcase-chest-open">
+      <img
+        *ngIf="openedChest == false"
+        data-aos="fade-up"
+        data-aos-duration="2000"
+        class="animate__animated animate__pulse animate__infinite pointer"
+        src="../../../../../assets/misc/closed_chest.png"
+        [ngStyle]="{
+          height: viewportService.getResponsiveSizeChestImg()[1] + 'px',
+          width: viewportService.getResponsiveSizeChestImg()[0] + 'px'
+        }"
+        (click)="openChest()"
+      />
+      <div
+        class="item-wrapper d-flex flex-column align-items-center justify-content-center gap-2"
+        data-aos="fade-left"
+        data-aos-duration="2000"
+        *ngIf="openedChest"
+      >
+        <img
+          data-aos="fade-up"
+          data-aos-duration="2000"
+          src="../../../../../assets/misc/opened_chest.png"
+          [ngStyle]="{
+            height: viewportService.getResponsiveSizeChestImg()[1] + 'px',
+            width: viewportService.getResponsiveSizeChestImg()[0] + 'px'
+          }"
+        />
+        <ng-container *ngTemplateOutlet="lootWonDisplay"></ng-container>
+        <div
+          class="d-flex justify-content-center align-items-center"
+          data-aos="fade-down"
+          data-aos-duration="4000"
+        >
+          <button (click)="closedChest = true" class="btn btn-primary">
+            <i class="fa fa-check px-2 pb-1"></i>Continue
+          </button>
+        </div>
+        <ng-container *ngTemplateOutlet="lootLostDisplay"></ng-container>
+      </div>
+    </div>
+  }
+
   <ng-container *ngIf="fightResult">
     <div class="description justify-content-center">
       <p urTitle>{{ victory ? 'Victory!' : 'Defeat!' }}</p>
@@ -38,108 +235,11 @@
           >Defense {{ player.stats.armor }} → {{ player.stats.armor + 2 }}</span
         >
       </div>
-      <ng-container
-        *ngTemplateOutlet="
-          lootDrop;
-          context: {
-            loot: !!fightResult.lostLoot
-              ? fightResult.lostLoot
-              : fightResult.loot,
-            lost: !!fightResult.lostLoot,
-            type: 'item'
-          }
-        "
-      ></ng-container>
 
-      <ng-container
-        *ngTemplateOutlet="
-          lootDrop;
-          context: {
-            loot: !!fightResult.consumableLostLoot
-              ? fightResult.consumableLostLoot
-              : fightResult.consumableLoot,
-            lost: !!fightResult.consumableLostLoot,
-            type: 'consumible'
-          }
-        "
-      >
-      </ng-container>
-
-      <ng-container
-        *ngTemplateOutlet="
-          lootDrop;
-          context: {
-            loot: !!fightResult.materialLostLoot
-              ? fightResult.materialLostLoot
-              : fightResult.materialLoot,
-            lost: !!fightResult.materialLostLoot,
-            type: 'material'
-          }
-        "
-      >
-      </ng-container>
-
-      <ng-template #lootDrop let-loot="loot" let-lost="lost" let-type="type">
-        <div *ngIf="loot" class="col col-md-12 d-flex flex-column gap-2">
-          <span urText class="text-rainbow text-center">{{
-            lost ? 'Inventory is full' : 'Congratulations!'
-          }}</span>
-          <span urText class="text-white text-center">{{
-            lost
-              ? 'You cannot take this ' + type + ' with you, so you let it go.'
-              : 'Your enemy dropped something.'
-          }}</span>
-          @if (type == 'item') {
-            @for (lootItem of loot; track lootItem.id) {
-              <app-item-box
-                #lootItem
-                class="d-flex justify-content-center w-100"
-                [height]="getItemBoxSize()"
-                [width]="getItemBoxSize()"
-                [image]="lootItem.itemData.image | toIpfsImageFromCid"
-              >
-                <div tooltip class="tooltip-uruk">
-                  <app-item-tooltip [item]="lootItem"></app-item-tooltip>
-                </div>
-              </app-item-box>
-            }
-          } @else if (type == 'consumible') {
-            @for (lootItem of loot; track lootItem.id) {
-              <app-item-box
-                #lootItem
-                class="d-flex justify-content-center w-100"
-                [height]="getItemBoxSize()"
-                [width]="getItemBoxSize()"
-                [image]="lootItem.consumableData.image | toIpfsImageFromCid"
-              >
-                <div tooltip class="tooltip-uruk">
-                  <app-consumable-tooltip [item]="lootItem.consumableData">
-                  </app-consumable-tooltip>
-                </div>
-              </app-item-box>
-            }
-          } @else if (type == 'material') {
-            @for (lootItem of loot; track lootItem.id) {
-              <app-item-box
-                #lootItem
-                class="d-flex justify-content-center w-100"
-                [height]="getItemBoxSize()"
-                [width]="getItemBoxSize()"
-                [image]="lootItem.materialData.image | toIpfsImageFromCid"
-                [stack]="lootItem.quantity"
-              >
-                <div tooltip class="tooltip-uruk">
-                  <app-material-tooltip
-                    [item]="lootItem.materialData"
-                  ></app-material-tooltip>
-                </div>
-              </app-item-box>
-            }
-          } @else {
-            Non compatible item type
-          }
-        </div>
-      </ng-template>
+      <div class="col col-md-12 d-flex flex-column gap-2">
+        <ng-container *ngTemplateOutlet="lootWonDisplay"></ng-container>
+        <ng-container *ngTemplateOutlet="lootLostDisplay"></ng-container>
+      </div>
     </div>
 
     <span urText *ngIf="fightResult.exp" class="text-white pb-2"
@@ -169,18 +269,7 @@
       Congratulations! You have completed an adventure!
     </span>
     <div class="pb-2">
-      <button
-        (click)="questStatusChange.emit({ status: questStatusEnum.PICKING })"
-        class="btn btn-primary"
-      >
-        <i class="fa fa-arrow-left px-2 pb-1"></i
-        >{{
-          fightResult.completedAdventure ||
-          fightResult.newQuest.data.isAdventurePhase
-            ? 'Adventures'
-            : 'Quests'
-        }}
-      </button>
+      <ng-container *ngTemplateOutlet="pickingButton"></ng-container>
     </div>
   </ng-container>
 </div>

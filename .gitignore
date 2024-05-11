@@ -46,3 +46,4 @@ Thumbs.db
 .env
 .vscode
 /src/firebase-messaging-sw.js
+.nx

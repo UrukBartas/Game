@@ -99,7 +99,7 @@
   </div>
 
   <ng-container *ngIf="resultItem">
-    <div class="result-item" (click)="closeResult()">
+    <div class="result-item-showcase" (click)="closeResult()">
       <div class="animate__animated animate__jackInTheBox delay_4">
         <app-item-box
           #result
@@ -118,7 +118,7 @@
     </div>
   </ng-container>
   <ng-container *ngIf="resultItem === false">
-    <div class="result-item" (click)="closeResult()">
+    <div class="result-item-showcase" (click)="closeResult()">
       <span urTitle class="text-white">Upgrade failed 💀</span>
       <div class="animate__animated animate__hinge delay_4">
         <app-item-box

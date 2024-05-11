@@ -50,7 +50,7 @@ export class QuestRouterComponent extends TemplatePage {
   @Output() questPickChanged = new EventEmitter<QuestModel>();
   @Input() public set adventure(data: AdventureData) {
     this._data = cloneDeep(data);
-    this.getQuestStatus();
+    if (!this._data || this._data.id != data.id) this.getQuestStatus();
   }
   public get adventure() {
     return this._data;
@@ -65,6 +65,7 @@ export class QuestRouterComponent extends TemplatePage {
 
   ngOnInit(): void {
     this.getQuestStatus();
+
   }
 
   private getQuestStatus() {
@@ -87,7 +88,6 @@ export class QuestRouterComponent extends TemplatePage {
     }
 
     const activeFight = this.store.selectSnapshot(MainState.getState).fight;
-
     if (activeQuest) {
       if (!activeFight) {
         this.questRouter().status = QuestStatusEnum.IN_PROGRESS;
