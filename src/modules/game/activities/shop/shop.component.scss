@@ -177,9 +177,9 @@
     transform-origin: center bottom;
     animation: show-items-animation 0.6s forwards;
 
-    @for $i from 1 through 9 {
+    @for $i from 1 through 20 {
       &:nth-child(#{$i}) {
-        animation-delay: ($i - 1) * 0.2s;
+        animation-delay: ($i - 1) * 0.1s;
       }
     }
   }
@@ -189,9 +189,9 @@
     transform-origin: center bottom;
     animation: hide-items-animation 0.3s forwards;
 
-    @for $i from 1 through 9 {
+    @for $i from 1 through 20 {
       &:nth-child(#{$i}) {
-        animation-delay: ($i - 1) * 0.1s;
+        animation-delay: ($i - 1) * 0.05s;
       }
     }
   }
