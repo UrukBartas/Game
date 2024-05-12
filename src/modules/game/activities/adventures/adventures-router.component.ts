@@ -83,6 +83,7 @@ export class AdventuresRouterComponent extends TemplatePage {
 
   @Output() onAdventureStarted = new EventEmitter<Adventure>();
   @Output() updateAdventures = new EventEmitter<void>();
+  @Output() questStatusChanged = new EventEmitter<QuestRouterModel>();
   @Output() questPickChanged = new EventEmitter<QuestModel>();
   @Output() goNextAdventure = new EventEmitter<void>();
 
@@ -101,6 +102,7 @@ export class AdventuresRouterComponent extends TemplatePage {
   }
 
   public statusChangedQuest(router: QuestRouterModel) {
+    this.questStatusChanged.emit(router);
     if (!!router.force) this.updateAdventures.emit();
   }
 }

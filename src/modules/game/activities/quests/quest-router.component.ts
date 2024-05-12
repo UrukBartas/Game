@@ -4,6 +4,7 @@ import {
   Input,
   Output,
   effect,
+  inject,
   signal,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
@@ -14,6 +15,8 @@ import { QuestRouterModel } from './models/quest-router.model';
 import { AdventureData } from 'src/services/adventures-data.service';
 import { cloneDeep } from 'lodash';
 import { QuestModel } from 'src/modules/core/models/quest.model';
+import { QuestService } from 'src/services/quest.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-quest-router',
@@ -27,7 +30,7 @@ import { QuestModel } from 'src/modules/core/models/quest.model';
       ></app-quest-picker>
       <app-quest-progress
         *ngSwitchCase="questStatusEnum.IN_PROGRESS"
-        (questStatusChange)="questRouter.set($event)"
+        (questStatusChange)="questProgressStatusChange($event)"
       ></app-quest-progress>
       <app-quest-fight
         *ngSwitchCase="questStatusEnum.FIGHT"
@@ -43,6 +46,7 @@ import { QuestModel } from 'src/modules/core/models/quest.model';
 })
 export class QuestRouterComponent extends TemplatePage {
   questStatusEnum = QuestStatusEnum;
+  questService = inject(QuestService);
   questRouter = signal<QuestRouterModel>({ status: QuestStatusEnum.PICKING });
   questRouterEffect = effect(() => {
     this.statusChanged.emit(this.questRouter());
@@ -65,7 +69,26 @@ export class QuestRouterComponent extends TemplatePage {
 
   ngOnInit(): void {
     this.getQuestStatus();
+  }
 
+  public async questProgressStatusChange(event: QuestRouterModel) {
+    if (!!event.data) {
+      const quest = event.data as QuestModel;
+      const isPassiveQuest = quest.data.type == 'Passive';
+      if (isPassiveQuest) {
+        const result = await firstValueFrom(
+          this.questService.resolve(quest.id)
+        );
+        this.questRouter.set({
+          status: QuestStatusEnum.RESULT,
+          data: result.result,
+        });
+      } else {
+        this.questRouter.set(event);
+      }
+    } else {
+      this.questRouter.set(event);
+    }
   }
 
   private getQuestStatus() {

@@ -4,6 +4,9 @@
     <h3 urTitle>
       {{ quest.data.name }}
     </h3>
+    <div class="description mb-3 px-4">
+      {{ quest.data.description }}
+    </div>
     <div
       class="progress position-relative"
       [style.height]="getProgressBarHeight() + 'px'"
@@ -22,10 +25,8 @@
     <button
       (click)="
         questStatusChange.emit({
-          status:
-            quest.data.type == 'Passive'
-              ? questStatusEnum.RESULT
-              : questStatusEnum.FIGHT
+          data: quest,
+          status: questStatusEnum.FIGHT
         })
       "
       urTitle

@@ -14,7 +14,7 @@
 .tooltip-uruk {
   display: flex;
   gap: 5px;
-  flex-direction: row;
+  flex-direction: column;
   @include media-breakpoint-down(sm) {
     flex-direction: column;
   }

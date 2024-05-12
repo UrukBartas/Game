@@ -2,7 +2,7 @@
   class="adventures-wrapper"
   [ngStyle]="{ 'background-image': 'url(' + activeWallpaper + ')' }"
 >
-  <div class="adventure-slider">
+  <div class="adventure-slider" *ngIf="!goFullScreen()">
     <div
       class="scroll mt-3"
       *ngIf="availableAdventures$ | async as availableAdventures"
@@ -25,7 +25,7 @@
             >
               <span
                 (click)="selectAdventure(adventure)"
-                class="d-none d-sm-block"
+                class="d-none d-md-block"
                 >BLOCKED</span
               >
               <span (click)="selectAdventure(adventure)"
@@ -37,7 +37,7 @@
               class="overlay-adventure text-warning pointer"
               (click)="selectAdventure(adventure)"
             >
-              <span>{{ adventure.name }}</span>
+              <span class="d-none d-md-block">{{ adventure.name }}</span>
             </span>
           }
 
@@ -95,6 +95,7 @@
         (onAdventureStarted)="refreshAdventures()"
         (updateAdventures)="refreshAdventures()"
         (goNextAdventure)="goNext()"
+        (questStatusChanged)="questStatusRouter = $event"
         [selectedAdventure]="selectedAdventure"
         (questPickChanged)="activeWallpaper = $event.data.image"
       ></app-adventure-router>

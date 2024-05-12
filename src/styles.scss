@@ -309,3 +309,18 @@ tabset {
     animation: none;
   }
 }
+
+.result-quest-complete {
+  @extend .result-item-showcase-chest-open;
+  background: #000000d1;
+}
+
+app-adventures {
+  .scroll {
+    app-item-box {
+      .stack {
+        bottom: -20px !important;
+      }
+    }
+  }
+}

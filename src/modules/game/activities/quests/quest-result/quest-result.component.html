@@ -3,7 +3,7 @@
     (click)="
       questStatusChange.emit({
         status: questStatusEnum.PICKING,
-        force: !!fightResult.completedAdventure
+        force: true
       })
     "
     class="btn btn-primary"
@@ -11,7 +11,7 @@
     <i class="fa fa-arrow-left px-2 pb-1"></i
     >{{
       fightResult.completedAdventure ||
-      fightResult.newQuest.data.isAdventurePhase
+      fightResult.newQuest?.data?.isAdventurePhase
         ? 'Adventures'
         : 'Quests'
     }}
@@ -151,7 +151,9 @@
   </div>
 </ng-template>
 
-<div class="d-flex flex-column gap-2 overflow-x-hidden">
+<div
+  class="d-flex flex-column gap-2 overflow-x-hidden result-quest-complete h-100 align-items-center justify-content-center"
+>
   @if (!!fightResult.completedAdventure && !closedChest) {
     <div class="result-item-showcase-chest-open">
       <img
@@ -252,13 +254,13 @@
     >
     <span urText class="text-white pb-2" *ngIf="!!fightResult.newQuest"
       >{{
-        fightResult.newQuest.data.isAdventurePhase
+        fightResult?.newQuest?.data?.isAdventurePhase
           ? 'New adventure phase unlocked:'
           : 'New quest unlocked:'
       }}
       <span
-        [ngStyle]="{ color: getRarityColor(fightResult.newQuest.data.rarity) }"
-        >{{ fightResult.newQuest.data.name }}</span
+        [ngStyle]="{ color: getRarityColor(fightResult?.newQuest?.data?.rarity) }"
+        >{{ fightResult?.newQuest?.data?.name }}</span
       ></span
     >
     <span

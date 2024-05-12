@@ -9,6 +9,8 @@ import {
 } from 'src/services/adventures-data.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
+import { QuestStatusEnum } from '../quests/enums/quest-status.enum';
+import { QuestRouterModel } from '../quests/models/quest-router.model';
 
 @Component({
   selector: 'app-adventures',
@@ -26,6 +28,7 @@ export class AdventuresComponent extends TemplatePage {
     .select(MainState.getState)
     .pipe(map((entry) => entry.player));
   public activeWallpaper = '../../../../assets/backgrounds/adventures.png';
+  public questStatusRouter: QuestRouterModel;
   constructor() {
     super();
     this.refreshAdventures();
@@ -73,10 +76,23 @@ export class AdventuresComponent extends TemplatePage {
     }
   }
 
-  private getActiveWallpaperFromQuest() {
+  public getActiveQuest() {
     const activeQuest = this.selectedAdventure.Adventure[0].quests
       .sort((a, b) => a.data.phase - b.data.phase)
       .find((quest) => quest.active);
+    return activeQuest;
+  }
+
+  public goFullScreen() {
+    return (
+      !!this.questStatusRouter &&
+      (this.questStatusRouter.status == QuestStatusEnum.FIGHT ||
+        this.questStatusRouter.status == QuestStatusEnum.IN_PROGRESS)
+    );
+  }
+
+  private getActiveWallpaperFromQuest() {
+    const activeQuest = this.getActiveQuest();
 
     if (!!activeQuest) this.activeWallpaper = activeQuest.data.image;
   }
@@ -100,8 +116,6 @@ export class AdventuresComponent extends TemplatePage {
       case 'xxl':
       case 'xl':
       case 'lg':
-      case 'md':
-      case 'sm':
         return '3rem';
       default:
         return '2rem';
@@ -113,8 +127,9 @@ export class AdventuresComponent extends TemplatePage {
       case 'xxl':
       case 'xl':
       case 'lg':
-      case 'md':
         return [170, 140];
+      case 'md':
+        return [120, 100];
       default:
         return [75, 60];
     }
