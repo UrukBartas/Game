@@ -28,6 +28,7 @@ export class QuestPickerComponent extends TemplatePage {
   activeSlideIndex = 0;
   modalService = inject(BsModalService);
   titleService = inject(Title);
+  loading = false;
 
   public slots$ = this.store
     .select(MainState.getState)
@@ -62,6 +63,7 @@ export class QuestPickerComponent extends TemplatePage {
   }
 
   getPlayerQuests() {
+    this.loading = true;
     this.questService
       .getActive()
       .pipe(take(1))
@@ -71,6 +73,7 @@ export class QuestPickerComponent extends TemplatePage {
         if (quests.find((quest) => quest.startedAt !== null)) {
           this.questStatusChange.emit({ status: QuestStatusEnum.IN_PROGRESS });
         }
+        this.loading = false;
       });
   }
 
