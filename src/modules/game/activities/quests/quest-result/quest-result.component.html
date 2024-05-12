@@ -255,11 +255,15 @@
     <span urText class="text-white pb-2" *ngIf="!!fightResult.newQuest"
       >{{
         fightResult?.newQuest?.data?.isAdventurePhase
-          ? 'New adventure phase unlocked:'
+          ? fightResult.newQuest.data.lost
+            ? "Don't surrender, try it again! 💪"
+            : 'New adventure phase unlocked:'
           : 'New quest unlocked:'
       }}
       <span
-        [ngStyle]="{ color: getRarityColor(fightResult?.newQuest?.data?.rarity) }"
+        [ngStyle]="{
+          color: getRarityColor(fightResult?.newQuest?.data?.rarity)
+        }"
         >{{ fightResult?.newQuest?.data?.name }}</span
       ></span
     >

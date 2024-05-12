@@ -11,5 +11,6 @@ export interface QuestDataModel {
   rarity: Rarity;
   phase: number;
   isAdventurePhase?: boolean;
+  lost?:boolean;
   type: 'Default' | 'Passive';
 }
