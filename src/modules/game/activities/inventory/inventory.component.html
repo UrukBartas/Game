@@ -81,7 +81,6 @@
                       : null
                   "
                   [showContextualMenu]="true"
-                  [boxes]="itemInventoryBoxes"
                   [disableDND]="false"
                   (onDragStart)="onDragStart($event.event, $event.data)"
                   (onDragEnd)="onDragEnd($event)"
@@ -105,10 +104,7 @@
                     | stack: 'consumableData.name' as inventoryConsumables
                 "
               >
-                <app-consumables-inventory
-                  [items]="inventoryConsumables"
-                  [boxes]="consumablesInventoryBoxes"
-                >
+                <app-consumables-inventory [items]="inventoryConsumables">
                   <ng-container
                     extraItemBoxes
                     *ngTemplateOutlet="inventoryExpander"
@@ -118,10 +114,7 @@
               </ng-container>
             </tab>
             <tab heading="Materials">
-              <app-materials-inventory
-                [items]="currentMaterials"
-                [boxes]="materialsInventoryBoxes"
-              >
+              <app-materials-inventory [items]="currentMaterials">
                 <ng-container
                   extraItemBoxes
                   *ngTemplateOutlet="inventoryExpander"

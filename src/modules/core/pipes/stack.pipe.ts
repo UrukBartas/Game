@@ -9,6 +9,7 @@ export class StackPipe implements PipeTransform {
   transform(value: Array<any>, propertyNameToStackBy: string): Array<any> {
     if (!value) return [];
     const res = value.reduce((prev, next) => {
+      if(!next) return prev;
       const foundGroupedIndex = prev.findIndex(
         (entry) =>
           get(entry, propertyNameToStackBy) == get(next, propertyNameToStackBy)

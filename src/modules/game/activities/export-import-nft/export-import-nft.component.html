@@ -253,7 +253,6 @@
   <ng-template #inventory let-items$="itemsToLoad$">
     <app-item-inventory
       [items]="items$ | async"
-      [boxes]="itemInventoryBoxes"
       [(selectedItems)]="selectedMultipleItems"
       [disableDND]="true"
     >

@@ -11,7 +11,6 @@ export interface ConsumableWithStack extends Consumable {
 })
 export class ConsumablesInventoryComponent {
   @Input() items: ConsumableWithStack[] = [];
-  @Input() boxes: Array<InventoryStructure> = [];
   @Input() selectedItem: ConsumableWithStack;
   @Output() selectNewItem = new EventEmitter<Consumable>();
 

@@ -3,73 +3,66 @@
   [(searchTerm)]="searchTerm"
 ></app-inventory-topbar>
 <div class="item-inventory" *ngIf="items">
-  @for (box of boxes; track box.id; let index = $index) {
-    <div class="box-wrapper">
-      <ng-template #contextOptions>
-        @if (contextMenuTemplate == 'default') {
-          <app-context-menu-inventory-options
-            *ngIf="showContextualMenu"
-            (clickEquip)="
-              onDoubleClick.emit(filteredItems[index]);
-              contextMenuService.hideContextMenu()
-            "
-            (clickDestroy)="
-              onDestroyItem.emit(filteredItems[index]);
-              contextMenuService.hideContextMenu()
-            "
-          >
-          </app-context-menu-inventory-options>
-        } @else {
-          <app-blacksmith-context-menu
-            *ngIf="showContextualMenu"
-            (anvilIt)="
-              onDoubleClick.emit(filteredItems[index]);
-              contextMenuService.hideContextMenu()
-            "
-          >
-          </app-blacksmith-context-menu>
-        }
-      </ng-template>
-      <app-item-box
-        (contextmenu)="contextMenuService.onContextMenu($event, contextOptions)"
-        (click)="addToSelectedItems(filteredItems[index])"
-        (mouseover)="onHover.emit(filteredItems[index])"
-        (mouseout)="onHover.emit(null)"
-        (dndStart)="
-          onDragStart.emit({ event: $event, data: filteredItems[index] })
-        "
-        (dndEnd)="onDragEnd.emit($event)"
-        (appDoubleClick)="onDoubleClick.emit(filteredItems[index])"
-        [dndDraggable]="filteredItems[index]"
-        [dndEffectAllowed]="'all'"
-        [dndDisableIf]="!filteredItems[index] || disableDND"
-        [height]="boxSize"
-        [width]="boxSize"
-        [rarity]="filteredItems[index]?.itemData?.rarity"
-        [active]="isMultipleSelected(filteredItems[index])"
-        [displayTooltip]="!!filteredItems[index]"
-        [image]="
-          filteredItems[index]?.itemData?.image
-            ? (filteredItems[index]?.itemData?.image | toIpfsImageFromCid)
-            : null
-        "
-      >
-        @if (!!filteredItems[index] && !contextMenuService.menuVisible()) {
-          <div tooltip class="tooltip-uruk">
-            <app-item-tooltip
-              [item]="filteredItems[index]"
-              [compareWith]="equippedItemOfType"
-            ></app-item-tooltip>
-            <app-item-tooltip
-              *ngIf="equippedItemOfType && getShowItemCompare()"
-              [item]="equippedItemOfType"
-              [isBeingCompared]="true"
-            ></app-item-tooltip>
-          </div>
-        }
-      </app-item-box>
-    </div>
-  }
+  <div class="box-wrapper" *ngFor="let item of filteredItems">
+    <ng-template #contextOptions>
+      @if (contextMenuTemplate == 'default') {
+        <app-context-menu-inventory-options
+          *ngIf="showContextualMenu"
+          (clickEquip)="
+            onDoubleClick.emit(item); contextMenuService.hideContextMenu()
+          "
+          (clickDestroy)="
+            onDestroyItem.emit(item); contextMenuService.hideContextMenu()
+          "
+        >
+        </app-context-menu-inventory-options>
+      } @else {
+        <app-blacksmith-context-menu
+          *ngIf="showContextualMenu"
+          (anvilIt)="
+            onDoubleClick.emit(item); contextMenuService.hideContextMenu()
+          "
+        >
+        </app-blacksmith-context-menu>
+      }
+    </ng-template>
+    <app-item-box
+      (contextmenu)="contextMenuService.onContextMenu($event, contextOptions)"
+      (click)="addToSelectedItems(item)"
+      (mouseover)="onHover.emit(item)"
+      (mouseout)="onHover.emit(null)"
+      (dndStart)="onDragStart.emit({ event: $event, data: item })"
+      (dndEnd)="onDragEnd.emit($event)"
+      (appDoubleClick)="onDoubleClick.emit(item)"
+      [dndDraggable]="item"
+      [dndEffectAllowed]="'all'"
+      [dndDisableIf]="!item || disableDND"
+      [height]="boxSize"
+      [width]="boxSize"
+      [rarity]="item?.itemData?.rarity"
+      [active]="isMultipleSelected(item)"
+      [displayTooltip]="!!item"
+      [image]="
+        item?.itemData?.image
+          ? (item?.itemData?.image | toIpfsImageFromCid)
+          : null
+      "
+    >
+      @if (!!item && !contextMenuService.menuVisible()) {
+        <div tooltip class="tooltip-uruk">
+          <app-item-tooltip
+            [item]="item"
+            [compareWith]="equippedItemOfType"
+          ></app-item-tooltip>
+          <app-item-tooltip
+            *ngIf="equippedItemOfType && getShowItemCompare()"
+            [item]="equippedItemOfType"
+            [isBeingCompared]="true"
+          ></app-item-tooltip>
+        </div>
+      }
+    </app-item-box>
+  </div>
 
   <ng-content select="[extraItemBoxes]"></ng-content>
 </div>

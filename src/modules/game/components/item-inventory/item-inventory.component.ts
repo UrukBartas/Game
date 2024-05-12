@@ -22,7 +22,6 @@ import { ViewportService } from 'src/services/viewport.service';
 })
 export class ItemInventoryComponent {
   @Input() items: Item[] = [];
-  @Input() boxes: Array<InventoryStructure> = [];
   @Input() boxSize: number = 40;
   @Input() disableDND = true;
   @Input() equippedItemOfType: Item;

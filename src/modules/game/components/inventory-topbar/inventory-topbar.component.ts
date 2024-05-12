@@ -18,7 +18,7 @@ export class InventoryTopbarComponent {
   }
 
   public get inventory() {
-    return this._inventory;
+    return this._inventory.filter((entry)=> !!entry);
   }
 
   private _inventory: Array<any> = [];
@@ -65,6 +65,7 @@ export class InventoryTopbarComponent {
     ];
     const sortedItems = items.sort((a, b) => {
       let comparison = 0;
+      if (!a || !b) return 0;
       if (this.sortType === 'level') {
         comparison = a.level - b.level;
       } else if (this.sortType === 'rarity') {

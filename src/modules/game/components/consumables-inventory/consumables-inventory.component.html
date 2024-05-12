@@ -4,31 +4,26 @@
   [(searchTerm)]="searchTerm"
 ></app-inventory-topbar>
 <div class="consumables-inventory">
-  @for (box of boxes; track box.id; let indexConsumable = $index) {
-    <app-item-box
-      (click)="selectNewItem.emit(filteredItems[indexConsumable])"
-      [height]="40"
-      [width]="40"
-      [active]="
-        !!selectedItem &&
-        !!filteredItems[indexConsumable] &&
-        selectedItem.id == filteredItems[indexConsumable].id
-      "
-      [stack]="filteredItems[indexConsumable]?.stack ?? 0"
-      [image]="
-        filteredItems[indexConsumable]?.consumableData?.image
-          ? (filteredItems[indexConsumable].consumableData.image | toIpfsImageFromCid)
-          : null
-      "
-    >
-      @if (!!filteredItems[indexConsumable]) {
-        <div tooltip class="tooltip-uruk">
-          <app-consumable-tooltip
-            [item]="filteredItems[indexConsumable].consumableData"
-          ></app-consumable-tooltip>
-        </div>
-      }
-    </app-item-box>
-  }
+  <app-item-box
+    *ngFor="let item of filteredItems"
+    (click)="selectNewItem.emit(item)"
+    [height]="40"
+    [width]="40"
+    [active]="!!selectedItem && !!item && selectedItem.id == item.id"
+    [stack]="item?.stack ?? 0"
+    [image]="
+      item?.consumableData?.image
+        ? (item.consumableData.image | toIpfsImageFromCid)
+        : null
+    "
+  >
+    @if (!!item) {
+      <div tooltip class="tooltip-uruk">
+        <app-consumable-tooltip
+          [item]="item.consumableData"
+        ></app-consumable-tooltip>
+      </div>
+    }
+  </app-item-box>
   <ng-content select="[extraItemBoxes]"></ng-content>
 </div>

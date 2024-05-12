@@ -7,6 +7,7 @@ import { WalletService } from 'src/services/wallet.service';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { PushNotificationsService } from 'src/services/push-notifications.service';
+import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -14,12 +15,14 @@ import { PushNotificationsService } from 'src/services/push-notifications.servic
 })
 export class AppComponent {
   public walletService = inject(WalletService);
+  public tooltipService = inject(NgbTooltipConfig);
   //public pushNotificationsService = inject(PushNotificationsService);
   constructor() {
     this.walletService.initWalletConnect();
     this.lockOrientation();
     //this.initializeFirebase();
     //this.pushNotificationsService.init();
+    this.tooltipService.container = 'body';
   }
   ngOnInit(): void {}
 
