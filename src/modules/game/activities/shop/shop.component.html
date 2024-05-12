@@ -1,35 +1,13 @@
-<ng-template #itemTooltip let-item="item">
-  <div tooltip class="tooltip-uruk">
-    <app-item-tooltip
-      [item]="item"
-      [compareWith]="this.getItem$(item.itemData.itemType) | async"
-    ></app-item-tooltip>
-    <app-item-tooltip
-      *ngIf="
-        (this.getItem$(item.itemData.itemType) | async) && getShowItemCompare()
-      "
-      [item]="this.getItem$(item.itemData.itemType) | async"
-      [isBeingCompared]="true"
-    ></app-item-tooltip>
-  </div>
-</ng-template>
-
-<ng-template #consumableTooltip let-item="item">
-  <div tooltip class="tooltip-uruk">
-    <app-consumable-tooltip
-      [showPrice]="true"
-      [item]="item"
-    ></app-consumable-tooltip>
-  </div>
-</ng-template>
-
 <div id="shop">
   <div class="shop-bg"></div>
-  <div class="col-12 position-relative wrapper-shop h-100 pb-lg-4 pb-sm-2">
+  <div
+    class="col-12 position-relative d-flex justify-content-center align-items-end h-100 pb-lg-4 pb-sm-2"
+  >
     <div class="shop-section-bg"></div>
     <div *ngIf="showDialog" class="shop-tender-dialog">
       <span urTitle>{{ dialog }} </span>
     </div>
+    <div class="item-rack-bg"></div>
     <div class="roll-buttons">
       <app-daily-roll-button
         (buttonClicked)="dailyRoll()"
@@ -90,3 +68,26 @@
     </div>
   </div>
 </div>
+
+<ng-template #itemTooltip let-item="item">
+  <div tooltip class="tooltip-uruk">
+    <app-item-tooltip
+      [item]="item"
+      [compareWith]="this.getItem$(item.itemData.itemType) | async"
+    ></app-item-tooltip>
+    <app-item-tooltip
+      *ngIf="
+        (this.getItem$(item.itemData.itemType) | async) && getShowItemCompare()
+      "
+      [item]="this.getItem$(item.itemData.itemType) | async"
+      [isBeingCompared]="true"
+    ></app-item-tooltip>
+  </div>
+</ng-template>
+
+<ng-template #consumableTooltip let-item="item">
+  <app-generic-item-tooltip
+    [showPrice]="true"
+    [item]="item"
+  ></app-generic-item-tooltip>
+</ng-template>

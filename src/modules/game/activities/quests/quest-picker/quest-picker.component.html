@@ -1,5 +1,5 @@
 <div class="container-fluid h-100">
-  <div class="carousel-container">
+  <div *ngIf="!loading" class="carousel-container">
     <div class="carousel">
       <div
         class="slide"
@@ -32,15 +32,18 @@
         </div>
       </div>
     </div>
-    <button
-      urTitle
-      (click)="startQuest()"
-      class="button-rainbow"
-      [style.padding]="getResponsiveButtonSize()"
-      [style.fontSize]="getResponsiveButtonFontSize()"
-    >
-      START QUEST
-    </button>
+
+    <div class="button-container">
+      <button
+        urTitle
+        class="button-rainbow"
+        [style.fontSize]="getResponsiveButtonFontSize()"
+      >
+        <span (click)="startQuest()"> START QUEST </span>
+        <i (click)="questRoll()" class="fa fa-rotate"></i>
+      </button>
+    </div>
+
     <a (click)="previousSlide()" class="carousel-control-prev" role="button">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="sr-only">Previous</span>
@@ -49,5 +52,8 @@
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="sr-only">Next</span>
     </a>
+  </div>
+  <div *ngIf="loading" class="w-100 h-100 d-flex align-items-center justify-content-center">
+    <span urTitle class="text-white">Loading...</span>
   </div>
 </div>

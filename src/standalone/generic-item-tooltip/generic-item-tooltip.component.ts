@@ -1,31 +1,22 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { ConsumableData } from 'src/modules/core/models/consumable.model';
+import { MaterialData } from 'src/modules/core/models/material.model';
 import { getRarityColor } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
-  selector: 'app-consumable-tooltip',
+  selector: 'app-generic-item-tooltip',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './consumable-tooltip.component.html',
-  styleUrl: './consumable-tooltip.component.scss',
+  templateUrl: './generic-item-tooltip.component.html',
+  styleUrl: './generic-item-tooltip.component.scss',
 })
-export class ConsumableTooltipComponent {
-  @Input() item: ConsumableData;
+export class GenericItemTooltipComponent {
+  @Input() item: ConsumableData | MaterialData;
   @Input() showPrice = false;
 
   viewportService = inject(ViewportService);
   public anyfy = (anything) => anything as any;
   public getRarityColor = getRarityColor;
-  public getItemBoxSize() {
-    if (
-      this.viewportService.screenSize == 'xs' ||
-      this.viewportService.screenSize == 'sm' ||
-      this.viewportService.screenSize == 'md'
-    ) {
-      return 100;
-    }
-    return 200;
-  }
 }
