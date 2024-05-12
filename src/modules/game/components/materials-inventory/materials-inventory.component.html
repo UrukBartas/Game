@@ -17,9 +17,9 @@
     >
       @if (!!filteredItems[indexConsumable]) {
         <div tooltip class="tooltip-uruk">
-          <app-material-tooltip
+          <app-generic-item-tooltip
             [item]="filteredItems[indexConsumable]?.materialData"
-          ></app-material-tooltip>
+          ></app-generic-item-tooltip>
         </div>
       }
     </app-item-box>

@@ -23,9 +23,9 @@
     >
       @if (!!filteredItems[indexConsumable]) {
         <div tooltip class="tooltip-uruk">
-          <app-consumable-tooltip
+          <app-generic-item-tooltip
             [item]="filteredItems[indexConsumable].consumableData"
-          ></app-consumable-tooltip>
+          ></app-generic-item-tooltip>
         </div>
       }
     </app-item-box>

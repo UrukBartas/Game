@@ -5,12 +5,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { DndModule } from 'ngx-drag-drop';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
-import { ConsumableTooltipComponent } from 'src/standalone/consumable-tooltip/consumable-tooltip.component';
+import { GenericItemTooltipComponent } from 'src/standalone/generic-item-tooltip/generic-item-tooltip.component';
 import { ContextMenuInventoryOptionsComponent } from 'src/standalone/context-menu/context-menu-inventory-options/context-menu-inventory-options.component';
 import { ContextMenuComponent } from 'src/standalone/context-menu/context-menu.component';
 import { ExpandInventoryTooltipComponent } from 'src/standalone/expand-inventory-tooltip/expand-inventory-tooltip.component';
 import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
-import { MaterialTooltipComponent } from 'src/standalone/material-tooltip/material-tooltip.component';
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
 import { DoubleClickDirective } from '../core/directives/double-click.directive';
@@ -96,8 +95,7 @@ const components = [
     CarouselModule,
     ItemTooltipComponent,
     ExpandInventoryTooltipComponent,
-    ConsumableTooltipComponent,
-    MaterialTooltipComponent,
+    GenericItemTooltipComponent,
     DoubleClickDirective,
     StackPipe,
     CompressNumberPipe,

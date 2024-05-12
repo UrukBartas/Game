@@ -31,9 +31,9 @@
         [image]="previewMaterial.material.imageLocal"
       >
         <div tooltip class="tooltip-uruk">
-          <app-material-tooltip
+          <app-generic-item-tooltip
             [item]="previewMaterial.material"
-          ></app-material-tooltip>
+          ></app-generic-item-tooltip>
         </div>
       </app-item-box>
     </ng-container>
@@ -50,9 +50,9 @@
           [active]="userHasThisMaterial(material)"
         >
           <div tooltip class="tooltip-uruk">
-            <app-material-tooltip
+            <app-generic-item-tooltip
               [item]="material.material"
-            ></app-material-tooltip>
+            ></app-generic-item-tooltip>
           </div>
         </app-item-box>
       }

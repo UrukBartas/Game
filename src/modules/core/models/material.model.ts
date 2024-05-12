@@ -15,4 +15,5 @@ export interface MaterialData {
   name: string;
   description: string;
   rarity: Rarity;
+  price?: number;
 }

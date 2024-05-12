@@ -11,7 +11,7 @@ import { getRarityColor } from 'src/modules/utils';
 import { PlayerService } from 'src/services/player.service';
 import { QuestService } from 'src/services/quest.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { MainState, SetQuests } from 'src/store/main.store';
+import { MainState, RefreshPlayer, SetQuests } from 'src/store/main.store';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { QuestRouterModel } from '../models/quest-router.model';
 
@@ -133,19 +133,29 @@ export class QuestPickerComponent extends TemplatePage {
       });
   }
 
-  getResponsiveButtonSize() {
-    switch (this.viewportService.screenSize) {
-      case 'xxl':
-      case 'xl':
-      case 'lg':
-        return '0.8em 3em';
-      case 'md':
-        return '0.4em 1.5em';
-      case 'xs':
-      case 'sm':
-      default:
-        return '0.3em 1em';
-    }
+  questRoll() {
+    this.questService
+      .rollData()
+      .pipe(take(1))
+      .subscribe((rollData) => {
+        const config: ModalOptions = {
+          initialState: {
+            title: 'Quest Roll',
+            description: `Roll prices restart every 24 hours. \nNumber of rolls: ${rollData.rollNumber} \nCurrent roll price is at: ${rollData.price} \n\n Do you want to roll?`,
+            accept: async () => {
+              this.questService
+                .roll()
+                .pipe(take(1))
+                .subscribe(() => {
+                  this.getPlayerQuests();
+                });
+
+              modalRef.hide();
+            },
+          },
+        };
+        const modalRef = this.modalService.show(ConfirmModalComponent, config);
+      });
   }
 
   getResponsiveButtonFontSize() {
@@ -160,7 +170,7 @@ export class QuestPickerComponent extends TemplatePage {
       case 'xs':
       case 'sm':
       default:
-        return '3.25rem';
+        return '1.25rem';
     }
   }
 }

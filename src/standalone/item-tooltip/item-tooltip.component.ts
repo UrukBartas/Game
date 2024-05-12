@@ -55,15 +55,4 @@ export class ItemTooltipComponent {
       : '';
   }
 
-  public getItemBoxSize() {
-    if (this.viewportService.screenSize == 'xs') {
-      return 100;
-    } else if (
-      this.viewportService.screenSize == 'sm' ||
-      this.viewportService.screenSize == 'md'
-    ) {
-      return 100;
-    }
-    return 180;
-  }
 }
