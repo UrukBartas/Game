@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { Store } from '@ngxs/store';
 import {
   getAccount,
@@ -19,6 +19,7 @@ import {
   from,
   interval,
   map,
+  of,
   startWith,
   switchMap,
   tap,
@@ -61,6 +62,9 @@ export class ExportImportNftComponent extends TemplatePage {
   walletService = inject(WalletService);
   public compatibleChains = this.getChainList();
   public activeNetworkId = signal(getNetwork().chain.id);
+  public activeCorrectNetwork = computed(() => {
+    return of(this.activeNetworkId()).pipe(filter((entry) => !!entry));
+  });
   player$ = this.store
     .select(MainState.getState)
     .pipe(map((entry) => entry.player));
@@ -87,16 +91,27 @@ export class ExportImportNftComponent extends TemplatePage {
 
   public selectedMultipleItems: Item[] = [];
 
-  public getERC20ExportFee$ = from(
-    this.contractService.executeReadContractOnUrukERC20('getExportFee', null)
-  ).pipe(
-    map((entry) => Number(ethers.formatEther(entry.toString())).toFixed(8))
+  public getERC20ExportFee$ = this.activeCorrectNetwork().pipe(
+    switchMap(() => {
+      return from(
+        this.contractService.executeReadContractOnUrukERC20(
+          'getExportFee',
+          null
+        )
+      ).pipe(
+        map((entry) => Number(ethers.formatEther(entry.toString())).toFixed(8))
+      );
+    })
   );
 
-  public getNFTExportFee$ = from(
-    this.contractService.executeReadContractOnUrukNFT('getMintingFee', null)
-  ).pipe(
-    map((entry) => Number(ethers.formatEther(entry.toString())).toFixed(8))
+  public getNFTExportFee$ = this.activeCorrectNetwork().pipe(
+    switchMap(() => {
+      return from(
+        this.contractService.executeReadContractOnUrukNFT('getMintingFee', null)
+      ).pipe(
+        map((entry) => Number(ethers.formatEther(entry.toString())).toFixed(8))
+      );
+    })
   );
 
   public currentSize$ = this.store.select(MainState.getState).pipe(
@@ -210,7 +225,7 @@ export class ExportImportNftComponent extends TemplatePage {
       const chain = this.compatibleChains.find(
         (chain) => chain.id == this.activeNetworkId()
       );
-      return chain.img;
+      if (chain) return chain.img;
     }
     return null;
   }

@@ -18,7 +18,7 @@ export class ContractService {
 
   public executeReadContractOnUrukNFT(functionName: string, args: Array<any>) {
     return readContract({
-      address: getChainById(getNetwork().chain.id).NFT,
+      address: getChainById(getNetwork().chain.id)?.NFT,
       abi: UrukNFTArtifact.abi,
       functionName,
       args,
@@ -31,7 +31,7 @@ export class ContractService {
     value?: any
   ) {
     return writeContract({
-      address: getChainById(getNetwork().chain.id).NFT,
+      address: getChainById(getNetwork().chain.id)?.NFT,
       abi: UrukNFTArtifact.abi,
       functionName,
       args,
@@ -44,7 +44,7 @@ export class ContractService {
     args: Array<any>
   ) {
     return readContract({
-      address: getChainById(getNetwork().chain.id).ERC20,
+      address: getChainById(getNetwork().chain.id)?.ERC20,
       abi: GoldenUruks.abi,
       functionName,
       args,
@@ -57,7 +57,7 @@ export class ContractService {
     value?: any
   ) {
     return writeContract({
-      address: getChainById(getNetwork().chain.id).ERC20,
+      address: getChainById(getNetwork().chain.id)?.ERC20,
       abi: GoldenUruks.abi,
       functionName,
       args,
