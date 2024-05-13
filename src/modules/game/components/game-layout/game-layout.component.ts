@@ -32,11 +32,11 @@ export class GameLayoutComponent {
       displayText: 'Quests',
       icon: 'fa fa-map',
     },
-    {
-      path: '/adventures',
-      displayText: 'Adventures',
-      icon: 'fa fa-khanda',
-    },
+    // {
+    //   path: '/adventures',
+    //   displayText: 'Adventures',
+    //   icon: 'fa fa-khanda',
+    // },
     {
       path: '/shop',
       displayText: 'Shop',
