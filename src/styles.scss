@@ -201,6 +201,10 @@ ngb-tooltip-window {
   background: $black-400;
 }
 
+.busted-effect div {
+  filter: grayscale(100%) contrast(150%) brightness(50%) sepia(100%);
+}
+
 .h-fit {
   height: fit-content;
 }
@@ -244,8 +248,79 @@ app-blacksmith-context-menu {
   }
 }
 
+.adventure-slider {
+  img {
+    filter: blur(2px);
+  }
+  app-item-box {
+    .stack {
+      font-size: 25px !important;
+    }
+  }
+}
+
 tabset {
   .item-inventory {
     padding-top: 10px;
+  }
+}
+@keyframes glowing-upgrade {
+  0% {
+    box-shadow: 0 0 10vw 10vw rgba(204, 209, 207, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 15vw 15vw rgba(201, 206, 204, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 10vw 10vw rgba(206, 211, 209, 0.4);
+  }
+}
+
+.result-item-showcase {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0000004a;
+  flex-direction: column;
+  z-index: 10;
+  app-item-box {
+    animation: glowing-upgrade 4s infinite;
+    position: relative;
+    display: inline-block;
+    border-radius: 20px;
+    .box {
+      border-radius: 20px !important;
+      img {
+        border-radius: 20px !important;
+      }
+    }
+  }
+}
+
+.result-item-showcase-chest-open {
+  @extend .result-item-showcase;
+  background: black;
+  app-item-box {
+    animation: none;
+  }
+}
+
+.result-quest-complete {
+  @extend .result-item-showcase-chest-open;
+  background: #000000d1;
+}
+
+app-adventures {
+  .scroll {
+    app-item-box {
+      .stack {
+        bottom: -20px !important;
+      }
+    }
   }
 }

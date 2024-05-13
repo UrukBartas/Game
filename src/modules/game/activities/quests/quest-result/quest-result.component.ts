@@ -37,10 +37,21 @@ export class QuestResultComponent extends TemplatePage {
   questStatusEnum = QuestStatusEnum;
   player = this.store.selectSnapshot(MainState.getState).player;
   getRarityColor = getRarityColor;
+  public openedChest = false;
+  public closedChest = false;
 
   constructor() {
     super();
     this.titleService.setTitle('Quest result');
+  }
+
+  public openChest() {
+    this.openedChest = true;
+    setTimeout(() => {
+      party.confetti(this.loot.nativeElement, {
+        count: party.variation.range(20, 40),
+      });
+    });
   }
 
   @Output() questStatusChange = new EventEmitter<QuestRouterModel>();
@@ -50,7 +61,10 @@ export class QuestResultComponent extends TemplatePage {
       this.victory = !!fightResult.player;
       this.updateQuests();
       if (this.victory) {
-        if (fightResult.item && !fightResult.lostItem) {
+        if (
+          fightResult.loot &&
+          (!fightResult.lostLoot || fightResult.lostLoot.length == 0)
+        ) {
           setTimeout(() => {
             party.confetti(this.loot.nativeElement, {
               count: party.variation.range(20, 40),

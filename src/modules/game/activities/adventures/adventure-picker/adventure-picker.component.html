@@ -1,0 +1,130 @@
+<div class="pl-1 container-fluid h-100">
+  <div class="carousel-container">
+    <div class="carousel">
+      <div
+        class="slide"
+        [style.background]="'transparent'"
+        [class.active]="true"
+      >
+        <div class="slide-text">
+          <div class="row">
+            <span urTitle class="mb-0 text-third">{{
+              selectedAdventure.name
+            }}</span>
+          </div>
+          <div class="row d-flex justify-content-center">
+            <span urText class="badge mb-1 col-12 col-md-4">
+              <i class="fa-solid fa-certificate"></i>
+              Level {{ selectedAdventure.minLevel }}
+            </span>
+
+            <span urText class="badge mb-1 col-12 col-md-4">
+              <i class="fa-solid fa-clock"></i>
+              {{ selectedAdventure.questsData.length }} phases
+            </span>
+          </div>
+
+          <div class="row description-adventure">
+            <ng-container
+              *ngFor="
+                let paragraph of separateByParagraph(
+                  selectedAdventure.description
+                );
+                let i = index
+              "
+            >
+              <p
+                *ngIf="i < 2 || !!selectedAdventure.readMore"
+                data-aos="fade-right"
+                [attr.data-aos-duration]="500 * i"
+              >
+                {{ paragraph }}
+                <ng-container *ngIf="i == 1 && !selectedAdventure.readMore">
+                  ...
+                  <span
+                    urText
+                    (click)="selectedAdventure.readMore = true"
+                    class="text-third"
+                    >Discover more</span
+                  >
+                </ng-container>
+              </p>
+            </ng-container>
+          </div>
+
+          <div
+            class="possible-rewards d-flex justify-content-center align-items-center"
+          >
+            <ng-template #tooltipChest>
+              <div class="item-tooltip-wrapper">
+                <div class="d-flex flex-column align-items-start gap-1">
+                  <div class="description w-100">
+                    <p
+                      class="h6 m-0 text-center w-100"
+                      [ngStyle]="{ color: getRarityColor(RarityEnum.MYTHIC) }"
+                    >
+                      Adventure chest
+                    </p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <p>
+                      When completed the adventure successfully, this chest will
+                      open and will contain the following rewards:
+                    </p>
+
+                    <span class="value">
+                      {{ selectedAdventure.itemData.length + ' items' }}
+                    </span>
+                    +
+                    <span class="value">
+                      {{
+                        selectedAdventure.consumablesData.length +
+                          ' consumables'
+                      }}
+                    </span>
+                    +
+                    <span class="value">
+                      {{ selectedAdventure.materialsData.length + ' items' }}
+                    </span>
+                    +
+                    <span class="value"> ??????? </span>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+
+            <img
+              [ngbTooltip]="tooltipChest"
+              src="../../../../../assets/misc/closed_chest.png"
+              [ngStyle]="{
+                height: viewportService.getResponsiveSizeChestImg()[1] + 'px',
+                width: viewportService.getResponsiveSizeChestImg()[0] + 'px'
+              }"
+            />
+            <span urSubtitle class="text-third">X1 Adventure Chest!</span>
+            <button
+              urTitle
+              [disabled]="(player$ | async).level < selectedAdventure.minLevel"
+              (click)="startAdventure()"
+              class="{{
+                (player$ | async).level < selectedAdventure.minLevel
+                  ? 'button-rainbow-disabled'
+                  : 'button-rainbow'
+              }}"
+              [style.padding]="getResponsiveButtonSize()"
+              [style.fontSize]="getResponsiveButtonFontSize()"
+            >
+              {{
+                (player$ | async).level < selectedAdventure.minLevel
+                  ? 'YOU ARE NOT READY'
+                  : 'START ADVENTURE'
+              }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

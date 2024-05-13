@@ -4,6 +4,9 @@
     <h3 urTitle>
       {{ quest.data.name }}
     </h3>
+    <div class="description mb-3 px-4">
+      {{ quest.data.description }}
+    </div>
     <div
       class="progress position-relative"
       [style.height]="getProgressBarHeight() + 'px'"
@@ -20,12 +23,17 @@
   </div>
   <div *ngIf="questReady">
     <button
-      (click)="questStatusChange.emit({ status: questStatusEnum.FIGHT })"
+      (click)="
+        questStatusChange.emit({
+          data: quest,
+          status: questStatusEnum.FIGHT
+        })
+      "
       urTitle
       class="button-rainbow"
       [style.padding]="getResponsiveButtonSize()"
     >
-      FIGHT
+      {{ quest.data.type == 'Passive' ? 'RESOLVE' : 'FIGHT' }}
     </button>
   </div>
 </div>

@@ -50,8 +50,6 @@ export class ExportImportNftComponent extends TemplatePage {
   public exportingObjectTypeActive: 'nft' | 'coins' = 'nft';
 
   public selectedUruksToExport = 0;
-  private inventoryService = inject(InventoryService);
-  public itemInventoryBoxes = this.inventoryService.getInventoryStructure();
   private playerService = inject(PlayerService);
   viewportService = inject(ViewportService);
   contractService = inject(ContractService);
@@ -88,6 +86,11 @@ export class ExportImportNftComponent extends TemplatePage {
   );
 
   public selectedMultipleItems: Item[] = [];
+
+  public currentSize$ = this.store.select(MainState.getState).pipe(
+    filter((player) => !!player),
+    map((entry) => entry.player.sockets)
+  );
 
   public get selectedItem() {
     return this.selectedMultipleItems ? this.selectedMultipleItems[0] : null;

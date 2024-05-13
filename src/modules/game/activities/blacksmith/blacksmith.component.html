@@ -32,7 +32,7 @@
           [multipleSelection]="!!multipleSelection.value"
           [contextMenuTemplate]="'anvil'"
           [items]="currentInventory"
-          [boxes]="itemInventoryBoxes"
+          [sockets]="currentSize$ | async"
           [disableDND]="false"
           [boxSize]="40"
           (onDragStart)="hovered = true"
@@ -47,7 +47,7 @@
       <tab heading="Materials">
         <app-materials-inventory
           [items]="currentMaterials"
-          [boxes]="materialsInventoryBoxes"
+          [sockets]="currentSize$ | async"
         >
         </app-materials-inventory>
       </tab>
@@ -63,6 +63,7 @@
           (dndDrop)="onAnvilDrop($event)"
           [active]="hovered"
           [ngbTooltip]="itemTooltip"
+          [tooltipContext]="{ item: null }"
           [height]="getItemBoxSize()"
           [width]="getItemBoxSize()"
         ></app-item-box>
@@ -94,6 +95,7 @@
     <div class="flex">
       <button
         (click)="openModal(false)"
+        [disabled]="selectedMultipleItems.length == 0"
         [class]="'btn btn-primary ' + getButtonSize()"
       >
         <i class="fa fa-recycle pl-1 pb-1"></i>
@@ -101,7 +103,7 @@
       </button>
       <button
         (click)="openModal(true)"
-        [disabled]="!!multipleSelection.value"
+        [disabled]="!!multipleSelection.value || selectedMultipleItems.length == 0"
         [class]="'btn btn-secondary mx-1 ' + getButtonSize()"
       >
         <i class="fa fa-gears pl-1 pb-1"></i>
@@ -111,7 +113,7 @@
   </div>
 
   <ng-container *ngIf="resultItem">
-    <div class="result-item" (click)="closeResult()">
+    <div class="result-item-showcase" (click)="closeResult()">
       <div class="animate__animated animate__jackInTheBox delay_4">
         <app-item-box
           #result
@@ -126,7 +128,7 @@
     </div>
   </ng-container>
   <ng-container *ngIf="resultItem === false">
-    <div class="result-item" (click)="closeResult()">
+    <div class="result-item-showcase" (click)="closeResult()">
       <span urTitle class="text-white">Upgrade failed 💀</span>
       <div class="animate__animated animate__hinge delay_4">
         <app-item-box
@@ -146,5 +148,7 @@
 </div>
 
 <ng-template #itemTooltip let-item="item">
-  <app-item-tooltip *ngIf="item" [item]="item"></app-item-tooltip>
+  <ng-container *ngIf="!!item">
+    <app-item-tooltip [item]="item"></app-item-tooltip>
+  </ng-container>
 </ng-template>

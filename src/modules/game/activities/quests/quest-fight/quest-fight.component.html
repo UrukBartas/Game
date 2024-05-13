@@ -225,7 +225,13 @@
     <img class="finish-quest-bg" src="assets/fight-screens/victory.png" />
   </div>
   <div *ngIf="defeat" class="finish-quest-screen">
-    <div class="h1 defeat-title text-white">QUEST FAILED ☠️</div>
+    <div class="h1 defeat-title text-white">
+      {{
+        quest.data.isAdventurePhase
+          ? 'ADVENTURE PHASE FAILED ☠️'
+          : 'QUEST FAILED ☠️'
+      }}
+    </div>
   </div>
 </div>
 

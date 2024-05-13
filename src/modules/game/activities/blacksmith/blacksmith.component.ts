@@ -16,10 +16,10 @@ import { ViewportService } from 'src/services/viewport.service';
 import { BlacksmithModalComponent } from './modal/blacksmith-modal.component';
 import * as party from 'party-js';
 import { Store } from '@ngxs/store';
-import { RefreshPlayer } from 'src/store/main.store';
+import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { FormControl } from '@angular/forms';
-import { firstValueFrom, Subject } from 'rxjs';
+import { filter, firstValueFrom, map, Subject } from 'rxjs';
 import { Material } from 'src/modules/core/models/material.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -34,24 +34,26 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
   @ViewChild('result', { read: ElementRef }) result: ElementRef;
 
   private playerService = inject(PlayerService);
-  private inventoryService = inject(InventoryService);
   private viewportService = inject(ViewportService);
   private modalService = inject(BsModalService);
   private store = inject(Store);
-  public materialsInventoryBoxes =
-    this.inventoryService.getInventoryStructure();
+
   dialog: string;
   showDialog = false;
   resultItem;
   hovered = false;
 
-  public itemInventoryBoxes = this.inventoryService.getInventoryStructure();
   public inventoryUpdated$ = new Subject();
   public materialUpdated$ = new Subject();
   public currentInventory: Array<Item> = [];
   public currentMaterials: Array<Material> = [];
   public multipleSelection = new FormControl(false);
   public selectedMultipleItems: Array<Item> = [];
+
+  public currentSize$ = this.store.select(MainState.getState).pipe(
+    filter((player) => !!player),
+    map((entry) => entry.player.sockets)
+  );
 
   constructor() {
     super();

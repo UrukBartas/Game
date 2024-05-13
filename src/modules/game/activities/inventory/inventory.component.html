@@ -45,13 +45,13 @@
               <ng-container *ngIf="!!currentInventory">
                 <app-item-inventory
                   [items]="currentInventory"
+                  [sockets]="currentSize$ | async"
                   [equippedItemOfType]="
                     !!hoveredItem
                       ? (this.getItem$(hoveredItem.itemData.itemType) | async)
                       : null
                   "
                   [showContextualMenu]="true"
-                  [boxes]="itemInventoryBoxes"
                   [disableDND]="false"
                   (onDragStart)="onDragStart($event.event, $event.data)"
                   (onDragEnd)="onDragEnd($event)"
@@ -77,7 +77,7 @@
               >
                 <app-consumables-inventory
                   [items]="inventoryConsumables"
-                  [boxes]="consumablesInventoryBoxes"
+                  [sockets]="currentSize$ | async"
                 >
                   <ng-container
                     extraItemBoxes
@@ -90,7 +90,7 @@
             <tab heading="Materials">
               <app-materials-inventory
                 [items]="currentMaterials"
-                [boxes]="materialsInventoryBoxes"
+                [sockets]="currentSize$ | async"
               >
                 <ng-container
                   extraItemBoxes

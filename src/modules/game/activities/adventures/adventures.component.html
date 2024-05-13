@@ -1,0 +1,108 @@
+<div
+  class="adventures-wrapper"
+  [ngStyle]="{ 'background-image': 'url(' + activeWallpaper + ')' }"
+>
+  <div class="adventure-slider" *ngIf="!goFullScreen()">
+    <div
+      class="scroll mt-3"
+      *ngIf="availableAdventures$ | async as availableAdventures"
+    >
+      @for (
+        adventure of availableAdventures;
+        track adventure.id;
+        let index = $index
+      ) {
+        <div
+          class="adventure"
+          [ngClass]="{
+            'busted-effect': (player$ | async).level < adventure.minLevel
+          }"
+        >
+          @if ((player$ | async).level < adventure.minLevel) {
+            <span
+              class="blocked-adventure text-danger pointer"
+              (click)="selectAdventure(adventure)"
+            >
+              <span
+                (click)="selectAdventure(adventure)"
+                class="d-none d-md-block"
+                >BLOCKED</span
+              >
+              <span (click)="selectAdventure(adventure)"
+                >Level {{ adventure.minLevel }}</span
+              >
+            </span>
+          } @else {
+            <span
+              class="overlay-adventure text-warning pointer"
+              (click)="selectAdventure(adventure)"
+            >
+              <span class="d-none d-md-block">{{ adventure.name }}</span>
+            </span>
+          }
+
+          <app-item-box
+            [ngClass]="{
+              'glowing-legendary': (player$ | async).level >= adventure.minLevel
+            }"
+            [height]="getResponsiveSizeAdventureImgs()[1]"
+            [width]="getResponsiveSizeAdventureImgs()[0]"
+            [image]="adventure.image"
+            (click)="selectAdventure(adventure)"
+            [active]="
+              selectedAdventure ? selectedAdventure.id == adventure.id : false
+            "
+            [stack]="getAdventureStackLabel(adventure)"
+          >
+            <div
+              tooltip
+              class="tooltip-uruk"
+              *ngIf="(player$ | async).level < adventure.minLevel"
+            >
+              <span class="text-danger"
+                >You are not ready for this adventure yet. Level too low.</span
+              >
+            </div>
+          </app-item-box>
+        </div>
+        <div
+          class="d-flex justify-content-center align-items-center"
+          *ngIf="index < availableAdventures.length - 1"
+        >
+          <i
+            [ngStyle]="{ 'font-size': getResponsiveButtonFontSize() }"
+            style="
+              animation-duration: 1.5s;
+              animation-timing-function: ease-in-out;
+            "
+            class="d-flex fa-solid fa-xl align-items-center text-white fa-angles-down animate__animated animate__pulse animate__infinite"
+          ></i>
+        </div>
+      } @empty {
+        <div
+          class="w-100 h-100 d-flex justify-content-center align-items-center d-none d-sm-flex"
+        >
+          <span urText class="text-white text-center"
+            >No adventures available yet</span
+          >
+        </div>
+      }
+    </div>
+  </div>
+  <div class="content">
+    @if (!!selectedAdventure) {
+      <app-adventure-router
+        (onAdventureStarted)="refreshAdventures()"
+        (updateAdventures)="refreshAdventures()"
+        (goNextAdventure)="goNext()"
+        (questStatusChanged)="questStatusRouter = $event"
+        [selectedAdventure]="selectedAdventure"
+        (questPickChanged)="activeWallpaper = $event.data.image"
+      ></app-adventure-router>
+    } @else {
+      <span urSubtitle class="text-white"
+        >Select an adventure to start! 🗺️⚔️🏴‍☠️</span
+      >
+    }
+  </div>
+</div>

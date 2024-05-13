@@ -73,3 +73,14 @@ export function truncateEthereumAddress(
 }
 
 export const round2Decimals = (value: number) => Math.round(value * 100) / 100;
+
+export const fillInventoryBasedOnPlayerSockets = (
+  inventory: Array<any>,
+  sockets: number
+) => {
+  let finalArray = Array(sockets);
+  for (let i = 0; i < finalArray.length; i++) {
+    finalArray[i] = inventory.length > i ? inventory[i] : null;
+  }
+  return finalArray;
+};

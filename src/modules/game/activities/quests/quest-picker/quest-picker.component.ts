@@ -1,19 +1,20 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { firstValueFrom, map, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { Rarity } from 'src/modules/core/models/items.model';
 import { QuestModel } from 'src/modules/core/models/quest.model';
-import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { getRarityColor } from 'src/modules/utils';
-import { PlayerService } from 'src/services/player.service';
 import { QuestService } from 'src/services/quest.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer, SetQuests } from 'src/store/main.store';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { QuestRouterModel } from '../models/quest-router.model';
+import { Rarity } from 'src/modules/core/models/items.model';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
+import { PlayerService } from 'src/services/player.service';
+import { Title } from '@angular/platform-browser';
+import { AdventureData } from 'src/services/adventures-data.service';
 
 @Component({
   selector: 'app-quest-picker',
@@ -21,6 +22,14 @@ import { QuestRouterModel } from '../models/quest-router.model';
   styleUrl: './quest-picker.component.scss',
 })
 export class QuestPickerComponent extends TemplatePage {
+  @Input() public set adventure(data: AdventureData) {
+    this._adventure = data;
+    this.getPlayerQuests();
+  }
+  public get adventure() {
+    return this._adventure;
+  }
+  private _adventure: AdventureData;
   @Output() questStatusChange = new EventEmitter<QuestRouterModel>();
 
   quests: QuestModel[];
@@ -28,6 +37,7 @@ export class QuestPickerComponent extends TemplatePage {
   activeSlideIndex = 0;
   modalService = inject(BsModalService);
   titleService = inject(Title);
+  @Output() questChanged = new EventEmitter<QuestModel>();
   loading = false;
 
   public slots$ = this.store
@@ -58,8 +68,23 @@ export class QuestPickerComponent extends TemplatePage {
     private playerService: PlayerService
   ) {
     super();
-    this.getPlayerQuests();
     this.titleService.setTitle('Pick an adventure');
+  }
+
+  public isCurrentQuestTheNextPhase() {
+    if (!this.adventure || !this.quests) return false;
+    let adventureSelected = null;
+    if (this.adventure?.Adventure?.length > 0) {
+      adventureSelected = this.adventure.Adventure[0];
+    }
+    return (
+      adventureSelected.currentPhase + 1 ==
+      this.quests[this.activeSlideIndex].data.phase
+    );
+  }
+
+  ngOnInit(): void {
+    this.getPlayerQuests();
   }
 
   getPlayerQuests() {
@@ -68,9 +93,20 @@ export class QuestPickerComponent extends TemplatePage {
       .getActive()
       .pipe(take(1))
       .subscribe((quests) => {
-        this.quests = quests;
+        this.quests = quests.filter((quest) => {
+          if (!!this.adventure) {
+            return (
+              !!quest.data?.isAdventurePhase &&
+              !!quest.adventures &&
+              quest.adventures.length > 0 &&
+              quest.adventures[0].adventureDataId == this.adventure.id
+            );
+          } else {
+            return !quest.data.isAdventurePhase;
+          }
+        });
         this.store.dispatch(new SetQuests(quests));
-        if (quests.find((quest) => quest.startedAt !== null)) {
+        if (this.quests.find((quest) => quest.startedAt !== null)) {
           this.questStatusChange.emit({ status: QuestStatusEnum.IN_PROGRESS });
         }
         this.loading = false;
@@ -82,14 +118,20 @@ export class QuestPickerComponent extends TemplatePage {
       this.activeSlideIndex--;
       const carousel: HTMLElement = document.querySelector('.carousel');
       carousel.style.transform = `translateX(-${this.activeSlideIndex * 100}%)`;
+      this.questChanged.emit(this.quests[this.activeSlideIndex]);
     }
   }
 
   nextSlide() {
+    // if (!!this.adventure &&  this.activeSlideIndex + 1 > this.adventure.currentPhase) {
+    //   return;
+    // }
+
     if (this.activeSlideIndex < this.quests.length - 1) {
       this.activeSlideIndex++;
       const carousel: HTMLElement = document.querySelector('.carousel');
       carousel.style.transform = `translateX(-${this.activeSlideIndex * 100}%)`;
+      this.questChanged.emit(this.quests[this.activeSlideIndex]);
     }
   }
 

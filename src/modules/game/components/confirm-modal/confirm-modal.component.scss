@@ -4,11 +4,6 @@
   padding: 20px 40px;
   background: $black-300;
   border-radius: 3%;
-
-  p {
-    white-space: pre;
-  }
-  .description {
-    text-wrap: balance;
-  }
+  width: 80vw;
+  text-wrap: wrap;
 }

@@ -1,4 +1,4 @@
-import { Rarity } from "./items.model";
+import { Rarity } from './items.model';
 
 export interface QuestDataModel {
   id: number;
@@ -9,4 +9,8 @@ export interface QuestDataModel {
   enemyImage: string;
   level: number;
   rarity: Rarity;
+  phase: number;
+  isAdventurePhase?: boolean;
+  lost?:boolean;
+  type: 'Default' | 'Passive';
 }

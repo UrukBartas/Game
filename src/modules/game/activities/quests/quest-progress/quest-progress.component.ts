@@ -1,6 +1,7 @@
 import {
   Component,
   EventEmitter,
+  Input,
   NgZone,
   OnDestroy,
   Output,
@@ -14,6 +15,8 @@ import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { QuestRouterModel } from '../models/quest-router.model';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { Adventure } from 'src/services/adventures.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-quest-progress',
@@ -37,13 +40,18 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
     private title: Title
   ) {
     super();
-    this.quest = this.store
-      .selectSnapshot(MainState.getState)
-      .quests.find((quest) => quest.startedAt !== null);
+  }
 
-    if (this.quest) {
-      this.setQuestTimer();
-    }
+  ngOnInit(): void {
+    this.store
+      .select(MainState.getState)
+      .pipe(filter((entry) => !!entry.quests))
+      .subscribe((state) => {
+        this.quest = state.quests.find((quest) => quest.startedAt !== null);
+        if (this.quest) {
+          this.setQuestTimer();
+        }
+      });
   }
 
   changeTitleRecursiveQuestIsReady(): void {
@@ -60,6 +68,10 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
   setQuestTimer() {
     this.ngZone.runOutsideAngular(() => {
       this.interval = setInterval(() => {
+        if (!this.quest) {
+          clearInterval(this.interval);
+          return;
+        }
         const startedAt = new Date(this.quest.startedAt);
         const finishedAt = new Date(this.quest.finishedAt);
         //finishedAt.setMinutes(finishedAt.getMinutes() - 320);

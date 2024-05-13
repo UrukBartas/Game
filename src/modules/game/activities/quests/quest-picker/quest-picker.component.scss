@@ -33,6 +33,13 @@
   }
 }
 
+.button-rainbow-disabled {
+  @extend .button-container;
+  &::before {
+    animation: ease;
+  }
+}
+
 .carousel {
   display: flex;
   transition: transform 0.5s ease-in-out;
@@ -46,9 +53,9 @@
     flex: 0 0 100%;
     padding: 20px;
     box-sizing: border-box;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
     cursor: pointer;
     border-radius: 5px;
     padding: 3%;

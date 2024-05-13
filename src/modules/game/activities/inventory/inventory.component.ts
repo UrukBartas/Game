@@ -19,7 +19,6 @@ import {
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
-import { InventoryService } from 'src/services/inventory.service';
 import { ItemService } from 'src/services/item.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
@@ -36,7 +35,6 @@ import { Material } from 'src/modules/core/models/material.model';
   encapsulation: ViewEncapsulation.None,
 })
 export class InventoryComponent extends TemplatePage {
-  private inventoryService = inject(InventoryService);
   private store = inject(Store);
   modalService = inject(BsModalService);
   private playerService = inject(PlayerService);
@@ -46,12 +44,6 @@ export class InventoryComponent extends TemplatePage {
   public router = inject(Router);
   public activeSlideIndex = 0;
   public maxLevel = 10;
-  public itemInventoryBoxes = this.inventoryService.getInventoryStructure();
-  public consumablesInventoryBoxes =
-    this.inventoryService.getInventoryStructure();
-  public materialsInventoryBoxes =
-    this.inventoryService.getInventoryStructure();
-
   public currentSize$ = this.store.select(MainState.getState).pipe(
     filter((player) => !!player),
     map((entry) => entry.player.sockets)
@@ -83,12 +75,7 @@ export class InventoryComponent extends TemplatePage {
           .select(MainState.getState)
           .pipe(map((entry) => entry.player));
       }
-    }),
-    tap(
-      () =>
-        (this.itemInventoryBoxes =
-          this.inventoryService.getInventoryStructure())
-    )
+    })
   );
   public actualPlayer$ = new BehaviorSubject<PlayerModel>(null);
 

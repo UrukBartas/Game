@@ -30,4 +30,16 @@ export class ViewportService {
     if (width <= 1400) return 'xl';
     return 'xxl';
   }
+
+  getResponsiveSizeChestImg() {
+    switch (this.screenSize) {
+      case 'xxl':
+      case 'xl':
+      case 'lg':
+      case 'md':
+        return [200, 180];
+      default:
+        return [100, 90];
+    }
+  }
 }

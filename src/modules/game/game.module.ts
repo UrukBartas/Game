@@ -35,12 +35,17 @@ import { QuestResultComponent } from './activities/quests/quest-result/quest-res
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
 import { DailyRollButtonComponent } from './activities/shop/components/daily-roll-button.component';
 import { ShopComponent } from './activities/shop/shop.component';
-import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
-import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
 import { MaterialsInventoryComponent } from './components/materials-inventory/materials-inventory.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
+import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
+import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
+import { AdventuresComponent } from './activities/adventures/adventures.component';
+import { AdventurePickerComponent } from './activities/adventures/adventure-picker/adventure-picker.component';
+import { AdventuresRouterComponent } from './activities/adventures/adventures-router.component';
+import { ItemdataToItemPipe } from '../core/pipes/itemdata-to-item.pipe';
+import { OrderByPipe } from '../core/pipes/order-by.pipe';
 import { BlacksmithContextMenuComponent } from 'src/standalone/context-menu/blacksmith-context-menu/blacksmith-context-menu.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { InventoryTopbarComponent } from './components/inventory-topbar/inventory-topbar.component';
@@ -79,6 +84,9 @@ const components = [
     RegisterReferralComponent,
     ItemInventoryComponent,
     ConsumablesInventoryComponent,
+    AdventuresComponent,
+    AdventurePickerComponent,
+    AdventuresRouterComponent,
     MaterialsInventoryComponent,
     InventoryTopbarComponent,
   ],
@@ -100,6 +108,8 @@ const components = [
     StackPipe,
     CompressNumberPipe,
     DndModule,
+    ItemdataToItemPipe,
+    OrderByPipe,
     ContextMenuComponent,
     ContextMenuInventoryOptionsComponent,
     BlacksmithContextMenuComponent,

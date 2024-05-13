@@ -1,3 +1,4 @@
+import { Consumable } from './consumable.model';
 import { Item } from './items.model';
 import { Material } from './material.model';
 import { FighterStats } from './player-stats.model';
@@ -33,11 +34,16 @@ export interface FighterStatusModel {
 export interface FightResultModel {
   newQuest: QuestModel;
   exp?: number;
-  item?: Item;
-  lostItem?: boolean;
+  loot?: Array<Item>;
+  lostLoot?: Array<Item>;
+  consumableLoot?: Array<Consumable>;
+  consumableLostLoot?: Array<Consumable>;
+  materialLoot?: Array<Material>;
+  materialLostLoot?: Array<Material>;
   material?: Material;
   player?: PlayerModel;
   uruks?: number;
+  completedAdventure?: boolean;
 }
 
 export interface FighterTurnModel {

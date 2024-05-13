@@ -6,10 +6,12 @@ import {
   Input,
   Output,
   signal,
+  SimpleChanges,
 } from '@angular/core';
 import { includes } from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Item } from 'src/modules/core/models/items.model';
+import { fillInventoryBasedOnPlayerSockets } from 'src/modules/utils';
 import { ContextMenuService } from 'src/services/context-menu.service';
 import { InventoryStructure } from 'src/services/inventory.service';
 import { ItemService } from 'src/services/item.service';
@@ -22,7 +24,7 @@ import { ViewportService } from 'src/services/viewport.service';
 })
 export class ItemInventoryComponent {
   @Input() items: Item[] = [];
-  @Input() boxes: Array<InventoryStructure> = [];
+  @Input() sockets = 0;
   @Input() boxSize: number = 40;
   @Input() disableDND = true;
   @Input() equippedItemOfType: Item;
@@ -42,9 +44,15 @@ export class ItemInventoryComponent {
   @Output() onDestroyItem = new EventEmitter<Item>();
 
   public get filteredItems() {
-    return this.items.filter(
-      (item) =>
-        item?.itemData?.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+    return fillInventoryBasedOnPlayerSockets(
+      this.items
+        .filter((item) =>
+          item?.itemData?.name
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase())
+        )
+        .sort(),
+      this.sockets
     );
   }
 
