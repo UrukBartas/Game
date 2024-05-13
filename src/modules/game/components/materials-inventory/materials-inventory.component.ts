@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Consumable } from 'src/modules/core/models/consumable.model';
 import { Material } from 'src/modules/core/models/material.model';
-import { InventoryStructure } from 'src/services/inventory.service';
+import { fillInventoryBasedOnPlayerSockets } from 'src/modules/utils';
 export interface ConsumableWithStack extends Consumable {
   stack?: number;
 }
@@ -12,13 +12,18 @@ export interface ConsumableWithStack extends Consumable {
 })
 export class MaterialsInventoryComponent {
   @Input() items: Material[] = [];
-  @Input() boxes: Array<InventoryStructure> = [];
+  @Input() sockets = 0;
 
   public get filteredItems() {
-    return this.items.filter((item) =>
-      item?.materialData?.name
-        .toLowerCase()
-        .includes(this.searchTerm.toLowerCase())
+    return fillInventoryBasedOnPlayerSockets(
+      this.items
+        .filter((item) =>
+          item?.materialData?.name
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase())
+        )
+        .sort(),
+      this.sockets
     );
   }
 

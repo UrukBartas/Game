@@ -1,6 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { Consumable } from 'src/modules/core/models/consumable.model';
-import { InventoryStructure } from 'src/services/inventory.service';
+import { fillInventoryBasedOnPlayerSockets } from 'src/modules/utils';
 export interface ConsumableWithStack extends Consumable {
   stack?: number;
 }
@@ -11,14 +17,20 @@ export interface ConsumableWithStack extends Consumable {
 })
 export class ConsumablesInventoryComponent {
   @Input() items: ConsumableWithStack[] = [];
+  @Input() sockets = 0;
   @Input() selectedItem: ConsumableWithStack;
   @Output() selectNewItem = new EventEmitter<Consumable>();
 
   public get filteredItems() {
-    return this.items.filter((item) =>
-      item?.consumableData?.name
-        .toLowerCase()
-        .includes(this.searchTerm.toLowerCase())
+    return fillInventoryBasedOnPlayerSockets(
+      this.items
+        .filter((item) =>
+          item?.consumableData?.name
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase())
+        )
+        .sort(),
+      this.sockets
     );
   }
 

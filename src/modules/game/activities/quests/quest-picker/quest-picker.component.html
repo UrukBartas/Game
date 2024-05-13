@@ -43,26 +43,29 @@
         </div>
       </div>
     </div>
-    <button
-      urTitle
-      (click)="startQuest()"
-      [disabled]="!!adventure ? !isCurrentQuestTheNextPhase() : false"
-      class="{{
-        !!adventure && !isCurrentQuestTheNextPhase()
-          ? 'button-rainbow-disabled'
-          : 'button-rainbow'
-      }}"
-      [style.fontSize]="getResponsiveButtonFontSize()"
-    >
-      {{
-        !!adventure
-          ? isCurrentQuestTheNextPhase()
-            ? 'START PHASE'
-            : 'YOU ARE NOT READY YET'
-          : 'START QUEST'
-      }}
-      <i (click)="questRoll()" *ngIf="!adventure" class="fa fa-rotate"></i>
-    </button>
+    <div class="button-container">
+      <button
+        urTitle
+        [disabled]="!!adventure ? !isCurrentQuestTheNextPhase() : false"
+        class="{{
+          !!adventure && !isCurrentQuestTheNextPhase()
+            ? 'button-rainbow-disabled'
+            : 'button-rainbow'
+        }}"
+        [style.fontSize]="getResponsiveButtonFontSize()"
+      >
+        <span (click)="startQuest()">
+          {{
+            !!adventure
+              ? isCurrentQuestTheNextPhase()
+                ? 'START PHASE'
+                : 'YOU ARE NOT READY YET'
+              : 'START QUEST'
+          }}
+        </span>
+        <i (click)="questRoll()" *ngIf="!adventure" class="fa fa-rotate"></i>
+      </button>
+    </div>
     <a (click)="previousSlide()" class="carousel-control-prev" role="button">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="sr-only">Previous</span>

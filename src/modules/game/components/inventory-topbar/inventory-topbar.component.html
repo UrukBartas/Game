@@ -3,8 +3,8 @@
     <div
       class="d-flex justify-content-end"
       [ngClass]="{
-        'justify-content-end': inventory.length <= itemInventoryBoxes.length,
-        'justify-content-between': inventory.length > itemInventoryBoxes.length
+        'justify-content-end': inventory.length <= (currentSize$ | async),
+        'justify-content-between': inventory.length > (currentSize$ | async)
       }"
     >
       <div *ngIf="!disableSort" class="d-flex">
@@ -28,9 +28,9 @@
       [formControl]="searchControl"
     />
 
-    <span>{{ inventory.length }}/{{ itemInventoryBoxes.length }}</span>
+    <span>{{ inventory.length }}/{{ currentSize$ | async }}</span>
   </div>
-  @if (inventory.length > itemInventoryBoxes.length) {
+  @if (inventory.length > (currentSize$ | async)) {
     <div class="text-warning">
       <i
         class="bi bi-exclamation-triangle-fill text-secondary px-1 pointer"

@@ -77,9 +77,9 @@ export class BlacksmithModalComponent implements OnInit {
   }
 
   private async getCurrentUserMaterials() {
-    this.currentMaterials = await firstValueFrom(
-      this.playerService.getItemsMaterial()
-    );
+    this.currentMaterials = (
+      await firstValueFrom(this.playerService.getItemsMaterial())
+    ).filter((entry) => !!entry);
   }
 
   public userHasThisMaterial(material: {

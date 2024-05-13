@@ -34,7 +34,7 @@
 }
 
 .button-rainbow-disabled {
-  @extend .button-rainbow;
+  @extend .button-container;
   &::before {
     animation: ease;
   }

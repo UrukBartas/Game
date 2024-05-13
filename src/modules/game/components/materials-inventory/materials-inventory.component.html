@@ -3,26 +3,21 @@
   [(searchTerm)]="searchTerm"
 ></app-inventory-topbar>
 <div class="materials-inventory" *ngIf="!!items">
-  @for (box of boxes; track box.id; let indexConsumable = $index) {
-    <app-item-box
-      [height]="40"
-      [width]="40"
-      [stack]="filteredItems[indexConsumable]?.quantity | compressNumber"
-      [rarity]="filteredItems[indexConsumable]?.materialData?.rarity"
-      [image]="
-        filteredItems[indexConsumable]
-          ? filteredItems[indexConsumable]?.materialData.imageLocal
-          : null
-      "
-    >
-      @if (!!filteredItems[indexConsumable]) {
-        <div tooltip class="tooltip-uruk">
-          <app-generic-item-tooltip
-            [item]="filteredItems[indexConsumable]?.materialData"
-          ></app-generic-item-tooltip>
-        </div>
-      }
-    </app-item-box>
-  }
+  <app-item-box
+    *ngFor="let item of filteredItems"
+    [height]="40"
+    [width]="40"
+    [stack]="item?.quantity | compressNumber"
+    [rarity]="item?.materialData?.rarity"
+    [image]="item ? item?.materialData.imageLocal : null"
+  >
+    @if (!!item) {
+      <div tooltip class="tooltip-uruk">
+        <app-generic-item-tooltip
+          [item]="item?.materialData"
+        ></app-generic-item-tooltip>
+      </div>
+    }
+  </app-item-box>
   <ng-content select="[extraItemBoxes]"></ng-content>
 </div>

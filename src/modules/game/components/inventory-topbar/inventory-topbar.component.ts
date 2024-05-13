@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
-import { debounceTime } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { debounceTime, filter, map } from 'rxjs';
 import { Item, Rarity } from 'src/modules/core/models/items.model';
 import { InventoryService } from 'src/services/inventory.service';
+import { MainState } from 'src/store/main.store';
 
 @Component({
   selector: 'app-inventory-topbar',
@@ -11,19 +13,21 @@ import { InventoryService } from 'src/services/inventory.service';
   styleUrl: './inventory-topbar.component.scss',
 })
 export class InventoryTopbarComponent {
-  private inventoryService = inject(InventoryService);
   @Input() disableSort = false;
   @Input() public set inventory(data: Array<any>) {
     this._inventory = this.sortInventory(data);
   }
 
   public get inventory() {
-    return this._inventory.filter((entry)=> !!entry);
+    return this._inventory.filter((entry) => !!entry);
   }
-
+  store = inject(Store);
+  public currentSize$ = this.store.select(MainState.getState).pipe(
+    filter((player) => !!player),
+    map((entry) => entry.player.sockets)
+  );
   private _inventory: Array<any> = [];
   @Output() inventoryChange = new EventEmitter<any[]>();
-  public itemInventoryBoxes = this.inventoryService.getInventoryStructure();
   public sortOrderUp = false;
   public sortType: 'rarity' | 'level' = 'rarity';
 

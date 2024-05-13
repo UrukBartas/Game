@@ -245,6 +245,7 @@
   <ng-template #inventory let-items$="itemsToLoad$">
     <app-item-inventory
       [items]="items$ | async"
+      [sockets]="currentSize$ | async"
       [(selectedItems)]="selectedMultipleItems"
       [disableDND]="true"
     >

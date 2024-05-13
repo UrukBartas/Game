@@ -45,6 +45,7 @@
               <ng-container *ngIf="!!currentInventory">
                 <app-item-inventory
                   [items]="currentInventory"
+                  [sockets]="currentSize$ | async"
                   [equippedItemOfType]="
                     !!hoveredItem
                       ? (this.getItem$(hoveredItem.itemData.itemType) | async)
@@ -74,7 +75,10 @@
                     | stack: 'consumableData.name' as inventoryConsumables
                 "
               >
-                <app-consumables-inventory [items]="inventoryConsumables">
+                <app-consumables-inventory
+                  [items]="inventoryConsumables"
+                  [sockets]="currentSize$ | async"
+                >
                   <ng-container
                     extraItemBoxes
                     *ngTemplateOutlet="inventoryExpander"
@@ -84,7 +88,10 @@
               </ng-container>
             </tab>
             <tab heading="Materials">
-              <app-materials-inventory [items]="currentMaterials">
+              <app-materials-inventory
+                [items]="currentMaterials"
+                [sockets]="currentSize$ | async"
+              >
                 <ng-container
                   extraItemBoxes
                   *ngTemplateOutlet="inventoryExpander"

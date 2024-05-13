@@ -32,6 +32,7 @@
           [multipleSelection]="!!multipleSelection.value"
           [contextMenuTemplate]="'anvil'"
           [items]="currentInventory"
+          [sockets]="currentSize$ | async"
           [disableDND]="false"
           [boxSize]="40"
           (onDragStart)="hovered = true"
@@ -46,7 +47,7 @@
       <tab heading="Materials">
         <app-materials-inventory
           [items]="currentMaterials"
-          [boxes]="materialsInventoryBoxes"
+          [sockets]="currentSize$ | async"
         >
         </app-materials-inventory>
       </tab>
@@ -62,6 +63,7 @@
           (dndDrop)="onAnvilDrop($event)"
           [active]="hovered"
           [ngbTooltip]="itemTooltip"
+          [tooltipContext]="{ item: null }"
           [height]="getItemBoxSize()"
           [width]="getItemBoxSize()"
         ></app-item-box>
@@ -93,6 +95,7 @@
     <div class="flex">
       <button
         (click)="openModal(false)"
+        [disabled]="selectedMultipleItems.length == 0"
         [class]="'btn btn-primary ' + getButtonSize()"
       >
         <i class="fa fa-recycle pl-1 pb-1"></i>
@@ -100,7 +103,7 @@
       </button>
       <button
         (click)="openModal(true)"
-        [disabled]="!!multipleSelection.value"
+        [disabled]="!!multipleSelection.value || selectedMultipleItems.length == 0"
         [class]="'btn btn-secondary mx-1 ' + getButtonSize()"
       >
         <i class="fa fa-gears pl-1 pb-1"></i>
@@ -145,5 +148,7 @@
 </div>
 
 <ng-template #itemTooltip let-item="item">
-  <app-item-tooltip *ngIf="item" [item]="item"></app-item-tooltip>
+  <ng-container *ngIf="!!item">
+    <app-item-tooltip [item]="item"></app-item-tooltip>
+  </ng-container>
 </ng-template>
