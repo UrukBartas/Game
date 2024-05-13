@@ -198,7 +198,18 @@
           [disabled]="!selectedItem || activeNetworkId() == 0"
           (click)="triggerActionForNFT()"
         >
-          {{ exportTypeActive == 'export' ? 'Export' : 'Import' }}
+          <div class="d-flex justify-content-center gap-3">
+            {{ exportTypeActive == 'export' ? 'Export' : 'Import' }}
+            @if (exportTypeActive == 'export') {
+              <div
+                class="display-fee"
+                *ngIf="getActiveNetworkImg() as activeNetwork"
+              >
+                <img src="{{ activeNetwork }}" />
+                <span>{{ getNFTExportFee$ | async | number }}</span>
+              </div>
+            }
+          </div>
         </button>
       } @else {
         <button
@@ -216,7 +227,18 @@
           [disabled]="selectedUruksToExport == 0 || activeNetworkId() == 0"
           (click)="triggerActionForERC20()"
         >
-          {{ exportTypeActive == 'export' ? 'Export' : 'Import' }}
+          <div class="d-flex justify-content-center gap-3">
+            {{ exportTypeActive == 'export' ? 'Export' : 'Import' }}
+            @if (exportTypeActive == 'export') {
+              <div
+                class="display-fee"
+                *ngIf="getActiveNetworkImg() as activeNetwork"
+              >
+                <img src="{{ activeNetwork }}" />
+                <span>{{ getERC20ExportFee$ | async | number }}</span>
+              </div>
+            }
+          </div>
         </button>
       }
     </div>

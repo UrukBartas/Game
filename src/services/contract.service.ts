@@ -25,12 +25,17 @@ export class ContractService {
     });
   }
 
-  public executewriteContractOnUrukNFT(functionName: string, args: Array<any>) {
+  public executewriteContractOnUrukNFT(
+    functionName: string,
+    args: Array<any>,
+    value?: any
+  ) {
     return writeContract({
       address: getChainById(getNetwork().chain.id).NFT,
       abi: UrukNFTArtifact.abi,
       functionName,
       args,
+      value,
     });
   }
 
@@ -48,13 +53,15 @@ export class ContractService {
 
   public executewriteContractOnUrukERC20(
     functionName: string,
-    args: Array<any>
+    args: Array<any>,
+    value?: any
   ) {
     return writeContract({
       address: getChainById(getNetwork().chain.id).ERC20,
       abi: GoldenUruks.abi,
       functionName,
       args,
+      value,
     });
   }
 }

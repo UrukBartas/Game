@@ -62,9 +62,18 @@
   }
 }
 
-.row-section{
+.row-section {
   @include media-breakpoint-down(sm) {
     gap: 10px;
   }
+}
 
+.display-fee {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  img {
+    max-width: 20px;
+    max-height: 20px;
+  }
 }

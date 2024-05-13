@@ -87,6 +87,18 @@ export class ExportImportNftComponent extends TemplatePage {
 
   public selectedMultipleItems: Item[] = [];
 
+  public getERC20ExportFee$ = from(
+    this.contractService.executeReadContractOnUrukERC20('getExportFee', null)
+  ).pipe(
+    map((entry) => Number(ethers.formatEther(entry.toString())).toFixed(8))
+  );
+
+  public getNFTExportFee$ = from(
+    this.contractService.executeReadContractOnUrukNFT('getMintingFee', null)
+  ).pipe(
+    map((entry) => Number(ethers.formatEther(entry.toString())).toFixed(8))
+  );
+
   public currentSize$ = this.store.select(MainState.getState).pipe(
     filter((player) => !!player),
     map((entry) => entry.player.sockets)
@@ -193,6 +205,16 @@ export class ExportImportNftComponent extends TemplatePage {
     });
   }
 
+  public getActiveNetworkImg() {
+    if (this.activeNetworkId() != 0) {
+      const chain = this.compatibleChains.find(
+        (chain) => chain.id == this.activeNetworkId()
+      );
+      return chain.img;
+    }
+    return null;
+  }
+
   public changeNetwork(chainId: number) {
     switchNetwork({ chainId });
   }
@@ -224,10 +246,11 @@ export class ExportImportNftComponent extends TemplatePage {
       const uploadJsonMetadataNFTCID = (await firstValueFrom(
         this.importExport.uploadJsonMetadataNFT(staticItemfornow)
       )) as { cid: string };
-
+      const fees = await firstValueFrom(this.getNFTExportFee$);
       await this.contractService.executewriteContractOnUrukNFT(
         'exportItemToNft',
-        [staticItemfornow.id + '', `ipfs://${uploadJsonMetadataNFTCID.cid}`]
+        [staticItemfornow.id + '', `ipfs://${uploadJsonMetadataNFTCID.cid}`],
+        ethers.parseEther(fees)
       );
       this.spinnerService.hide();
       this.toastService.success(
@@ -236,7 +259,7 @@ export class ExportImportNftComponent extends TemplatePage {
       this.selectedMultipleItems = [];
     } catch (error: any) {
       this.toastService.error(
-        error?.error?.message ?? undefined,
+        error?.error?.message ?? error?.cause?.reason ?? undefined,
         'Something went wrong'
       );
       this.spinnerService.hide();
@@ -298,7 +321,7 @@ export class ExportImportNftComponent extends TemplatePage {
       }
     } catch (error: any) {
       this.toastService.error(
-        error?.error?.message ?? undefined,
+        error?.error?.message ?? error?.cause?.reason ?? undefined,
         'Something went wrong'
       );
       this.spinnerService.hide();
@@ -315,9 +338,11 @@ export class ExportImportNftComponent extends TemplatePage {
             getAccount().address
           )
         );
+        const fees = await firstValueFrom(this.getERC20ExportFee$);
         await this.contractService.executewriteContractOnUrukERC20(
           'exportCoins',
-          [ethers.parseEther(this.selectedUruksToExport.toString())]
+          [ethers.parseEther(this.selectedUruksToExport.toString())],
+          ethers.parseEther(fees)
         );
         this.spinnerService.hide();
         this.toastService.success(
@@ -338,7 +363,7 @@ export class ExportImportNftComponent extends TemplatePage {
     } catch (error: any) {
       console.error(error);
       this.toastService.error(
-        error?.error?.message ?? undefined,
+        error?.error?.message ?? error?.cause?.reason ?? undefined,
         'Something went wrong'
       );
       this.spinnerService.hide();
