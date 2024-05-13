@@ -55,26 +55,38 @@
 
   <div class="item-container">
     <div class="container-multiple">
-      @for (
-        selectedMultipleItem of selectedMultipleItems;
-        track selectedMultipleItem.id
-      ) {
+      @if (selectedMultipleItems.length === 0) {
         <app-item-box
           #anvil
           dndDropzone
           (dndDrop)="onAnvilDrop($event)"
           [active]="hovered"
           [ngbTooltip]="itemTooltip"
-          [tooltipContext]="{ item: selectedMultipleItem }"
           [height]="getItemBoxSize()"
           [width]="getItemBoxSize()"
-          [upgradeLevel]="selectedMultipleItem?.upgradeLevel"
-          [image]="
-            selectedMultipleItem
-              ? (selectedMultipleItem?.itemData.image | toIpfsImageFromCid)
-              : null
-          "
         ></app-item-box>
+      } @else {
+        @for (
+          selectedMultipleItem of selectedMultipleItems;
+          track selectedMultipleItem.id
+        ) {
+          <app-item-box
+            #anvil
+            dndDropzone
+            (dndDrop)="onAnvilDrop($event)"
+            [active]="hovered"
+            [ngbTooltip]="itemTooltip"
+            [tooltipContext]="{ item: selectedMultipleItem }"
+            [height]="getItemBoxSize()"
+            [width]="getItemBoxSize()"
+            [upgradeLevel]="selectedMultipleItem?.upgradeLevel"
+            [image]="
+              selectedMultipleItem
+                ? selectedMultipleItem?.itemData.imageLocal
+                : null
+            "
+          ></app-item-box>
+        }
       }
     </div>
 
@@ -107,11 +119,7 @@
           [height]="200"
           [width]="200"
           [upgradeLevel]="resultItem?.upgradeLevel"
-          [image]="
-            resultItem
-              ? (resultItem?.itemData.image | toIpfsImageFromCid)
-              : null
-          "
+          [image]="resultItem ? resultItem?.itemData.imageLocal : null"
         ></app-item-box>
       </div>
     </div>
@@ -127,7 +135,7 @@
           [upgradeLevel]="selectedMultipleItems[0]?.upgradeLevel"
           [image]="
             selectedMultipleItems[0]
-              ? (selectedMultipleItems[0]?.itemData.image | toIpfsImageFromCid)
+              ? selectedMultipleItems[0]?.itemData.imageLocal
               : null
           "
         ></app-item-box>

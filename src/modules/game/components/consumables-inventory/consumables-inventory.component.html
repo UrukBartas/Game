@@ -12,18 +12,17 @@
     [active]="!!selectedItem && !!item && selectedItem.id == item.id"
     [stack]="item?.stack ?? 0"
     [image]="
-      item?.consumableData?.image
-        ? (item.consumableData.image | toIpfsImageFromCid)
-        : null
+      item?.consumableData?.imageLocal ? item.consumableData.imageLocal : null
     "
   >
     @if (!!item) {
       <div tooltip class="tooltip-uruk">
-        <app-consumable-tooltip
+        <app-generic-item-tooltip
           [item]="item.consumableData"
-        ></app-consumable-tooltip>
+        ></app-generic-item-tooltip>
       </div>
     }
   </app-item-box>
+
   <ng-content select="[extraItemBoxes]"></ng-content>
 </div>

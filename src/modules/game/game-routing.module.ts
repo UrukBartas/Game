@@ -62,6 +62,7 @@ const routes: Routes = [
         path: 'blacksmith',
         canActivate: [AuthGuard],
         component: BlacksmithComponent,
+        title: 'Blacksmith',
       },
       {
         path: 'edit',

@@ -6,7 +6,7 @@
           (click)="selectItem(consumable)"
           [ngbTooltip]="consumableTooltip"
           [tooltipContext]="{ item: consumable }"
-          [image]="consumable.consumableData.image | toIpfsImageFromCid"
+          [image]="consumable.consumableData.imageLocal"
           [height]="getItemBoxSize()"
           [width]="getItemBoxSize()"
         ></app-item-box>
@@ -29,5 +29,5 @@
 </div>
 
 <ng-template #consumableTooltip let-item="item">
-  <app-consumable-tooltip [item]="item.consumableData"></app-consumable-tooltip>
+  <app-generic-item-tooltip [item]="item.consumableData"></app-generic-item-tooltip>
 </ng-template>

@@ -11,7 +11,9 @@ export interface Material {
 export interface MaterialData {
   id: string;
   image: string;
+  imageLocal: string;
   name: string;
   description: string;
   rarity: Rarity;
+  price?: number;
 }

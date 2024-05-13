@@ -28,12 +28,12 @@
         [height]="getItemBoxSize()"
         [width]="getItemBoxSize()"
         [stack]="previewMaterial.quantity"
-        [image]="previewMaterial.material.image | toIpfsImageFromCid"
+        [image]="previewMaterial.material.imageLocal"
       >
         <div tooltip class="tooltip-uruk">
-          <app-material-tooltip
+          <app-generic-item-tooltip
             [item]="previewMaterial.material"
-          ></app-material-tooltip>
+          ></app-generic-item-tooltip>
         </div>
       </app-item-box>
     </ng-container>
@@ -46,13 +46,13 @@
           [height]="getItemBoxSize()"
           [width]="getItemBoxSize()"
           [stack]="material.quantity"
-          [image]="material.material.image | toIpfsImageFromCid"
+          [image]="material.material.imageLocal"
           [active]="userHasThisMaterial(material)"
         >
           <div tooltip class="tooltip-uruk">
-            <app-material-tooltip
+            <app-generic-item-tooltip
               [item]="material.material"
-            ></app-material-tooltip>
+            ></app-generic-item-tooltip>
           </div>
         </app-item-box>
       }
@@ -61,7 +61,7 @@
       <app-item-box
         [height]="getItemBoxSize()"
         [width]="getItemBoxSize()"
-        [image]="items[0].itemData.image | toIpfsImageFromCid"
+        [image]="items[0].itemData.imageLocal"
         [upgradeLevel]="items[0].upgradeLevel"
       >
         <div tooltip class="tooltip-uruk">
@@ -75,7 +75,7 @@
         class="button-rainbow"
         [height]="getItemBoxSize()"
         [width]="getItemBoxSize()"
-        [image]="preview.item.itemData.image | toIpfsImageFromCid"
+        [image]="preview.item.itemData.imageLocal"
         [upgradeLevel]="preview.item.upgradeLevel"
       >
         <div tooltip class="tooltip-uruk">

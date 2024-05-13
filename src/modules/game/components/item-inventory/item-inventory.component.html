@@ -42,11 +42,7 @@
       [rarity]="item?.itemData?.rarity"
       [active]="isMultipleSelected(item)"
       [displayTooltip]="!!item"
-      [image]="
-        item?.itemData?.image
-          ? (item?.itemData?.image | toIpfsImageFromCid)
-          : null
-      "
+      [image]="item ? item?.itemData.imageLocal : null"
     >
       @if (!!item && !contextMenuService.menuVisible()) {
         <div tooltip class="tooltip-uruk">

@@ -43,15 +43,17 @@ export function animateElement(element, animation, callback?) {
     const animationName = `animate__${animation}`;
     const node = document.querySelector(element);
 
-    node.classList.add(`animate__animated`, animationName);
+    if (node) {
+      node.classList.add(`animate__animated`, animationName);
 
-    const handleAnimationEnd = (event) => {
-      event.stopPropagation();
-      node.classList.remove(`animate__animated`, animationName);
-      resolve(callback?.());
-    };
+      const handleAnimationEnd = (event) => {
+        event.stopPropagation();
+        node.classList.remove(`animate__animated`, animationName);
+        resolve(callback?.());
+      };
 
-    node.addEventListener('animationend', handleAnimationEnd, { once: true });
+      node.addEventListener('animationend', handleAnimationEnd, { once: true });
+    }
   });
 }
 

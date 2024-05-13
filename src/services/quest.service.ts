@@ -29,4 +29,16 @@ export class QuestService extends ApiBaseService {
   claim(): Observable<void> {
     return this.get('/claim');
   }
+
+  
+  public roll() {
+    return this.get('/roll');
+  }
+
+  public rollData(): Observable<{
+    price: number;
+    rollNumber: number;
+  }> {
+    return this.get('/roll-data');
+  }
 }

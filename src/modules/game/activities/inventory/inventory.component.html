@@ -1,34 +1,4 @@
 <div id="inventory" class="row h-100">
-  <ng-template
-    #equippedSlot
-    let-item$="item$"
-    let-hovered="hovered"
-    let-isSmallItem="isSmallItem"
-  >
-    <app-item-box
-      dndDropzone
-      (dndDrop)="onDrop($event)"
-      (appDoubleClick)="unEquipItem(item$)"
-      [height]="getEquippedItemBoxSize() / (!!isSmallItem ? 2 : 1)"
-      [width]="getEquippedItemBoxSize() / (!!isSmallItem ? 2 : 1)"
-      [active]="hovered"
-      [displayTooltip]="!!(item$ | async)"
-      [rarity]="toItem(item$ | async)?.itemData?.rarity"
-      [upgradeLevel]="toItem(item$ | async)?.upgradeLevel"
-      [image]="
-        toItem(item$ | async)?.itemData?.image
-          ? (toItem(item$ | async).itemData.image | toIpfsImageFromCid)
-          : null
-      "
-    >
-      @if (!!(item$ | async)) {
-        <div tooltip class="tooltip-uruk">
-          <app-item-tooltip [item]="item$ | async"></app-item-tooltip>
-        </div>
-      }
-    </app-item-box>
-  </ng-template>
-
   <div class="col-12 col-md-6 order-1 order-sm-0">
     <ng-template #inventoryExpander>
       <app-item-box
@@ -255,3 +225,29 @@
     </div>
   </div>
 </div>
+
+<ng-template
+  #equippedSlot
+  let-item$="item$"
+  let-hovered="hovered"
+  let-isSmallItem="isSmallItem"
+>
+  <app-item-box
+    dndDropzone
+    (dndDrop)="onDrop($event)"
+    (appDoubleClick)="unEquipItem(item$)"
+    [height]="getEquippedItemBoxSize() / (!!isSmallItem ? 2 : 1)"
+    [width]="getEquippedItemBoxSize() / (!!isSmallItem ? 2 : 1)"
+    [active]="hovered"
+    [displayTooltip]="!!(item$ | async)"
+    [rarity]="toItem(item$ | async)?.itemData?.rarity"
+    [upgradeLevel]="toItem(item$ | async)?.upgradeLevel"
+    [image]="toItem(item$ | async)?.itemData?.imageLocal"
+  >
+    @if (!!(item$ | async)) {
+      <div tooltip class="tooltip-uruk">
+        <app-item-tooltip [item]="item$ | async"></app-item-tooltip>
+      </div>
+    }
+  </app-item-box>
+</ng-template>

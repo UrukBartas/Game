@@ -30,6 +30,7 @@ export interface ItemData {
   id: number;
   name: string;
   image: string;
+  imageLocal: string;
   rarity: Rarity;
   itemType: ItemType;
   trait?: Trait | null;

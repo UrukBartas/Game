@@ -23,7 +23,7 @@
       #lootItem
       [height]="getItemBoxSize()"
       [width]="getItemBoxSize()"
-      [image]="lootItem.itemData.image | toIpfsImageFromCid"
+      [image]="lootItem.itemData.image"
     >
       <div tooltip class="tooltip-uruk">
         <app-item-tooltip [item]="lootItem"></app-item-tooltip>
@@ -38,11 +38,11 @@
       #lootItem
       [height]="getItemBoxSize()"
       [width]="getItemBoxSize()"
-      [image]="lootItem.consumableData.image | toIpfsImageFromCid"
+      [image]="lootItem.consumableData.imageLocal"
     >
       <div tooltip class="tooltip-uruk">
-        <app-consumable-tooltip [item]="lootItem.consumableData">
-        </app-consumable-tooltip>
+        <app-generic-item-tooltip [item]="lootItem.consumableData">
+        </app-generic-item-tooltip>
       </div>
     </app-item-box>
   }
@@ -54,13 +54,13 @@
       #lootItem
       [height]="getItemBoxSize()"
       [width]="getItemBoxSize()"
-      [image]="lootItem.materialData.image | toIpfsImageFromCid"
+      [image]="lootItem.materialData.imageLocal"
       [stack]="lootItem.quantity"
     >
       <div tooltip class="tooltip-uruk">
-        <app-material-tooltip
+        <app-generic-item-tooltip
           [item]="lootItem.materialData"
-        ></app-material-tooltip>
+        ></app-generic-item-tooltip>
       </div>
     </app-item-box>
   }
