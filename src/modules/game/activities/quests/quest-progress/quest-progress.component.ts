@@ -28,10 +28,10 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
 
   quest: QuestModel;
   questReady = false;
-  questStatusEnum = QuestStatusEnum;
   percentage: number;
   time: string;
   interval;
+  questStarted = false;
 
   constructor(
     public viewportService: ViewportService,
@@ -54,8 +54,19 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
       });
   }
 
+  startQuest() {
+    this.questStarted = true;
+    setTimeout(() => {
+      this.title.setTitle('Fight!');
+    }, 1000);
+    this.questStatusChange.emit({
+      data: this.quest,
+      status: QuestStatusEnum.FIGHT,
+    });
+  }
+
   changeTitleRecursiveQuestIsReady(): void {
-    if (!this.questReady) return;
+    if (!this.questReady || this.questStarted) return;
     this.title.setTitle('Quest Ready!');
     setTimeout(() => {
       this.title.setTitle('Battle Incoming!');

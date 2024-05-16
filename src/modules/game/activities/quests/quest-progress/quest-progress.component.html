@@ -23,12 +23,7 @@
   </div>
   <div *ngIf="questReady">
     <button
-      (click)="
-        questStatusChange.emit({
-          data: quest,
-          status: questStatusEnum.FIGHT
-        })
-      "
+      (click)="startQuest()"
       urTitle
       class="button-rainbow"
       [style.padding]="getResponsiveButtonSize()"
