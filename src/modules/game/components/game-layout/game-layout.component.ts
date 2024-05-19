@@ -20,7 +20,7 @@ import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component'
 })
 export class GameLayoutComponent {
   @Select(MainState.getState) state$: Observable<MainStateModel>;
-
+  private displayPVE = false;
   public routesNavigation = [
     {
       path: '/inventory',
@@ -28,15 +28,35 @@ export class GameLayoutComponent {
       icon: 'fa fa-shield-halved',
     },
     {
+      displayText: 'PvE',
+      icon: 'fa-solid fa-dragon',
+      nested: true,
+      expanded: () => !!this.displayPVE,
+      class: () => {
+        return !!this.displayPVE ? 'text-white' : '';
+      },
+      click: () => {
+        this.displayPVE = !this.displayPVE;
+      },
+    },
+    {
       path: '/quests',
       displayText: 'Quests',
       icon: 'fa fa-map',
+      class: () => 'bg-secondary nested',
+      display: () => {
+        return !!this.displayPVE;
+      },
     },
-    // {
-    //   path: '/adventures',
-    //   displayText: 'Adventures',
-    //   icon: 'fa fa-khanda',
-    // },
+    {
+      path: '/adventures',
+      displayText: 'Adventures',
+      icon: 'fa fa-khanda',
+      class: () => 'bg-secondary nested',
+      display: () => {
+        return !!this.displayPVE;
+      },
+    },
     {
       path: '/shop',
       displayText: 'Shop',

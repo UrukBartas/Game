@@ -12,13 +12,13 @@
               selectedAdventure.name
             }}</span>
           </div>
-          <div class="row d-flex justify-content-center">
-            <span urText class="badge mb-1 col-12 col-md-4">
+          <div class="row d-flex justify-content-around">
+            <span urText class="badge mb-1 col-12 col-md-4 text-warning">
               <i class="fa-solid fa-certificate"></i>
-              Level {{ selectedAdventure.minLevel }}
+              Min level {{ selectedAdventure.minLevel }}
             </span>
 
-            <span urText class="badge mb-1 col-12 col-md-4">
+            <span urText class="badge mb-1 col-12 col-md-4 text-warning">
               <i class="fa-solid fa-clock"></i>
               {{ selectedAdventure.questsData.length }} phases
             </span>
@@ -33,11 +33,7 @@
                 let i = index
               "
             >
-              <p
-                *ngIf="i < 2 || !!selectedAdventure.readMore"
-                data-aos="fade-right"
-                [attr.data-aos-duration]="500 * i"
-              >
+              <p *ngIf="i < 2 || !!selectedAdventure.readMore">
                 {{ paragraph }}
                 <ng-container *ngIf="i == 1 && !selectedAdventure.readMore">
                   ...
@@ -86,7 +82,7 @@
                     </span>
                     +
                     <span class="value">
-                      {{ selectedAdventure.materialsData.length + ' items' }}
+                      {{ selectedAdventure.materialsData.length + ' materials' }}
                     </span>
                     +
                     <span class="value"> ??????? </span>
@@ -118,7 +114,7 @@
             >
               {{
                 (player$ | async).level < selectedAdventure.minLevel
-                  ? 'YOU ARE NOT READY'
+                  ? 'YOU ARE NOT READY. LEVEL TOO LOW.'
                   : 'START ADVENTURE'
               }}
             </button>

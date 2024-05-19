@@ -46,7 +46,7 @@ export class TitleSizeDirective implements OnInit, OnDestroy {
       case 'xs':
       case 'sm':
       default:
-        return '1.25rem';
+        return 'larger';
     }
   }
 

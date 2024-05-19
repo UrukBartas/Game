@@ -24,6 +24,8 @@ export interface Item {
   equipped: boolean;
   enabled: boolean;
   price?: number;
+
+  canBeUpgraded?:boolean;
 }
 
 export interface ItemData {

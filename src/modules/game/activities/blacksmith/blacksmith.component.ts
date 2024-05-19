@@ -43,11 +43,22 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
   resultItem;
   hovered = false;
 
+  public calculatedStackRule = (item: Item) => {
+    return !!item && !!item.canBeUpgraded ? '✨' : '';
+  };
+
+  public filterByUpgradableItems = (items: Item[]) => {
+    if (!!this.upgradableItems.value)
+      return items.filter((item) => !!item && !!item.canBeUpgraded);
+    return items;
+  };
+
   public inventoryUpdated$ = new Subject();
   public materialUpdated$ = new Subject();
   public currentInventory: Array<Item> = [];
   public currentMaterials: Array<Material> = [];
   public multipleSelection = new FormControl(false);
+  public upgradableItems = new FormControl(false);
   public selectedMultipleItems: Array<Item> = [];
 
   public currentSize$ = this.store.select(MainState.getState).pipe(
@@ -59,7 +70,7 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
     super();
     this.inventoryUpdated$.pipe(takeUntilDestroyed()).subscribe(async () => {
       this.currentInventory = await firstValueFrom(
-        this.playerService.getItems()
+        this.playerService.getItemsBlacksmith()
       );
     });
     this.materialUpdated$.pipe(takeUntilDestroyed()).subscribe(async () => {

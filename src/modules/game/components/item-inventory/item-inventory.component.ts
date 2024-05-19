@@ -31,6 +31,7 @@ export class ItemInventoryComponent {
   @Input() showContextualMenu = false;
   @Input() multipleSelection = false;
   @Input() contextMenuTemplate: 'anvil' | 'default' = 'default';
+  @Input() calculatedStack: Function;
   @Output() onDragStart = new EventEmitter<any>();
   @Output() onDragEnd = new EventEmitter<any>();
   @Output() onDoubleClick = new EventEmitter<any>();

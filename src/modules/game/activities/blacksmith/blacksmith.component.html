@@ -7,23 +7,41 @@
   <div class="inventory-container inventory">
     <tabset>
       <tab heading="Armory" id="tab1">
-        <div
-          class="form-check form-switch"
-          (click)="
-            multipleSelection.patchValue(!multipleSelection.value);
-            selectedMultipleItems = []
-          "
-        >
-          <input
-            class="form-check-input"
-            type="checkbox"
-            [formControl]="multipleSelection"
-          />
-          <label
-            class="form-check-label text-light"
-            for="flexSwitchCheckChecked"
-            >Multiple selection</label
+        <div class="d-flex gap-3 align-items-center">
+          <div
+            class="form-check form-switch"
+            (click)="
+              multipleSelection.patchValue(!multipleSelection.value);
+              selectedMultipleItems = []
+            "
           >
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [formControl]="multipleSelection"
+            />
+            <label
+              class="form-check-label text-light"
+              for="flexSwitchCheckChecked"
+              >Multiple</label
+            >
+          </div>
+
+          <div
+            class="form-check form-switch"
+            (click)="upgradableItems.patchValue(!upgradableItems.value)"
+          >
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [formControl]="upgradableItems"
+            />
+            <label
+              class="form-check-label text-light"
+              for="flexSwitchCheckChecked"
+              >Upgradable</label
+            >
+          </div>
         </div>
 
         <app-item-inventory
@@ -31,10 +49,11 @@
           [showContextualMenu]="true"
           [multipleSelection]="!!multipleSelection.value"
           [contextMenuTemplate]="'anvil'"
-          [items]="currentInventory"
+          [items]="filterByUpgradableItems(currentInventory)"
           [sockets]="currentSize$ | async"
           [disableDND]="false"
           [boxSize]="40"
+          [calculatedStack]="calculatedStackRule"
           (onDragStart)="hovered = true"
           (onDragEnd)="hovered = false"
           (onDoubleClick)="
@@ -103,7 +122,9 @@
       </button>
       <button
         (click)="openModal(true)"
-        [disabled]="!!multipleSelection.value || selectedMultipleItems.length == 0"
+        [disabled]="
+          !!multipleSelection.value || selectedMultipleItems.length == 0
+        "
         [class]="'btn btn-secondary mx-1 ' + getButtonSize()"
       >
         <i class="fa fa-gears pl-1 pb-1"></i>

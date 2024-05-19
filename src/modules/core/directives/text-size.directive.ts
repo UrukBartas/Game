@@ -39,7 +39,7 @@ export class TextSizeDirective implements OnInit, OnDestroy {
       case 'xxl':
       case 'xl':
       case 'lg':
-        return '1.4rem';
+        return '1rem';
       case 'md':
         return '1.2rem';
       case 'xs':

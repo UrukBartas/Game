@@ -13,10 +13,12 @@ export class ItemBoxComponent {
   @HostBinding('class') class = 'h-fit';
   @Input() height = 30;
   @Input() width = 30;
+  @Input() item: any;
   @Input() image: string = null;
   @Input() active = false;
   @Input() displayTooltip = true;
   @Input() stack: any = 0;
+  @Input() calculatedStack: Function;
   @Input() rarity: Rarity;
   @Input() upgradeLevel: number;
 

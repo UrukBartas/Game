@@ -184,6 +184,24 @@
   display: inline-block;
 }
 
+@keyframes glowing-highlight {
+  0% {
+    box-shadow: 0 0 2px 1px rgba(255, 215, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 6px 3px rgba(255, 215, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 2px 1px rgba(255, 215, 0, 0.4);
+  }
+}
+
+.glowing-highlight {
+  animation: glowing-highlight 4s infinite;
+  position: relative;
+  display: inline-block;
+}
+
 .text-warning {
   color: $orange;
 }
