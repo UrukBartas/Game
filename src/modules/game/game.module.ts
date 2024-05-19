@@ -3,13 +3,17 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 import { DndModule } from 'ngx-drag-drop';
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
-import { GenericItemTooltipComponent } from 'src/standalone/generic-item-tooltip/generic-item-tooltip.component';
+import { BlacksmithContextMenuComponent } from 'src/standalone/context-menu/blacksmith-context-menu/blacksmith-context-menu.component';
 import { ContextMenuInventoryOptionsComponent } from 'src/standalone/context-menu/context-menu-inventory-options/context-menu-inventory-options.component';
 import { ContextMenuComponent } from 'src/standalone/context-menu/context-menu.component';
 import { ExpandInventoryTooltipComponent } from 'src/standalone/expand-inventory-tooltip/expand-inventory-tooltip.component';
+import { GenericItemTooltipComponent } from 'src/standalone/generic-item-tooltip/generic-item-tooltip.component';
 import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
+import { SpinnerComponent } from 'src/standalone/spinner/spinner.component';
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
 import { DoubleClickDirective } from '../core/directives/double-click.directive';
@@ -18,7 +22,12 @@ import { TextSizeDirective } from '../core/directives/text-size.directive';
 import { TitleSizeDirective } from '../core/directives/title-size.directive';
 import { ValidInputDirective } from '../core/directives/valid-input.directive';
 import { CompressNumberPipe } from '../core/pipes/compress-number.pipe';
+import { ItemdataToItemPipe } from '../core/pipes/itemdata-to-item.pipe';
+import { OrderByPipe } from '../core/pipes/order-by.pipe';
 import { StackPipe } from '../core/pipes/stack.pipe';
+import { AdventurePickerComponent } from './activities/adventures/adventure-picker/adventure-picker.component';
+import { AdventuresRouterComponent } from './activities/adventures/adventures-router.component';
+import { AdventuresComponent } from './activities/adventures/adventures.component';
 import { BlacksmithComponent } from './activities/blacksmith/blacksmith.component';
 import { BlacksmithModalComponent } from './activities/blacksmith/modal/blacksmith-modal.component';
 import { RegisterReferralComponent } from './activities/campaigns/register-referral/register-referral.component';
@@ -35,20 +44,14 @@ import { QuestResultComponent } from './activities/quests/quest-result/quest-res
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
 import { DailyRollButtonComponent } from './activities/shop/components/daily-roll-button.component';
 import { ShopComponent } from './activities/shop/shop.component';
+import { ChallengeModalComponent } from './components/challengee-modal/challenge-modal.component';
+import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
+import { InventoryTopbarComponent } from './components/inventory-topbar/inventory-topbar.component';
+import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
 import { MaterialsInventoryComponent } from './components/materials-inventory/materials-inventory.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
-import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
-import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
-import { AdventuresComponent } from './activities/adventures/adventures.component';
-import { AdventurePickerComponent } from './activities/adventures/adventure-picker/adventure-picker.component';
-import { AdventuresRouterComponent } from './activities/adventures/adventures-router.component';
-import { ItemdataToItemPipe } from '../core/pipes/itemdata-to-item.pipe';
-import { OrderByPipe } from '../core/pipes/order-by.pipe';
-import { BlacksmithContextMenuComponent } from 'src/standalone/context-menu/blacksmith-context-menu/blacksmith-context-menu.component';
-import { TabsModule } from 'ngx-bootstrap/tabs';
-import { InventoryTopbarComponent } from './components/inventory-topbar/inventory-topbar.component';
 
 const directives = [
   ValidInputDirective,
@@ -75,6 +78,7 @@ const components = [
   DailyRollButtonComponent,
   ConsumableModalComponent,
   ConnectComponent,
+  ChallengeModalComponent,
 ];
 
 @NgModule({
@@ -113,6 +117,8 @@ const components = [
     ContextMenuComponent,
     ContextMenuInventoryOptionsComponent,
     BlacksmithContextMenuComponent,
+    NgxSpinnerModule,
+    SpinnerComponent
   ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe],

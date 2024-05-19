@@ -64,6 +64,32 @@
         </div>
       </div>
       <div class="list-leaderboard-item-right">
+        <div
+          *ngIf="isPlayerConnected(player.id) && player.id !== actualAddress"
+          class="duel-btn"
+          [ngbTooltip]="tooltipTemplate"
+          [tooltipContext]="{
+            text: 'Challenge player'
+          }"
+          (click)="challengePlayer(player)"
+        >
+          <div class="icon fa-sword"></div>
+        </div>
+        <div
+          class="connected-dot"
+          [ngbTooltip]="tooltipTemplate"
+          [tooltipContext]="{
+            text: isPlayerConnected(player.id) ? 'Online' : 'Offline'
+          }"
+        >
+          <div
+            class="dot"
+            [ngClass]="{
+              online: isPlayerConnected(player.id),
+              offline: !isPlayerConnected(player.id)
+            }"
+          ></div>
+        </div>
         <i
           class="bi bi-eye-fill pointer view-player mx-2"
           [routerLink]="['/view-player', player.id]"
@@ -72,3 +98,9 @@
     </div>
   }
 </div>
+
+<ng-template #tooltipTemplate let-text="text">
+  <div class="px-2 py-1">
+    <span class="text-white bg-black">{{ text }}</span>
+  </div>
+</ng-template>

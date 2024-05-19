@@ -1,11 +1,17 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
+import { Store } from '@ngxs/store';
 import { getAccount } from '@wagmi/core';
-import { debounceTime, map, tap } from 'rxjs';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { debounceTime, first, race, take, tap } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
+import { PlayerModel } from 'src/modules/core/models/player.model';
 import { truncateEthereumAddress } from 'src/modules/utils';
 import { PlayerService } from 'src/services/player.service';
+import { WebSocketService } from 'src/services/websocket.service';
+import { MainState } from 'src/store/main.store';
+import { ChallengeModalComponent } from '../../components/challengee-modal/challenge-modal.component';
 
 @Component({
   selector: 'app-leadeboard',
@@ -38,6 +44,12 @@ export class LeadeboardComponent extends TemplatePage {
 
   public truncateAddress = truncateEthereumAddress;
   public actualAddress = getAccount().address;
+  public websocket = inject(WebSocketService);
+  public store = inject(Store);
+  public modalService = inject(BsModalService);
+  public onlinePlayers: string[] = [];
+  public isPlayerConnected = (playerId: string) =>
+    this.onlinePlayers.some((onlinePlayer) => onlinePlayer === playerId);
 
   public getImgBasedOnRanking(number: number) {
     switch (number) {
@@ -64,5 +76,37 @@ export class LeadeboardComponent extends TemplatePage {
       .get('userOrWallet')
       .valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
       .subscribe((data) => this.nameOrWallet.set(data));
+    this.websocket.onlinePlayers$.subscribe(
+      (players) => (this.onlinePlayers = players)
+    );
+  }
+
+  challengePlayer(player: PlayerModel) {
+    const { id, name, level, image } = this.store.selectSnapshot(
+      MainState.getState
+    ).player;
+
+    const config: ModalOptions = {
+      initialState: {
+        player,
+        challenger: true,
+        accept: () => {
+          modal.content.awaiting = true;
+          race(
+            this.websocket.acceptChallenge$,
+            this.websocket.declineChallenge$
+          )
+            .pipe(first(), take(1))
+            .subscribe((accept: boolean) => {
+              console.log('Result:', accept);
+              modal.content.awaiting = false;
+              modal.content.challengeResult = true;
+              modal.content.challengeAccepted = accept;
+            });
+          this.websocket.sendChallenge({ id, name, level, image }, player.id);
+        },
+      },
+    };
+    const modal = this.modalService.show(ChallengeModalComponent, config);
   }
 }

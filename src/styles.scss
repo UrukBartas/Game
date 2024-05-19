@@ -324,3 +324,10 @@ app-adventures {
     }
   }
 }
+
+//ICONS
+
+.fa-sword {
+  -webkit-mask: url(assets/icons/swords.svg) no-repeat center;
+  mask: url(assets/icons/swords.svg) no-repeat center;
+}

@@ -1,0 +1,57 @@
+<div id="confirm-modal">
+  <ng-container *ngIf="!awaiting && !challengeResult">
+    <div class="row d-flex flex-column align-items-center pb-4">
+      <img class="challenger-image" [src]="player.image" />
+      <span utTitle class="text-secondary w-fit" urText
+        >{{ player.name }}
+      </span>
+      <span utText class="text-white w-fit">Level {{ player.level }}</span>
+    </div>
+    <div class="row">
+      <p class="text-white" urText>
+        {{
+          challenger
+            ? 'You are about to challenge'
+            : 'You have been challenged by'
+        }}
+        {{ player.name }}
+      </p>
+      <p class="text-white" urText>
+        {{ challenger ? 'Do you want to proceed?' : 'Do you accept the duel?' }}
+      </p>
+    </div>
+    <div class="d-flex w-100 justify-content-end pt-3">
+      <button
+        class="btn btn-secondary btn-transparent"
+        (click)="modalRef.hide(); cancel ? cancel() : false"
+      >
+        Cancel
+      </button>
+      <button class="btn btn-secondary" (click)="accept()">Accept</button>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="awaiting">
+    <div class="row justify-content-center py-4">
+      <app-spinner></app-spinner>
+    </div>
+    <p urText class="text-white">Waiting for player confirmation...</p>
+  </ng-container>
+  <ng-container *ngIf="challengeResult">
+    <ng-container *ngIf="!challengeAccepted">
+      <p urText class="text-white">Player declined the duel.</p>
+      <div class="d-flex w-100 justify-content-end pt-3">
+        <button class="btn btn-secondary" (click)="modalRef.hide()">
+          Accept
+        </button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="challengeAccepted">
+      <div class="row justify-content-center py-4">
+        <app-spinner></app-spinner>
+      </div>
+      <p urText class="text-white">
+        Player accepted the duel. Joining the fight...
+      </p>
+    </ng-container>
+  </ng-container>
+</div>

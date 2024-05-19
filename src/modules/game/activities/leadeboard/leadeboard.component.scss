@@ -38,11 +38,41 @@
     }
     &-right {
       display: flex;
-      flex-direction: column;
-      align-items: flex-end;
+      align-items: center;
       justify-content: space-around;
+      gap: 1vw;
       .view-player {
         font-size: 24px;
+      }
+      .duel-btn {
+        border-radius: 4px;
+        background-color: rgb(133 15 15);
+        box-shadow: 0px 1px 2px 2px rgb(66 6 6);
+        .icon {
+          width: 30px;
+          height: 30px;
+          background: white;
+        }
+      }
+      .connected-dot {
+        background: $gray-500;
+        width: 20px;
+        height: 20px;
+        border-radius: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .dot {
+          width: 14px;
+          height: 14px;
+          border-radius: 100%;
+        }
+        .online {
+          background: $secondary;
+        }
+        .offline {
+          background: $red;
+        }
       }
     }
     a {
@@ -77,4 +107,3 @@
     background-color: $third;
   }
 }
-

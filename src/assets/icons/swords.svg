@@ -1,0 +1,18 @@
+<svg  style="width: 30px" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+    <g transform="translate(100, 100)">
+    <!-- First sword -->
+    <g transform="rotate(-45)">
+        <polygon points="-10,-70 10,-70 10,30 -10,30" fill="currentColor"/>
+        <polygon points="-10,-70 0,-85 10,-70" fill="currentColor"/>
+        <rect x="-20" y="30" width="40" height="10" fill="currentColor"/>
+        <rect x="-5" y="40" width="10" height="30" fill="currentColor"/>
+    </g>
+    <!-- Second sword -->
+    <g transform="rotate(45)">
+        <polygon points="-10,-70 10,-70 10,30 -10,30" fill="currentColor"/>
+        <polygon points="-10,-70 0,-85 10,-70" fill="currentColor"/>
+        <rect x="-20" y="30" width="40" height="10" fill="currentColor"/>
+        <rect x="-5" y="40" width="10" height="30" fill="currentColor"/>
+    </g>
+    </g>
+</svg>

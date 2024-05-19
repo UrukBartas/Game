@@ -192,6 +192,10 @@
   color: $red;
 }
 
+.w-fit {
+  width: fit-content !important;
+}
+
 @for $i from 1 through 5 {
   .pr-#{$i} {
     padding-right: $i * 0.25rem !important;

@@ -10,6 +10,7 @@ import { Store } from '@ngxs/store';
 import { getAccount } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
+import { WebSocketService } from 'src/services/websocket.service';
 import { MainState } from 'src/store/main.store';
 
 @Injectable({
@@ -19,6 +20,7 @@ export class AuthGuard implements CanActivate {
   store = inject(Store);
   router = inject(Router);
   toastService = inject(ToastrService);
+  websocket = inject(WebSocketService);
 
   canActivate(
     next: ActivatedRouteSnapshot,
@@ -43,6 +45,12 @@ export class AuthGuard implements CanActivate {
     if (!isPlayerLogged || sessionExpired || isDisconnected)
       this.router.navigate(['/']);
 
-    return isPlayerLogged && !sessionExpired;
+    const isPlayerAuthorized = isPlayerLogged && !sessionExpired;
+
+    if (isPlayerAuthorized && !this.websocket.socket?.active) {
+      this.websocket.connect();
+    }
+
+    return isPlayerAuthorized;
   }
 }
