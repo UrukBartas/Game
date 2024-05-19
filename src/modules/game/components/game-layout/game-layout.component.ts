@@ -42,7 +42,7 @@ export class GameLayoutComponent {
     {
       path: '/quests',
       displayText: 'Quests',
-      icon: 'fa fa-map',
+      icon: 'fa fa-signs-post',
       class: () => 'bg-secondary nested',
       display: () => {
         return !!this.displayPVE;
@@ -51,7 +51,7 @@ export class GameLayoutComponent {
     {
       path: '/adventures',
       displayText: 'Adventures',
-      icon: 'fa fa-khanda',
+      icon: 'fa fa-map',
       class: () => 'bg-secondary nested',
       display: () => {
         return !!this.displayPVE;
