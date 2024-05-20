@@ -69,7 +69,8 @@
     @if (isMobile) {
       Menu
     }
-    <i *ngIf="!isMobile"
+    <i
+      *ngIf="!isMobile"
       class="pointer {{
         isSidebarOpened()
           ? 'fa-solid fa-angles-up fa-rotate-90'
@@ -84,21 +85,50 @@
     @for (route of routesNavigation; track route.path) {
       @if (route.path) {
         <li
-          class="list-group-item bg-primary"
+          class="list-group-item bg-primary d-flex justify-content-{{
+            !isSidebarOpened() ? 'between' : 'center'
+          }} {{ route.class ? route.class() : '' }}"
           (click)="modalRef ? modalRef.hide() : true"
           [ngClass]="{ active: router.url == route.path }"
           [routerLink]="[route.path]"
+          *ngIf="route.display ? route.display() : true"
         >
           <i class="{{ route.icon }}"></i>
           @if (!isSidebarOpened() || displayingFullScreenModal) {
-            <span class="d-sm-flex">{{ route.displayText }}</span>
+            <span class="d-sm-flex"
+              >{{ route.displayText }}
+              <i
+                class="fa-solid mt-1 {{
+                  !!route.expanded && route.expanded()
+                    ? 'fa-turn-down text-white'
+                    : 'fa-turn-up text-dark'
+                }}  mx-2"
+                *ngIf="route.nested"
+              ></i
+            ></span>
           }
         </li>
       } @else {
-        <li class="list-group-item bg-primary" (click)="route.click()">
+        <li
+          class="list-group-item bg-primary d-flex justify-content-{{
+            !isSidebarOpened() ? 'between' : 'center'
+          }} {{ route.class ? route.class() : '' }}"
+          (click)="route.click()"
+          *ngIf="route.display ? route.display() : true"
+        >
           <i class="{{ route.icon }}"></i>
           @if (!isSidebarOpened() || displayingFullScreenModal) {
-            <span class="d-sm-flex">{{ route.displayText }}</span>
+            <span class="d-sm-flex"
+              >{{ route.displayText }}
+              <i
+                class="fa-solid mt-1 {{
+                  !!route.expanded && route.expanded()
+                    ? 'fa-turn-down text-white'
+                    : 'fa-turn-up text-dark'
+                }}  mx-2"
+                *ngIf="route.nested"
+              ></i>
+            </span>
           }
         </li>
       }

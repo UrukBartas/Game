@@ -20,7 +20,7 @@
               <span class="level">Level {{ quest.level }}</span>
             </span>
 
-            <div class="col-12 mb-1 justify-content-center d-flex">
+            <div class="col-12 mb-1 justify-content-around d-flex">
               <span urText class="badge">
                 <i class="fa-solid fa-clock"></i>
                 {{ getApproxTimeOfQuestBasedOnRarity(quest.data.rarity) }}
@@ -59,7 +59,7 @@
             !!adventure
               ? isCurrentQuestTheNextPhase()
                 ? 'START PHASE'
-                : 'YOU ARE NOT READY YET'
+                : 'NOT AVAILABLE'
               : 'START QUEST'
           }}
         </span>

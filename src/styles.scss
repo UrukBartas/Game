@@ -99,6 +99,10 @@ app-item-box {
   top: 50%;
   margin: 0 !important;
   li {
+    background-color: $third !important;
+    border: 1px solid $primary !important;
+  }
+  li.nested {
     background-color: $secondary !important;
     border: 1px solid $primary !important;
   }
@@ -249,9 +253,6 @@ app-blacksmith-context-menu {
 }
 
 .adventure-slider {
-  img {
-    filter: blur(2px);
-  }
   app-item-box {
     .stack {
       font-size: 25px !important;
@@ -324,3 +325,10 @@ app-adventures {
     }
   }
 }
+
+.fullscreen-mode {
+  img.active-quest {
+    display: none;
+  }
+}
+

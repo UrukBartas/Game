@@ -7,7 +7,8 @@ import { Subject } from 'rxjs';
 export class ViewportService {
   public screenSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' =
     this.getViewport();
-  public screenSizeChanges: Subject<string> = new Subject();
+  public screenSizeChanges: Subject<'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'> =
+    new Subject();
 
   constructor(private zone: NgZone) {
     window.addEventListener('resize', () => {

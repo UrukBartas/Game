@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, firstValueFrom, map } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, map, pipe } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import {
   AdventureData,
@@ -11,6 +11,7 @@ import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
 import { QuestStatusEnum } from '../quests/enums/quest-status.enum';
 import { QuestRouterModel } from '../quests/models/quest-router.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-adventures',
@@ -29,6 +30,7 @@ export class AdventuresComponent extends TemplatePage {
     .pipe(map((entry) => entry.player));
   public activeWallpaper = '../../../../assets/backgrounds/adventures.png';
   public questStatusRouter: QuestRouterModel;
+  public currentlyDisplayedLayout: 'selector' | 'details' = 'selector';
   constructor() {
     super();
     this.refreshAdventures();
@@ -39,6 +41,11 @@ export class AdventuresComponent extends TemplatePage {
     this.selectedAdventure = adventure;
     this.activeWallpaper = this.selectedAdventure.image;
     this.getActiveWallpaperFromQuest();
+    setTimeout(() => {
+      if (this.viewportService.screenSize == 'xs') {
+        this.currentlyDisplayedLayout = 'details';
+      }
+    }, 0);
   }
 
   public async refreshAdventures() {
@@ -77,9 +84,11 @@ export class AdventuresComponent extends TemplatePage {
   }
 
   public getActiveQuest() {
+    if (!this.selectedAdventure?.Adventure?.length) return null;
     const activeQuest = this.selectedAdventure.Adventure[0].quests
       .sort((a, b) => a.data.phase - b.data.phase)
       .find((quest) => quest.active);
+    if (!!activeQuest) this.currentlyDisplayedLayout = 'details';
     return activeQuest;
   }
 
@@ -111,6 +120,26 @@ export class AdventuresComponent extends TemplatePage {
     }
   }
 
+  public shouldDisplayDetails() {
+    if (this.viewportService.screenSize != 'xs') return true;
+    return (
+      this.viewportService.screenSize == 'xs' &&
+      this.currentlyDisplayedLayout == 'details'
+    );
+  }
+
+  public getViewportSize(){
+    return this.viewportService.screenSize;
+  }
+
+  public shouldDisplaySelector() {
+    if (this.viewportService.screenSize != 'xs') return true;
+    return (
+      this.viewportService.screenSize == 'xs' &&
+      this.currentlyDisplayedLayout == 'selector'
+    );
+  }
+
   getResponsiveButtonFontSize() {
     switch (this.viewportService.screenSize) {
       case 'xxl':
@@ -128,10 +157,11 @@ export class AdventuresComponent extends TemplatePage {
       case 'xl':
       case 'lg':
         return [170, 140];
+      case 'sm':
       case 'md':
         return [120, 100];
       default:
-        return [75, 60];
+        return [170, 140];
     }
   }
 }
