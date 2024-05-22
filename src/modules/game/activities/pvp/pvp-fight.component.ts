@@ -154,7 +154,7 @@ export class PvPFightComponent
   }
 
   getBackground(): string {
-    return '/assets/backgrounds/arena.png';
+    return '/assets/backgrounds/village.webp';
   }
 
   submitAction(action: TurnActionEnum, consumableId?: number): void {
