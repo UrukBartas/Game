@@ -13,6 +13,7 @@ import { StatsDetailComponent } from './components/stats-detail/stats-detail.com
 import { RegisterReferralComponent } from './activities/campaigns/register-referral/register-referral.component';
 import { AdventuresComponent } from './activities/adventures/adventures.component';
 import { BlacksmithComponent } from './activities/blacksmith/blacksmith.component';
+import { PvPFightComponent } from './activities/pvp/pvp-fight.component';
 
 const routes: Routes = [
   {
@@ -86,6 +87,12 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         component: LeadeboardComponent,
         title: 'Leaderboard',
+      },
+      {
+        path: 'arena',
+        canActivate: [AuthGuard],
+        component: PvPFightComponent,
+        title: 'Arena',
       },
     ],
   },

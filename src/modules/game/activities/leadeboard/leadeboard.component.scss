@@ -40,7 +40,7 @@
       display: flex;
       align-items: center;
       justify-content: space-around;
-      gap: 1vw;
+      gap: 2vw;
       .view-player {
         font-size: 24px;
       }
@@ -58,20 +58,45 @@
         background: $gray-500;
         width: 20px;
         height: 20px;
-        border-radius: 100%;
+        border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
+        position: relative;
+
         .dot {
           width: 14px;
           height: 14px;
-          border-radius: 100%;
+          border-radius: 50%;
+          position: relative;
+          background: radial-gradient(circle at 30% 30%, #fff, #ccc 70%);
+          box-shadow:
+            inset -2px -2px 5px rgba(0, 0, 0, 0.5),
+            inset 2px 2px 5px rgba(255, 255, 255, 0.7),
+            0 0 8px rgba(0, 0, 0, 0.8);
+
+          &::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: rotate(-45deg);
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+          }
         }
+
         .online {
-          background: $secondary;
+          background: radial-gradient(circle at 30% 30%, #00ff00, #006400 70%);
+          box-shadow: 0 0 8px rgba(0, 255, 0, 0.7);
         }
+
         .offline {
-          background: $red;
+          background: radial-gradient(circle at 30% 30%, #ff0000, #8b0000 70%);
+          box-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
         }
       }
     }

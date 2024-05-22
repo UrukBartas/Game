@@ -7,8 +7,24 @@
   width: 80vw;
   text-wrap: wrap;
 
-  .challenger-image {
-    max-width: 40vh;
-    border-radius: 10%;
+  .challenger-container {
+    position: relative;
+    width: fit-content;
+    .icon {
+      width: 100px;
+      height: 100px;
+      max-width: 12vh;
+      max-height: 12vh;
+      background: white;
+      position: absolute;
+      top: 0;
+    }
+
+    .challenger-image {
+      width: 250px;
+      max-width: 40vh;
+      border-radius: 10%;
+      position: relative;
+    }
   }
 }

@@ -36,7 +36,7 @@ import { EditCharacterComponent } from './activities/edit-character/edit-charact
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { InventoryComponent } from './activities/inventory/inventory.component';
 import { LeadeboardComponent } from './activities/leadeboard/leadeboard.component';
-import { ConsumableModalComponent } from './activities/quests/quest-fight/components/consumable-modal.component';
+import { ConsumableModalComponent } from './components/consumable-modal/consumable-modal.component';
 import { QuestFightComponent } from './activities/quests/quest-fight/quest-fight.component';
 import { QuestPickerComponent } from './activities/quests/quest-picker/quest-picker.component';
 import { QuestProgressComponent } from './activities/quests/quest-progress/quest-progress.component';
@@ -52,6 +52,7 @@ import { ItemInventoryComponent } from './components/item-inventory/item-invento
 import { MaterialsInventoryComponent } from './components/materials-inventory/materials-inventory.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
+import { PvPFightComponent } from './activities/pvp/pvp-fight.component';
 
 const directives = [
   ValidInputDirective,
@@ -79,6 +80,7 @@ const components = [
   ConsumableModalComponent,
   ConnectComponent,
   ChallengeModalComponent,
+  PvPFightComponent
 ];
 
 @NgModule({

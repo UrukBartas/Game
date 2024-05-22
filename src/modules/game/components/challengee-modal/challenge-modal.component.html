@@ -1,11 +1,15 @@
 <div id="confirm-modal">
   <ng-container *ngIf="!awaiting && !challengeResult">
     <div class="row d-flex flex-column align-items-center pb-4">
-      <img class="challenger-image" [src]="player.image" />
-      <span utTitle class="text-secondary w-fit" urText
+      <div class="challenger-container">
+        <img class="challenger-image" [src]="player.image" />
+        <div class="icon fa-sword"></div>
+      </div>
+
+      <span urTitle class="text-secondary w-fit z-1 pt-2"
         >{{ player.name }}
       </span>
-      <span utText class="text-white w-fit">Level {{ player.level }}</span>
+      <span urText class="text-white w-fit">Level {{ player.level }}</span>
     </div>
     <div class="row">
       <p class="text-white" urText>
@@ -50,7 +54,12 @@
         <app-spinner></app-spinner>
       </div>
       <p urText class="text-white">
-        Player accepted the duel. Joining the fight...
+        {{
+          challenger
+            ? 'Player accepted the duel. Joining the fight...'
+            : 'Joining the fight...'
+        }}
+        
       </p>
     </ng-container>
   </ng-container>

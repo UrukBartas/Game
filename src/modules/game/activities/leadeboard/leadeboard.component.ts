@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { getAccount } from '@wagmi/core';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -47,6 +48,7 @@ export class LeadeboardComponent extends TemplatePage {
   public websocket = inject(WebSocketService);
   public store = inject(Store);
   public modalService = inject(BsModalService);
+  private router = inject(Router);
   public onlinePlayers: string[] = [];
   public isPlayerConnected = (playerId: string) =>
     this.onlinePlayers.some((onlinePlayer) => onlinePlayer === playerId);
@@ -102,6 +104,13 @@ export class LeadeboardComponent extends TemplatePage {
               modal.content.awaiting = false;
               modal.content.challengeResult = true;
               modal.content.challengeAccepted = accept;
+
+              if (accept) {
+                setTimeout(() => {
+                  this.router.navigateByUrl('/arena');
+                  modal.hide();
+                }, 2000);
+              }
             });
           this.websocket.sendChallenge({ id, name, level, image }, player.id);
         },
