@@ -29,16 +29,11 @@ import { TemplatePage } from 'src/modules/core/components/template-page.componen
 import { Item } from 'src/modules/core/models/items.model';
 import { ContractService } from 'src/services/contract.service';
 import { ExportImportService } from 'src/services/export-import.service';
-import { InventoryService } from 'src/services/inventory.service';
 import { ItemService } from 'src/services/item.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
-import {
-  WalletService,
-  allowedChains,
-  getChainById,
-} from 'src/services/wallet.service';
+import { WalletService } from 'src/services/wallet.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -60,7 +55,7 @@ export class ExportImportNftComponent extends TemplatePage {
   toastService = inject(ToastrService);
   store = inject(Store);
   walletService = inject(WalletService);
-  public compatibleChains = this.getChainList();
+
   public activeNetworkId = signal(getNetwork().chain.id);
   public activeCorrectNetwork = computed(() => {
     return of(this.activeNetworkId()).pipe(filter((entry) => !!entry));
@@ -199,19 +194,11 @@ export class ExportImportNftComponent extends TemplatePage {
 
   ngOnInit(): void {}
 
-  public getChainList() {
-    if (environment.production) {
-      return allowedChains.filter((entry) => entry.id == shimmer.id);
-    } else {
-      return allowedChains.filter((entry) => entry.id == shimmerTestnet.id);
-    }
-  }
-
   ngAfterViewInit(): void {
     watchNetwork((network) => {
-      const isAllowed = this.compatibleChains.find(
-        (chain) => chain.id == network.chain.id
-      );
+      const isAllowed = this.walletService.chains
+        .getValue()
+        .find((chain) => chain.id == network.chain.id);
       if (!!isAllowed) {
         this.activeNetworkId.set(network.chain.id);
       } else {
@@ -222,9 +209,9 @@ export class ExportImportNftComponent extends TemplatePage {
 
   public getActiveNetworkImg() {
     if (this.activeNetworkId() != 0) {
-      const chain = this.compatibleChains.find(
-        (chain) => chain.id == this.activeNetworkId()
-      );
+      const chain = this.walletService.chains
+        .getValue()
+        .find((chain) => chain.id == this.activeNetworkId());
       if (chain) return chain.img;
     }
     return null;
@@ -288,7 +275,7 @@ export class ExportImportNftComponent extends TemplatePage {
       params: {
         type: 'ERC721',
         options: {
-          address: getChainById(getNetwork().chain.id).NFT,
+          address: this.walletService.getChainById(getNetwork().chain.id).NFT,
           tokenId: this.selectedMultipleItems[0].id + '',
         },
       },
@@ -301,7 +288,7 @@ export class ExportImportNftComponent extends TemplatePage {
       params: {
         type: 'ERC20',
         options: {
-          address: getChainById(getNetwork().chain.id).ERC20,
+          address: this.walletService.getChainById(getNetwork().chain.id).ERC20,
         },
       },
     });

@@ -3,11 +3,11 @@ import { Capacitor } from '@capacitor/core';
 import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { StatusBar } from '@capacitor/status-bar';
 import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
-import { WalletService } from 'src/services/wallet.service';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
-import { PushNotificationsService } from 'src/services/push-notifications.service';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import { SessionService } from 'src/services/session.service';
+import { WalletService } from 'src/services/wallet.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -16,9 +16,13 @@ import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 export class AppComponent {
   public walletService = inject(WalletService);
   public tooltipService = inject(NgbTooltipConfig);
+  public sessionService = inject(SessionService);
   //public pushNotificationsService = inject(PushNotificationsService);
   constructor() {
-    this.walletService.initWalletConnect();
+    this.sessionService.getChains().subscribe((data) => {
+      this.walletService.chains.next(data);
+      this.walletService.initWalletConnect();
+    });
     this.lockOrientation();
     //this.initializeFirebase();
     //this.pushNotificationsService.init();

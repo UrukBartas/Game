@@ -17,7 +17,7 @@ export class HttpUrukInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     let request = req.clone();
     try {
-      if (!!getNetwork() && !!getNetwork().chain) {
+      if (!!request.withCredentials && !!getNetwork() && !!getNetwork().chain) {
         try {
           request = req.clone({
             setHeaders: {
