@@ -139,6 +139,7 @@ export class PvPFightComponent
   }
 
   private handleEnemySurrender() {
+    this.showEnemyStatus = false;
     this.triggerVictory(null);
   }
 
@@ -171,6 +172,7 @@ export class PvPFightComponent
 
   onSurrender(): void {
     this.websocket.socket.emit('surrender');
+    this.showEnemyStatus = false;
     this.triggerDefeat(null);
   }
 
