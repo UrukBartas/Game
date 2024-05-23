@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { TurnActionEnum } from 'src/modules/core/models/fight.model';
 import { ChallengeModalComponent } from 'src/modules/game/components/challengee-modal/challenge-modal.component';
 import { MainState } from 'src/store/main.store';
+import { SoundService } from './sound.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,7 @@ export class WebSocketService {
   private store = inject(Store);
   private modalService = inject(BsModalService);
   private router = inject(Router);
+  private soundService = inject(SoundService);
 
   connect(): void {
     const token = this.store.selectSnapshot(MainState.getState).session.token;
@@ -46,6 +48,8 @@ export class WebSocketService {
 
     this.socket.on('challengeReceived', ({ challenger }) => {
       console.log('Challenge received:', challenger);
+
+      this.soundService.playSound('assets/sounds/battle-horn.mp3');
       const config: ModalOptions = {
         initialState: {
           player: challenger,
