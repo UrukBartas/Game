@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import {
+  Chain,
   connect,
   Connector,
   disconnect,
@@ -15,11 +16,13 @@ import { Event as Web3ModalEvent } from 'node_modules/@web3modal/core';
 import { Web3Modal } from '@web3modal/wagmi/dist/types/src/client';
 import { ToastrService } from 'ngx-toastr';
 import {
+  BehaviorSubject,
   catchError,
   debounceTime,
+  delay,
+  filter,
   firstValueFrom,
   from,
-  interval,
   map,
   of,
   Subject,
@@ -34,26 +37,10 @@ import {
   MainState,
   RefreshPlayer,
 } from 'src/store/main.store';
-import { shimmerTestnet, shimmer } from 'viem/chains';
 import { AuthService } from './auth.service';
 import { PlayerService } from './player.service';
-export const allowedChains = [
-  {
-    ...shimmerTestnet,
-    img: 'assets/smr-testnet.png',
-    NFT: '0xE2Dc34B0CDF64A958F14B7230ADFF090C5A2d13F' as `0x${string}`,
-    ERC20: '0xD6c9f8B5C78a8439b384f0d265c41D68F15B0749' as `0x${string}`,
-  },
-  {
-    ...shimmer,
-    img: 'assets/smr.png',
-    NFT: '0x4D8ccA0c1A3c6B455DE8c8D20Ea27241b38BBC33' as `0x${string}`,
-    ERC20: '0x81f1B7248Bb987D7849B1F08FcE74666a7068ECe' as `0x${string}`,
-  },
-];
-
-export const getChainById = (id: number) =>
-  allowedChains.find((chain) => chain.id == id);
+import { SessionService } from './session.service';
+import { shimmerTestnet, shimmer } from 'viem/chains';
 
 @Injectable({
   providedIn: 'root',
@@ -63,6 +50,7 @@ export class WalletService {
   connectWalletInterval;
 
   public authService = inject(AuthService);
+  public sessionService = inject(SessionService);
   public playerService = inject(PlayerService);
   private toastService = inject(ToastrService);
   private router = inject(Router);
@@ -73,6 +61,16 @@ export class WalletService {
   });
   public address$ = new Subject<`0x${string}` | undefined>();
   public walletConnectIsLoggedIn$ = this.address$.pipe(map((entry) => !!entry));
+  public chains: BehaviorSubject<Array<any> | null> = new BehaviorSubject(null);
+
+  constructor() {
+    this.sessionService.getChains().subscribe((data) => {
+      this.chains.next(data);
+    });
+  }
+
+  getChainById = (id: number) =>
+    this.chains.getValue().find((chain) => chain.id == id);
 
   initWalletConnect() {
     const projectId = process.env['WALLET_CONNECT_PROJECT_ID'] ?? '';
@@ -84,12 +82,9 @@ export class WalletService {
         'https://avatars.githubusercontent.com/u/89161645?s=400&u=45ee748438c04f06f854fc0d28942581967ef16f&v=4',
       ],
     };
-
     const wagmiConfig = defaultWagmiConfig({
       projectId,
-      chains: allowedChains,
-      enableWalletConnect: true,
-      enableInjected: true,
+      chains: this.chains.getValue(),
       metadata,
     });
     watchAccount(({ address }) => {
@@ -99,7 +94,7 @@ export class WalletService {
     this.modal = createWeb3Modal({
       wagmiConfig,
       projectId,
-      chains: allowedChains,
+      chains: this.chains.getValue(),
     });
 
     this.modal.subscribeEvents((event) =>
@@ -121,11 +116,11 @@ export class WalletService {
         this.store.dispatch(new RefreshPlayer());
       }
     } else {
-      if (!this.router.url.includes('external')) this.logInVoid();
+      if (!this.router.url.includes('external')) firstValueFrom(this.logIn());
     }
   }
 
-  public logInVoid() {
+  public loginVoid() {
     firstValueFrom(this.logIn());
   }
 

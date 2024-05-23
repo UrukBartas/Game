@@ -31,7 +31,7 @@
           </div>
           <div class="chain-list">
             @for (
-              compatibleChain of compatibleChains;
+              compatibleChain of walletService.chains | async;
               track compatibleChain.id
             ) {
               <app-item-box

@@ -20,10 +20,14 @@ export class ApiBaseService {
 
   constructor(protected _http: HttpClient) {}
 
-  public get(endpoint: string, ignoreError?: boolean): Observable<any> {
+  public get(
+    endpoint: string,
+    ignoreError?: boolean,
+    withCredentials = true
+  ): Observable<any> {
     return this._http
       .get(environment.apiUrl + this.controllerPrefix + endpoint, {
-        withCredentials: true,
+        withCredentials,
       })
       .pipe(catchError((err) => this.handleError(err, ignoreError)));
   }

@@ -1,25 +1,18 @@
-import { Injectable } from '@angular/core';
-import {
-  getNetwork,
-  readContract,
-  watchNetwork,
-  writeContract,
-} from '@wagmi/core';
-import UrukNFTArtifact from '../assets/UrukNFT.json';
-import GoldenUruks from '../assets/GoldenUruks.json';
-import { BehaviorSubject, delay, filter, switchMap } from 'rxjs';
-import { getChainById } from './wallet.service';
+import { Injectable, inject } from '@angular/core';
+import { getNetwork, readContract, writeContract } from '@wagmi/core';
+import { WalletService } from './wallet.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContractService {
+  private wallet = inject(WalletService);
   constructor() {}
 
   public executeReadContractOnUrukNFT(functionName: string, args: Array<any>) {
     return readContract({
-      address: getChainById(getNetwork().chain.id)?.NFT,
-      abi: UrukNFTArtifact.abi,
+      address: this.wallet.getChainById(getNetwork().chain.id)?.NFT,
+      abi: this.wallet.getChainById(getNetwork().chain.id)?.NFT_ABI,
       functionName,
       args,
     });
@@ -31,8 +24,8 @@ export class ContractService {
     value?: any
   ) {
     return writeContract({
-      address: getChainById(getNetwork().chain.id)?.NFT,
-      abi: UrukNFTArtifact.abi,
+      address: this.wallet.getChainById(getNetwork().chain.id)?.NFT,
+      abi: this.wallet.getChainById(getNetwork().chain.id)?.NFT_ABI,
       functionName,
       args,
       value,
@@ -44,8 +37,8 @@ export class ContractService {
     args: Array<any>
   ) {
     return readContract({
-      address: getChainById(getNetwork().chain.id)?.ERC20,
-      abi: GoldenUruks.abi,
+      address: this.wallet.getChainById(getNetwork().chain.id)?.ERC20,
+      abi: this.wallet.getChainById(getNetwork().chain.id)?.ERC20_ABI,
       functionName,
       args,
     });
@@ -57,8 +50,8 @@ export class ContractService {
     value?: any
   ) {
     return writeContract({
-      address: getChainById(getNetwork().chain.id)?.ERC20,
-      abi: GoldenUruks.abi,
+      address: this.wallet.getChainById(getNetwork().chain.id)?.ERC20,
+      abi: this.wallet.getChainById(getNetwork().chain.id)?.ERC20_ABI,
       functionName,
       args,
       value,
