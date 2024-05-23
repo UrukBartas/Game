@@ -34,21 +34,11 @@ export class WebSocketService {
       },
     });
 
-    this.socket.on('connect', () => {
-      console.log('Connected to WebSocket server');
-    });
-
-    this.socket.on('disconnect', () => {
-      console.log('Disconnected from WebSocket server');
-    });
-
     this.socket.on('onlinePlayers', (data) => {
       this.onlinePlayersSubject.next(data.players);
     });
 
     this.socket.on('challengeReceived', ({ challenger }) => {
-      console.log('Challenge received:', challenger);
-
       this.soundService.playSound('assets/sounds/battle-horn.mp3');
       const config: ModalOptions = {
         initialState: {
@@ -67,13 +57,11 @@ export class WebSocketService {
       const modal = this.modalService.show(ChallengeModalComponent, config);
     });
 
-    this.socket.on('challengeAccepted', (data) => {
-      console.log('Challenge accepted:', data);
+    this.socket.on('challengeAccepted', () => {
       this.acceptChallenge$.next(true);
     });
 
-    this.socket.on('challengeDeclined', (data) => {
-      console.log('Challenge decline:', data);
+    this.socket.on('challengeDeclined', () => {
       this.declineChallenge$.next(false);
     });
   }

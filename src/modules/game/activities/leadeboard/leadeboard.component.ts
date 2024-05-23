@@ -78,9 +78,9 @@ export class LeadeboardComponent extends TemplatePage {
       .get('userOrWallet')
       .valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
       .subscribe((data) => this.nameOrWallet.set(data));
-    this.websocket.onlinePlayers$.subscribe(
-      (players) => (this.onlinePlayers = players)
-    );
+    this.websocket.onlinePlayers$
+      .pipe(takeUntilDestroyed())
+      .subscribe((players) => (this.onlinePlayers = players));
   }
 
   challengePlayer(player: PlayerModel) {
