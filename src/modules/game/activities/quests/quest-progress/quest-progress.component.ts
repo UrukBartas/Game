@@ -16,7 +16,7 @@ import { QuestRouterModel } from '../models/quest-router.model';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Adventure } from 'src/services/adventures.service';
-import { filter } from 'rxjs';
+import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'app-quest-progress',
@@ -28,10 +28,10 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
 
   quest: QuestModel;
   questReady = false;
-  questStatusEnum = QuestStatusEnum;
   percentage: number;
   time: string;
   interval;
+  questStarted = false;
 
   constructor(
     public viewportService: ViewportService,
@@ -45,7 +45,10 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
   ngOnInit(): void {
     this.store
       .select(MainState.getState)
-      .pipe(filter((entry) => !!entry.quests))
+      .pipe(
+        filter((entry) => !!entry.quests),
+        take(1)
+      )
       .subscribe((state) => {
         this.quest = state.quests.find((quest) => quest.startedAt !== null);
         if (this.quest) {
@@ -54,8 +57,19 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
       });
   }
 
+  startQuest() {
+    this.questStarted = true;
+    setTimeout(() => {
+      this.title.setTitle('Fight!');
+    }, 1000);
+    this.questStatusChange.emit({
+      data: this.quest,
+      status: QuestStatusEnum.FIGHT,
+    });
+  }
+
   changeTitleRecursiveQuestIsReady(): void {
-    if (!this.questReady) return;
+    if (!this.questReady || this.questStarted) return;
     this.title.setTitle('Quest Ready!');
     setTimeout(() => {
       this.title.setTitle('Battle Incoming!');
@@ -66,49 +80,46 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
   }
 
   setQuestTimer() {
-    this.ngZone.runOutsideAngular(() => {
-      this.interval = setInterval(() => {
-        if (!this.quest) {
-          clearInterval(this.interval);
-          return;
-        }
-        const startedAt = new Date(this.quest.startedAt);
-        const finishedAt = new Date(this.quest.finishedAt);
-        //finishedAt.setMinutes(finishedAt.getMinutes() - 320);
-        const currentDate = new Date();
+    this.interval = setInterval(() => {
+      if (!this.quest) {
+        clearInterval(this.interval);
+        return;
+      }
+      const startedAt = new Date(this.quest.startedAt);
+      const finishedAt = new Date(this.quest.finishedAt);
+      //finishedAt.setMinutes(finishedAt.getMinutes() - 320);
+      const currentDate = new Date();
 
-        if (currentDate > finishedAt) {
-          clearInterval(this.interval);
-          this.ngZone.run(() => {
-            this.questReady = true;
-            this.changeTitleRecursiveQuestIsReady();
-          });
-        }
-
-        const totalTimeSpanMillis = finishedAt.getTime() - startedAt.getTime();
-        const totalTimeDifferenceMillis =
-          totalTimeSpanMillis - (currentDate.getTime() - startedAt.getTime());
-        const timeDifferenceMillis =
-          currentDate.getTime() - startedAt.getTime();
-
-        const hours: number = Math.floor(totalTimeDifferenceMillis / 3600000);
-        const minutes: number = Math.floor(
-          (totalTimeDifferenceMillis % 3600000) / 60000
-        );
-        const seconds: number = Math.floor(
-          (totalTimeDifferenceMillis % 60000) / 1000
-        );
-
-        const formattedTime = `${String(hours).padStart(2, '0')}:${String(
-          minutes
-        ).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        this.title.setTitle(`${this.time} - ${this.quest.data.name}`);
+      if (currentDate > finishedAt) {
+        clearInterval(this.interval);
         this.ngZone.run(() => {
-          this.time = formattedTime;
-          this.percentage = (timeDifferenceMillis / totalTimeSpanMillis) * 100;
+          this.questReady = true;
+          this.changeTitleRecursiveQuestIsReady();
         });
-      }, 100);
-    });
+      }
+
+      const totalTimeSpanMillis = finishedAt.getTime() - startedAt.getTime();
+      const totalTimeDifferenceMillis =
+        totalTimeSpanMillis - (currentDate.getTime() - startedAt.getTime());
+      const timeDifferenceMillis = currentDate.getTime() - startedAt.getTime();
+
+      const hours: number = Math.floor(totalTimeDifferenceMillis / 3600000);
+      const minutes: number = Math.floor(
+        (totalTimeDifferenceMillis % 3600000) / 60000
+      );
+      const seconds: number = Math.floor(
+        (totalTimeDifferenceMillis % 60000) / 1000
+      );
+
+      const formattedTime = `${String(hours).padStart(2, '0')}:${String(
+        minutes
+      ).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      this.title.setTitle(`${this.time} - ${this.quest.data.name}`);
+      this.ngZone.run(() => {
+        this.time = formattedTime;
+        this.percentage = (timeDifferenceMillis / totalTimeSpanMillis) * 100;
+      });
+    }, 100);
   }
 
   getProgressBarHeight() {

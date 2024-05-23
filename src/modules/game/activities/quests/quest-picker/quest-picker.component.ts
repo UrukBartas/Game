@@ -79,7 +79,7 @@ export class QuestPickerComponent extends TemplatePage {
     }
     return (
       adventureSelected.currentPhase + 1 ==
-      this.quests[this.activeSlideIndex].data.phase
+      this.quests[this.activeSlideIndex]?.data?.phase
     );
   }
 
@@ -215,7 +215,7 @@ export class QuestPickerComponent extends TemplatePage {
       case 'xs':
       case 'sm':
       default:
-        return '1.25rem';
+        return '1.8rem';
     }
   }
 }

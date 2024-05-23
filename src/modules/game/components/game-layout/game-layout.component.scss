@@ -11,6 +11,11 @@ i {
   margin-right: 5px;
 }
 
+.turn-right{
+  transform: rotate(90deg);
+  font-size: 10px;
+}
+
 .last-row {
   color: $white-100;
   display: flex;
@@ -59,6 +64,7 @@ i {
 .sidebar-lateral {
   height: 100%;
   color: $white-100;
+  overflow: auto;
 }
 
 nav,
@@ -68,10 +74,12 @@ nav a {
 
 .list-group {
   gap: 5px;
+  align-items: end;
 }
 
 .list-group-item {
   display: flex;
+  width: 100%;
   justify-content: center;
   align-items: center;
   cursor: pointer;
@@ -81,11 +89,11 @@ nav a {
     background-color: lighten($color: $secondary, $amount: 5);
   }
   @include media-breakpoint-down(sm) {
-   height: 70px;
-   width: 300px;
-   span{
-    font-size: 20px;
-   }
+    height: 70px;
+    width: 300px;
+    span {
+      font-size: 20px;
+    }
   }
 }
 

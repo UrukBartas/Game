@@ -1,7 +1,7 @@
 <div class="active-quest-container" *ngIf="quest">
   <img [src]="quest.data.image" alt="Quest Image" class="active-quest" />
   <div *ngIf="!questReady" class="progress-bar-container">
-    <h3 urTitle>
+    <h3 urTitle class="text-third">
       {{ quest.data.name }}
     </h3>
     <div class="description mb-3 px-4">
@@ -23,12 +23,7 @@
   </div>
   <div *ngIf="questReady">
     <button
-      (click)="
-        questStatusChange.emit({
-          data: quest,
-          status: questStatusEnum.FIGHT
-        })
-      "
+      (click)="startQuest()"
       urTitle
       class="button-rainbow"
       [style.padding]="getResponsiveButtonSize()"
