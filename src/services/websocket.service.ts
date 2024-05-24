@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, take } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { TurnActionEnum } from 'src/modules/core/models/fight.model';
@@ -55,6 +55,9 @@ export class WebSocketService {
         },
       };
       const modal = this.modalService.show(ChallengeModalComponent, config);
+      modal.onHidden
+        .pipe(take(1))
+        .subscribe(() => this.declineChallenge(challenger.id));
     });
 
     this.socket.on('challengeAccepted', () => {
