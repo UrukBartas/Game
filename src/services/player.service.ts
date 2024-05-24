@@ -84,7 +84,9 @@ export class PlayerService extends ApiBaseService {
     sortType: 'asc' | 'desc',
     page: number,
     chunkSize: number,
-    nameOrWallet: string
+    nameOrWallet: string,
+    from: Date,
+    to: Date
   ) {
     return this.post('/get-leaderboard/', {
       sortBy,
@@ -92,6 +94,8 @@ export class PlayerService extends ApiBaseService {
       page,
       chunkSize,
       nameOrWallet,
+      from: from.toISOString(),
+      to: to.toISOString(),
     }) as Observable<PlayerModel[]>;
   }
 
