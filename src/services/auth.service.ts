@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
+import { getAccount } from '@wagmi/core';
 import { Observable } from 'rxjs';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 
@@ -7,9 +9,15 @@ import { ApiBaseService } from 'src/modules/core/services/api-base.service';
   providedIn: 'root',
 })
 export class AuthService extends ApiBaseService {
+  public nativePlatform = Capacitor.isNativePlatform() || true; //true
+
   constructor(private http: HttpClient) {
     super(http);
     this.controllerPrefix = '/auth';
+  }
+
+  loginPlayer(email: string, password: string) {
+    return this.post('/login', { email, password });
   }
 
   getAuth(): Observable<{ nonce: string }> {

@@ -54,13 +54,12 @@
     margin-bottom: 20px;
     color: $white-100;
   }
-
-  .save-button {
-    float: right;
+  .action-buttons{
+    display: flex;
+    justify-content: end;
   }
 }
 
-
-.row-buttons{
+.row-buttons {
   gap: 10px;
 }

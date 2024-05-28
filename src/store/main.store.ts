@@ -5,11 +5,12 @@ import { Device } from '@capacitor/device';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { disconnect } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
-import { take } from 'rxjs';
+import { firstValueFrom, take } from 'rxjs';
 import { FightModel } from 'src/modules/core/models/fight.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { SessionModel } from 'src/modules/core/models/session.model';
+import { AuthService } from 'src/services/auth.service';
 import { PlayerService } from 'src/services/player.service';
 import { SessionService } from 'src/services/session.service';
 import { WalletService } from 'src/services/wallet.service';
@@ -21,6 +22,7 @@ export class ConnectWallet {
 
 export class LoginPlayer {
   static readonly type = '[Player] Log in';
+  constructor(public payload?: { email: string; password: string }) {}
 }
 
 export class SetPlayer {
@@ -81,6 +83,7 @@ export class MainState {
   toastService = inject(ToastrService);
   store = inject(Store);
   walletService = inject(WalletService);
+  authService = inject(AuthService);
 
   @Action(ConnectWallet)
   connectWallet(
@@ -113,20 +116,19 @@ export class MainState {
   }
 
   @Action(LoginPlayer)
-  async loginPlayer({ patchState }: StateContext<MainStateModel>) {
+  async loginPlayer({ patchState }: StateContext<MainStateModel>, { payload }) {
     // No cambiar a observables da problemas de syncro
+    if (this.authService.nativePlatform && !!payload?.email) {
+      const logginResult = await firstValueFrom(
+        this.authService.loginPlayer(payload.email, payload.password)
+      );
+      if (!logginResult)
+        this.toastService.error("Credentials don't match, try again!");
+    }
     try {
-      const player = await this.playerService
-        .get('/')
-        .pipe(take(1))
-        .toPromise();
-
+      const player = await firstValueFrom(this.playerService.get('/'));
       if (player) {
-        const session = await this.sessionService
-          .open()
-          .pipe(take(1))
-          .toPromise();
-
+        const session = await firstValueFrom(this.sessionService.open());
         patchState({ player, session });
         this.router.navigateByUrl('/inventory');
       } else if (!this.router.url.includes('external')) {

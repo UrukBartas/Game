@@ -56,7 +56,7 @@ export class ExportImportNftComponent extends TemplatePage {
   store = inject(Store);
   walletService = inject(WalletService);
 
-  public activeNetworkId = signal(getNetwork().chain.id);
+  public activeNetworkId = signal(getNetwork().chain?.id);
   public activeCorrectNetwork = computed(() => {
     return of(this.activeNetworkId()).pipe(filter((entry) => !!entry));
   });

@@ -51,8 +51,62 @@
       />
     </div>
 
-    <div class="form-group py-3">
-      <button (click)="save()" class="btn btn-primary save-button">Save</button>
+    <div class="row">
+      <div class="form-group col-12 col-md-6">
+        <label for="password" class="text-third">Password:</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          formControlName="password"
+          name="password"
+          placeholder="Enter password"
+        />
+      </div>
+
+      <div class="form-group col-12 col-md-6">
+        <label for="repeatPassword" class="text-third">Repeat password:</label>
+        <input
+          type="password"
+          class="form-control"
+          id="repeatPassword"
+          formControlName="repeatPassword"
+          name="repeatPassword"
+          placeholder="Repeat password"
+        />
+      </div>
+    </div>
+
+    <div
+      *ngIf="
+        form.errors?.['passwordMismatch'] &&
+        (form.get('password').touched || form.get('repeatPassword').touched)
+      "
+    >
+      <span class="error text-danger">The passwords have to match</span>
+    </div>
+
+    <div
+      *ngIf="
+        form.get('password').errors?.['pattern'] && form.get('password').touched
+      "
+    >
+      <span class="error text-danger"
+        >The password must be at least 8 characters long and include an
+        uppercase letter, a lowercase letter, a number, and a special
+        character.</span
+      >
+    </div>
+
+    <div class="form-group py-3 action-buttons gap-2">
+      <button
+        [disabled]="form.invalid"
+        (click)="save()"
+        class="btn btn-secondary"
+      >
+        Save
+      </button>
+      <button (click)="location.back()" class="btn btn-dark">Back</button>
     </div>
   </div>
 
@@ -60,7 +114,23 @@
     <div class="description">
       <p urTitle>Settings</p>
     </div>
-    <div class="row row-buttons">
+    <div class="row">
+      <div class="col-12 col-sm-6">
+        @if (!userHasLinkedAddress()) {
+          <a
+            class="btn btn-lg btn-primary save-button w-100"
+            (click)="linkWeb3WalletAddressToThisAccount()"
+          >
+            {{
+              this.hasWalletConnected()
+                ? 'Verify ownership'
+                : 'Link Web3 Wallet'
+            }}
+          </a>
+        } @else {
+          <span class="text-secondary">Wallet address linked: {{ getAddress() }}</span>
+        }
+      </div>
       <div class="col-12 col-sm-6">
         <a
           type="submit"

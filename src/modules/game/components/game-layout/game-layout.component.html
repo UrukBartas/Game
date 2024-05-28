@@ -73,6 +73,26 @@
         !isSidebarOpened() ? 'content-extended' : 'content-collapsed'
       }}"
     >
+      <div
+        class="locked-screen"
+        *ngIf="
+          !!getActiveRoute() &&
+          !!getActiveRoute().onlyWeb3 &&
+          !(walletService.walletConnectIsLoggedIn$ | async)
+        "
+      >
+        <div class="display-message gap-3 text-white">
+          <i class="fa-solid fa-lock" style="font-size: 25px"></i>
+          <span class="text-secondary"
+            >You are not connected to a Web3 wallet, possibly because you logged
+            in with your email.</span
+          >
+          <span class="text-secondary"
+            >To access this section and perform transactions, please log in
+            using a Web3 wallet.</span
+          >
+        </div>
+      </div>
       <router-outlet></router-outlet>
     </div>
   </div>
@@ -130,7 +150,7 @@
           class="list-group-item bg-primary d-flex justify-content-{{
             !isSidebarOpened() ? 'between' : 'center'
           }} {{ route.class ? route.class() : '' }}"
-          (click)="route.click()"
+          (click)="route.click(); modalRef.hide()"
           *ngIf="route.display ? route.display() : true"
         >
           <i class="{{ route.icon }}"></i>

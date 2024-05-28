@@ -1,5 +1,5 @@
 import { Component, TemplateRef, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { disconnect } from '@wagmi/core';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -10,7 +10,11 @@ import { AuthService } from 'src/services/auth.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
-import { MainState, MainStateModel } from 'src/store/main.store';
+import {
+  DisconnectWallet,
+  MainState,
+  MainStateModel,
+} from 'src/store/main.store';
 import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component';
 
 @Component({
@@ -21,6 +25,12 @@ import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component'
 export class GameLayoutComponent {
   @Select(MainState.getState) state$: Observable<MainStateModel>;
   private displayPVE = false;
+  public walletService = inject(WalletService)
+  public getActiveRoute = () => {
+    return this.routesNavigation.find(
+      (entry) => entry.path == this.router.url
+    );
+  };
   public routesNavigation = [
     {
       path: '/inventory',
@@ -76,6 +86,7 @@ export class GameLayoutComponent {
       path: '/export-import',
       displayText: 'Import/Export',
       icon: 'fa fa-plug',
+      onlyWeb3: true,
     },
     {
       path: '/edit',
@@ -91,6 +102,7 @@ export class GameLayoutComponent {
 
   public isSidebarOpened = signal(true);
   public router = inject(Router);
+  public activeRoute = inject(ActivatedRoute);
   public authService = inject(AuthService);
   public accountService = inject(PlayerService);
   public viewportService = inject(ViewportService);
@@ -115,19 +127,12 @@ export class GameLayoutComponent {
   }
 
   private logout() {
-    const isPlayerDisconnected = !this.store.selectSnapshot(MainState.getState)
-      .player;
-
-    if (isPlayerDisconnected) {
-      return null;
-    }
-
     const config: ModalOptions = {
       initialState: {
         title: 'Logout',
         description: 'Are you sure you want to disconnect?',
         accept: () => {
-          disconnect();
+          this.store.dispatch(new DisconnectWallet());
           modalRef.hide();
         },
       },
