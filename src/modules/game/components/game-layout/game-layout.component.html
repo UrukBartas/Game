@@ -76,9 +76,7 @@
       <div
         class="locked-screen"
         *ngIf="
-          !!getActiveRoute() &&
-          !!getActiveRoute().onlyWeb3 &&
-          !(walletService.walletConnectIsLoggedIn$ | async)
+          !!getActiveRoute() && !!getActiveRoute().onlyWeb3 && loggedWithemail()
         "
       >
         <div class="display-message gap-3 text-white">

@@ -94,12 +94,13 @@ export class EditCharacterComponent extends TemplatePage {
     return player?.id?.match(/^0x[a-fA-F0-9]{40}$/);
   }
 
-  public getAddress() {
-    return getAccount().address;
+  public getPlayerAddress() {
+    const player = this.store.selectSnapshot(MainState.getState).player;
+    return player.id;
   }
 
   public hasWalletConnected() {
-    return !!this.getAddress();
+    return !!getAccount().address;
   }
 
   public async linkWeb3WalletAddressToThisAccount() {

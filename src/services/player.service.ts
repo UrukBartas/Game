@@ -58,6 +58,8 @@ export class PlayerService extends ApiBaseService {
     return this.post('/create-by-email', { email, name, image, password });
   }
 
+
+
   update(
     email: string,
     name: string,

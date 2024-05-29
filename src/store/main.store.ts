@@ -117,16 +117,17 @@ export class MainState {
 
   @Action(LoginPlayer)
   async loginPlayer({ patchState }: StateContext<MainStateModel>, { payload }) {
-    // No cambiar a observables da problemas de syncro
-    if (this.authService.nativePlatform && !!payload?.email) {
-      const logginResult = await firstValueFrom(
+    let player = null;
+    if (!!payload?.email) {
+      player = await firstValueFrom(
         this.authService.loginPlayer(payload.email, payload.password)
       );
-      if (!logginResult)
+      if (!player)
         this.toastService.error("Credentials don't match, try again!");
+    } else {
+      player = await firstValueFrom(this.playerService.get('/'));
     }
     try {
-      const player = await firstValueFrom(this.playerService.get('/'));
       if (player) {
         const session = await firstValueFrom(this.sessionService.open());
         patchState({ player, session });

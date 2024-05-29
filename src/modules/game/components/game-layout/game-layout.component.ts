@@ -25,11 +25,10 @@ import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component'
 export class GameLayoutComponent {
   @Select(MainState.getState) state$: Observable<MainStateModel>;
   private displayPVE = false;
-  public walletService = inject(WalletService)
+  public walletService = inject(WalletService);
+
   public getActiveRoute = () => {
-    return this.routesNavigation.find(
-      (entry) => entry.path == this.router.url
-    );
+    return this.routesNavigation.find((entry) => entry.path == this.router.url);
   };
   public routesNavigation = [
     {
@@ -110,6 +109,7 @@ export class GameLayoutComponent {
   public modalService = inject(BsModalService);
   public displayingFullScreenModal = false;
   modalRef?: BsModalRef;
+  public loggedWithemail = this.authService.loggedWithEmail;
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);

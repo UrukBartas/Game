@@ -38,14 +38,14 @@ export class AuthGuard implements CanActivate {
       : true;
     const { isDisconnected } = getAccount();
 
-    if (isDisconnected && !this.authService.nativePlatform) {
+    if (isDisconnected && !this.authService.loggedWithEmail()) {
       this.toastService.warning('Please connect your wallet');
     }
 
     if (
       !isPlayerLogged ||
       sessionExpired ||
-      (isDisconnected && !this.authService.nativePlatform)
+      (isDisconnected && !this.authService.loggedWithEmail())
     )
       this.router.navigate(['/']);
 
