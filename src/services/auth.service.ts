@@ -9,7 +9,7 @@ import { MainState } from 'src/store/main.store';
   providedIn: 'root',
 })
 export class AuthService extends ApiBaseService {
-  public nativePlatform = Capacitor.isNativePlatform() && false;
+  public nativePlatform = Capacitor.isNativePlatform();
 
   constructor(private http: HttpClient) {
     super(http);
