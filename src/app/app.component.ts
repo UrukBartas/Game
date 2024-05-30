@@ -8,6 +8,7 @@ import { getAnalytics } from 'firebase/analytics';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { SessionService } from 'src/services/session.service';
 import { WalletService } from 'src/services/wallet.service';
+import { AuthService } from 'src/services/auth.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -17,6 +18,7 @@ export class AppComponent {
   public walletService = inject(WalletService);
   public tooltipService = inject(NgbTooltipConfig);
   public sessionService = inject(SessionService);
+  public authService = inject(AuthService)
   //public pushNotificationsService = inject(PushNotificationsService);
   constructor() {
     this.sessionService.getChains().subscribe((data) => {
