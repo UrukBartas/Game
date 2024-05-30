@@ -38,6 +38,10 @@ export class AppComponent {
       await ScreenOrientation.unlock();
       await StatusBar.hide();
       await NavigationBar.hide();
+      document.addEventListener('resume', async () => {
+        await StatusBar.hide();
+        await NavigationBar.hide();
+      });
     } catch (error) {}
   }
 
