@@ -88,6 +88,10 @@
   </div>
   <div class="row mt-3">
     <div class="col-12 col-sm-6">
+      <p *ngIf="!upgrade" class="text-warning">
+        There is a small possibility of getting a Magic Dust for each melted
+        item.
+      </p>
       <p class="text-white" urText>
         Price is
         {{ preview?.totalPrice ?? preview?.price ?? 0 | compressNumber }}
@@ -104,9 +108,7 @@
       <p class="text-white" urText>Do you wish to continue?</p>
     </div>
     <div class="col-12 col-sm-6" *ngIf="upgrade">
-      <div class="text-secondary pb-2" urText>
-        Avoid upgrade failure with:
-      </div>
+      <div class="text-secondary pb-2" urText>Avoid upgrade failure with:</div>
       <div class="wrapper-magic-dust">
         <app-item-box
           [height]="getItemBoxSize()"
