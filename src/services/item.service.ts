@@ -37,8 +37,8 @@ export class ItemService extends ApiBaseService {
     return this.post('/' + item.id + '/equip/', {}) as Observable<Item>;
   }
 
-  public upgradeItem(itemId: number) {
-    return this.get('/' + itemId + '/upgrade-item/');
+  public upgradeItem(itemId: number, useMagicDust: boolean) {
+    return this.get('/' + itemId + '/upgrade-item/' + useMagicDust);
   }
 
   public getUpgradeItemPreview(itemId: number) {

@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
-import { ScreenOrientation } from '@capacitor/screen-orientation';
 import { StatusBar } from '@capacitor/status-bar';
 import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
 import { initializeApp } from 'firebase/app';
@@ -34,8 +33,6 @@ export class AppComponent {
 
   async lockOrientation() {
     try {
-      await ScreenOrientation.lock({ orientation: 'landscape-primary' });
-      await ScreenOrientation.unlock();
       await StatusBar.hide();
       await NavigationBar.hide();
     } catch (error) {}
