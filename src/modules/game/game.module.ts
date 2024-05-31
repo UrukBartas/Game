@@ -53,6 +53,7 @@ import { MaterialsInventoryComponent } from './components/materials-inventory/ma
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
 import { PvPFightComponent } from './activities/pvp/pvp-fight.component';
+import { CapitalizeFirstPipe } from '../core/pipes/capitalize-first.pipe';
 
 const directives = [
   ValidInputDirective,
@@ -80,7 +81,15 @@ const components = [
   ConsumableModalComponent,
   ConnectComponent,
   ChallengeModalComponent,
-  PvPFightComponent
+  PvPFightComponent,
+];
+
+const pipes = [
+  ItemdataToItemPipe,
+  CapitalizeFirstPipe,
+  OrderByPipe,
+  StackPipe,
+  CompressNumberPipe,
 ];
 
 @NgModule({
@@ -98,6 +107,7 @@ const components = [
   ],
   imports: [
     ...directives,
+    ...pipes,
     CommonModule,
     TabsModule,
     GameRoutingModule,
@@ -111,16 +121,12 @@ const components = [
     ExpandInventoryTooltipComponent,
     GenericItemTooltipComponent,
     DoubleClickDirective,
-    StackPipe,
-    CompressNumberPipe,
     DndModule,
-    ItemdataToItemPipe,
-    OrderByPipe,
     ContextMenuComponent,
     ContextMenuInventoryOptionsComponent,
     BlacksmithContextMenuComponent,
     NgxSpinnerModule,
-    SpinnerComponent
+    SpinnerComponent,
   ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe],

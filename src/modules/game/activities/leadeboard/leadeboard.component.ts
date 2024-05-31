@@ -13,6 +13,7 @@ import { PlayerService } from 'src/services/player.service';
 import { WebSocketService } from 'src/services/websocket.service';
 import { MainState } from 'src/store/main.store';
 import { ChallengeModalComponent } from '../../components/challengee-modal/challenge-modal.component';
+import { PlayerStateEnum } from './enum/player-state.enum';
 
 @Component({
   selector: 'app-leadeboard',
@@ -49,9 +50,15 @@ export class LeadeboardComponent extends TemplatePage {
   public store = inject(Store);
   public modalService = inject(BsModalService);
   private router = inject(Router);
-  public onlinePlayers: string[] = [];
-  public isPlayerConnected = (playerId: string) =>
-    this.onlinePlayers.some((onlinePlayer) => onlinePlayer === playerId);
+  public onlinePlayers: { address: string; state: PlayerStateEnum }[] = [];
+  public getPlayerState = (playerId: string) => {
+    const player = this.onlinePlayers.find(
+      (onlinePlayer) => onlinePlayer.address === playerId
+    );
+    if (!player) return PlayerStateEnum.OFFLINE;
+    return player.state;
+  };
+  public playerStates = PlayerStateEnum;
 
   public getImgBasedOnRanking(number: number) {
     switch (number) {
@@ -80,7 +87,7 @@ export class LeadeboardComponent extends TemplatePage {
       .subscribe((data) => this.nameOrWallet.set(data));
     this.websocket.onlinePlayers$
       .pipe(takeUntilDestroyed())
-      .subscribe((players) => (this.onlinePlayers = players));
+      .subscribe((players) => this.onlinePlayers = players);
   }
 
   challengePlayer(player: PlayerModel) {

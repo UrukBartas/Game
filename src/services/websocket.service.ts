@@ -5,7 +5,7 @@ import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, Subject, take } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
-import { TurnActionEnum } from 'src/modules/core/models/fight.model';
+import { PlayerStateEnum } from 'src/modules/game/activities/leadeboard/enum/player-state.enum';
 import { ChallengeModalComponent } from 'src/modules/game/components/challengee-modal/challenge-modal.component';
 import { MainState } from 'src/store/main.store';
 import { SoundService } from './sound.service';
@@ -15,7 +15,9 @@ import { SoundService } from './sound.service';
 })
 export class WebSocketService {
   socket: Socket;
-  private onlinePlayersSubject = new BehaviorSubject<string[]>([]);
+  private onlinePlayersSubject = new BehaviorSubject<
+    { address: string; state: PlayerStateEnum }[]
+  >([]);
   onlinePlayers$ = this.onlinePlayersSubject.asObservable();
   acceptChallenge$ = new Subject<boolean>();
   declineChallenge$ = new Subject<boolean>();
@@ -55,9 +57,11 @@ export class WebSocketService {
         },
       };
       const modal = this.modalService.show(ChallengeModalComponent, config);
-      modal.onHidden
-        .pipe(take(1))
-        .subscribe(() => this.declineChallenge(challenger.id));
+      modal.onHidden.pipe(take(1)).subscribe(() => {
+        if (!modal.content.challengeAccepted) {
+          this.declineChallenge(challenger.id);
+        }
+      });
     });
 
     this.socket.on('challengeAccepted', () => {

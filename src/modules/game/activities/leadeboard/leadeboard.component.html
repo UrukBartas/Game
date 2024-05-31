@@ -65,7 +65,10 @@
       </div>
       <div class="list-leaderboard-item-right">
         <div
-          *ngIf="isPlayerConnected(player.id) && player.id !== actualAddress"
+          *ngIf="
+            getPlayerState(player.id) === playerStates.ONLINE &&
+            player.id !== actualAddress
+          "
           class="duel-btn"
           [ngbTooltip]="tooltipTemplate"
           [tooltipContext]="{
@@ -79,14 +82,15 @@
           class="connected-dot"
           [ngbTooltip]="tooltipTemplate"
           [tooltipContext]="{
-            text: isPlayerConnected(player.id) ? 'Online' : 'Offline'
+            text: getPlayerState(player.id) | capitalizeFirst
           }"
         >
           <div
             class="dot"
             [ngClass]="{
-              online: isPlayerConnected(player.id),
-              offline: !isPlayerConnected(player.id)
+              online: getPlayerState(player.id) === playerStates.ONLINE,
+              offline: getPlayerState(player.id) === playerStates.OFFLINE,
+              fighting: getPlayerState(player.id) === playerStates.FIGHTING
             }"
           ></div>
         </div>
