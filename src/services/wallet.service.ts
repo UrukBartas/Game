@@ -76,7 +76,7 @@ export class WalletService {
     const projectId = process.env['WALLET_CONNECT_PROJECT_ID'] ?? '';
     const metadata = {
       name: 'Uruk Bartas',
-      description: 'Play to earn game',
+      description: 'Play to Earn Web3 RPG Game',
       url: 'https://game.urukbartas.com/',
       icons: [
         'https://avatars.githubusercontent.com/u/89161645?s=400&u=45ee748438c04f06f854fc0d28942581967ef16f&v=4',
