@@ -55,11 +55,10 @@ export abstract class BaseFightComponent extends TemplatePage {
   abstract afterDefeat(result: FightResultModel): void;
   abstract afterVictory(result: FightResultModel): void;
 
-
   doAction(action: TurnActionEnum, consumableId?: number) {
     const currentTime = Date.now();
 
-    if (currentTime - this.lastClickTime < 1000 || this.fight.result) {
+    if (currentTime - this.lastClickTime < 500 || this.fight.result) {
       return;
     }
     this.lastClickTime = currentTime;
@@ -78,7 +77,6 @@ export abstract class BaseFightComponent extends TemplatePage {
     if (ripPlayer || ripEnemy) {
       this.controlEndScreen(ripPlayer, fight.result);
     }
-
   }
 
   private controlEndScreen(ripPlayer: boolean, result: FightResultModel) {

@@ -132,6 +132,9 @@
             *ngIf="awaitingPlayer && showEnemyStatus"
             class="fa-solid fa-check"
           ></i>
+          <div *ngIf="turnTimer > 0" class="turn-timer">
+            Time left: {{ turnTimer }} seconds
+          </div>
         </div>
         <span urText class="text-white"
           >{{ enemy.name }} (level {{ enemy.level }})</span

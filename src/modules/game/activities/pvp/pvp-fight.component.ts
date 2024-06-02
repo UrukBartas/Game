@@ -44,6 +44,8 @@ export class PvPFightComponent
   awaitingOpponent = false;
   awaitingPlayer = false;
   showEnemyStatus = true;
+  turnTimer: number = 0;
+  private turnTimerInterval: any;
 
   constructor(
     store: Store,
@@ -59,8 +61,9 @@ export class PvPFightComponent
   private setupFightSockets() {
     this.bindSocketEvent('turnResult', this.handleTurnResult);
     this.bindSocketEvent('awaitingPlayer', this.handleAwaitingPlayer);
-    this.bindSocketEvent('awaitingOpponent', this.handleAwaitingOpponent);
-    this.bindSocketEvent('enemySurrender', this.handleEnemySurrender);
+    this.bindSocketEvent('enemySurrender', this.handleEnemyLose);
+    this.bindSocketEvent('winByTimeout', this.handleEnemyLose);
+    this.bindSocketEvent('loseByTimeout', this.handleLoseByTimeout);
   }
 
   ngOnInit() {
@@ -95,6 +98,7 @@ export class PvPFightComponent
           this.enemyCurrentStats = this.isOpponent
             ? currentStats.player
             : currentStats.enemy;
+          this.startTurnTimer();
         },
         error: () => {
           this.location.back();
@@ -128,19 +132,40 @@ export class PvPFightComponent
     setTimeout(() => {
       this.showEnemyStatus = true;
     }, 1000);
+
+    this.startTurnTimer();
   }
 
   private handleAwaitingPlayer() {
     this.awaitingPlayer = true;
   }
 
-  private handleAwaitingOpponent() {
-    this.awaitingOpponent = true;
+  private handleLoseByTimeout() {
+    this.showEnemyStatus = false;
+    this.triggerDefeat(null);
   }
 
-  private handleEnemySurrender() {
+  private handleEnemyLose() {
     this.showEnemyStatus = false;
     this.triggerVictory(null);
+  }
+
+  private startTurnTimer() {
+    this.clearTurnTimer();
+    this.turnTimer = 60;
+    this.turnTimerInterval = setInterval(() => {
+      this.turnTimer--;
+      if (this.turnTimer <= 0) {
+        this.clearTurnTimer();
+      }
+    }, 1000);
+  }
+
+  private clearTurnTimer() {
+    if (this.turnTimerInterval) {
+      clearInterval(this.turnTimerInterval);
+      this.turnTimerInterval = null;
+    }
   }
 
   getTurn(): {
@@ -159,6 +184,7 @@ export class PvPFightComponent
   }
 
   submitAction(action: TurnActionEnum, consumableId?: number): void {
+    this.awaitingOpponent = true;
     this.websocket.socket.emit('submitTurn', { action, consumableId });
   }
 
@@ -179,7 +205,6 @@ export class PvPFightComponent
   ngOnDestroy() {
     this.unbindSocketEvent('turnResult', this.handleTurnResult);
     this.unbindSocketEvent('awaitingPlayer', this.handleAwaitingPlayer);
-    this.unbindSocketEvent('awaitingOpponent', this.handleAwaitingOpponent);
-    this.unbindSocketEvent('enemySurrender', this.handleEnemySurrender);
+    this.unbindSocketEvent('enemySurrender', this.handleEnemyLose);
   }
 }
