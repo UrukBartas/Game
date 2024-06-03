@@ -113,13 +113,13 @@
               </ng-template>
               <ng-container
                 *ngIf="
-                  currentMiscInventory$
-                    | async
+                  currentMiscInventory
                     | stack: 'miscellanyItemData.name' as inventoryMisc
                 "
               >
                 <app-misc-inventory
                   [items]="inventoryMisc"
+                  (updateInventory)="miscUpdated$.next(true)"
                   [sockets]="currentSize$ | async"
                 >
                   <ng-container

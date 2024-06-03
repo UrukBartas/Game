@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, SimpleChanges, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  SimpleChanges,
+  inject,
+} from '@angular/core';
 import { ItemBoxComponent } from '../item-box/item-box.component';
 import { Item } from 'src/modules/core/models/items.model';
 import { ItemTooltipComponent } from '../item-tooltip/item-tooltip.component';
@@ -25,6 +32,9 @@ export class ItemRouletteComponent {
   translateX: number = 0;
   interval: any;
   store = inject(Store);
+
+  @Output() spinEnded = new EventEmitter<void>();
+
   ngOnChanges(changes: SimpleChanges): void {
     if (!!changes['items'].currentValue) {
       this.displayedItems = this.repeatItems(this.items, 20); // Repetir ítems para simular infinitos
@@ -67,7 +77,7 @@ export class ItemRouletteComponent {
     }
 
     // Calcular la posición final para centrar el ítem resultante
-    const finalOffset = closestIndex * totalWidth - (600 / 2 - itemWidth / 2); // Ajuste para centrar en el contenedor de 600px
+    const finalOffset = closestIndex * totalWidth - (600 / 2 - itemWidth / 2);
     const initialTranslateX = this.translateX;
     const totalDistance = finalOffset - initialTranslateX;
 
@@ -81,6 +91,7 @@ export class ItemRouletteComponent {
         requestAnimationFrame(step);
       } else {
         this.translateX = -finalOffset; // Asegurarse de que termina en la posición exacta
+        this.spinEnded.emit()
       }
     };
 

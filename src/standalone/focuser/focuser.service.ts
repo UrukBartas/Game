@@ -14,4 +14,10 @@ export class FocuserService {
     this.context.set(context);
     this.focusedOpened.set(true);
   }
+
+  public close() {
+    this.focusedOpened.set(false);
+    this.template.set(null);
+    this.context.set({});
+  }
 }

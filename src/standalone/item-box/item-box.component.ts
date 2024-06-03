@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, HostBinding, Input } from '@angular/core';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { Rarity } from 'src/modules/core/models/items.model';
+import { getRarityColor } from 'src/modules/utils';
 @Component({
   selector: 'app-item-box',
   standalone: true,
@@ -23,5 +24,6 @@ export class ItemBoxComponent {
   @Input() upgradeLevel: number;
 
   public isNaNLocal = isNaN;
+  getRarityColor = getRarityColor;
   rarityEnum = Rarity;
 }

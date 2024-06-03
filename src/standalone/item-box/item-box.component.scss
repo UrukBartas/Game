@@ -16,6 +16,37 @@
   }
 }
 
+.box-COMMON {
+  &:hover {
+    @extend .hovered;
+    background-color: #b0b5b349 !important;
+  }
+}
+.box-UNCOMMON {
+  &:hover {
+    @extend .hovered;
+    background-color: #3d74b842 !important;
+  }
+}
+.box-EPIC {
+  &:hover {
+    @extend .hovered;
+    background-color: #9d44b53e !important;
+  }
+}
+.box-LEGENDARY {
+  &:hover {
+    @extend .hovered;
+    background-color: #ff801134 !important;
+  }
+}
+.box-MYTHIC {
+  &:hover {
+    @extend .hovered;
+    background-color: #f344133e !important;
+  }
+}
+
 .selectedItem {
   border: 3px solid $secondary;
 }

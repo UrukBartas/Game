@@ -19,7 +19,49 @@
       #itemRoulette
       [items]="roll?.spinWheelItems ?? []"
       [resultItem]="roll?.resultItem"
+      (spinEnded)="spinEndedHandle()"
     ></app-item-roulette>
+  </div>
+  <div class="third-phase" [ngClass]="{ 'd-none': currentPhase != 2 }">
+    <div class="result-item-showcase">
+      <div class="animate__animated animate__jackInTheBox delay_4">
+        <app-item-box
+          #itemResult
+          #result
+          [height]="200"
+          [width]="200"
+          [image]="
+            roll?.resultItem ? roll.resultItem?.itemData.imageLocal : null
+          "
+        >
+          <div tooltip class="tooltip-uruk" *ngIf="!!roll?.resultItem">
+            <app-item-tooltip
+              [item]="roll?.resultItem"
+              [compareWith]="
+                getItem$(roll.resultItem.itemData.itemType) | async
+              "
+            ></app-item-tooltip>
+            <app-item-tooltip
+              *ngIf="
+                getShowItemCompare() &&
+                  getItem$(roll.resultItem.itemData.itemType)
+                  | async as comparedItem
+              "
+              [item]="comparedItem"
+              [isBeingCompared]="true"
+            ></app-item-tooltip>
+          </div>
+        </app-item-box>
+      </div>
+      <div class="final-result-wrapper px-3 text-center">
+        <span urTitle class="text-secondary mt-3"
+          >✨ Congratulations on {{ roll?.resultItem?.itemData?.name }}</span
+        >
+        <button class="btn btn-primary" (click)="endPhases()">
+          <i class="fa fa-arrow-left px-2 pb-1"></i>Go back
+        </button>
+      </div>
+    </div>
   </div>
 </ng-template>
 
@@ -43,6 +85,7 @@
     (contextmenu)="
       contextMenuService.onContextMenu($event, contextOptions, item)
     "
+    (appDoubleClick)="open(item)"
     (click)="selectNewItem.emit(item)"
     [height]="40"
     [width]="40"
