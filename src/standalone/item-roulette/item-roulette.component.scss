@@ -1,0 +1,35 @@
+.roulette-container {
+  width: 600px;
+  overflow: hidden;
+  position: relative;
+  padding: 20px;
+}
+
+.roulette {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.1s linear;
+}
+
+.item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.arrow {
+  position: absolute;
+  transform: rotate(180deg);
+  top: -20px;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 0;
+  margin-left: -10px; /* Half of the arrow's width to center it */
+  z-index: 10; /* Ensure it is above the roulette items */
+  width: 64px;
+  height: 64px;
+  img {
+    width: 100%;
+  }
+}

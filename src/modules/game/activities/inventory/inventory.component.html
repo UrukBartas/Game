@@ -41,7 +41,10 @@
         </div>
         <div class="inventory pb-4">
           <tabset>
-            <tab heading="Armory" id="tab1">
+            <tab id="tab1">
+              <ng-template tabHeading>
+                <span>⚔️</span>
+              </ng-template>
               <ng-container *ngIf="!!currentInventory">
                 <app-item-inventory
                   [items]="currentInventory"
@@ -67,7 +70,24 @@
                 </app-item-inventory>
               </ng-container>
             </tab>
-            <tab heading="Consumables">
+            <tab>
+              <ng-template tabHeading>
+                <span>🧱</span>
+              </ng-template>
+              <app-materials-inventory
+                [items]="currentMaterials"
+                [sockets]="currentSize$ | async"
+              >
+                <ng-container
+                  extraItemBoxes
+                  *ngTemplateOutlet="inventoryExpander"
+                >
+                </ng-container> </app-materials-inventory
+            ></tab>
+            <tab>
+              <ng-template tabHeading>
+                <span>⚗️</span>
+              </ng-template>
               <ng-container
                 *ngIf="
                   currentConsumableInventory$
@@ -87,17 +107,29 @@
                 </app-consumables-inventory>
               </ng-container>
             </tab>
-            <tab heading="Materials">
-              <app-materials-inventory
-                [items]="currentMaterials"
-                [sockets]="currentSize$ | async"
+            <tab>
+              <ng-template tabHeading>
+                <span>📜</span>
+              </ng-template>
+              <ng-container
+                *ngIf="
+                  currentMiscInventory$
+                    | async
+                    | stack: 'miscellanyItemData.name' as inventoryMisc
+                "
               >
-                <ng-container
-                  extraItemBoxes
-                  *ngTemplateOutlet="inventoryExpander"
+                <app-misc-inventory
+                  [items]="inventoryMisc"
+                  [sockets]="currentSize$ | async"
                 >
-                </ng-container> </app-materials-inventory
-            ></tab>
+                  <ng-container
+                    extraItemBoxes
+                    *ngTemplateOutlet="inventoryExpander"
+                  >
+                  </ng-container>
+                </app-misc-inventory>
+              </ng-container>
+            </tab>
           </tabset>
         </div>
       </slide>

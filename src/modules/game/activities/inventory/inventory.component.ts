@@ -57,6 +57,7 @@ export class InventoryComponent extends TemplatePage {
   public currentMaterials: Array<Material> = [];
 
   public currentConsumableInventory$ = this.playerService.getItemsConsumable();
+  public currentMiscInventory$ = this.playerService.getMiscellanyItems();
   public activeDragAndDropItemType: ItemType = null;
   public itemTypePublic = ItemType;
   private spinnerService = inject(NgxSpinnerService);

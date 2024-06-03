@@ -10,6 +10,7 @@ import { PlayerModel } from 'src/modules/core/models/player.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 import { RefreshPlayer } from 'src/store/main.store';
 import { ItemService } from './item.service';
+import { MiscellanyItem } from 'src/modules/core/models/misc.model';
 
 @Injectable({
   providedIn: 'root',
@@ -62,6 +63,9 @@ export class PlayerService extends ApiBaseService {
 
   getItemsConsumable(): Observable<Array<Consumable>> {
     return this.get('/inventory-consumables');
+  }
+  getMiscellanyItems(): Observable<Array<MiscellanyItem>> {
+    return this.get('/inventory-miscellany');
   }
   updateFCMToken(fcmToken: string) {
     return this.post('/add-fcm-token', { fcmToken });
