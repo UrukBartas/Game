@@ -107,6 +107,7 @@ export class WalletService {
   }
 
   private async controlWalletFlow(address: `0x${string}` | undefined) {
+    if (this.router.url == '/edit') return;
     const state = this.store.selectSnapshot(MainState.getState);
 
     if (state.address) {
@@ -154,6 +155,26 @@ export class WalletService {
             }
           })
         );
+      })
+    );
+  }
+
+  public verifyOwnership() {
+    return this.authService.getAuth().pipe(
+      take(1),
+      catchError((err) => {
+        this.toastService.error("Couldn't reach the server");
+        return of(err);
+      }),
+      switchMap(({ nonce }) => {
+        const message = `Sign this message to authenticate your Ethereum address: ${nonce}`;
+        return from(signMessage({ message })).pipe(
+          map((sign) => [sign, nonce])
+        );
+      }),
+      switchMap(([sign, nonce]) => {
+        const address: string = getAccount().address ?? '';
+        return this.authService.checkSignature(sign, address, nonce);
       })
     );
   }
