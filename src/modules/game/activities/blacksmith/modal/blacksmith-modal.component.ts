@@ -1,4 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { firstValueFrom, take } from 'rxjs';
@@ -24,6 +25,7 @@ export class BlacksmithModalComponent implements OnInit {
   onJobDone: (result) => void;
   preview;
   public currentMaterials: Array<Material> = [];
+  public useMagicDust = new FormControl(false);
   ngOnInit() {
     if (this.items) {
       this.getCurrentUserMaterials();
@@ -40,7 +42,10 @@ export class BlacksmithModalComponent implements OnInit {
   accept() {
     if (this.items) {
       const observable = this.upgrade
-        ? this.itemService.upgradeItem(this.items[0].id)
+        ? this.itemService.upgradeItem(
+            this.items[0].id,
+            this.useMagicDust.value
+          )
         : this.itemService.recycleItems(this.items.map((entry) => entry.id));
 
       observable.pipe(take(1)).subscribe((result) => {
@@ -53,7 +58,10 @@ export class BlacksmithModalComponent implements OnInit {
   doAction() {
     if (this.items) {
       const observable = this.upgrade
-        ? this.itemService.upgradeItem(this.items[0].id)
+        ? this.itemService.upgradeItem(
+            this.items[0].id,
+            this.useMagicDust.value
+          )
         : this.itemService.recycleItems(this.items.map((entry) => entry.id));
 
       observable.pipe(take(1)).subscribe((result) => {
@@ -80,16 +88,26 @@ export class BlacksmithModalComponent implements OnInit {
     this.currentMaterials = (
       await firstValueFrom(this.playerService.getItemsMaterial())
     ).filter((entry) => !!entry);
+
+    this.userHasMagicDust()
+      ? this.useMagicDust.enable()
+      : this.useMagicDust.disable();
   }
 
-  public userHasThisMaterial(material: {
+  private userHasMagicDust() {
+    return !!this.currentMaterials.find(
+      (userMaterial) => userMaterial.materialDataId == 'MagicDust'
+    );
+  }
+
+  public userHasThisMaterial(param: {
     quantity: number;
     material: MaterialData;
   }) {
     const userHasTheMaterialRes = this.currentMaterials.find(
-      (userMaterial) => userMaterial.materialDataId == material.material.id
+      (userMaterial) => userMaterial.materialDataId == param.material.id
     );
     if (!userHasTheMaterialRes) return false;
-    return userHasTheMaterialRes.quantity >= material.quantity;
+    return userHasTheMaterialRes.quantity >= param.quantity;
   }
 }

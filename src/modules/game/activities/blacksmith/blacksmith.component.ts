@@ -151,6 +151,7 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
 
     this.store.dispatch(new RefreshPlayer());
     this.inventoryUpdated$.next(true);
+    this.materialUpdated$.next(true);
   }
 
   public closeResult() {
