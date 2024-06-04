@@ -1,6 +1,7 @@
 import { Consumable } from './consumable.model';
 import { Item } from './items.model';
 import { Material } from './material.model';
+import { MiscellanyItem } from './misc.model';
 import { FighterStats } from './player-stats.model';
 import { PlayerModel } from './player.model';
 import { QuestModel } from './quest.model';
@@ -40,6 +41,8 @@ export interface FightResultModel {
   consumableLostLoot?: Array<Consumable>;
   materialLoot?: Array<Material>;
   materialLostLoot?: Array<Material>;
+  miscellanyLoot?: Array<MiscellanyItem>;
+  miscellanyLostLoot?: Array<MiscellanyItem>;
   material?: Material;
   player?: PlayerModel;
   uruks?: number;

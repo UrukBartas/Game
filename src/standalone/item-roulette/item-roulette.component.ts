@@ -12,6 +12,7 @@ import { Item } from 'src/modules/core/models/items.model';
 import { ItemTooltipComponent } from '../item-tooltip/item-tooltip.component';
 import { Store } from '@ngxs/store';
 import { GenericItemTooltipComponent } from '../generic-item-tooltip/generic-item-tooltip.component';
+import { SoundService } from 'src/services/sound.service';
 
 @Component({
   selector: 'app-item-roulette',
@@ -32,6 +33,7 @@ export class ItemRouletteComponent {
   translateX: number = 0;
   interval: any;
   store = inject(Store);
+  sound = inject(SoundService)
 
   @Output() spinEnded = new EventEmitter<void>();
 
@@ -54,6 +56,7 @@ export class ItemRouletteComponent {
       console.error('resultItem no está definido');
       return;
     }
+    this.sound.playSound('assets/sounds/roulette.mp3')
 
     const itemWidth = 100; // Ancho del ítem
     const gap = 20; // Gap entre ítems
