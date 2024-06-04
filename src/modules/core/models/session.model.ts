@@ -6,4 +6,5 @@ export interface SessionModel {
   createdAt: string;
   expiresAt: string | null;
   playerId: string;
+  loginWithMail: boolean;
 }

@@ -41,12 +41,37 @@ export class PlayerService extends ApiBaseService {
     }
   }
 
-  create(email: string, name: string, image: string): Observable<PlayerModel> {
-    return this.post('/create', { email, name, image });
+  create(
+    email: string,
+    name: string,
+    image: string,
+    password: string
+  ): Observable<PlayerModel> {
+    return this.post('/create', { email, name, image, password });
   }
 
-  update(email: string, name: string, image: string): Observable<PlayerModel> {
-    return this.post('/update', { email, name, image });
+  createByEmail(
+    email: string,
+    name: string,
+    image: string,
+    password: string
+  ): Observable<PlayerModel> {
+    return this.post('/create-by-email', { email, name, image, password });
+  }
+
+
+
+  update(
+    email: string,
+    name: string,
+    image: string,
+    password: string
+  ): Observable<PlayerModel> {
+    return this.post('/update', { email, name, image, password });
+  }
+
+  migrateEta(address: string) {
+    return this.get('/migrate-eta-account/' + address);
   }
 
   getItems() {
