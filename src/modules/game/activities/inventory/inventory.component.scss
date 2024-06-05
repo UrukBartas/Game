@@ -55,7 +55,8 @@
 
   .item-inventory,
   .consumables-inventory,
-  .materials-inventory {
+  .materials-inventory,
+  .misc-inventory {
     height: 50vh;
     @include media-breakpoint-up(lg) {
       height: 400px;

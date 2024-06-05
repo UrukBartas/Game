@@ -1,0 +1,111 @@
+<ng-template #lootboxOpener let-item="data">
+  <div class="first-phase" [ngClass]="{ 'd-none': currentPhase != 0 }">
+    <div
+      class="animate__animated animate__pulse animate__infinite delay_4"
+      (click)="runRoulette(item.id)"
+    >
+      <app-item-box
+        #result
+        [rarity]="item.miscellanyItemData.rarity"
+        [height]="200"
+        [width]="200"
+        [image]="item ? item?.miscellanyItemData.imageLocal : null"
+      ></app-item-box>
+    </div>
+    <span urTitle class="text-secondary mt-3">Click to open</span>
+  </div>
+  <div class="second-phase" [ngClass]="{ 'd-none': currentPhase != 1 }">
+    <app-item-roulette
+      #itemRoulette
+      [items]="roll?.spinWheelItems ?? []"
+      [resultItem]="roll?.resultItem"
+      (spinEnded)="spinEndedHandle()"
+    ></app-item-roulette>
+  </div>
+  <div class="third-phase" [ngClass]="{ 'd-none': currentPhase != 2 }">
+    <div class="result-item-showcase">
+      <div class="animate__animated animate__jackInTheBox delay_4">
+        <app-item-box
+          #itemResult
+          #result
+          [height]="200"
+          [width]="200"
+          [image]="
+            roll?.resultItem ? roll.resultItem?.itemData.imageLocal : null
+          "
+        >
+          <div tooltip class="tooltip-uruk" *ngIf="!!roll?.resultItem">
+            <app-item-tooltip
+              [item]="roll?.resultItem"
+              [compareWith]="
+                getItem$(roll.resultItem.itemData.itemType) | async
+              "
+            ></app-item-tooltip>
+            <app-item-tooltip
+              *ngIf="
+                getShowItemCompare() &&
+                  getItem$(roll.resultItem.itemData.itemType)
+                  | async as comparedItem
+              "
+              [item]="comparedItem"
+              [isBeingCompared]="true"
+            ></app-item-tooltip>
+          </div>
+        </app-item-box>
+      </div>
+      <div class="final-result-wrapper px-3 text-center">
+        <span urTitle class="text-secondary mt-3"
+          >✨ Congratulations on {{ roll?.resultItem?.itemData?.name }}</span
+        >
+        <button class="btn btn-primary" (click)="endPhases()">
+          <i class="fa fa-arrow-left px-2 pb-1"></i>Go back
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #contextOptions let-data="data">
+  <ul
+    class="list-options"
+    *ngIf="data.miscellanyItemData.itemType == 'Lootbox'"
+  >
+    <li (click)="open(data); contextMenuService.hideContextMenu()">Open</li>
+  </ul>
+</ng-template>
+
+<app-inventory-topbar
+  [(inventory)]="items"
+  [disableSort]="true"
+  [(searchTerm)]="searchTerm"
+></app-inventory-topbar>
+<div class="misc-inventory">
+  <app-item-box
+    *ngFor="let item of filteredItems"
+    (contextmenu)="
+      contextMenuService.onContextMenu($event, contextOptions, item)
+    "
+    (appDoubleClick)="open(item)"
+    (click)="selectNewItem.emit(item)"
+    [height]="40"
+    [width]="40"
+    [active]="!!selectedItem && !!item && selectedItem.id == item.id"
+    [stack]="item?.stack ?? 0"
+    [rarity]="item?.miscellanyItemData?.rarity"
+    [image]="
+      item?.miscellanyItemData?.imageLocal
+        ? item.miscellanyItemData.imageLocal
+        : null
+    "
+  >
+    @if (!!item) {
+      <div tooltip class="tooltip-uruk">
+        <app-generic-item-tooltip
+          [item]="item.miscellanyItemData"
+        ></app-generic-item-tooltip>
+      </div>
+    }
+  </app-item-box>
+
+  <ng-content select="[extraItemBoxes]"></ng-content>
+</div>

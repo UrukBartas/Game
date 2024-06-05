@@ -49,6 +49,8 @@ import { OrderByPipe } from '../core/pipes/order-by.pipe';
 import { BlacksmithContextMenuComponent } from 'src/standalone/context-menu/blacksmith-context-menu/blacksmith-context-menu.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { InventoryTopbarComponent } from './components/inventory-topbar/inventory-topbar.component';
+import { MiscInventoryComponent } from './components/misc-inventory/misc-inventory.component';
+import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulette.component';
 
 const directives = [
   ValidInputDirective,
@@ -89,6 +91,7 @@ const components = [
     AdventuresRouterComponent,
     MaterialsInventoryComponent,
     InventoryTopbarComponent,
+    MiscInventoryComponent,
   ],
   imports: [
     ...directives,
@@ -113,6 +116,7 @@ const components = [
     ContextMenuComponent,
     ContextMenuInventoryOptionsComponent,
     BlacksmithContextMenuComponent,
+    ItemRouletteComponent,
   ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe],

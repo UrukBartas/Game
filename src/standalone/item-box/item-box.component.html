@@ -3,7 +3,7 @@
 </ng-template>
 <div
   [ngbTooltip]="displayTooltip ? tipContent : null"
-  class="box d-flex justify-content-center"
+  class="box d-flex justify-content-center box-{{ rarity }}"
   [ngClass]="{
     selectedBox: active,
     'glowing-common': rarity === rarityEnum.COMMON,

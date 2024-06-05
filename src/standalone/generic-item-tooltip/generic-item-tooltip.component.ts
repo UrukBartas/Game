@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { ConsumableData } from 'src/modules/core/models/consumable.model';
+import { ItemData } from 'src/modules/core/models/items.model';
 import { MaterialData } from 'src/modules/core/models/material.model';
 import { getRarityColor } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
@@ -13,7 +14,7 @@ import { ViewportService } from 'src/services/viewport.service';
   styleUrl: './generic-item-tooltip.component.scss',
 })
 export class GenericItemTooltipComponent {
-  @Input() item: ConsumableData | MaterialData;
+  @Input() item: ConsumableData | MaterialData | (ItemData & { price?: any });
   @Input() showPrice = false;
 
   viewportService = inject(ViewportService);

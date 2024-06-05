@@ -1,0 +1,8 @@
+<div class="focused-screen" *ngIf="focusService.focusedOpened()">
+  <ng-container
+    *ngTemplateOutlet="
+      focusService.template();
+      context: { data: focusService.context() }
+    "
+  ></ng-container>
+</div>

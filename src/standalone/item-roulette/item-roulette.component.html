@@ -1,0 +1,22 @@
+<div class="roulette-container">
+  <div
+    class="roulette"
+    [ngStyle]="{ transform: 'translateX(' + translateX + 'px)' }"
+  >
+    <div *ngFor="let item of displayedItems" class="item">
+      <app-item-box
+        [rarity]="item.itemData.rarity"
+        [height]="100"
+        [width]="100"
+        [image]="item.itemData.imageLocal"
+      >
+        <div tooltip class="tooltip-uruk">
+          <app-item-tooltip [item]="item"></app-item-tooltip>
+        </div>
+      </app-item-box>
+    </div>
+  </div>
+  <div class="arrow">
+    <img src="assets/misc/arrow.png" alt="" srcset="" />
+  </div>
+</div>

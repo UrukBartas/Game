@@ -66,11 +66,30 @@
   }
 </ng-template>
 
+<ng-template #miscLootDrop let-loot="loot">
+  @for (lootItem of loot; track lootItem.id) {
+    <app-item-box
+      #lootItem
+      [height]="getItemBoxSize()"
+      [width]="getItemBoxSize()"
+      [image]="lootItem.miscellanyItemData.imageLocal"
+      [stack]="lootItem.quantity"
+    >
+      <div tooltip class="tooltip-uruk">
+        <app-generic-item-tooltip
+          [item]="lootItem.miscellanyItemData"
+        ></app-generic-item-tooltip>
+      </div>
+    </app-item-box>
+  }
+</ng-template>
+
 <ng-template #lootLostDisplay>
   @if (
     fightResult?.materialLostLoot?.length > 0 ||
     fightResult?.consumableLostLoot?.length > 0 ||
-    fightResult?.lostLoot?.length > 0
+    fightResult?.lostLoot?.length > 0 ||
+    fightResult?.miscellanyLostLoot?.length > 0
   ) {
     <span urText class="text-danger text-center">Inventory is full!</span>
     <span urText class="text-white text-center">
@@ -104,13 +123,22 @@
         }
       "
     ></ng-container>
+    <ng-container
+      *ngTemplateOutlet="
+        miscLootDrop;
+        context: {
+          loot: fightResult?.miscellanyLostLoot
+        }
+      "
+    ></ng-container>
   </div>
 </ng-template>
 <ng-template #lootWonDisplay>
   @if (
     fightResult?.materialLoot?.length > 0 ||
     fightResult?.consumableLoot?.length > 0 ||
-    fightResult?.loot?.length > 0
+    fightResult?.loot?.length > 0 ||
+    fightResult?.miscellanyLoot?.length > 0
   ) {
     <span urText class="text-rainbow text-center">Congratulations!</span>
     <span urText class="text-white text-center">
@@ -148,6 +176,15 @@
         }
       "
     ></ng-container>
+
+    <ng-container
+      *ngTemplateOutlet="
+        miscLootDrop;
+        context: {
+          loot: fightResult?.miscellanyLoot
+        }
+      "
+    ></ng-container>
   </div>
 </ng-template>
 
@@ -155,7 +192,7 @@
   class="d-flex flex-column gap-2 overflow-x-hidden result-quest-complete h-100 align-items-center justify-content-center"
 >
   @if (!!fightResult.completedAdventure && !closedChest) {
-    <div class="result-item-showcase-chest-open">
+    <div class="focused-screen">
       <img
         *ngIf="openedChest == false"
         data-aos="fade-up"
@@ -212,7 +249,9 @@
         fightResult.consumableLoot ||
         fightResult.consumableLostLoot ||
         fightResult.materialLoot ||
-        fightResult.materialLostLoot
+        fightResult.materialLostLoot ||
+        fightResult.miscellanyLoot ||
+        fightResult.miscellanyLostLoot
       "
     >
       <div
