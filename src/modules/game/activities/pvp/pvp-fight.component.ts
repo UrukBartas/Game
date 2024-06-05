@@ -62,8 +62,7 @@ export class PvPFightComponent
     this.bindSocketEvent('turnResult', this.handleTurnResult);
     this.bindSocketEvent('awaitingPlayer', this.handleAwaitingPlayer);
     this.bindSocketEvent('enemySurrender', this.handleEnemyLose);
-    this.bindSocketEvent('winByTimeout', this.handleEnemyLose);
-    this.bindSocketEvent('loseByTimeout', this.handleLoseByTimeout);
+    this.bindSocketEvent('playerSurrender', this.handleLoseByTimeout);
   }
 
   ngOnInit() {

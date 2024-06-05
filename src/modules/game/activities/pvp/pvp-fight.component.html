@@ -28,6 +28,9 @@
           class="player-image shadow"
           [style.animation]="playerAnimation"
         />
+        <div *ngIf="turnTimer > 0" class="turn-timer">
+          Time left: {{ turnTimer }} seconds
+        </div>
         <span
           *ngIf="showPlayerAction"
           style="right: 5vw"
