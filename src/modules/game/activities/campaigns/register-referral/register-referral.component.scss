@@ -1,5 +1,7 @@
 @import '../../../../../variables.scss';
-
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
 .wrapper {
   height: 100%;
   width: 100%;
@@ -52,10 +54,10 @@
     height: 100%;
     opacity: 0.5;
     z-index: -1;
-    left: -15%;
-    top: -30%;
+    @include media-breakpoint-up(lg) {
+      left: -15%;
+      top: -30%;
+    }
+    filter: opacity(0.2);
   }
-}
-.extra-large {
-  font-size: 80px !important;
 }
