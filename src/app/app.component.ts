@@ -17,7 +17,7 @@ export class AppComponent {
   public walletService = inject(WalletService);
   public tooltipService = inject(NgbTooltipConfig);
   public sessionService = inject(SessionService);
-  public authService = inject(AuthService)
+  public authService = inject(AuthService);
   //public pushNotificationsService = inject(PushNotificationsService);
   constructor() {
     this.sessionService.getChains().subscribe((data) => {
@@ -28,6 +28,7 @@ export class AppComponent {
     //this.initializeFirebase();
     //this.pushNotificationsService.init();
     this.tooltipService.container = 'body';
+    this.tooltipService.openDelay = 200;
   }
   ngOnInit(): void {}
 

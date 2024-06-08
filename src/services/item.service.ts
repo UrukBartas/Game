@@ -25,7 +25,7 @@ export class ItemService extends ApiBaseService {
     return this.get('/' + itemIdData + '/get-item-data/');
   }
 
-  public getMultipleItemsAtOnce(ids: { ids: Array<number> }) {
+  public getMultipleItemsAtOnce(ids: { ids: Array<number> }): Observable<Item[]> {
     return this.post('/get-multiple-at-once', ids);
   }
 
