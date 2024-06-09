@@ -9,8 +9,9 @@ import {
 import { Store } from '@ngxs/store';
 import { getAccount } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
+import { filter, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from 'src/services/auth.service';
+import { WalletService } from 'src/services/wallet.service';
 import { MainState } from 'src/store/main.store';
 
 @Injectable({
@@ -21,22 +22,24 @@ export class AuthGuard implements CanActivate {
   router = inject(Router);
   toastService = inject(ToastrService);
   authService = inject(AuthService);
+  walletService = inject(WalletService);
 
-  canActivate(
+  async canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ):
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree>
-    | boolean
-    | UrlTree {
+  ): Promise<boolean | UrlTree> {
     const storeState = this.store.selectSnapshot(MainState.getState);
     const isPlayerLogged = !!storeState?.player;
     const sessionExpiresAt = storeState?.session?.expiresAt;
     const sessionExpired = sessionExpiresAt
       ? new Date().getTime() > new Date(sessionExpiresAt).getTime()
       : true;
-    const { isDisconnected } = getAccount();
+    let isDisconnected = false;
+    try {
+      isDisconnected = getAccount()?.isDisconnected;
+    } catch (error) {
+      isDisconnected = false;
+    }
 
     if (isDisconnected && !this.authService.loggedWithEmail()) {
       this.toastService.warning('Please connect your wallet');

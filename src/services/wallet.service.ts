@@ -40,7 +40,6 @@ import {
 import { AuthService } from './auth.service';
 import { PlayerService } from './player.service';
 import { SessionService } from './session.service';
-import { shimmerTestnet, shimmer } from 'viem/chains';
 
 @Injectable({
   providedIn: 'root',

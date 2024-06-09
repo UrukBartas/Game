@@ -148,7 +148,7 @@
           class="list-group-item bg-primary d-flex justify-content-{{
             !isSidebarOpened() ? 'between' : 'center'
           }} {{ route.class ? route.class() : '' }}"
-          (click)="route.click(); modalRef.hide()"
+          (click)="route.click(); !route.nested ? modalRef.hide() : false"
           *ngIf="route.display ? route.display() : true"
         >
           <i class="{{ route.icon }}"></i>

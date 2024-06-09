@@ -62,6 +62,9 @@ app-item-box {
   span {
     color: $third;
   }
+  @include media-breakpoint-down(sm) {
+    font-size: 14px;
+  }
 }
 
 .inventory {

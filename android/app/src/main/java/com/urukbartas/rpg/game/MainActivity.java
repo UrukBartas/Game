@@ -1,4 +1,4 @@
-package com.urukbartas.game;
+package com.urukbartas.rpg.game;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -256,7 +256,7 @@
     >
       <div
         *ngIf="fightResult.player?.level > player.level"
-        class="col pb-md-4 col-md-12 d-flex flex-column gap-2"
+        class="col pb-md-4 col-12 d-flex flex-column gap-2"
       >
         <span #levelUp urSubtitle class="text-rainbow text-center"
           >LEVEL UP!</span
@@ -277,7 +277,7 @@
         >
       </div>
 
-      <div class="col col-md-12 d-flex flex-column gap-2">
+      <div class="col col-12 d-flex flex-column gap-2">
         <ng-container *ngTemplateOutlet="lootWonDisplay"></ng-container>
         <ng-container *ngTemplateOutlet="lootLostDisplay"></ng-container>
       </div>

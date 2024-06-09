@@ -2,12 +2,13 @@ import { Component, inject } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { StatusBar } from '@capacitor/status-bar';
 import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
-import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
+// import { initializeApp } from 'firebase/app';
+// import { getAnalytics } from 'firebase/analytics';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
 import { SessionService } from 'src/services/session.service';
 import { WalletService } from 'src/services/wallet.service';
 import { AuthService } from 'src/services/auth.service';
+import { delay } from 'rxjs';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -20,7 +21,7 @@ export class AppComponent {
   public authService = inject(AuthService);
   //public pushNotificationsService = inject(PushNotificationsService);
   constructor() {
-    this.sessionService.getChains().subscribe((data) => {
+    this.sessionService.getChains().pipe(delay(2000)).subscribe((data) => {
       this.walletService.chains.next(data);
       this.walletService.initWalletConnect();
     });
@@ -45,24 +46,24 @@ export class AppComponent {
     } catch (error) {}
   }
 
-  public async initializeFirebase(): Promise<void> {
-    try {
-      if (Capacitor.isNativePlatform()) {
-        return;
-      }
-      const app = initializeApp({
-        apiKey: process.env['apiKey'],
-        authDomain: process.env['authDomain'],
-        projectId: process.env['projectId'],
-        storageBucket: process.env['storageBucket'],
-        messagingSenderId: process.env['messagingSenderId'],
-        appId: process.env['appId'],
-        measurementId: process.env['measurementId'],
-        vapidKey: process.env['vapidKey'],
-      } as any);
-      getAnalytics(app);
-    } catch (error) {
-      console.error('An error happened while initializing Firebase', error);
-    }
-  }
+  // public async initializeFirebase(): Promise<void> {
+  //   try {
+  //     if (Capacitor.isNativePlatform()) {
+  //       return;
+  //     }
+  //     const app = initializeApp({
+  //       apiKey: process.env['apiKey'],
+  //       authDomain: process.env['authDomain'],
+  //       projectId: process.env['projectId'],
+  //       storageBucket: process.env['storageBucket'],
+  //       messagingSenderId: process.env['messagingSenderId'],
+  //       appId: process.env['appId'],
+  //       measurementId: process.env['measurementId'],
+  //       vapidKey: process.env['vapidKey'],
+  //     } as any);
+  //     getAnalytics(app);
+  //   } catch (error) {
+  //     console.error('An error happened while initializing Firebase', error);
+  //   }
+  // }
 }
