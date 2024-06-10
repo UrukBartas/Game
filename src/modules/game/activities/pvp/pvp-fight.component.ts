@@ -1,14 +1,25 @@
 import { Location } from '@angular/common';
 import {
   Component,
+  DestroyRef,
   inject,
+  NgZone,
   OnDestroy,
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { retry, take } from 'rxjs';
+import {
+  BehaviorSubject,
+  interval,
+  retry,
+  switchMap,
+  take,
+  takeWhile,
+  tap,
+} from 'rxjs';
 import { BaseFightComponent } from 'src/modules/core/components/base-fight.component';
 import {
   FighterTurnModel,
@@ -35,6 +46,8 @@ export class PvPFightComponent
 {
   fightBackgroundImage = this.getBackground();
   private location = inject(Location);
+  private ngZone = inject(NgZone);
+  private destroyRef = inject(DestroyRef);
   player: PlayerModel;
   playerBaseStats: FighterStats;
   playerCurrentStats: FighterStats;
@@ -44,8 +57,8 @@ export class PvPFightComponent
   awaitingOpponent = false;
   awaitingPlayer = false;
   showEnemyStatus = true;
-  turnTimer: number = 0;
-  private turnTimerInterval: any;
+  turnTimer = 0;
+  private timerSubject = new BehaviorSubject<void>(null);
 
   constructor(
     store: Store,
@@ -132,7 +145,7 @@ export class PvPFightComponent
       this.showEnemyStatus = true;
     }, 1000);
 
-    this.startTurnTimer();
+    this.timerSubject.next();
   }
 
   private handleAwaitingPlayer() {
@@ -150,21 +163,18 @@ export class PvPFightComponent
   }
 
   private startTurnTimer() {
-    this.clearTurnTimer();
-    this.turnTimer = 60;
-    this.turnTimerInterval = setInterval(() => {
-      this.turnTimer--;
-      if (this.turnTimer <= 0) {
-        this.clearTurnTimer();
-      }
-    }, 1000);
-  }
-
-  private clearTurnTimer() {
-    if (this.turnTimerInterval) {
-      clearInterval(this.turnTimerInterval);
-      this.turnTimerInterval = null;
-    }
+    this.timerSubject
+      .pipe(
+        switchMap(() => {
+          this.turnTimer = 60;
+          return interval(1000).pipe(
+            takeWhile(() => this.turnTimer > 0),
+            tap(() => this.ngZone.run(() => this.turnTimer--))
+          );
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
   }
 
   getTurn(): {

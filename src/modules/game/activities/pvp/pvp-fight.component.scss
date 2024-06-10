@@ -34,6 +34,11 @@
     gap: 3%;
     padding-top: 1%;
 
+    .turn-timer {
+      font-size: 1em;
+      color: white;
+    }
+
     .player-image {
       aspect-ratio: 1 / 1;
       width: 50%;
@@ -56,18 +61,6 @@
         width: 100%;
         border-radius: 20%;
       }
-      app-spinner {
-        position: absolute;
-        bottom: 7%;
-        left: 7%;
-      }
-      i {
-        color: white;
-        font-size: 4vmax;
-        position: absolute;
-        bottom: 7%;
-        left: 7%;
-      }
     }
 
     .progress {
@@ -86,6 +79,19 @@
       }
       .progress-bar-energy {
         background-color: $yellow;
+      }
+      .progress-bar-timer {
+        background-color: $white-400;
+      }
+      .progress-bar-timer-ready {
+        background-color: $secondary;
+        i {
+          color: white;
+          font-size: 4vmax;
+          position: absolute;
+          bottom: 7%;
+          left: 7%;
+        }
       }
     }
 

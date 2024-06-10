@@ -207,7 +207,7 @@ export abstract class BaseFightComponent extends TemplatePage {
     }
   }
 
-  getHealthEnergyHeight() {
+  getEnergyBarHeight() {
     switch (this.viewportService.screenSize) {
       case 'xxl':
       case 'xl':
@@ -219,6 +219,21 @@ export abstract class BaseFightComponent extends TemplatePage {
       case 'sm':
       default:
         return 20;
+    }
+  }
+
+  getTimerBarHeight() {
+    switch (this.viewportService.screenSize) {
+      case 'xxl':
+      case 'xl':
+      case 'lg':
+        return 30;
+      case 'md':
+        return 20;
+      case 'xs':
+      case 'sm':
+      default:
+        return 15;
     }
   }
 

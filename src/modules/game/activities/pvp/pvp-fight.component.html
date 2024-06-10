@@ -28,9 +28,6 @@
           class="player-image shadow"
           [style.animation]="playerAnimation"
         />
-        <div *ngIf="turnTimer > 0" class="turn-timer">
-          Time left: {{ turnTimer }} seconds
-        </div>
         <span
           *ngIf="showPlayerAction"
           style="right: 5vw"
@@ -71,7 +68,7 @@
 
         <div
           class="progress shadow"
-          [style.height]="getHealthEnergyHeight() + 'px'"
+          [style.height]="getEnergyBarHeight() + 'px'"
         >
           <span class="progress-text position-absolute"
             >{{ playerCurrentStats.energy }}/{{ playerBaseStats.energy }}</span
@@ -83,6 +80,28 @@
             aria-valuemax="100"
             [style.width]="
               (playerCurrentStats.energy / playerBaseStats.energy) * 100 + '%'
+            "
+          ></div>
+        </div>
+
+        <div
+          class="progress shadow"
+          [style.height]="getTimerBarHeight() + 'px'"
+        >
+          <div class="progress-text position-absolute">
+            <span *ngIf="!awaitingOpponent">{{ turnTimer }}</span>
+            <i *ngIf="awaitingOpponent" class="fa-solid fa-check"></i>
+          </div>
+          <div
+            class="progress-bar progress-bar-timer progress-bar-animated shadow"
+            [ngClass]="{
+              'progress-bar-timer-ready': awaitingOpponent
+            }"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="60"
+            [style.width]="
+              (awaitingOpponent ? 100 : (turnTimer / 60) * 100) + '%'
             "
           ></div>
         </div>
@@ -125,19 +144,6 @@
             class="enemy-image shadow"
             [style.animation]="enemyAnimation"
           />
-          <app-spinner
-            *ngIf="!awaitingPlayer && showEnemyStatus"
-            [border]="'5px'"
-            [size]="'4vmax'"
-            [maxSize]="'80px'"
-          ></app-spinner>
-          <i
-            *ngIf="awaitingPlayer && showEnemyStatus"
-            class="fa-solid fa-check"
-          ></i>
-          <div *ngIf="turnTimer > 0" class="turn-timer">
-            Time left: {{ turnTimer }} seconds
-          </div>
         </div>
         <span urText class="text-white"
           >{{ enemy.name }} (level {{ enemy.level }})</span
@@ -162,7 +168,7 @@
 
         <div
           class="progress shadow"
-          [style.height]="getHealthEnergyHeight() + 'px'"
+          [style.height]="getEnergyBarHeight() + 'px'"
         >
           <span class="progress-text position-absolute"
             >{{ enemyCurrentStats.energy }}/{{ enemyBaseStats.energy }}</span
@@ -174,6 +180,35 @@
             aria-valuemax="100"
             [style.width]="
               (enemyCurrentStats.energy / enemyBaseStats.energy) * 100 + '%'
+            "
+          ></div>
+        </div>
+
+        <div
+          class="progress shadow"
+          [style.height]="getTimerBarHeight() + 'px'"
+        >
+          <div class="progress-text position-absolute">
+            <span *ngIf="!(awaitingPlayer && showEnemyStatus)">{{
+              turnTimer
+            }}</span>
+            <i
+              *ngIf="awaitingPlayer && showEnemyStatus"
+              class="fa-solid fa-check"
+            ></i>
+          </div>
+          <div
+            class="progress-bar progress-bar-timer progress-bar-animated shadow"
+            [ngClass]="{
+              'progress-bar-timer-ready': awaitingPlayer && showEnemyStatus
+            }"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="60"
+            [style.width]="
+              (awaitingPlayer && showEnemyStatus
+                ? 100
+                : (turnTimer / 60) * 100) + '%'
             "
           ></div>
         </div>
