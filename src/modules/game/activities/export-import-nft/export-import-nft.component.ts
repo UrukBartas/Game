@@ -16,6 +16,7 @@ import {
   catchError,
   filter,
   firstValueFrom,
+  forkJoin,
   from,
   interval,
   map,
@@ -34,7 +35,7 @@ import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { WalletService } from 'src/services/wallet.service';
-import { environment } from 'src/environments/environment';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-export-import-nft',
@@ -55,8 +56,8 @@ export class ExportImportNftComponent extends TemplatePage {
   toastService = inject(ToastrService);
   store = inject(Store);
   walletService = inject(WalletService);
-
-  public activeNetworkId = signal(getNetwork().chain.id);
+  public multipleSelection = new FormControl(false);
+  public activeNetworkId = signal(getNetwork().chain?.id);
   public activeCorrectNetwork = computed(() => {
     return of(this.activeNetworkId()).pipe(filter((entry) => !!entry));
   });
@@ -103,20 +104,23 @@ export class ExportImportNftComponent extends TemplatePage {
     switchMap(() => {
       return from(
         this.contractService.executeReadContractOnUrukNFT('getMintingFee', null)
-      ).pipe(
-        map((entry) => Number(ethers.formatEther(entry.toString())).toFixed(8))
-      );
+      ).pipe(map((entry) => Number(ethers.formatEther(entry.toString()))));
     })
   );
+
+  public calculateFeesBasedOnSelectedItems(
+    baseFee: number,
+    itemsNumber?: number
+  ) {
+    return (
+      baseFee * (itemsNumber ?? this.selectedMultipleItems.length)
+    ).toFixed(8);
+  }
 
   public currentSize$ = this.store.select(MainState.getState).pipe(
     filter((player) => !!player),
     map((entry) => entry.player.sockets)
   );
-
-  public get selectedItem() {
-    return this.selectedMultipleItems ? this.selectedMultipleItems[0] : null;
-  }
 
   public whiteListedItems$ = new BehaviorSubject([]);
   public whiteListedItemsInterval$ = interval(5000).pipe(
@@ -238,25 +242,38 @@ export class ExportImportNftComponent extends TemplatePage {
     this.selectedUruksToExport = 0;
   }
 
-  public async exportItem(id: number) {
+  public async exportItems(ids: number[]) {
     this.spinnerService.hide();
     this.spinnerService.show();
     try {
-      const staticItemfornow = await firstValueFrom(
-        this.itemService.getItem(id)
+      const items = await firstValueFrom(
+        this.itemService.getMultipleItemsAtOnce({ ids })
       );
-      const uploadJsonMetadataNFTCID = (await firstValueFrom(
-        this.importExport.uploadJsonMetadataNFT(staticItemfornow)
-      )) as { cid: string };
+      const CIDsNFT = await firstValueFrom(
+        forkJoin(
+          items.map((item) =>
+            this.importExport.uploadJsonMetadataNFT({ id: item.id }).pipe(
+              map((result) => {
+                return { item: item, cid: result.cid };
+              })
+            )
+          )
+        )
+      );
       const fees = await firstValueFrom(this.getNFTExportFee$);
       await this.contractService.executewriteContractOnUrukNFT(
-        'exportItemToNft',
-        [staticItemfornow.id + '', `ipfs://${uploadJsonMetadataNFTCID.cid}`],
-        ethers.parseEther(fees)
+        'exportItemsToNfts',
+        [
+          CIDsNFT.map((entry) => entry.item.id),
+          CIDsNFT.map((entry) => `ipfs://${entry.cid}`),
+        ],
+        ethers.parseEther(
+          this.calculateFeesBasedOnSelectedItems(fees, ids.length)
+        )
       );
       this.spinnerService.hide();
       this.toastService.success(
-        'The item got exported, you will receive your NFT in your wallet soon!'
+        'The items got exported, you will receive your NFT in your wallet soon!'
       );
       this.selectedMultipleItems = [];
     } catch (error: any) {
@@ -298,27 +315,20 @@ export class ExportImportNftComponent extends TemplatePage {
     this.spinnerService.show();
     try {
       if (this.exportTypeActive == 'export') {
-        const staticItemfornow = await firstValueFrom(
-          this.itemService.getItem(this.selectedMultipleItems[0].id)
-        );
-
+        const idsToExport = this.selectedMultipleItems.map((entry) => entry.id);
         await firstValueFrom(
-          this.importExport.whiteListItem(
-            staticItemfornow.id + '',
-            getAccount().address
-          )
+          this.importExport.whiteListItems(idsToExport, getAccount().address)
         );
-
-        this.exportItem(this.selectedMultipleItems[0].id);
+        this.exportItems(idsToExport);
       } else {
         await this.contractService.executewriteContractOnUrukNFT(
           'importNftToItem',
-          [this.selectedMultipleItems[0].id + '']
+          [this.selectedMultipleItems.map((entry) => entry.id)]
         );
         this.spinnerService.hide();
         this.selectedMultipleItems = [];
         this.toastService.success(
-          'The item got imported, you will receive your item in your in-game inventory soon!'
+          'The items got imported, you will receive your item in your in-game inventory soon!'
         );
       }
     } catch (error: any) {

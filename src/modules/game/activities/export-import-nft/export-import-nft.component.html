@@ -118,17 +118,21 @@
           {{ selectedUruksToExport + ' Golden Uruks selected' }}
         </p>
       } @else {
-        <app-item-box
-          [height]="200"
-          [width]="200"
-          [image]="selectedItem?.itemData?.imageLocal"
-        >
-          @if (!!selectedItem) {
-            <div tooltip class="tooltip-uruk">
-              <app-item-tooltip [item]="selectedItem"></app-item-tooltip>
-            </div>
+        <div class="flex-row wrapper-selected-items">
+          @for (selectedItem of selectedMultipleItems; track selectedItem.id) {
+            <app-item-box
+              [height]="200"
+              [width]="200"
+              [image]="selectedItem?.itemData?.imageLocal"
+            >
+              @if (!!selectedItem) {
+                <div tooltip class="tooltip-uruk">
+                  <app-item-tooltip [item]="selectedItem"></app-item-tooltip>
+                </div>
+              }
+            </app-item-box>
           }
-        </app-item-box>
+        </div>
       }
 
       <div
@@ -153,7 +157,7 @@
               type="button"
               class="btn btn-secondary btn-lg btn-block w-100 btn-pending"
               *ngFor="let whiteListedItemId of pending"
-              (click)="exportItem(whiteListedItemId.id)"
+              (click)="exportItems([whiteListedItemId.id])"
             >
               #{{ whiteListedItemId.id }}
               <i
@@ -187,7 +191,9 @@
           type="button"
           *ngIf="exportTypeActive == 'import'"
           class="btn btn-dark btn-lg btn-block w-100"
-          [disabled]="!selectedItem || activeNetworkId() == 0"
+          [disabled]="
+            selectedMultipleItems.length == 0 || activeNetworkId() == 0
+          "
           (click)="addAssetToWallet()"
         >
           Add asset to wallet
@@ -195,7 +201,11 @@
         <button
           type="button"
           class="btn btn-primary btn-lg btn-block w-100"
-          [disabled]="!selectedItem || activeNetworkId() == 0"
+          [disabled]="
+            !selectedMultipleItems ||
+            selectedMultipleItems.length == 0 ||
+            activeNetworkId() == 0
+          "
           (click)="triggerActionForNFT()"
         >
           <div class="d-flex justify-content-center gap-3">
@@ -206,7 +216,10 @@
                 *ngIf="getActiveNetworkImg() as activeNetwork"
               >
                 <img src="{{ activeNetwork }}" />
-                <span>{{ getNFTExportFee$ | async | number }}</span>
+                <span>{{
+                  calculateFeesBasedOnSelectedItems(getNFTExportFee$ | async)
+                    | number
+                }}</span>
               </div>
             }
           </div>
@@ -265,8 +278,26 @@
   </div>
 
   <ng-template #inventory let-items$="itemsToLoad$">
+    <div
+      class="form-check form-switch"
+      (click)="
+        multipleSelection.patchValue(!multipleSelection.value);
+        selectedMultipleItems = []
+      "
+    >
+      <input
+        id="multipleSelection"
+        class="form-check-input"
+        type="checkbox"
+        [formControl]="multipleSelection"
+      />
+      <label class="form-check-label text-light" for="multipleSelection"
+        >Multiple selection</label
+      >
+    </div>
     <app-item-inventory
       [items]="items$ | async"
+      [multipleSelection]="!!multipleSelection.value"
       [sockets]="currentSize$ | async"
       [(selectedItems)]="selectedMultipleItems"
       [disableDND]="true"

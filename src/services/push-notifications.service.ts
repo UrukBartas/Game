@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import {
-  FirebaseMessaging,
-  GetTokenOptions,
-} from '@capacitor-firebase/messaging';
+// import {
+//   FirebaseMessaging,
+//   GetTokenOptions,
+// } from '@capacitor-firebase/messaging';
 import { Capacitor } from '@capacitor/core';
 import {
   Subject,
@@ -37,91 +37,91 @@ export class PushNotificationsService {
 
   constructor() {}
 
-  private getLoggedPlayer() {
-    return this.store.select(MainState.getState).pipe(
-      map((state) => {
-        return state.player;
-      }),
-      filter((player) => !!player),
-      tap(() => this.getToken()),
-      debounceTime(300),
-      distinctUntilChanged((previous, current) => previous.id == current.id)
-    );
-  }
+  // private getLoggedPlayer() {
+  //   return this.store.select(MainState.getState).pipe(
+  //     map((state) => {
+  //       return state.player;
+  //     }),
+  //     filter((player) => !!player),
+  //     tap(() => this.getToken()),
+  //     debounceTime(300),
+  //     distinctUntilChanged((previous, current) => previous.id == current.id)
+  //   );
+  // }
 
-  public checkPermissionIsGranted() {
-    return from(FirebaseMessaging.checkPermissions()).pipe(
-      map((status) => status.receive == 'granted')
-    );
-  }
+  // public checkPermissionIsGranted() {
+  //   return from(FirebaseMessaging.checkPermissions()).pipe(
+  //     map((status) => status.receive == 'granted')
+  //   );
+  // }
 
-  public async autoGetToken() {
-    await firstValueFrom(
-      this.checkPermissionIsGranted().pipe(
-        switchMap((granted) => {
-          if (granted) return of(true);
-          return from(this.requestPermissions());
-        })
-      )
-    );
+  // public async autoGetToken() {
+  //   await firstValueFrom(
+  //     this.checkPermissionIsGranted().pipe(
+  //       switchMap((granted) => {
+  //         if (granted) return of(true);
+  //         return from(this.requestPermissions());
+  //       })
+  //     )
+  //   );
 
-    this.token = await this.getToken();
-  }
+  //   this.token = await this.getToken();
+  // }
 
-  public init() {
-    combineLatest([this.getLoggedPlayer(), this.tokenChanged$])
-      .pipe(
-        tap(([, token]) =>
-          firstValueFrom(this.playerService.updateFCMToken(token))
-        ),
-        take(1)
-      )
-      .subscribe();
-    //Only activate for web for now
-    if (Capacitor.getPlatform() === 'web') {
-      FirebaseMessaging.addListener('notificationReceived', (event) => {
-        console.log('notificationReceived: ', { event });
-      });
-      FirebaseMessaging.addListener('notificationActionPerformed', (event) => {
-        console.log('notificationActionPerformed: ', { event });
-      });
+  // public init() {
+  //   combineLatest([this.getLoggedPlayer(), this.tokenChanged$])
+  //     .pipe(
+  //       tap(([, token]) =>
+  //         firstValueFrom(this.playerService.updateFCMToken(token))
+  //       ),
+  //       take(1)
+  //     )
+  //     .subscribe();
+  //   //Only activate for web for now
+  //   if (Capacitor.getPlatform() === 'web') {
+  //     FirebaseMessaging.addListener('notificationReceived', (event) => {
+  //       console.log('notificationReceived: ', { event });
+  //     });
+  //     FirebaseMessaging.addListener('notificationActionPerformed', (event) => {
+  //       console.log('notificationActionPerformed: ', { event });
+  //     });
 
-      navigator.serviceWorker.addEventListener('message', (event: any) => {
-        console.log('serviceWorker message: ', { event });
-        const notification = new Notification(event.data.notification.title, {
-          body: event.data.notification.body,
-        });
-        notification.onclick = (event) => {
-          console.log('notification clicked: ', { event });
-        };
-      });
-    }
-    this.autoGetToken();
-  }
+  //     navigator.serviceWorker.addEventListener('message', (event: any) => {
+  //       console.log('serviceWorker message: ', { event });
+  //       const notification = new Notification(event.data.notification.title, {
+  //         body: event.data.notification.body,
+  //       });
+  //       notification.onclick = (event) => {
+  //         console.log('notification clicked: ', { event });
+  //       };
+  //     });
+  //   }
+  //   this.autoGetToken();
+  // }
 
-  public async requestPermissions(): Promise<void> {
-    await FirebaseMessaging.requestPermissions();
-  }
+  // public async requestPermissions(): Promise<void> {
+  //   await FirebaseMessaging.requestPermissions();
+  // }
 
-  public async getToken(): Promise<string> {
-    try {
-      const options: GetTokenOptions = {
-        vapidKey: process.env['vapidKey'],
-      };
-      if (Capacitor.getPlatform() === 'web') {
-        options.serviceWorkerRegistration =
-          await navigator.serviceWorker.register('firebase-messaging-sw.js');
-      }
-      const { token } = await FirebaseMessaging.getToken(options);
-      this.grantedPermission = true;
-      this.tokenChanged$.next(token);
-      return token;
-    } catch (error: any) {
-      console.error(
-        'An error happened while getting the token for Firebase',
-        error
-      );
-      return null;
-    }
-  }
+  // public async getToken(): Promise<string> {
+  //   try {
+  //     const options: GetTokenOptions = {
+  //       vapidKey: process.env['vapidKey'],
+  //     };
+  //     if (Capacitor.getPlatform() === 'web') {
+  //       options.serviceWorkerRegistration =
+  //         await navigator.serviceWorker.register('firebase-messaging-sw.js');
+  //     }
+  //     const { token } = await FirebaseMessaging.getToken(options);
+  //     this.grantedPermission = true;
+  //     this.tokenChanged$.next(token);
+  //     return token;
+  //   } catch (error: any) {
+  //     console.error(
+  //       'An error happened while getting the token for Firebase',
+  //       error
+  //     );
+  //     return null;
+  //   }
+  // }
 }

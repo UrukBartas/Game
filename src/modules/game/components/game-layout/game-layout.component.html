@@ -26,7 +26,24 @@
         !isSidebarOpened() ? 'content-extended' : 'content-collapsed'
       }}"
     >
-      <div class="uruks gap-2 px-4">
+      <ng-template #uruks let-uruks="uruks">
+        <div id="uruks-tooltip-wrapper" class="py-2">
+          <p>Total amount</p>
+          <p urText>
+            {{ uruks }}
+            <img class="navbar-uruks-icon pb-1" src="assets/goldenuruks.png" />
+            Golden uruks
+          </p>
+        </div>
+      </ng-template>
+
+      <div
+        class="uruks gap-2 px-4"
+        [ngbTooltip]="uruks"
+        [tooltipContext]="{
+          uruks: player.uruks
+        }"
+      >
         <img class="navbar-uruks-icon pb-1" src="assets/goldenuruks.png" />
         <span urText class="text-white">{{
           player.uruks | compressNumber
@@ -56,6 +73,24 @@
         !isSidebarOpened() ? 'content-extended' : 'content-collapsed'
       }}"
     >
+      <div
+        class="locked-screen"
+        *ngIf="
+          !!getActiveRoute() && !!getActiveRoute().onlyWeb3 && loggedWithemail()
+        "
+      >
+        <div class="display-message gap-3 text-white">
+          <i class="fa-solid fa-lock" style="font-size: 25px"></i>
+          <span class="text-secondary"
+            >You are not connected to a Web3 wallet, possibly because you logged
+            in with your email.</span
+          >
+          <span class="text-secondary"
+            >To access this section and perform transactions, please log in
+            using a Web3 wallet.</span
+          >
+        </div>
+      </div>
       <router-outlet></router-outlet>
     </div>
   </div>
@@ -113,7 +148,7 @@
           class="list-group-item bg-primary d-flex justify-content-{{
             !isSidebarOpened() ? 'between' : 'center'
           }} {{ route.class ? route.class() : '' }}"
-          (click)="route.click()"
+          (click)="route.click(); !route.nested ? modalRef.hide() : false"
           *ngIf="route.display ? route.display() : true"
         >
           <i class="{{ route.icon }}"></i>

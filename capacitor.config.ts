@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.urukbartas.game',
+  appId: 'com.urukbartas.rpg.game',
   appName: 'Uruk Bartas - Play & Earn RPG',
   webDir: 'dist/game-app',
   server: {

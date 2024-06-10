@@ -25,6 +25,8 @@ export interface PlayerModel {
   armor: number;
   speed: number;
   energy: number;
+  //calculated based on quests
+  pve?: { title: string; glow: string };
 }
 
 export interface PlayerStatsModel {

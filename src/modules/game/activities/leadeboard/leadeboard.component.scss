@@ -11,9 +11,23 @@
   gap: 10px;
   .form-group {
     width: 100%;
-    max-width: 350px;
+    max-width: 70%;
   }
 }
+
+.expander {
+  display: flex;
+  flex-wrap: wrap;
+  ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    li {
+      list-style: none;
+    }
+  }
+}
+
 .list-leaderboard {
   display: flex;
   max-height: 73vh;
@@ -135,5 +149,29 @@
   }
   .active {
     background-color: $third;
+  }
+}
+
+#player-tooltip-wrapper {
+  background-color: $black;
+  padding: 15px;
+  border-radius: 3px;
+  ul {
+    min-width: 180px;
+    padding-left: 0;
+    li {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      list-style-type: none;
+      display: block;
+      text-align: center;
+    }
+  }
+
+  .list-item-stat {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
   }
 }

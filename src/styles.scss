@@ -68,6 +68,9 @@ app-item-box {
   span {
     color: $third;
   }
+  @include media-breakpoint-down(sm) {
+    font-size: 14px;
+  }
 }
 
 .inventory {
@@ -201,23 +204,20 @@ ngb-tooltip-window {
 .h-fit {
   height: fit-content;
 }
-app-context-menu-inventory-options,
-app-blacksmith-context-menu {
-  .list-options {
-    list-style: none;
-    display: flex;
-    padding: 0px;
-    margin: 0;
-    flex-direction: column;
-    gap: 1px;
-    background-color: $black-400;
-    li {
-      cursor: pointer;
-      color: $third;
-      padding: 10px;
-      &:hover {
-        background-color: $secondary;
-      }
+.list-options {
+  list-style: none;
+  display: flex;
+  padding: 0px;
+  margin: 0;
+  flex-direction: column;
+  gap: 1px;
+  background-color: $black-400;
+  li {
+    cursor: pointer;
+    color: $third;
+    padding: 10px;
+    &:hover {
+      background-color: $secondary;
     }
   }
 }
@@ -292,7 +292,7 @@ tabset {
   }
 }
 
-.result-item-showcase-chest-open {
+.focused-screen {
   @extend .result-item-showcase;
   background: black;
   app-item-box {
@@ -301,7 +301,7 @@ tabset {
 }
 
 .result-quest-complete {
-  @extend .result-item-showcase-chest-open;
+  @extend .focused-screen;
   background: #000000d1;
 }
 
@@ -326,4 +326,14 @@ app-adventures {
   img.active-quest {
     display: none;
   }
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
 }

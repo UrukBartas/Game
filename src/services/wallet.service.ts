@@ -40,7 +40,6 @@ import {
 import { AuthService } from './auth.service';
 import { PlayerService } from './player.service';
 import { SessionService } from './session.service';
-import { shimmerTestnet, shimmer } from 'viem/chains';
 
 @Injectable({
   providedIn: 'root',
@@ -76,7 +75,7 @@ export class WalletService {
     const projectId = process.env['WALLET_CONNECT_PROJECT_ID'] ?? '';
     const metadata = {
       name: 'Uruk Bartas',
-      description: 'Play to earn game',
+      description: 'Play to Earn Web3 RPG Game',
       url: 'https://game.urukbartas.com/',
       icons: [
         'https://avatars.githubusercontent.com/u/89161645?s=400&u=45ee748438c04f06f854fc0d28942581967ef16f&v=4',
@@ -107,6 +106,7 @@ export class WalletService {
   }
 
   private async controlWalletFlow(address: `0x${string}` | undefined) {
+    if (this.router.url == '/edit') return;
     const state = this.store.selectSnapshot(MainState.getState);
 
     if (state.address) {
@@ -154,6 +154,26 @@ export class WalletService {
             }
           })
         );
+      })
+    );
+  }
+
+  public verifyOwnership() {
+    return this.authService.getAuth().pipe(
+      take(1),
+      catchError((err) => {
+        this.toastService.error("Couldn't reach the server");
+        return of(err);
+      }),
+      switchMap(({ nonce }) => {
+        const message = `Sign this message to authenticate your Ethereum address: ${nonce}`;
+        return from(signMessage({ message })).pipe(
+          map((sign) => [sign, nonce])
+        );
+      }),
+      switchMap(([sign, nonce]) => {
+        const address: string = getAccount().address ?? '';
+        return this.authService.checkSignature(sign, address, nonce);
       })
     );
   }

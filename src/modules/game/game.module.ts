@@ -12,6 +12,7 @@ import { ContextMenuInventoryOptionsComponent } from 'src/standalone/context-men
 import { ContextMenuComponent } from 'src/standalone/context-menu/context-menu.component';
 import { ExpandInventoryTooltipComponent } from 'src/standalone/expand-inventory-tooltip/expand-inventory-tooltip.component';
 import { GenericItemTooltipComponent } from 'src/standalone/generic-item-tooltip/generic-item-tooltip.component';
+import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulette.component';
 import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
 import { SpinnerComponent } from 'src/standalone/spinner/spinner.component';
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
@@ -21,6 +22,7 @@ import { SubtitleSizeDirective } from '../core/directives/subtitle-size.directiv
 import { TextSizeDirective } from '../core/directives/text-size.directive';
 import { TitleSizeDirective } from '../core/directives/title-size.directive';
 import { ValidInputDirective } from '../core/directives/valid-input.directive';
+import { CapitalizeFirstPipe } from '../core/pipes/capitalize-first.pipe';
 import { CompressNumberPipe } from '../core/pipes/compress-number.pipe';
 import { ItemdataToItemPipe } from '../core/pipes/itemdata-to-item.pipe';
 import { OrderByPipe } from '../core/pipes/order-by.pipe';
@@ -36,7 +38,7 @@ import { EditCharacterComponent } from './activities/edit-character/edit-charact
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { InventoryComponent } from './activities/inventory/inventory.component';
 import { LeadeboardComponent } from './activities/leadeboard/leadeboard.component';
-import { ConsumableModalComponent } from './components/consumable-modal/consumable-modal.component';
+import { PvPFightComponent } from './activities/pvp/pvp-fight.component';
 import { QuestFightComponent } from './activities/quests/quest-fight/quest-fight.component';
 import { QuestPickerComponent } from './activities/quests/quest-picker/quest-picker.component';
 import { QuestProgressComponent } from './activities/quests/quest-progress/quest-progress.component';
@@ -45,15 +47,15 @@ import { QuestRouterComponent } from './activities/quests/quest-router.component
 import { DailyRollButtonComponent } from './activities/shop/components/daily-roll-button.component';
 import { ShopComponent } from './activities/shop/shop.component';
 import { ChallengeModalComponent } from './components/challengee-modal/challenge-modal.component';
+import { ConsumableModalComponent } from './components/consumable-modal/consumable-modal.component';
 import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { InventoryTopbarComponent } from './components/inventory-topbar/inventory-topbar.component';
 import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
 import { MaterialsInventoryComponent } from './components/materials-inventory/materials-inventory.component';
+import { MiscInventoryComponent } from './components/misc-inventory/misc-inventory.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
-import { PvPFightComponent } from './activities/pvp/pvp-fight.component';
-import { CapitalizeFirstPipe } from '../core/pipes/capitalize-first.pipe';
 
 const directives = [
   ValidInputDirective,
@@ -104,6 +106,7 @@ const pipes = [
     AdventuresRouterComponent,
     MaterialsInventoryComponent,
     InventoryTopbarComponent,
+    MiscInventoryComponent,
   ],
   imports: [
     ...directives,
@@ -127,6 +130,7 @@ const pipes = [
     BlacksmithContextMenuComponent,
     NgxSpinnerModule,
     SpinnerComponent,
+    ItemRouletteComponent,
   ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe],

@@ -1,4 +1,52 @@
-<div class="w-100 h-100 d-flex justify-content-center align-items-center" *ngIf="walletService.modal">
+<ng-template #login>
+  <div [formGroup]="formGroup" class="connect-wrapper gap-3 w-100 px-3">
+    <div class="form-group">
+      <label for="characterName" class="text-third">Email</label>
+      <input
+        type="text"
+        class="form-control"
+        id="characterName"
+        formControlName="email"
+        name="characterName"
+        placeholder="Enter email"
+        validInput
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password" class="text-third">Password:</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        formControlName="password"
+        name="password"
+        placeholder="Enter password"
+      />
+    </div>
+    <button
+      type="submit"
+      [disabled]="formGroup.invalid"
+      class="btn btn-lg btn-secondary save-button"
+      (click)="doLogin()"
+    >
+      Login
+      <i class="fa-solid fa-torii-gate pl-2"></i>
+    </button>
+    <button
+      type="submit"
+      class="btn btn-lg btn-dark save-button"
+      (click)="doingLogin = false"
+    >
+      Back
+    </button>
+  </div>
+</ng-template>
+
+<div
+  class="w-100 h-100 d-flex justify-content-center align-items-center"
+  *ngIf="walletService.modal"
+>
   @if (
     walletService.latestModalEvent().event == 'CONNECT_SUCCESS' ||
     (walletService.walletConnectIsLoggedIn$ | async) == true
@@ -12,13 +60,30 @@
       <i class="fa-solid fa-torii-gate pl-2"></i>
     </button>
   } @else {
-    <button
-      (click)="walletService.modal.open()"
-      type="submit"
-      class="btn btn-lg btn-primary save-button"
-    >
-      Begin your adventure
-      <i class="fa-solid fa-torii-gate pl-2"></i>
-    </button>
+    @if (doingLogin) {
+      <ng-container *ngTemplateOutlet="login"></ng-container>
+    } @else {
+      <div class="connect-wrapper gap-3">
+        <button
+          type="submit"
+          class="btn btn-lg btn-primary save-button"
+          (click)="
+            this.authService.nativePlatform
+              ? this.router.navigateByUrl('/create')
+              : walletService.modal.open()
+          "
+        >
+          Begin your adventure
+          <i class="fa-solid fa-torii-gate pl-2"></i>
+        </button>
+        <p
+          urText
+          class="text-third text-center pointer"
+          (click)="doingLogin = true"
+        >
+          Login with email
+        </p>
+      </div>
+    }
   }
 </div>

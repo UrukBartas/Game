@@ -6,6 +6,9 @@
   id="contextMenu"
 >
   <ng-container
-    *ngTemplateOutlet="contextMenuService.menuContent()"
+    *ngTemplateOutlet="
+      contextMenuService.menuContent();
+      context: { data: contextMenuService.context() }
+    "
   ></ng-container>
 </div>

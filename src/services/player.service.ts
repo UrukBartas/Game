@@ -10,6 +10,7 @@ import { PlayerModel } from 'src/modules/core/models/player.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 import { RefreshPlayer } from 'src/store/main.store';
 import { ItemService } from './item.service';
+import { MiscellanyItem } from 'src/modules/core/models/misc.model';
 
 @Injectable({
   providedIn: 'root',
@@ -40,12 +41,37 @@ export class PlayerService extends ApiBaseService {
     }
   }
 
-  create(email: string, name: string, image: string): Observable<PlayerModel> {
-    return this.post('/create', { email, name, image });
+  create(
+    email: string,
+    name: string,
+    image: string,
+    password: string
+  ): Observable<PlayerModel> {
+    return this.post('/create', { email, name, image, password });
   }
 
-  update(email: string, name: string, image: string): Observable<PlayerModel> {
-    return this.post('/update', { email, name, image });
+  createByEmail(
+    email: string,
+    name: string,
+    image: string,
+    password: string
+  ): Observable<PlayerModel> {
+    return this.post('/create-by-email', { email, name, image, password });
+  }
+
+
+
+  update(
+    email: string,
+    name: string,
+    image: string,
+    password: string
+  ): Observable<PlayerModel> {
+    return this.post('/update', { email, name, image, password });
+  }
+
+  migrateEta(address: string) {
+    return this.get('/migrate-eta-account/' + address);
   }
 
   getItems() {
@@ -62,6 +88,9 @@ export class PlayerService extends ApiBaseService {
 
   getItemsConsumable(): Observable<Array<Consumable>> {
     return this.get('/inventory-consumables');
+  }
+  getMiscellanyItems(): Observable<Array<MiscellanyItem>> {
+    return this.get('/inventory-miscellany');
   }
   updateFCMToken(fcmToken: string) {
     return this.post('/add-fcm-token', { fcmToken });
@@ -84,7 +113,9 @@ export class PlayerService extends ApiBaseService {
     sortType: 'asc' | 'desc',
     page: number,
     chunkSize: number,
-    nameOrWallet: string
+    nameOrWallet: string,
+    from: Date,
+    to: Date
   ) {
     return this.post('/get-leaderboard/', {
       sortBy,
@@ -92,6 +123,8 @@ export class PlayerService extends ApiBaseService {
       page,
       chunkSize,
       nameOrWallet,
+      from: from.toISOString(),
+      to: to.toISOString(),
     }) as Observable<PlayerModel[]>;
   }
 

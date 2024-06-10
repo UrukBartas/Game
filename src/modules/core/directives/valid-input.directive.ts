@@ -37,16 +37,20 @@ export class ValidInputDirective {
 
     if (errors) {
       const errorEl: HTMLElement = this.renderer.createElement('div');
-      this.renderer.addClass(errorEl, 'invalid-feedback');
-      // implementar mas errores if need
-      let errorMessage = 'Invalid input';
-      if (errors['required']) {
-        errorMessage = 'This field is required';
-      } else if (errors['email']) {
-        errorMessage = 'Please enter a valid email address';
+      if (document.querySelectorAll('invalid-feedback').length == 0) {
+        this.renderer.addClass(errorEl, 'invalid-feedback');
+        // implementar mas errores if need
+        let errorMessage = 'Invalid input';
+        if (errors['required']) {
+          errorMessage = 'This field is required';
+        } else if (errors['email']) {
+          errorMessage = 'Please enter a valid email address';
+        } else if (errors['passwordMismatch']) {
+          errorMessage = 'The passwords have to match';
+        }
+        errorEl.textContent = errorMessage;
+        this.renderer.appendChild(this.el.nativeElement.parentElement, errorEl);
       }
-      errorEl.textContent = errorMessage;
-      this.renderer.appendChild(this.el.nativeElement.parentElement, errorEl);
     }
 
     this.renderer.removeClass(this.el.nativeElement, 'is-valid');

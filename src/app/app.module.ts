@@ -16,6 +16,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { HttpUrukInterceptor } from 'src/services/http-uruk.interceptor';
 import { ContextMenuComponent } from 'src/standalone/context-menu/context-menu.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { FocuserComponent } from 'src/standalone/focuser/focuser.component';
 @NgModule({
   declarations: [AppComponent, TemplatePage],
   imports: [
@@ -34,6 +35,7 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
     NgxSpinnerModule,
     ModalModule.forRoot(),
     ContextMenuComponent,
+    FocuserComponent,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HttpUrukInterceptor, multi: true },

@@ -25,7 +25,7 @@ export interface Item {
   enabled: boolean;
   price?: number;
 
-  canBeUpgraded?:boolean;
+  canBeUpgraded?: boolean;
 }
 
 export interface ItemData {
@@ -36,7 +36,7 @@ export interface ItemData {
   rarity: Rarity;
   itemType: ItemType;
   trait?: Trait | null;
-
+  description: string;
   items: Item[];
 }
 

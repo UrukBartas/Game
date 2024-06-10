@@ -6,7 +6,10 @@
 
   <div class="inventory-container inventory">
     <tabset>
-      <tab heading="Armory" id="tab1">
+      <tab id="tab1">
+        <ng-template tabHeading>
+          <span>⚔️</span>
+        </ng-template>
         <div class="d-flex gap-3 align-items-center">
           <div
             class="form-check form-switch"
@@ -63,7 +66,10 @@
         >
         </app-item-inventory>
       </tab>
-      <tab heading="Materials">
+      <tab>
+        <ng-template tabHeading>
+          <span>🧱</span>
+        </ng-template>
         <app-materials-inventory
           [items]="currentMaterials"
           [sockets]="currentSize$ | async"
@@ -117,8 +123,8 @@
         [disabled]="selectedMultipleItems.length == 0"
         [class]="'btn btn-primary ' + getButtonSize()"
       >
-        <i class="fa fa-recycle pl-1 pb-1"></i>
-        Recycle
+        <i class="fa fa-fire pl-1 pb-1"></i>
+        Melt
       </button>
       <button
         (click)="openModal(true)"

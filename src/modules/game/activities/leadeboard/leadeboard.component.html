@@ -1,3 +1,24 @@
+<ng-template
+  #questsAchevementsTooltip
+  let-completedQuests="completedQuests"
+  let-currentTier="currentTier"
+>
+  <div id="player-tooltip-wrapper">
+    <p>Completed quests {{ completedQuests }}</p>
+    <p>Possible achievements</p>
+    <ul>
+      <li
+        *ngFor="let questTier of questTiers"
+        [ngStyle]="{ color: getRarityColor(questTier.rarity) }"
+      >
+        @if (questTier.title == currentTier.title) {
+          X
+        }
+        {{ questTier.title }} {{ questTier.maxQuests }} quests
+      </li>
+    </ul>
+  </div>
+</ng-template>
 <div class="description">
   <p urTitle>Hall of Uruks</p>
 </div>
@@ -6,12 +27,21 @@
     <input
       type="text"
       class="form-control"
-      placeholder="Search by username or address"
+      placeholder="User or address"
       formControlName="userOrWallet"
     />
+    <div class="d-flex">
+      <tabset>
+        <tab heading="All time" id="tab1" (selectTab)="filterAllTime()"></tab>
+        <tab heading="Monthly" id="tab2" (selectTab)="filterByMonth()"></tab>
+        <tab heading="Weekly" id="tab3" (selectTab)="filterCurrentWeek()"></tab>
+      </tabset>
+    </div>
   </div>
   <div class="mover col d-flex align-items-center">
-    <span class="text-white px-2">Page: {{ activePage() + 1 }}</span>
+    <span class="text-white px-2 d-none d-md-flex"
+      >Page: {{ activePage() + 1 }}</span
+    >
     <i
       class="bi bi-caret-left-fill"
       [ngClass]="{ 'disabled-icon': activePage() == 0 }"
@@ -58,9 +88,36 @@
             <span>( {{ player.name }} )</span>
           </div>
 
-          <span class="list-leaderboard-item-badge"
-            >Level {{ player.level }}</span
-          >
+          <div class="tags d-flex gap-2">
+            <span class="list-leaderboard-item-badge"
+              >Level {{ player.level }}</span
+            >
+            <div class="expander gap-2">
+              <span
+                class="list-leaderboard-item-badge pointer"
+                (click)="player['expandPVE'] = !player['expandPVE']"
+                >PVE <i class="fa-solid fa-dragon"></i
+              ></span>
+              <ul *ngIf="!!player['expandPVE']">
+                <li
+                  class="list-item-stat"
+                  [ngbTooltip]="questsAchevementsTooltip"
+                  [tooltipContext]="{
+                    completedQuests: player['_count'].quest,
+                    currentTier: getTitleForQuestsCompleted(
+                      player['_count'].quest
+                    )
+                  }"
+                >
+                  <span
+                    class="list-leaderboard-item-badge"
+                    [ngClass]="'glowing-' + player.pve.glow"
+                    >{{ player.pve.title }}</span
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
       <div class="list-leaderboard-item-right">

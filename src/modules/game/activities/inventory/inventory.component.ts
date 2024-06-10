@@ -53,10 +53,12 @@ export class InventoryComponent extends TemplatePage {
 
   public inventoryUpdated$ = new Subject();
   public materialUpdated$ = new Subject();
+  public miscUpdated$ = new Subject();
   public currentInventory: Array<Item> = [];
   public currentMaterials: Array<Material> = [];
 
   public currentConsumableInventory$ = this.playerService.getItemsConsumable();
+  public currentMiscInventory = [];
   public activeDragAndDropItemType: ItemType = null;
   public itemTypePublic = ItemType;
   private spinnerService = inject(NgxSpinnerService);
@@ -125,8 +127,14 @@ export class InventoryComponent extends TemplatePage {
         this.playerService.getItemsMaterial()
       );
     });
+    this.miscUpdated$.pipe(takeUntilDestroyed()).subscribe(async () => {
+      this.currentMiscInventory = await firstValueFrom(
+        this.playerService.getMiscellanyItems()
+      );
+    });
     this.inventoryUpdated$.next(true);
     this.materialUpdated$.next(true);
+    this.miscUpdated$.next(true);
   }
 
   public getEquippedItemBoxSize() {

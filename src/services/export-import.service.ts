@@ -10,7 +10,7 @@ export class ExportImportService extends ApiBaseService {
     super(http);
     this.controllerPrefix = '/import-export';
   }
-  public whiteListItem(itemId: string, address: string) {
+  public whiteListItems(itemId: number[], address: string) {
     return this.post('/whitelist-export/' + address + '/' + itemId, {});
   }
 
@@ -21,7 +21,7 @@ export class ExportImportService extends ApiBaseService {
     );
   }
 
-  public uploadJsonMetadataNFT(item: any) {
+  public uploadJsonMetadataNFT(item: { id: number; type?: any }) {
     return this.post('/upload-metadata', item);
   }
 }

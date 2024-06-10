@@ -5,10 +5,11 @@ import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { getAccount } from '@wagmi/core';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { debounceTime, first, race, take, tap } from 'rxjs';
+import { debounceTime, first, map, race, take, tap } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
+import { Rarity } from 'src/modules/core/models/items.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
-import { truncateEthereumAddress } from 'src/modules/utils';
+import { getRarityColor, truncateEthereumAddress } from 'src/modules/utils';
 import { PlayerService } from 'src/services/player.service';
 import { WebSocketService } from 'src/services/websocket.service';
 import { MainState } from 'src/store/main.store';
@@ -21,12 +22,69 @@ import { PlayerStateEnum } from './enum/player-state.enum';
   styleUrl: './leadeboard.component.scss',
 })
 export class LeadeboardComponent extends TemplatePage {
+  questTiers = [
+    { maxQuests: 10, title: 'Snaga', glow: 'common', rarity: Rarity.COMMON },
+    {
+      maxQuests: 50,
+      title: 'Warchanter',
+      glow: 'common',
+      rarity: Rarity.COMMON,
+    },
+    {
+      maxQuests: 100,
+      title: 'Brute',
+      glow: 'uncommon',
+      rarity: Rarity.UNCOMMON,
+    },
+    {
+      maxQuests: 500,
+      title: 'Marauder',
+      glow: 'uncommon',
+      rarity: Rarity.UNCOMMON,
+    },
+    { maxQuests: 1000, title: 'Warlord', glow: 'epic', rarity: Rarity.EPIC },
+    { maxQuests: 2000, title: 'Chieftain', glow: 'epic', rarity: Rarity.EPIC },
+    {
+      maxQuests: 5000,
+      title: 'Overlord',
+      glow: 'legendary',
+      rarity: Rarity.LEGENDARY,
+    },
+    {
+      maxQuests: 10000,
+      title: 'Warbringer',
+      glow: 'mythic',
+      rarity: Rarity.MYTHIC,
+    },
+    {
+      maxQuests: Infinity,
+      title: 'Godslayer',
+      glow: 'highlight',
+      rarity: Rarity.MYTHIC,
+    },
+  ];
+  getRarityColor = getRarityColor;
+  public getTitleForQuestsCompleted(questsCompleted: number): {
+    title: string;
+    glow: string;
+    rarity: Rarity;
+  } {
+    for (const tier of this.questTiers) {
+      if (questsCompleted <= tier.maxQuests) {
+        return tier;
+      }
+    }
+    return { title: 'Unknown', glow: 'common', rarity: Rarity.COMMON };
+  }
+
   playerService = inject(PlayerService);
   fb = inject(FormBuilder);
   public sortBy = signal<string>('level');
   public sortType = signal<'asc' | 'desc'>('desc');
   public activePage = signal<number>(0);
   public chunkSize = signal<number>(25);
+  public from = signal<Date>(new Date(0));
+  public to = signal<Date>(new Date());
   public nameOrWallet = signal('');
   public lastPageSize = 0;
   public getLeaderboard$ = computed(() => {
@@ -36,13 +94,61 @@ export class LeadeboardComponent extends TemplatePage {
         this.sortType(),
         this.activePage(),
         this.chunkSize(),
-        this.nameOrWallet()
+        this.nameOrWallet(),
+        this.from(),
+        this.to()
       )
-      .pipe(tap((entry) => (this.lastPageSize = entry.length)));
+      .pipe(
+        map((players) => {
+          return players.map((player) => {
+            const playerCasted = player as PlayerModel & { _count: any };
+            const questsCompleted = playerCasted._count.quest;
+            const title = this.getTitleForQuestsCompleted(questsCompleted);
+            return {
+              ...player,
+              pve: {
+                ...title,
+              },
+            };
+          });
+        }),
+        tap((entry) => (this.lastPageSize = entry.length))
+      );
   });
   public formGroup = this.fb.group({
     userOrWallet: ['', []],
   });
+
+  public filterAllTime() {
+    this.from.set(new Date(0));
+    this.to.set(new Date());
+  }
+
+  public filterByMonth() {
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    this.from.set(startOfMonth);
+    this.to.set(endOfMonth);
+  }
+
+  public filterCurrentWeek() {
+    const now = new Date();
+
+    const dayOfWeek = now.getDay();
+    const dayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - dayOffset);
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    endOfWeek.setHours(23, 59, 59, 999);
+    this.from.set(startOfWeek);
+    this.to.set(endOfWeek);
+  }
 
   public truncateAddress = truncateEthereumAddress;
   public actualAddress = getAccount().address;
@@ -87,7 +193,7 @@ export class LeadeboardComponent extends TemplatePage {
       .subscribe((data) => this.nameOrWallet.set(data));
     this.websocket.onlinePlayers$
       .pipe(takeUntilDestroyed())
-      .subscribe((players) => this.onlinePlayers = players);
+      .subscribe((players) => (this.onlinePlayers = players));
   }
 
   challengePlayer(player: PlayerModel) {
