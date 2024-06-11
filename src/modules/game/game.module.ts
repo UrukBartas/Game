@@ -49,6 +49,7 @@ import { ShopComponent } from './activities/shop/shop.component';
 import { ChallengeModalComponent } from './components/challengee-modal/challenge-modal.component';
 import { ConsumableModalComponent } from './components/consumable-modal/consumable-modal.component';
 import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
+import { FightHistoricComponent } from './components/fight-historic/fight-historic.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { InventoryTopbarComponent } from './components/inventory-topbar/inventory-topbar.component';
 import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
@@ -84,6 +85,7 @@ const components = [
   ConnectComponent,
   ChallengeModalComponent,
   PvPFightComponent,
+  FightHistoricComponent
 ];
 
 const pipes = [

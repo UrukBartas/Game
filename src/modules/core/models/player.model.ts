@@ -27,6 +27,7 @@ export interface PlayerModel {
   energy: number;
   //calculated based on quests
   pve?: { title: string; glow: string };
+  mmr: number;
 }
 
 export interface PlayerStatsModel {

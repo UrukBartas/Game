@@ -31,6 +31,14 @@
       formControlName="userOrWallet"
     />
     <div class="d-flex">
+      <tabset class="pr-1">
+        <tab
+          heading="Leveling"
+          id="tab1"
+          (selectTab)="sortBy.set('level')"
+        ></tab>
+        <tab heading="Arena" id="tab2" (selectTab)="sortBy.set('mmr')"></tab>
+      </tabset>
       <tabset>
         <tab heading="All time" id="tab1" (selectTab)="filterAllTime()"></tab>
         <tab heading="Monthly" id="tab2" (selectTab)="filterByMonth()"></tab>
@@ -116,6 +124,9 @@
                   >
                 </li>
               </ul>
+              <span class="list-leaderboard-item-badge pointer"
+                >PVP rating: {{ player.mmr }}
+              </span>
             </div>
           </div>
         </div>

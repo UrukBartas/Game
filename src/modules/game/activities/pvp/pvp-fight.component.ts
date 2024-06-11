@@ -9,6 +9,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
@@ -45,7 +46,7 @@ export class PvPFightComponent
   implements OnInit, OnDestroy
 {
   fightBackgroundImage = this.getBackground();
-  private location = inject(Location);
+  private router = inject(Router);
   private ngZone = inject(NgZone);
   private destroyRef = inject(DestroyRef);
   player: PlayerModel;
@@ -85,7 +86,7 @@ export class PvPFightComponent
       .subscribe({
         next: (fight: FightModel) => {
           if (!fight) {
-            this.location.back();
+            this.router.navigateByUrl('/leaderboard');
             return;
           }
           const currentPlayer = this.store.selectSnapshot(
@@ -113,7 +114,7 @@ export class PvPFightComponent
           this.startTurnTimer();
         },
         error: () => {
-          this.location.back();
+          this.router.navigateByUrl('/leaderboard');
         },
       });
   }
@@ -198,11 +199,11 @@ export class PvPFightComponent
   }
 
   afterVictory(result: FightResultModel): void {
-    this.location.back();
+    this.router.navigateByUrl('/leaderboard');
   }
 
   afterDefeat(result: FightResultModel): void {
-    this.location.back();
+    this.router.navigateByUrl('/leaderboard');
   }
 
   onSurrender(): void {

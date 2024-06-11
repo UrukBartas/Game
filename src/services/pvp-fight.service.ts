@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 
 @Injectable({
@@ -11,4 +12,7 @@ export class PvPFightService extends ApiBaseService {
     this.controllerPrefix = '/pvp';
   }
 
+  getHistoric(address: string): Observable<any[]> {
+    return this.get(`/${address}/historic`);
+  }
 }

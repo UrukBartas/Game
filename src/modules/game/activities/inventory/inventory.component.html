@@ -141,13 +141,31 @@
               class="bi bi-caret-left-fill"
               (click)="activeSlideIndex = activeSlideIndex - 1"
             ></i>
-            <i class="bi bi-caret-right-fill disabled-icon"></i>
+            <i
+              class="bi bi-caret-right-fill"
+              (click)="activeSlideIndex = activeSlideIndex + 1"
+            ></i>
           </div>
         </div>
         <app-stats-detail
           [player]="actualPlayer$ | async"
           [isViewingAnotherPlayer]="isViewingPlayer"
         ></app-stats-detail>
+      </slide>
+      <slide>
+        <div class="description desc-mover">
+          <p urTitle>Arena Matches</p>
+          <div class="mover" *ngIf="!isViewingPlayer">
+            <i
+              class="bi bi-caret-left-fill"
+              (click)="activeSlideIndex = activeSlideIndex - 1"
+            ></i>
+            <i class="bi bi-caret-right-fill disabled-icon"></i>
+          </div>
+        </div>
+        <app-fight-historic
+          [player]="actualPlayer$ | async"
+        ></app-fight-historic>
       </slide>
     </carousel>
   </div>
