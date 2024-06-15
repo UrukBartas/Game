@@ -1,4 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { QuestStatusEnum } from 'src/modules/game/activities/quests/enums/quest-status.enum';
@@ -40,7 +45,8 @@ export abstract class BaseFightComponent extends TemplatePage {
   constructor(
     protected store: Store,
     protected viewportService: ViewportService,
-    protected modalService: BsModalService
+    protected modalService: BsModalService,
+    protected cdr: ChangeDetectorRef
   ) {
     super();
   }
@@ -124,10 +130,10 @@ export abstract class BaseFightComponent extends TemplatePage {
       this.handleEnemyAnimation('defend-left', 1);
     }
     if (lastPlayerAction === TurnActionEnum.CHARGE) {
-      this.handlePlayerAnimation('charge', 0.8);
+      this.handlePlayerAnimation('charge', 1);
     }
     if (lastEnemyAction === TurnActionEnum.CHARGE) {
-      this.handleEnemyAnimation('charge', 0.8);
+      this.handleEnemyAnimation('charge', 1);
     }
     if (
       lastPlayerAction === TurnActionEnum.BLOCKED ||
@@ -254,6 +260,7 @@ export abstract class BaseFightComponent extends TemplatePage {
   // duration in seconds
   private handlePlayerAnimation(animation: string, duration: number) {
     this.playerAnimation = `${animation} ${duration}s ease-in-out`;
+    this.cdr.detectChanges();
     setTimeout(() => {
       this.playerAnimation = '';
     }, duration * 1000);

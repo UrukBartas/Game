@@ -8,12 +8,39 @@ import { PVPHistoricModel } from './models/pvp-historic.model';
 @Component({
   selector: 'app-fight-historic',
   templateUrl: './fight-historic.component.html',
-  styleUrl: './fight-historic.component.scss',
+  styleUrls: ['./fight-historic.component.scss'],
 })
 export class FightHistoricComponent extends TemplatePage {
   private pvpService = inject(PvPFightService);
   getPlayerHistoric$: Observable<PVPHistoricModel[]>;
+  currentPage: number = 0;
+  pageSize: number = 10;
+  playerId: string;
+
   @Input() set player(player: PlayerModel) {
-    this.getPlayerHistoric$ = this.pvpService.getHistoric(player.id);
+    if (player) {
+      this.playerId = player.id;
+      this.loadHistoric();
+    }
+  }
+
+  loadHistoric() {
+    this.getPlayerHistoric$ = this.pvpService.getHistoric(
+      this.playerId,
+      this.pageSize,
+      this.currentPage * this.pageSize
+    );
+  }
+
+  nextPage() {
+    this.currentPage++;
+    this.loadHistoric();
+  }
+
+  prevPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadHistoric();
+    }
   }
 }

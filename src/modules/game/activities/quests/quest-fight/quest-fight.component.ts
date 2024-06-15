@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { take } from 'rxjs';
@@ -33,9 +33,10 @@ export class QuestFightComponent extends BaseFightComponent implements OnInit {
     store: Store,
     viewportService: ViewportService,
     modalService: BsModalService,
-    private fightService: FightService
+    private fightService: FightService,
+    cdr: ChangeDetectorRef
   ) {
-    super(store, viewportService, modalService);
+    super(store, viewportService, modalService, cdr);
   }
 
   ngOnInit() {

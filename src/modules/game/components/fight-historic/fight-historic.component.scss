@@ -1,45 +1,81 @@
+@import '../../../../variables.scss';
+
 #historic-list {
   .historic-element {
+    display: flex;
     justify-content: space-between;
-    background-color: #1a1a1a;
+    align-items: center;
+    background-color: $black-400;
     padding: 10px;
     margin-bottom: 5px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-    transition: transform 0.2s ease-in-out;
+    transition:
+      transform 0.2s ease-in-out,
+      background-color 0.2s ease-in-out;
+
     &:hover {
       transform: scale(1.02);
+      background-color: $black-300;
     }
+
     .player-info,
     .opponent-info {
       display: flex;
-      flex-direction: row;
       align-items: center;
       gap: 10px;
     }
+
     .player-img,
     .opponent-img {
       border-radius: 5%;
       max-height: 50px;
       max-width: 50px;
-      border: 2px solid #fff;
+      border: 2px solid $white-100;
     }
-    .player-name,
-    .opponent-name {
-      font-size: 16px;
-    }
+
     .result {
       font-size: 18px;
       font-weight: bold;
+      padding: 0 10px;
     }
+
     .win {
-      color: #4caf50;
+      color: $third;
     }
+
     .lose {
-      color: #f44336;
+      color: $red;
     }
-    .mmr-change {
+  }
+
+  .pagination-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+
+    button {
+      background-color: #444;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
       font-size: 16px;
+      margin: 4px 2px;
+      transition-duration: 0.4s;
+      cursor: pointer;
+      border-radius: 5px;
+
+      &:hover {
+        background-color: #555;
+      }
+
+      &:disabled {
+        background-color: #666;
+        cursor: not-allowed;
+      }
     }
   }
 }

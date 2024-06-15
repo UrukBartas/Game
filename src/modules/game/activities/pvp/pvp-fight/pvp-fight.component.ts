@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   inject,
@@ -66,9 +67,10 @@ export class PvPFightComponent
     viewportService: ViewportService,
     modalService: BsModalService,
     private fightService: PvPFightService,
-    private websocket: WebSocketService
+    private websocket: WebSocketService,
+    cdr: ChangeDetectorRef
   ) {
-    super(store, viewportService, modalService);
+    super(store, viewportService, modalService, cdr);
     this.setupFightSockets();
   }
 
@@ -199,11 +201,11 @@ export class PvPFightComponent
   }
 
   afterVictory(result: FightResultModel): void {
-    this.router.navigateByUrl('/leaderboard');
+    this.router.navigateByUrl('/arena-result');
   }
 
   afterDefeat(result: FightResultModel): void {
-    this.router.navigateByUrl('/leaderboard');
+    this.router.navigateByUrl('/arena-result');
   }
 
   onSurrender(): void {

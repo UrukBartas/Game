@@ -90,8 +90,7 @@
               </ng-template>
               <ng-container
                 *ngIf="
-                  currentConsumableInventory$
-                    | async
+                  currentConsumableInventory
                     | stack: 'consumableData.name' as inventoryConsumables
                 "
               >
@@ -136,10 +135,15 @@
       <slide>
         <div class="description desc-mover">
           <p urTitle>Stats</p>
-          <div class="mover" *ngIf="!isViewingPlayer">
+          <div class="mover">
             <i
               class="bi bi-caret-left-fill"
-              (click)="activeSlideIndex = activeSlideIndex - 1"
+              [ngClass]="{ 'disabled-icon': isViewingPlayer }"
+              (click)="
+                isViewingPlayer
+                  ? null
+                  : (activeSlideIndex = activeSlideIndex - 1)
+              "
             ></i>
             <i
               class="bi bi-caret-right-fill"
@@ -155,7 +159,7 @@
       <slide>
         <div class="description desc-mover">
           <p urTitle>Arena Matches</p>
-          <div class="mover" *ngIf="!isViewingPlayer">
+          <div class="mover">
             <i
               class="bi bi-caret-left-fill"
               (click)="activeSlideIndex = activeSlideIndex - 1"

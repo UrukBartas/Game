@@ -18,6 +18,7 @@ import { SpinnerComponent } from 'src/standalone/spinner/spinner.component';
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
 import { DoubleClickDirective } from '../core/directives/double-click.directive';
+import { SubtextSizeDirective } from '../core/directives/subtext-size.directive';
 import { SubtitleSizeDirective } from '../core/directives/subtitle-size.directive';
 import { TextSizeDirective } from '../core/directives/text-size.directive';
 import { TitleSizeDirective } from '../core/directives/title-size.directive';
@@ -38,7 +39,8 @@ import { EditCharacterComponent } from './activities/edit-character/edit-charact
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { InventoryComponent } from './activities/inventory/inventory.component';
 import { LeadeboardComponent } from './activities/leadeboard/leadeboard.component';
-import { PvPFightComponent } from './activities/pvp/pvp-fight.component';
+import { PvPResultComponent } from './activities/pvp/pv-presult/pvp-result.component';
+import { PvPFightComponent } from './activities/pvp/pvp-fight/pvp-fight.component';
 import { QuestFightComponent } from './activities/quests/quest-fight/quest-fight.component';
 import { QuestPickerComponent } from './activities/quests/quest-picker/quest-picker.component';
 import { QuestProgressComponent } from './activities/quests/quest-progress/quest-progress.component';
@@ -63,6 +65,7 @@ const directives = [
   TextSizeDirective,
   TitleSizeDirective,
   SubtitleSizeDirective,
+  SubtextSizeDirective,
 ];
 
 const components = [
@@ -85,7 +88,8 @@ const components = [
   ConnectComponent,
   ChallengeModalComponent,
   PvPFightComponent,
-  FightHistoricComponent
+  PvPResultComponent,
+  FightHistoricComponent,
 ];
 
 const pipes = [
