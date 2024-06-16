@@ -51,6 +51,7 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { InventoryTopbarComponent } from './components/inventory-topbar/inventory-topbar.component';
 import { MiscInventoryComponent } from './components/misc-inventory/misc-inventory.component';
 import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulette.component';
+import { BaseInventoryComponent } from './components/base-inventory/base-inventory.component';
 
 const directives = [
   ValidInputDirective,
@@ -92,6 +93,7 @@ const components = [
     MaterialsInventoryComponent,
     InventoryTopbarComponent,
     MiscInventoryComponent,
+    BaseInventoryComponent,
   ],
   imports: [
     ...directives,
@@ -119,6 +121,6 @@ const components = [
     ItemRouletteComponent,
   ],
   exports: [GameLayoutComponent],
-  providers: [DecimalPipe, AsyncPipe],
+  providers: [DecimalPipe, AsyncPipe, StackPipe],
 })
 export class GameModule {}

@@ -18,6 +18,8 @@
 }
 .pending-exports {
   gap: 10px;
+  overflow: auto;
+  width: 100%;
 }
 
 .fit-content {
@@ -82,4 +84,15 @@
   width: 100%;
   overflow: auto;
   gap: 10px;
+}
+
+.selected-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.quantity-material {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

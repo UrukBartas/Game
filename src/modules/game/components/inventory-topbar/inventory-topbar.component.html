@@ -1,13 +1,14 @@
 <div class="item-inventory-topbar my-2">
   <div class="description">
     <div
+      *ngIf="!disableSort"
       class="d-flex justify-content-end"
       [ngClass]="{
         'justify-content-end': inventory.length <= (currentSize$ | async),
         'justify-content-between': inventory.length > (currentSize$ | async)
       }"
     >
-      <div *ngIf="!disableSort" class="d-flex">
+      <div class="d-flex">
         <i
           (click)="changeSortOrder()"
           class="bi bi-caret-down-fill text-secondary px-1 pointer"

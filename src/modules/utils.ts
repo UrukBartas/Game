@@ -1,4 +1,5 @@
 import { Rarity } from './core/models/items.model';
+import { ItemTypeSC } from './game/activities/export-import-nft/enums/ItemTypesSC';
 
 export function getRarityColor(rarity: Rarity): string {
   switch (rarity) {
@@ -77,4 +78,12 @@ export const fillInventoryBasedOnPlayerSockets = (
     finalArray[i] = inventory.length > i ? inventory[i] : null;
   }
   return finalArray;
+};
+
+export const getItemTypeSCBasedOnItem = (item: any) => {
+  if (!!item.itemDataId) return ItemTypeSC.Item;
+  if (!!item.consumableDataId) return ItemTypeSC.Potion;
+  if (!!item.materialDataId) return ItemTypeSC.Material;
+  if (!!item.miscellanyItemDataId) return ItemTypeSC.Miscellaneous;
+  return ItemTypeSC.Item;
 };

@@ -1,7 +1,7 @@
 <div class="h-100 pl-5">
   <div class="row">
     <div class="description">
-      <p urTitle>Export section</p>
+      <p urTitle>Bridge</p>
       <div class="form-check form-switch">
         <input
           class="form-check-input"
@@ -37,7 +37,7 @@
               <app-item-box
                 [height]="50"
                 [width]="50"
-                [active]="activeNetworkId() == compatibleChain.id"
+                [active]="activeNetworkId.getValue() == compatibleChain.id"
                 (click)="changeNetwork(compatibleChain.id)"
                 [image]="compatibleChain.img"
               >
@@ -58,6 +58,7 @@
           [active]="exportingObjectTypeActive == 'nft'"
           (click)="exportingObjectTypeActive = 'nft'"
           [image]="'/assets/helmet.png'"
+          [stack]="'NFTs'"
         >
           <div tooltip class="tooltip-uruk">Uruk Bartas item NFT's</div>
         </app-item-box>
@@ -67,6 +68,7 @@
           [active]="exportingObjectTypeActive == 'coins'"
           (click)="exportingObjectTypeActive = 'coins'"
           [image]="'/assets/goldenuruks.png'"
+          [stack]="'Coins'"
         >
           <div tooltip class="tooltip-uruk">Golden Uruks</div>
         </app-item-box>
@@ -132,11 +134,164 @@
               }
             </app-item-box>
           }
+          @for (
+            selectedMaterial of selectedMultipleMaterials;
+            track selectedMaterial.id
+          ) {
+            <div class="selected-item">
+              <app-item-box
+                [height]="200"
+                [width]="200"
+                [image]="selectedMaterial?.materialData?.imageLocal"
+              >
+                @if (!!selectedMaterial) {
+                  <div tooltip class="tooltip-uruk">
+                    <app-generic-item-tooltip
+                      [item]="selectedMaterial.materialData"
+                    ></app-generic-item-tooltip>
+                  </div>
+                }
+              </app-item-box>
+
+              <div
+                class="quantity-material"
+                *ngIf="
+                  exportTypeActive == 'export' && selectedMaterial.quantity > 1
+                "
+              >
+                <p class="text-light mb-0">Select quantity:</p>
+                <ng-container>
+                  <input
+                    type="range"
+                    class="form-range"
+                    step="1"
+                    min="1"
+                    [max]="selectedMaterial.quantity"
+                    [(ngModel)]="selectedMaterial['quantityToExport']"
+                  />
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Quantity"
+                    style="max-width: 200px"
+                    [(ngModel)]="selectedMaterial['quantityToExport']"
+                  />
+                </ng-container>
+              </div>
+            </div>
+          }
+
+          @for (
+            selectedConsumable of selectedMultipleConsumables;
+            track selectedConsumable.id
+          ) {
+            <div class="selected-item">
+              <app-item-box
+                [height]="200"
+                [width]="200"
+                [image]="selectedConsumable?.consumableData?.imageLocal"
+              >
+                @if (!!selectedConsumable) {
+                  <div tooltip class="tooltip-uruk">
+                    <app-generic-item-tooltip
+                      [item]="selectedConsumable.consumableData"
+                    ></app-generic-item-tooltip>
+                  </div>
+                }
+              </app-item-box>
+              <div
+                class="quantity-material"
+                *ngIf="
+                  exportTypeActive == 'export' &&
+                  quantityOfStackedConsumables(
+                    selectedConsumable.consumableDataId
+                  ) > 1
+                "
+              >
+                <p class="text-light mb-0">Select quantity:</p>
+                <ng-container>
+                  <input
+                    type="range"
+                    class="form-range"
+                    step="1"
+                    min="1"
+                    [max]="
+                      quantityOfStackedConsumables(
+                        selectedConsumable.consumableDataId
+                      )
+                    "
+                    [(ngModel)]="selectedConsumable['quantityToExport']"
+                  />
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Quantity"
+                    style="max-width: 200px"
+                    [(ngModel)]="selectedConsumable['quantityToExport']"
+                  />
+                </ng-container>
+              </div>
+            </div>
+          }
+
+          @for (
+            selectedMiscellany of selectedMultipleMiscellany;
+            track selectedMiscellany.id
+          ) {
+            <div class="selected-item">
+              <app-item-box
+                [height]="200"
+                [width]="200"
+                [image]="selectedMiscellany?.miscellanyItemData?.imageLocal"
+              >
+                @if (!!selectedMiscellany) {
+                  <div tooltip class="tooltip-uruk">
+                    <app-generic-item-tooltip
+                      [item]="selectedMiscellany.miscellanyItemData"
+                    ></app-generic-item-tooltip>
+                  </div>
+                }
+              </app-item-box>
+
+              <div
+                class="quantity-material"
+                *ngIf="
+                  exportTypeActive == 'export' &&
+                  quantityOfStackedMiscellany(
+                    selectedMiscellany.miscellanyItemDataId
+                  ) > 1
+                "
+              >
+                <p class="text-light mb-0">Select quantity:</p>
+                <ng-container>
+                  <input
+                    type="range"
+                    class="form-range"
+                    step="1"
+                    min="1"
+                    [max]="
+                      quantityOfStackedMiscellany(
+                        selectedMiscellany.miscellanyItemDataId
+                      )
+                    "
+                    [(ngModel)]="selectedMiscellany['quantityToExport']"
+                  />
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Quantity"
+                    style="max-width: 200px"
+                    [(ngModel)]="selectedMiscellany['quantityToExport']"
+                  />
+                </ng-container>
+              </div>
+            </div>
+          }
         </div>
       }
 
       <div
-        class="all-pending-exports"
+        class="all-pending-exports w-100"
         *ngIf="
           exportTypeActive == 'export' && exportingObjectTypeActive == 'nft'
         "
@@ -157,7 +312,13 @@
               type="button"
               class="btn btn-secondary btn-lg btn-block w-100 btn-pending"
               *ngFor="let whiteListedItemId of pending"
-              (click)="exportItems([whiteListedItemId.id])"
+              (click)="
+                exportItems(
+                  [whiteListedItemId.id],
+                  [getItemTypeSCBasedOnItem(whiteListedItemId)],
+                  [1]
+                )
+              "
             >
               #{{ whiteListedItemId.id }}
               <i
@@ -165,22 +326,41 @@
                 (click)="
                   $event.preventDefault();
                   $event.stopPropagation();
-                  cancelPendingExport(whiteListedItemId.id)
+                  cancelPendingExports(
+                    [whiteListedItemId.id],
+                    [getItemTypeSCBasedOnItem(whiteListedItemId)]
+                  )
                 "
               ></i>
               <app-item-box
                 [height]="100"
                 [width]="100"
-                [image]="whiteListedItemId?.itemData?.imageLocal"
+                [image]="
+                  whiteListedItemId?.itemData?.imageLocal ??
+                  whiteListedItemId?.consumableData?.imageLocal ??
+                  whiteListedItemId?.materialData?.imageLocal ??
+                  whiteListedItemId?.miscellanyItemData?.imageLocal ??
+                  ''
+                "
               >
                 @if (!!whiteListedItemId) {
                   <div tooltip class="tooltip-uruk">
-                    <app-item-tooltip
+                    <app-generic-item-tooltip
                       [item]="whiteListedItemId"
-                    ></app-item-tooltip>
+                    ></app-generic-item-tooltip>
                   </div>
                 }
               </app-item-box>
+            </button>
+          </div>
+          <div class="w-100 d-flex justify-content-end">
+            <button
+              *ngIf="pending.length > 0"
+              type="button"
+              class="btn btn-dark"
+              (click)="cancelAll(pending)"
+            >
+              Cancell all
             </button>
           </div>
         </div>
@@ -192,19 +372,19 @@
           *ngIf="exportTypeActive == 'import'"
           class="btn btn-dark btn-lg btn-block w-100"
           [disabled]="
-            selectedMultipleItems.length == 0 || activeNetworkId() == 0
+            allSelectedItems.length == 0 || activeNetworkId.getValue() == 0
           "
           (click)="addAssetToWallet()"
         >
-          Add asset to wallet
+          Add selected NFTs to wallet
         </button>
         <button
           type="button"
           class="btn btn-primary btn-lg btn-block w-100"
           [disabled]="
-            !selectedMultipleItems ||
-            selectedMultipleItems.length == 0 ||
-            activeNetworkId() == 0
+            !allSelectedItems ||
+            allSelectedItems.length == 0 ||
+            activeNetworkId.getValue() == 0
           "
           (click)="triggerActionForNFT()"
         >
@@ -229,7 +409,7 @@
           type="button"
           *ngIf="exportTypeActive == 'import'"
           class="btn btn-dark btn-lg btn-block w-100"
-          [disabled]="activeNetworkId() == 0"
+          [disabled]="activeNetworkId.getValue() == 0"
           (click)="addERC20ToWallet()"
         >
           Add asset to wallet
@@ -237,7 +417,9 @@
         <button
           type="button"
           class="btn btn-primary btn-lg btn-block w-100"
-          [disabled]="selectedUruksToExport == 0 || activeNetworkId() == 0"
+          [disabled]="
+            selectedUruksToExport == 0 || activeNetworkId.getValue() == 0
+          "
           (click)="triggerActionForERC20()"
         >
           <div class="d-flex justify-content-center gap-3">
@@ -263,45 +445,96 @@
         <ng-container
           *ngTemplateOutlet="
             inventory;
-            context: { itemsToLoad$: currentInventory$ }
+            context: {
+              itemsToLoad$: currentInventory$,
+              materialsToLoad$: currentInventoryMaterials$,
+              consumablesToLoad$: currentInventoryConsumables$,
+              miscellanyToLoad$: currentInventoryMiscellany$
+            }
           "
         ></ng-container>
       } @else {
         <ng-container
           *ngTemplateOutlet="
             inventory;
-            context: { itemsToLoad$: currentInventoryOfNfts$ }
+            context: {
+              itemsToLoad$: currentInventoryOfNftsItems$,
+              materialsToLoad$: currentInventoryOfNftsMaterials$,
+              consumablesToLoad$: currentInventoryOfNftsConsumables$,
+              miscellanyToLoad$: currentInventoryOfNftsMiscellany$
+            }
           "
         ></ng-container>
       }
     </div>
   </div>
 
-  <ng-template #inventory let-items$="itemsToLoad$">
-    <div
-      class="form-check form-switch"
-      (click)="
-        multipleSelection.patchValue(!multipleSelection.value);
-        selectedMultipleItems = []
-      "
-    >
-      <input
-        id="multipleSelection"
-        class="form-check-input"
-        type="checkbox"
-        [formControl]="multipleSelection"
-      />
-      <label class="form-check-label text-light" for="multipleSelection"
-        >Multiple selection</label
-      >
+  <ng-template
+    #inventory
+    let-items$="itemsToLoad$"
+    let-materials$="materialsToLoad$"
+    let-consumables$="consumablesToLoad$"
+    let-misc$="miscellanyToLoad$"
+  >
+    <div class="inventory pb-4">
+      <tabset>
+        <tab id="tab1">
+          <ng-template tabHeading>
+            <span>⚔️</span>
+          </ng-template>
+
+          <app-item-inventory
+            [items]="items$ | async"
+            [multipleSelection]="true"
+            [sockets]="currentSize$ | async"
+            [(selectedItems)]="selectedMultipleItems"
+            [disableDND]="true"
+          >
+          </app-item-inventory>
+        </tab>
+        <tab>
+          <ng-template tabHeading>
+            <span>🧱</span>
+          </ng-template>
+
+          <app-materials-inventory
+            [items]="materials$ | async"
+            [sockets]="currentSize$ | async"
+            [(selectedItems)]="selectedMultipleMaterials"
+            [multipleSelection]="true"
+          >
+          </app-materials-inventory>
+        </tab>
+        <tab>
+          <ng-template tabHeading>
+            <span>⚗️</span>
+          </ng-template>
+
+          <ng-container *ngIf="consumables$ | async as inventoryConsumables">
+            <app-consumables-inventory
+              [items]="inventoryConsumables"
+              [sockets]="currentSize$ | async"
+              [(selectedItems)]="selectedMultipleConsumables"
+              [multipleSelection]="true"
+            >
+            </app-consumables-inventory>
+          </ng-container>
+        </tab>
+        <tab>
+          <ng-template tabHeading>
+            <span>📜</span>
+          </ng-template>
+          <ng-container *ngIf="misc$ | async as inventoryMisc">
+            <app-misc-inventory
+              [items]="inventoryMisc"
+              [sockets]="currentSize$ | async"
+              [(selectedItems)]="selectedMultipleMiscellany"
+              [multipleSelection]="true"
+            >
+            </app-misc-inventory>
+          </ng-container>
+        </tab>
+      </tabset>
     </div>
-    <app-item-inventory
-      [items]="items$ | async"
-      [multipleSelection]="!!multipleSelection.value"
-      [sockets]="currentSize$ | async"
-      [(selectedItems)]="selectedMultipleItems"
-      [disableDND]="true"
-    >
-    </app-item-inventory>
   </ng-template>
 </div>

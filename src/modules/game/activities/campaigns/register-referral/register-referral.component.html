@@ -12,7 +12,7 @@
           {{ 1000 - (getCampaignsCount$ | async) + ' claims remaining' }}
         </p>
       </div>
-      @if (!(walletService.address$ | async)) {
+      @if (!(walletService.getValidAddress$ | async)) {
         <button
           urTitle
           (click)="walletService.modal.open()"

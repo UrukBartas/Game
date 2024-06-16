@@ -15,12 +15,13 @@ import { ContextMenuService } from 'src/services/context-menu.service';
 import { FocuserService } from 'src/standalone/focuser/focuser.service';
 import { MiscellanyService } from 'src/services/miscellany.service';
 import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulette.component';
-import { BehaviorSubject, filter, firstValueFrom, map, of } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 import * as party from 'party-js';
 import { Store } from '@ngxs/store';
 import { MainState } from 'src/store/main.store';
 import { ViewportService } from 'src/services/viewport.service';
-import { ItemBoxComponent } from 'src/standalone/item-box/item-box.component';
+import { BaseInventoryComponent } from '../base-inventory/base-inventory.component';
+import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
 export interface MiscWithStack extends MiscellanyItem {
   stack?: number;
 }
@@ -29,11 +30,8 @@ export interface MiscWithStack extends MiscellanyItem {
   templateUrl: './misc-inventory.component.html',
   styleUrl: './misc-inventory.component.scss',
 })
-export class MiscInventoryComponent {
-  @Input() items: MiscWithStack[] = [];
-  @Input() sockets = 0;
+export class MiscInventoryComponent extends BaseInventoryComponent {
   @Input() selectedItem: MiscWithStack;
-  @Output() selectNewItem = new EventEmitter<MiscWithStack>();
   @Output() updateInventory = new EventEmitter<void>();
   public currentPhase = 0;
   @ViewChild('lootboxOpener') lootboxOpener: TemplateRef<any>;
@@ -45,6 +43,8 @@ export class MiscInventoryComponent {
   miscelanyService = inject(MiscellanyService);
   viewportService = inject(ViewportService);
   store = inject(Store);
+  stack = inject(StackPipe);
+
   public roll: {
     spinWheelItems: Array<Item>;
     resultItem: Item;
@@ -53,7 +53,8 @@ export class MiscInventoryComponent {
   rarity = Rarity;
   public get filteredItems() {
     return fillInventoryBasedOnPlayerSockets(
-      this.items
+      this.stack
+        .transform(this.items, 'miscellanyItemData.name')
         .filter((item) =>
           item?.miscellanyItemData?.name
             .toLowerCase()
@@ -91,9 +92,6 @@ export class MiscInventoryComponent {
     }
   }
 
-  public searchTerm = '';
-  constructor() {}
-
   public spinEndedHandle() {
     if (this.currentPhase == 1) {
       this.currentPhase = 2;
@@ -102,7 +100,7 @@ export class MiscInventoryComponent {
           count: party.variation.range(20, 40),
         });
       }, 500);
-      this.updateInventory.emit()
+      this.updateInventory.emit();
     }
   }
 

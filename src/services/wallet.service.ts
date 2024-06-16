@@ -58,7 +58,8 @@ export class WalletService {
     type: 'track',
     event: 'MODAL_CREATED',
   });
-  public address$ = new Subject<`0x${string}` | undefined>();
+  public address$ = new BehaviorSubject<`0x${string}` | undefined>(undefined);
+  public getValidAddress$ = this.address$.pipe(filter((entry) => !!entry));
   public walletConnectIsLoggedIn$ = this.address$.pipe(map((entry) => !!entry));
   public chains: BehaviorSubject<Array<any> | null> = new BehaviorSubject(null);
 
@@ -100,7 +101,7 @@ export class WalletService {
       this.latestModalEvent.set(event.data)
     );
 
-    this.address$
+    this.getValidAddress$
       .pipe(debounceTime(300))
       .subscribe((address) => this.controlWalletFlow(address));
   }
