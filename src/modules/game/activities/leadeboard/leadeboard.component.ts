@@ -151,7 +151,6 @@ export class LeadeboardComponent extends TemplatePage {
   }
 
   public truncateAddress = truncateEthereumAddress;
-  public actualAddress = getAccount().address;
   public websocket = inject(WebSocketService);
   public store = inject(Store);
   public modalService = inject(BsModalService);
@@ -165,6 +164,7 @@ export class LeadeboardComponent extends TemplatePage {
     return player.state;
   };
   public playerStates = PlayerStateEnum;
+  public actualAddress = this.store.selectSnapshot(MainState).address;
 
   public getImgBasedOnRanking(number: number) {
     switch (number) {
