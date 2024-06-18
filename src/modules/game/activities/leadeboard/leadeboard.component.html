@@ -95,6 +95,14 @@
             >
               - {{ player.pve.title }}</span
             >
+            <span
+              *ngIf="leaderboardType === leaderboardTypes.PVP"
+              [ngStyle]="{
+                color: getRarityColor(player.pvp.rarity)
+              }"
+            >
+              - {{ player.pvp.title }}</span
+            >
           </div>
 
           <div class="tags d-flex gap-2">

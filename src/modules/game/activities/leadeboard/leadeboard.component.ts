@@ -17,6 +17,7 @@ import { ChallengeModalComponent } from '../../components/challengee-modal/chall
 import { PlayerStateEnum } from './enum/player-state.enum';
 import { questTiers } from './const/quest-tiers';
 import { LeaderboardType } from './enum/leaderboard-type.enum';
+import { pvpTiers } from './const/pvp-tiers';
 
 @Component({
   selector: 'app-leadeboard',
@@ -25,6 +26,7 @@ import { LeaderboardType } from './enum/leaderboard-type.enum';
 })
 export class LeadeboardComponent extends TemplatePage {
   questTiers = questTiers;
+  pvpTiers = pvpTiers;
   getRarityColor = getRarityColor;
   playerService = inject(PlayerService);
   fb = inject(FormBuilder);
@@ -49,7 +51,7 @@ export class LeadeboardComponent extends TemplatePage {
       )
       .pipe(
         map((players) => {
-          return players.map((player) => {
+          return players.map((player, index) => {
             const playerCasted = player as PlayerModel & { _count: any };
             const questsCompleted = playerCasted._count.quest;
             const title = this.getTitleForQuestsCompleted(questsCompleted);
@@ -58,6 +60,7 @@ export class LeadeboardComponent extends TemplatePage {
               pve: {
                 ...title,
               },
+              pvp: pvpTiers.find((tier) => tier.position >= index + 1),
             };
           });
         }),
