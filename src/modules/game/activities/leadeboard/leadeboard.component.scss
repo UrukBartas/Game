@@ -143,8 +143,10 @@
     &-badge {
       border: 1px solid $secondary;
       padding: 0px 10px;
+      padding-top: 3px;
       border-radius: 10px;
       width: fit-content;
+      font-size: 14px;
     }
   }
   .active {

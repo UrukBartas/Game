@@ -15,6 +15,8 @@ import { WebSocketService } from 'src/services/websocket.service';
 import { MainState } from 'src/store/main.store';
 import { ChallengeModalComponent } from '../../components/challengee-modal/challenge-modal.component';
 import { PlayerStateEnum } from './enum/player-state.enum';
+import { questTiers } from './const/quest-tiers';
+import { LeaderboardType } from './enum/leaderboard-type.enum';
 
 @Component({
   selector: 'app-leadeboard',
@@ -22,61 +24,8 @@ import { PlayerStateEnum } from './enum/player-state.enum';
   styleUrl: './leadeboard.component.scss',
 })
 export class LeadeboardComponent extends TemplatePage {
-  questTiers = [
-    { maxQuests: 10, title: 'Snaga', glow: 'common', rarity: Rarity.COMMON },
-    {
-      maxQuests: 50,
-      title: 'Warchanter',
-      glow: 'common',
-      rarity: Rarity.COMMON,
-    },
-    {
-      maxQuests: 100,
-      title: 'Brute',
-      glow: 'uncommon',
-      rarity: Rarity.UNCOMMON,
-    },
-    {
-      maxQuests: 500,
-      title: 'Marauder',
-      glow: 'uncommon',
-      rarity: Rarity.UNCOMMON,
-    },
-    { maxQuests: 1000, title: 'Warlord', glow: 'epic', rarity: Rarity.EPIC },
-    { maxQuests: 2000, title: 'Chieftain', glow: 'epic', rarity: Rarity.EPIC },
-    {
-      maxQuests: 5000,
-      title: 'Overlord',
-      glow: 'legendary',
-      rarity: Rarity.LEGENDARY,
-    },
-    {
-      maxQuests: 10000,
-      title: 'Warbringer',
-      glow: 'mythic',
-      rarity: Rarity.MYTHIC,
-    },
-    {
-      maxQuests: Infinity,
-      title: 'Godslayer',
-      glow: 'highlight',
-      rarity: Rarity.MYTHIC,
-    },
-  ];
+  questTiers = questTiers;
   getRarityColor = getRarityColor;
-  public getTitleForQuestsCompleted(questsCompleted: number): {
-    title: string;
-    glow: string;
-    rarity: Rarity;
-  } {
-    for (const tier of this.questTiers) {
-      if (questsCompleted <= tier.maxQuests) {
-        return tier;
-      }
-    }
-    return { title: 'Unknown', glow: 'common', rarity: Rarity.COMMON };
-  }
-
   playerService = inject(PlayerService);
   fb = inject(FormBuilder);
   public sortBy = signal<string>('level');
@@ -115,9 +64,60 @@ export class LeadeboardComponent extends TemplatePage {
         tap((entry) => (this.lastPageSize = entry.length))
       );
   });
+
   public formGroup = this.fb.group({
     userOrWallet: ['', []],
   });
+  public truncateAddress = truncateEthereumAddress;
+  public websocket = inject(WebSocketService);
+  public store = inject(Store);
+  public modalService = inject(BsModalService);
+  private router = inject(Router);
+  public onlinePlayers: { address: string; state: PlayerStateEnum }[] = [];
+  public getPlayerState = (playerId: string) => {
+    const player = this.onlinePlayers.find(
+      (onlinePlayer) => onlinePlayer.address === playerId
+    );
+    if (!player) return PlayerStateEnum.OFFLINE;
+    return player.state;
+  };
+  public playerStates = PlayerStateEnum;
+  public actualAddress = this.store.selectSnapshot(MainState).address;
+  public leaderboardType = LeaderboardType.PVE;
+  public leaderboardTypes = LeaderboardType;
+
+  constructor() {
+    super();
+    this.formGroup
+      .get('userOrWallet')
+      .valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
+      .subscribe((data) => this.nameOrWallet.set(data));
+    this.websocket.onlinePlayers$
+      .pipe(takeUntilDestroyed())
+      .subscribe((players) => (this.onlinePlayers = players));
+  }
+
+  public setPvpLeaderboard() {
+    this.leaderboardType = LeaderboardType.PVP;
+    this.sortBy.set('mmr');
+  }
+  public setLevelLeaderboard() {
+    this.leaderboardType = LeaderboardType.PVE;
+    this.sortBy.set('level');
+  }
+
+  public getTitleForQuestsCompleted(questsCompleted: number): {
+    title: string;
+    glow: string;
+    rarity: Rarity;
+  } {
+    for (const tier of this.questTiers) {
+      if (questsCompleted <= tier.maxQuests) {
+        return tier;
+      }
+    }
+    return { title: 'Unknown', glow: 'common', rarity: Rarity.COMMON };
+  }
 
   public filterAllTime() {
     this.from.set(new Date(0));
@@ -150,30 +150,14 @@ export class LeadeboardComponent extends TemplatePage {
     this.to.set(endOfWeek);
   }
 
-  public truncateAddress = truncateEthereumAddress;
-  public websocket = inject(WebSocketService);
-  public store = inject(Store);
-  public modalService = inject(BsModalService);
-  private router = inject(Router);
-  public onlinePlayers: { address: string; state: PlayerStateEnum }[] = [];
-  public getPlayerState = (playerId: string) => {
-    const player = this.onlinePlayers.find(
-      (onlinePlayer) => onlinePlayer.address === playerId
-    );
-    if (!player) return PlayerStateEnum.OFFLINE;
-    return player.state;
-  };
-  public playerStates = PlayerStateEnum;
-  public actualAddress = this.store.selectSnapshot(MainState).address;
-
   public getImgBasedOnRanking(number: number) {
     switch (number) {
       case 0:
-        return 'assets/leaderboard/gold.png';
+        return `assets/leaderboard/${this.leaderboardType === LeaderboardType.PVE ? 'level' : 'pvp'}/gold.png`;
       case 1:
-        return 'assets/leaderboard/silver.png';
+        return `assets/leaderboard/${this.leaderboardType === LeaderboardType.PVE ? 'level' : 'pvp'}/silver.png`;
       default:
-        return 'assets/leaderboard/third.png';
+        return `assets/leaderboard/${this.leaderboardType === LeaderboardType.PVE ? 'level' : 'pvp'}/bronze.png`;
     }
   }
 
@@ -183,17 +167,6 @@ export class LeadeboardComponent extends TemplatePage {
 
   public prevPage() {
     this.activePage.set(this.activePage() - 1);
-  }
-
-  constructor() {
-    super();
-    this.formGroup
-      .get('userOrWallet')
-      .valueChanges.pipe(debounceTime(500), takeUntilDestroyed())
-      .subscribe((data) => this.nameOrWallet.set(data));
-    this.websocket.onlinePlayers$
-      .pipe(takeUntilDestroyed())
-      .subscribe((players) => (this.onlinePlayers = players));
   }
 
   challengePlayer(player: PlayerModel) {
