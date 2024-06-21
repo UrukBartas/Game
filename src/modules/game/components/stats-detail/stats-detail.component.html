@@ -33,10 +33,12 @@
               <label class="text-third">Questing rank:</label>
               <span
                 [ngStyle]="{
-                  color: getRarityColor(getQuestTier(player.pvpIndex).rarity)
+                  color: getRarityColor(
+                    getQuestTier(player._count.quest).rarity
+                  )
                 }"
               >
-                {{ getQuestTier(player.pvpIndex).title }}</span
+                {{ getQuestTier(player._count.quest).title }}</span
               >
             </li>
             <li urSubtext class="d-flex justify-content-between gap-2">
