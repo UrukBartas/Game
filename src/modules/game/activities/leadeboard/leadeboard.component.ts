@@ -60,7 +60,11 @@ export class LeadeboardComponent extends TemplatePage {
               pve: {
                 ...title,
               },
-              pvp: pvpTiers.find((tier) => tier.position >= index + 1),
+              pvp: pvpTiers.find(
+                (tier) =>
+                  player.pvpIndex >= tier.range[0] &&
+                  player.pvpIndex <= tier.range[1]
+              ),
             };
           });
         }),
@@ -114,12 +118,7 @@ export class LeadeboardComponent extends TemplatePage {
     glow: string;
     rarity: Rarity;
   } {
-    for (const tier of this.questTiers) {
-      if (questsCompleted <= tier.maxQuests) {
-        return tier;
-      }
-    }
-    return { title: 'Unknown', glow: 'common', rarity: Rarity.COMMON };
+    return questTiers.find((tier) => questsCompleted <= tier.maxQuests);
   }
 
   public filterAllTime() {

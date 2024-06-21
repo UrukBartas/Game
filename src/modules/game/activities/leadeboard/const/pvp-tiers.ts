@@ -1,38 +1,46 @@
 import { Rarity } from 'src/modules/core/models/items.model';
 
-export const pvpTiers = [
+export interface PvpTier {
+  range: [number, number];
+  title: string;
+  rarity: Rarity;
+  pvpTrophy?: string;
+  pveTrophy?: string;
+}
+
+export const pvpTiers: PvpTier[] = [
   {
-    position: 1,
+    range: [1, 1],
     title: 'Emperor of the Hordes',
     rarity: Rarity.MYTHIC,
   },
   {
-    position: 2,
+    range: [2, 2],
     title: 'Supreme Warchief',
     rarity: Rarity.LEGENDARY,
   },
   {
-    position: 3,
+    range: [3, 3],
     title: 'Dread Overlord',
     rarity: Rarity.LEGENDARY,
   },
   {
-    position: 4,
-    title: 'Dark Warlord',
+    range: [4, 4],
+    title: 'High Warlord',
     rarity: Rarity.EPIC,
   },
   {
-    position: 5,
+    range: [5, 5],
     title: 'Shadow Chieftain',
     rarity: Rarity.EPIC,
   },
   {
-    position: 6,
-    title: 'Bloodthirster',
+    range: [6, 10],
+    title: 'Warlord',
     rarity: Rarity.UNCOMMON,
   },
   {
-    position: 11,
+    range: [11, Infinity],
     title: 'Brute',
     rarity: Rarity.COMMON,
   },
