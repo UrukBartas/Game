@@ -18,6 +18,8 @@
 }
 .pending-exports {
   gap: 10px;
+  overflow: auto;
+  width: 100%;
 }
 
 .fit-content {
@@ -45,6 +47,7 @@
   position: absolute;
   right: 5px;
   top: 0px;
+  z-index: 1000;
   cursor: pointer;
   &:hover {
     color: $primary;
@@ -82,4 +85,15 @@
   width: 100%;
   overflow: auto;
   gap: 10px;
+}
+
+.selected-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.quantity-material {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

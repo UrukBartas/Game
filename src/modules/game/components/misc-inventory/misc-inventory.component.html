@@ -86,10 +86,10 @@
       contextMenuService.onContextMenu($event, contextOptions, item)
     "
     (appDoubleClick)="open(item)"
-    (click)="selectNewItem.emit(item)"
+    [active]="isMultipleSelected(item)"
+    (click)="addToSelectedItems(item)"
     [height]="40"
     [width]="40"
-    [active]="!!selectedItem && !!item && selectedItem.id == item.id"
     [stack]="item?.stack ?? 0"
     [rarity]="item?.miscellanyItemData?.rarity"
     [image]="

@@ -10,6 +10,8 @@
     [stack]="item?.quantity | compressNumber"
     [rarity]="item?.materialData?.rarity"
     [image]="item ? item?.materialData.imageLocal : null"
+    [active]="isMultipleSelected(item)"
+    (click)="addToSelectedItems(item)"
   >
     @if (!!item) {
       <div tooltip class="tooltip-uruk">
