@@ -27,7 +27,7 @@
       <div class="row justify-content-center">
         <div class="chains py-3">
           <div class="description justify-content-center">
-            <p urSubtitle>Select compatible network</p>
+            <p urSubtitle>#1 Destination network</p>
           </div>
           <div class="chain-list">
             @for (
@@ -49,7 +49,7 @@
           </div>
         </div>
         <div class="description justify-content-center">
-          <p urSubtitle>Select type of export</p>
+          <p urSubtitle>#2 Export type</p>
         </div>
 
         <app-item-box
@@ -307,7 +307,7 @@
                 : 'Pending exports'
             }}
           </div>
-          <div class="d-flex pending-exports">
+          <div class="d-flex pending-exports py-2">
             <button
               type="button"
               class="btn btn-secondary btn-lg btn-block w-100 btn-pending"
@@ -320,7 +320,6 @@
                 )
               "
             >
-              #{{ whiteListedItemId.id }}
               <i
                 class="bi bi-x-circle-fill close-icon-pending"
                 (click)="
@@ -343,17 +342,18 @@
                   ''
                 "
               >
-                @if (!!whiteListedItemId) {
-                  <div tooltip class="tooltip-uruk">
-                    <app-generic-item-tooltip
-                      [item]="whiteListedItemId"
-                    ></app-generic-item-tooltip>
-                  </div>
-                }
               </app-item-box>
             </button>
           </div>
-          <div class="w-100 d-flex justify-content-end">
+          <div class="w-100 d-flex justify-content-end gap-2">
+            <button
+              *ngIf="pending.length > 0"
+              type="button"
+              class="btn btn-dark"
+              (click)="moveForwardAll(pending)"
+            >
+              Move forward
+            </button>
             <button
               *ngIf="pending.length > 0"
               type="button"
@@ -384,12 +384,19 @@
           [disabled]="
             !allSelectedItems ||
             allSelectedItems.length == 0 ||
-            activeNetworkId.getValue() == 0
+            activeNetworkId.getValue() == 0 ||
+            !isAllowedNetwork(activeNetworkId.getValue())
           "
           (click)="triggerActionForNFT()"
         >
           <div class="d-flex justify-content-center gap-3">
-            {{ exportTypeActive == 'export' ? 'Export' : 'Import' }}
+            {{
+              exportTypeActive == 'export'
+                ? !isAllowedNetwork(activeNetworkId.getValue())
+                  ? 'Incorrect chain connected'
+                  : 'Export'
+                : 'Import'
+            }}
             @if (exportTypeActive == 'export') {
               <div
                 class="display-fee"
@@ -397,8 +404,10 @@
               >
                 <img src="{{ activeNetwork }}" />
                 <span>{{
-                  calculateFeesBasedOnSelectedItems(getNFTExportFee$ | async)
-                    | number
+                  calculateFeesBasedOnSelectedItems(
+                    getNFTExportFee$ | async,
+                    flattenIdsAndTypesFromSelection()[0].length
+                  ) | number
                 }}</span>
               </div>
             }
@@ -418,12 +427,20 @@
           type="button"
           class="btn btn-primary btn-lg btn-block w-100"
           [disabled]="
-            selectedUruksToExport == 0 || activeNetworkId.getValue() == 0
+            selectedUruksToExport == 0 ||
+            activeNetworkId.getValue() == 0 ||
+            !isAllowedNetwork(activeNetworkId.getValue())
           "
           (click)="triggerActionForERC20()"
         >
           <div class="d-flex justify-content-center gap-3">
-            {{ exportTypeActive == 'export' ? 'Export' : 'Import' }}
+            {{
+              exportTypeActive == 'export'
+                ? !isAllowedNetwork(activeNetworkId.getValue())
+                  ? 'Incorrect chain connected'
+                  : 'Export'
+                : 'Import'
+            }}
             @if (exportTypeActive == 'export') {
               <div
                 class="display-fee"

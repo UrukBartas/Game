@@ -30,7 +30,6 @@ export class BaseInventoryComponent {
   }
 
   private findItemIndex(item: any) {
-    console.log(item)
     if (!!item.tokenId) {
       return this.selectedItems.findIndex(
         (selectedItem) => selectedItem.tokenId == item.tokenId

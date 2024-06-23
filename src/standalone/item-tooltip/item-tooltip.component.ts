@@ -39,8 +39,13 @@ export class ItemTooltipComponent {
           'enabled',
           'price',
           'selected',
+          'tokenId',
           'shopItemId',
-        ].includes(entry) &&
+          'quantity',
+          'quantityToExport'
+        ].find(
+          (entryInner) => entryInner.toLowerCase() == entry.toLowerCase()
+        ) &&
         !!this.item[entry] &&
         this.item[entry] > 0
     );
@@ -55,5 +60,4 @@ export class ItemTooltipComponent {
       ? '%'
       : '';
   }
-
 }

@@ -1,16 +1,10 @@
-import {
-  Component,
-  SimpleChanges,
-  computed,
-  effect,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { Store } from '@ngxs/store';
 import {
   getAccount,
   getNetwork,
   switchNetwork,
+  waitForTransaction,
   watchNetwork,
 } from '@wagmi/core';
 import { ethers } from 'ethers';
@@ -21,7 +15,6 @@ import {
   BehaviorSubject,
   EMPTY,
   Observable,
-  Subject,
   catchError,
   filter,
   firstValueFrom,
@@ -204,6 +197,7 @@ export class ExportImportNftComponent extends TemplatePage {
     switchMap((entry: { id: number; itemType: ItemTypeSC; uri: string }[]) => {
       const itemsParsed = entry.map((entry) => {
         entry.id = Number(entry.id.toString());
+        entry.itemType = Number(entry.itemType.toString());
         return entry;
       });
       return this.itemService
@@ -326,17 +320,29 @@ export class ExportImportNftComponent extends TemplatePage {
     });
   }
 
-  ngAfterViewInit(): void {
-    watchNetwork((network) => {
-      const isAllowed = this.walletService.chains
-        .getValue()
-        .find((chain) => chain.id == network.chain.id);
-      if (!!isAllowed) {
-        this.activeNetworkId.next(network.chain.id);
-      } else {
-        this.activeNetworkId.next(0);
-      }
+  ngOnInit(): void {
+    this.walletService.getValidAddress$.subscribe(() => {
+      watchNetwork((network) => {
+        try {
+          const isAllowed = this.walletService.chains
+            .getValue()
+            .find((chain) => chain.id == network.chain.id);
+          if (!!isAllowed) {
+            this.activeNetworkId.next(network.chain.id);
+          } else {
+            this.activeNetworkId.next(0);
+          }
+        } catch (error) {
+          this.activeNetworkId.next(0);
+        }
+      });
     });
+  }
+
+  public isAllowedNetwork(chainId: number) {
+    return this.walletService.chains
+      .getValue()
+      .find((chain) => chain.id == chainId);
   }
 
   public getActiveNetworkImg() {
@@ -397,28 +403,38 @@ export class ExportImportNftComponent extends TemplatePage {
           })
         )
       );
-
       const fees = await firstValueFrom(this.getNFTExportFee$);
-      await this.contractService.executewriteContractOnUrukNFT(
+      const tx = await this.contractService.executewriteContractOnUrukNFT(
         'exportItemsToNfts',
         [
           nftsUploaded.map((entry) => entry.id),
           nftsUploaded.map((entry) => entry.type),
-          nftsUploaded.map((entry) => `ipfs://${entry.cid}`),
+          nftsUploaded.map(
+            (entry) => `https://gateway.lighthouse.storage/ipfs/${entry.cid}`
+          ),
           nftsUploaded.map((entry) => entry.quantity),
         ],
         ethers.parseEther(
           this.calculateFeesBasedOnSelectedItems(fees, ids.length)
         )
       );
+      const receipt = await waitForTransaction({
+        hash: tx.hash,
+      });
       this.spinnerService.hide();
+      if (receipt.status !== 'success')
+        throw new Error('Error exporting items!');
       this.toastService.success(
         'The items got exported, you will receive your NFT in your wallet soon!'
       );
       this.sendThemToTheAbyssAndBurnThemLikeJs();
     } catch (error: any) {
       this.toastService.error(
-        error?.error?.message ?? error?.cause?.reason ?? undefined,
+        error?.shortMessage ??
+          error?.error?.message ??
+          error?.cause?.reason ??
+          error ??
+          undefined,
         'Something went wrong'
       );
       this.spinnerService.hide();
@@ -617,12 +633,6 @@ export class ExportImportNftComponent extends TemplatePage {
     this.spinnerService.show();
     try {
       if (this.exportTypeActive == 'export') {
-        if (this.allSelectedItems.length > 10) {
-          this.toastService.error(
-            'You can not upload more than 10 limits at once'
-          );
-          return;
-        }
         const [
           flattenedArrayIds,
           flattenedArrayTypes,
@@ -671,12 +681,17 @@ export class ExportImportNftComponent extends TemplatePage {
           this.importExport.whiteListItemERC20(this.selectedUruksToExport)
         );
         const fees = await firstValueFrom(this.getERC20ExportFee$);
-        await this.contractService.executewriteContractOnUrukERC20(
+        const tx = await this.contractService.executewriteContractOnUrukERC20(
           'exportCoins',
           [ethers.parseEther(this.selectedUruksToExport.toString())],
           ethers.parseEther(fees)
         );
+        const receipt = await waitForTransaction({
+          hash: tx.hash,
+        });
         this.spinnerService.hide();
+        if (receipt.status !== 'success')
+          throw new Error('Error exporting items!');
         this.toastService.success(
           'The coins got exported, you will receive them in your wallet soon!'
         );
@@ -695,9 +710,11 @@ export class ExportImportNftComponent extends TemplatePage {
         this.selectedUruksToExport = 0;
       }
     } catch (error: any) {
-      console.error(error);
       this.toastService.error(
-        error?.error?.message ?? error?.cause?.reason ?? undefined,
+        error?.shortMessage ??
+          error?.error?.message ??
+          error?.cause?.reason ??
+          undefined,
         'Something went wrong'
       );
       this.spinnerService.hide();
@@ -714,6 +731,24 @@ export class ExportImportNftComponent extends TemplatePage {
       );
       this.spinnerService.hide();
       this.toastService.success('Success');
+    } catch (error: any) {
+      this.toastService.error(
+        error?.error?.message ?? undefined,
+        'Something went wrong'
+      );
+      this.spinnerService.hide();
+    }
+  }
+
+  public async moveForwardAll(pendingItems: Array<any>) {
+    this.spinnerService.show();
+    try {
+      await this.exportItems(
+        pendingItems.map((entry) => entry.id),
+        pendingItems.map((entry) => this.getItemTypeSCBasedOnItem(entry)),
+        pendingItems.map(() => 1)
+      );
+      this.spinnerService.hide();
     } catch (error: any) {
       this.toastService.error(
         error?.error?.message ?? undefined,
