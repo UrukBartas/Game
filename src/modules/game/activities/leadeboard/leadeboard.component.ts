@@ -172,6 +172,8 @@ export class LeadeboardComponent extends TemplatePage {
   }
 
   challengePlayer(player: PlayerModel) {
+    if (player.configuration?.disablePVP) return;
+
     const { id, name, level, image } = this.store.selectSnapshot(
       MainState.getState
     ).player;

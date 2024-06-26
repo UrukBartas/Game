@@ -30,6 +30,11 @@ export interface PlayerModel {
   pvpIndex?: number;
   mmr: number;
   _count: { quest: number };
+  configuration: PlayerConfiguration;
+}
+
+export interface PlayerConfiguration {
+  disablePVP: boolean;
 }
 
 export interface PlayerStatsModel {

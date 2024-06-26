@@ -131,11 +131,15 @@
             player.id !== actualAddress
           "
           class="duel-btn"
+          [class.disabled]="player.configuration?.disablePVP"
           [ngbTooltip]="tooltipTemplate"
           [tooltipContext]="{
-            text: 'Challenge player'
+            text: player.configuration?.disablePVP
+              ? 'Player has disabled PVP'
+              : 'Challenge player'
           }"
           (click)="challengePlayer(player)"
+          [attr.disabled]="player.configuration?.disablePVP ? true : null"
         >
           <div class="icon fa-sword"></div>
         </div>

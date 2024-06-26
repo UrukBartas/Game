@@ -6,7 +6,10 @@ import { Observable, firstValueFrom, tap } from 'rxjs';
 import { Consumable } from 'src/modules/core/models/consumable.model';
 import { Item } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
-import { PlayerModel } from 'src/modules/core/models/player.model';
+import {
+  PlayerConfiguration,
+  PlayerModel,
+} from 'src/modules/core/models/player.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 import { RefreshPlayer } from 'src/store/main.store';
 import { ItemService } from './item.service';
@@ -45,29 +48,48 @@ export class PlayerService extends ApiBaseService {
     email: string,
     name: string,
     image: string,
-    password: string
+    password: string,
+    configuration: PlayerConfiguration
   ): Observable<PlayerModel> {
-    return this.post('/create', { email, name, image, password });
+    return this.post('/create', {
+      email,
+      name,
+      image,
+      password,
+      configuration,
+    });
   }
 
   createByEmail(
     email: string,
     name: string,
     image: string,
-    password: string
+    password: string,
+    configuration: PlayerConfiguration
   ): Observable<PlayerModel> {
-    return this.post('/create-by-email', { email, name, image, password });
+    return this.post('/create-by-email', {
+      email,
+      name,
+      image,
+      password,
+      configuration,
+    });
   }
-
-
 
   update(
     email: string,
     name: string,
     image: string,
-    password: string
+    password: string,
+    configuration: PlayerConfiguration
   ): Observable<PlayerModel> {
-    return this.post('/update', { email, name, image, password });
+    return this.post('/update', {
+      email,
+      name,
+      image,
+      password,
+      configuration,
+    });
   }
 
   migrateEta(address: string) {

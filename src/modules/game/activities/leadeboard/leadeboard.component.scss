@@ -67,6 +67,15 @@
           height: 30px;
           background: white;
         }
+
+        &.disabled {
+          background-color: rgb(100, 100, 100);
+          box-shadow: none;
+          cursor: not-allowed;
+          .icon {
+            background: grey;
+          }
+        }
       }
       .connected-dot {
         background: $gray-500;
