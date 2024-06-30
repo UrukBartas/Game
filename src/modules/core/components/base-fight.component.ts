@@ -168,6 +168,7 @@ export abstract class BaseFightComponent extends TemplatePage {
         }, 1500);
       });
     });
+    this.cdr.detectChanges();
   }
 
   triggerDefeat(result: FightResultModel) {
@@ -182,6 +183,7 @@ export abstract class BaseFightComponent extends TemplatePage {
         }, 1500);
       });
     });
+    this.cdr.detectChanges();
   }
 
   openConsumableModal() {
@@ -269,6 +271,7 @@ export abstract class BaseFightComponent extends TemplatePage {
   // duration in seconds
   private handleEnemyAnimation(animation: string, duration: number) {
     this.enemyAnimation = `${animation} ${duration}s`;
+    this.cdr.detectChanges();
     setTimeout(() => {
       this.enemyAnimation = '';
     }, duration * 1000);
