@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Item } from 'src/modules/core/models/items.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
+import { ItemTypeSC } from 'src/modules/game/activities/export-import-nft/enums/ItemTypesSC';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,10 @@ export class ItemService extends ApiBaseService {
     return this.get('/' + itemIdData + '/get-item-data/');
   }
 
-  public getMultipleItemsAtOnce(ids: { ids: Array<number> }): Observable<Item[]> {
+  public getMultipleItemsAtOnce(ids: {
+    ids: Array<number>;
+    itemTypes: Array<ItemTypeSC>;
+  }): Observable<any[]> {
     return this.post('/get-multiple-at-once', ids);
   }
 

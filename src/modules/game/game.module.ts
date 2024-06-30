@@ -48,6 +48,7 @@ import { QuestResultComponent } from './activities/quests/quest-result/quest-res
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
 import { DailyRollButtonComponent } from './activities/shop/components/daily-roll-button.component';
 import { ShopComponent } from './activities/shop/shop.component';
+import { BaseInventoryComponent } from './components/base-inventory/base-inventory.component';
 import { ChallengeModalComponent } from './components/challengee-modal/challenge-modal.component';
 import { ConsumableModalComponent } from './components/consumable-modal/consumable-modal.component';
 import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
@@ -113,6 +114,7 @@ const pipes = [
     MaterialsInventoryComponent,
     InventoryTopbarComponent,
     MiscInventoryComponent,
+    BaseInventoryComponent,
   ],
   imports: [
     ...directives,
@@ -139,6 +141,6 @@ const pipes = [
     ItemRouletteComponent,
   ],
   exports: [GameLayoutComponent],
-  providers: [DecimalPipe, AsyncPipe],
+  providers: [DecimalPipe, AsyncPipe, StackPipe],
 })
 export class GameModule {}

@@ -1,12 +1,8 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { Consumable } from 'src/modules/core/models/consumable.model';
 import { fillInventoryBasedOnPlayerSockets } from 'src/modules/utils';
+import { BaseInventoryComponent } from '../base-inventory/base-inventory.component';
+import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
 export interface ConsumableWithStack extends Consumable {
   stack?: number;
 }
@@ -15,15 +11,14 @@ export interface ConsumableWithStack extends Consumable {
   templateUrl: './consumables-inventory.component.html',
   styleUrl: './consumables-inventory.component.scss',
 })
-export class ConsumablesInventoryComponent {
-  @Input() items: ConsumableWithStack[] = [];
-  @Input() sockets = 0;
+export class ConsumablesInventoryComponent extends BaseInventoryComponent {
   @Input() selectedItem: ConsumableWithStack;
-  @Output() selectNewItem = new EventEmitter<Consumable>();
+  stack = inject(StackPipe);
 
   public get filteredItems() {
     return fillInventoryBasedOnPlayerSockets(
-      this.items
+      this.stack
+        .transform(this.items, 'consumableData.name')
         .filter((item) =>
           item?.consumableData?.name
             .toLowerCase()
@@ -33,7 +28,4 @@ export class ConsumablesInventoryComponent {
       this.sockets
     );
   }
-
-  public searchTerm = '';
-  constructor() {}
 }

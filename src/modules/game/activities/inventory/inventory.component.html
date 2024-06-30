@@ -110,15 +110,14 @@
               <ng-template tabHeading>
                 <span>📜</span>
               </ng-template>
-              <ng-container
-                *ngIf="
-                  currentMiscInventory
-                    | stack: 'miscellanyItemData.name' as inventoryMisc
-                "
-              >
+              <ng-container *ngIf="currentMiscInventory as inventoryMisc">
                 <app-misc-inventory
                   [items]="inventoryMisc"
-                  (updateInventory)="miscUpdated$.next(true)"
+                  (updateInventory)="
+                    miscUpdated$.next(true);
+                    inventoryUpdated$.next(true);
+                    materialUpdated$.next(true)
+                  "
                   [sockets]="currentSize$ | async"
                 >
                   <ng-container

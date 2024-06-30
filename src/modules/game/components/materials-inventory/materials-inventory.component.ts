@@ -1,19 +1,13 @@
 import { Component, Input } from '@angular/core';
-import { Consumable } from 'src/modules/core/models/consumable.model';
-import { Material } from 'src/modules/core/models/material.model';
 import { fillInventoryBasedOnPlayerSockets } from 'src/modules/utils';
-export interface ConsumableWithStack extends Consumable {
-  stack?: number;
-}
+import { BaseInventoryComponent } from '../base-inventory/base-inventory.component';
+
 @Component({
   selector: 'app-materials-inventory',
   templateUrl: './materials-inventory.component.html',
   styleUrl: './materials-inventory.component.scss',
 })
-export class MaterialsInventoryComponent {
-  @Input() items: Material[] = [];
-  @Input() sockets = 0;
-
+export class MaterialsInventoryComponent extends BaseInventoryComponent {
   public get filteredItems() {
     return fillInventoryBasedOnPlayerSockets(
       this.items
@@ -26,7 +20,4 @@ export class MaterialsInventoryComponent {
       this.sockets
     );
   }
-
-  public searchTerm = '';
-  constructor() {}
 }

@@ -84,7 +84,7 @@ export class GameLayoutComponent {
     {
       path: '/export-import',
       displayText: 'Import/Export',
-      icon: 'fa fa-plug',
+      icon: 'fa fa-bridge',
       onlyWeb3: true,
     },
     {

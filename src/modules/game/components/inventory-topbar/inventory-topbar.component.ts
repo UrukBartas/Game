@@ -75,9 +75,9 @@ export class InventoryTopbarComponent {
       } else if (this.sortType === 'rarity') {
         let data = a.itemData ?? a.materialData ?? a.consumableData;
         let dataB = b.itemData ?? b.materialData ?? b.consumableData;
-        if (!data.rarity || !dataB.rarity) comparison = 0;
+        if (!data?.rarity || !dataB?.rarity) comparison = 0;
         comparison =
-          rarityOrder.indexOf(data.rarity) - rarityOrder.indexOf(dataB.rarity);
+          rarityOrder.indexOf(data?.rarity) - rarityOrder.indexOf(dataB?.rarity);
       }
       return this.sortOrderUp ? comparison : -comparison;
     });

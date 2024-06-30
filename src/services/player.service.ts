@@ -14,6 +14,7 @@ import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 import { RefreshPlayer } from 'src/store/main.store';
 import { ItemService } from './item.service';
 import { MiscellanyItem } from 'src/modules/core/models/misc.model';
+import { ItemTypeSC } from 'src/modules/game/activities/export-import-nft/enums/ItemTypesSC';
 
 @Injectable({
   providedIn: 'root',
