@@ -89,10 +89,7 @@
                 <span>⚗️</span>
               </ng-template>
               <ng-container
-                *ngIf="
-                  currentConsumableInventory
-                    | stack: 'consumableData.name' as inventoryConsumables
-                "
+                *ngIf="currentConsumableInventory as inventoryConsumables"
               >
                 <app-consumables-inventory
                   [items]="inventoryConsumables"
