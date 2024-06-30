@@ -1,9 +1,15 @@
 @import './variables.scss';
 @import './styles-custom.scss';
+
 @import '~bootstrap-icons/font/bootstrap-icons.css';
-@import 'node_modules/bootstrap/scss/functions';
-@import 'node_modules/bootstrap/scss/variables';
-@import 'node_modules/bootstrap/scss/mixins';
+@import './node_modules/bootstrap/scss/bootstrap';
+
+@import '@fortawesome/fontawesome-free/scss/fontawesome.scss';
+@import '@fortawesome/fontawesome-free/scss/solid.scss';
+@import '@fortawesome/fontawesome-free/scss/regular.scss';
+@import '@fortawesome/fontawesome-free/scss/brands.scss';
+@import 'node_modules/ngx-bootstrap/datepicker/bs-datepicker';
+
 $min-contrast-ratio: 2.5;
 
 * {
@@ -11,6 +17,7 @@ $min-contrast-ratio: 2.5;
   padding: 0;
   box-sizing: border-box;
   font-family: 'UrukFont';
+  user-select: none;
 }
 html,
 body {
@@ -162,27 +169,10 @@ ngb-tooltip-window {
   }
 }
 
-/* Importing Bootstrap SCSS file. */
-@import 'bootstrap/scss/bootstrap';
-
-@import '@fortawesome/fontawesome-free/scss/fontawesome.scss';
-@import '@fortawesome/fontawesome-free/scss/solid.scss';
-@import '@fortawesome/fontawesome-free/scss/regular.scss';
-@import '@fortawesome/fontawesome-free/scss/brands.scss';
-@import 'node_modules/bootstrap/scss/functions';
-@import 'node_modules/bootstrap/scss/variables';
-@import 'node_modules/bootstrap/scss/mixins';
-
-/* Importing Bootstrap SCSS file. */
-@import './node_modules/bootstrap/scss/bootstrap';
-
-/* Importing Datepicker SCSS file. */
-@import 'node_modules/ngx-bootstrap/datepicker/bs-datepicker';
-
 .carousel-inner {
   padding: 0px;
   @include media-breakpoint-up(lg) {
-    padding: 0px 90px;
+    padding: 0px 40px;
   }
 }
 
@@ -326,6 +316,13 @@ app-adventures {
   }
 }
 
+//ICONS
+
+.fa-sword {
+  -webkit-mask: url(assets/icons/swords.svg) no-repeat center;
+  mask: url(assets/icons/swords.svg) no-repeat center;
+}
+
 .fullscreen-mode {
   img.active-quest {
     display: none;
@@ -336,6 +333,7 @@ app-adventures {
   display: flex;
   flex-direction: column;
 }
+
 .flex-row {
   display: flex;
   flex-direction: row;

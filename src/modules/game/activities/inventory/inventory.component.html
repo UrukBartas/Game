@@ -89,9 +89,7 @@
                 <span>⚗️</span>
               </ng-template>
               <ng-container
-                *ngIf="
-                  currentConsumableInventory$ | async as inventoryConsumables
-                "
+                *ngIf="currentConsumableInventory as inventoryConsumables"
               >
                 <app-consumables-inventory
                   [items]="inventoryConsumables"
@@ -132,8 +130,32 @@
       </slide>
       <slide>
         <div class="description desc-mover">
-          <p urTitle>Stats</p>
-          <div class="mover" *ngIf="!isViewingPlayer">
+          <p urTitle>Details</p>
+          <div class="mover">
+            <i
+              class="bi bi-caret-left-fill"
+              [ngClass]="{ 'disabled-icon': isViewingPlayer }"
+              (click)="
+                isViewingPlayer
+                  ? null
+                  : (activeSlideIndex = activeSlideIndex - 1)
+              "
+            ></i>
+            <i
+              class="bi bi-caret-right-fill"
+              (click)="activeSlideIndex = activeSlideIndex + 1"
+            ></i>
+          </div>
+        </div>
+        <app-stats-detail
+          [player]="actualPlayer$ | async"
+          [isViewingAnotherPlayer]="isViewingPlayer"
+        ></app-stats-detail>
+      </slide>
+      <slide>
+        <div class="description desc-mover">
+          <p urTitle>Arena Matches</p>
+          <div class="mover">
             <i
               class="bi bi-caret-left-fill"
               (click)="activeSlideIndex = activeSlideIndex - 1"
@@ -141,10 +163,9 @@
             <i class="bi bi-caret-right-fill disabled-icon"></i>
           </div>
         </div>
-        <app-stats-detail
+        <app-fight-historic
           [player]="actualPlayer$ | async"
-          [isViewingAnotherPlayer]="isViewingPlayer"
-        ></app-stats-detail>
+        ></app-fight-historic>
       </slide>
     </carousel>
   </div>

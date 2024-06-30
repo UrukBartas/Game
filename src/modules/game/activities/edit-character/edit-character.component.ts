@@ -24,6 +24,7 @@ import {
 import { Location } from '@angular/common';
 import { WalletService } from 'src/services/wallet.service';
 import { getAccount } from '@wagmi/core';
+import { PlayerConfiguration } from 'src/modules/core/models/player.model';
 export function passwordMatchingValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const password = control.get('password');
@@ -80,6 +81,7 @@ export class EditCharacterComponent extends TemplatePage {
           [Validators.required, Validators.pattern(passwordPattern)],
         ],
         repeatPassword: ['', [Validators.required]],
+        disablePVP: [false, [Validators.required]]
       },
       { validator: passwordMatchingValidator() }
     );
@@ -123,8 +125,8 @@ export class EditCharacterComponent extends TemplatePage {
   private async load() {
     const player = this.store.selectSnapshot(MainState.getState).player;
     if (player) {
-      const { image, name, email } = player;
-      this.form.patchValue({ image, name, email });
+      const { image, name, email, configuration } = player;
+      this.form.patchValue({ image, name, email, disablePVP: configuration?.disablePVP });
     }
   }
 
@@ -156,18 +158,19 @@ export class EditCharacterComponent extends TemplatePage {
   }
 
   create() {
-    const { email, name, image, password } = this.form.value;
+    const { email, name, image, password, disablePVP } = this.form.value;
+    const configuration: PlayerConfiguration = { disablePVP };
 
     if (this.authService.nativePlatform) {
       this.playerService
-        .createByEmail(email, name, image, password)
+        .createByEmail(email, name, image, password, configuration)
         .pipe(take(1))
         .subscribe(() => {
           this.store.dispatch(new LoginPlayer({ email, password }));
         });
     } else {
       this.playerService
-        .create(email, name, image, password)
+        .create(email, name, image, password, configuration)
         .pipe(take(1))
         .subscribe(() => {
           this.store.dispatch(new LoginPlayer());
@@ -176,9 +179,11 @@ export class EditCharacterComponent extends TemplatePage {
   }
 
   edit() {
-    const { email, name, image, password } = this.form.value;
+    const { email, name, image, password, disablePVP } = this.form.value;
+    const configuration: PlayerConfiguration = { disablePVP };
+    
     this.playerService
-      .update(email, name, image, password)
+      .update(email, name, image, password, configuration)
       .pipe(take(1))
       .subscribe(() => {
         this.toastService.success('Settings updated');

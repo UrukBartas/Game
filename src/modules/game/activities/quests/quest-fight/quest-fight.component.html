@@ -75,7 +75,7 @@
 
         <div
           class="progress shadow"
-          [style.height]="getHealthEnergyHeight() + 'px'"
+          [style.height]="getEnergyBarHeight() + 'px'"
         >
           <span class="progress-text position-absolute"
             >{{ fight.currentStats.player.energy }}/{{
@@ -162,7 +162,7 @@
 
         <div
           class="progress shadow"
-          [style.height]="getHealthEnergyHeight() + 'px'"
+          [style.height]="getEnergyBarHeight() + 'px'"
         >
           <span class="progress-text position-absolute"
             >{{ fight.currentStats.enemy.energy }}/{{
