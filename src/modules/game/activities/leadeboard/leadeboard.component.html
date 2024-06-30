@@ -65,7 +65,9 @@
               class="list-leaderboard-item-left-image-ranking"
             />
           } @else {
-            <div class="list-leaderboard-item-left-number-ranking">
+            <div
+              class="list-leaderboard-item-left-number-ranking d-flex align-items-center pl-1"
+            >
               {{ index + 1 + chunkSize() * activePage() }}
             </div>
           }
