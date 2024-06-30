@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, TemplateRef } from '@angular/core';
 import { ConsumableData } from 'src/modules/core/models/consumable.model';
 import { ItemData } from 'src/modules/core/models/items.model';
 import { MaterialData } from 'src/modules/core/models/material.model';
@@ -21,6 +21,7 @@ export class GenericItemTooltipComponent {
     | (MiscellanyItemData & { price?: any })
     | (ItemData & { price?: any });
   @Input() showPrice = false;
+  @Input() customTemplate: TemplateRef<any>;
 
   viewportService = inject(ViewportService);
   public anyfy = (anything) => anything as any;

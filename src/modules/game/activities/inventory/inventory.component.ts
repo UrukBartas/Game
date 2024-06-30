@@ -101,7 +101,7 @@ export class InventoryComponent extends TemplatePage {
   public getHelmet$ = this.getItem$(ItemType.HELMET);
   public getShield$ = this.getItem$(ItemType.SHIELD);
   public getChest$ = this.getItem$(ItemType.CHEST);
-  public getWeapon$ = this.getItem$(ItemType.WEAPON);
+  public getWeapon$ = this.getItem$(ItemType.Weapon1H);
   public getTrousers$ = this.getItem$(ItemType.TROUSERS);
   public getBoots$ = this.getItem$(ItemType.BOOTS);
   public getGloves$ = this.getItem$(ItemType.GLOVES);

@@ -28,6 +28,22 @@ export interface Item {
   canBeUpgraded?: boolean;
 }
 
+export enum DamageType {
+  BLUDGEONING = 'BLUDGEONING',
+  PIERCING = 'PIERCING',
+  SLASHING = 'SLASHING',
+  FIRE = 'FIRE',
+  COLD = 'COLD',
+  LIGHTNING = 'LIGHTNING',
+  THUNDER = 'THUNDER',
+  ACID = 'ACID',
+  POISON = 'POISON',
+  PSYCHIC = 'PSYCHIC',
+  RADIANT = 'RADIANT',
+  NECROTIC = 'NECROTIC',
+  FORCE = 'FORCE',
+}
+
 export interface ItemData {
   id: number;
   name: string;
@@ -35,6 +51,7 @@ export interface ItemData {
   imageLocal: string;
   rarity: Rarity;
   itemType: ItemType;
+  damageType: DamageType;
   trait?: Trait | null;
   description: string;
   items: Item[];
@@ -46,7 +63,8 @@ export enum ItemType {
   GLOVES = 'Gloves',
   TROUSERS = 'Trousers',
   BOOTS = 'Boots',
-  WEAPON = 'Weapon',
+  Weapon1H = 'Weapon1H',
+  Weapon2H = 'Weapon2H',
   SHIELD = 'Shield',
   RING = 'Ring',
   CHARM = 'Charm',

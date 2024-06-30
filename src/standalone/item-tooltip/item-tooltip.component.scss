@@ -53,4 +53,11 @@
     flex-direction: row;
     gap: 5px;
   }
+
+  .positive-rarity-bonus {
+    color: rgba(255, 215, 0, 1);
+  }
+  .negative-rarity-bonus {
+    color: $red;
+  }
 }

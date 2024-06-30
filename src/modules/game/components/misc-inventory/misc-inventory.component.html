@@ -1,18 +1,51 @@
+<ng-template #statsLootbox>
+  <div class="stats-info-lootbox py-4">
+    <p
+      class="mb-0"
+      *ngFor="
+        let distribution of parsePossibilities(lootboxPossibilities$() | async)
+      "
+      [ngStyle]="{ color: getRarityColor(distribution.rarity) }"
+    >
+      {{
+        distribution.value * 100 +
+          '% of getting a ' +
+          camelCase(distribution.rarity) +
+          ' item'
+      }}
+    </p>
+  </div>
+</ng-template>
+
 <ng-template #lootboxOpener let-item="data">
   <div class="first-phase" [ngClass]="{ 'd-none': currentPhase != 0 }">
-    <div
-      class="animate__animated animate__pulse animate__infinite delay_4"
-      (click)="runRoulette(item.id)"
-    >
-      <app-item-box
-        #result
-        [rarity]="item.miscellanyItemData.rarity"
-        [height]="200"
-        [width]="200"
-        [image]="item ? item?.miscellanyItemData.imageLocal : null"
-      ></app-item-box>
+    <div class="wrapper-lootbox">
+      <i
+        class="fa-regular fa-circle-xmark text-white"
+        (click)="endPhases()"
+      ></i>
+      <div
+        class="animate__animated animate__pulse animate__infinite delay_4"
+        (click)="runRoulette(item.id)"
+      >
+        <app-item-box
+          #result
+          [rarity]="item.miscellanyItemData.rarity"
+          [height]="200"
+          [width]="200"
+          [image]="item ? item?.miscellanyItemData.imageLocal : null"
+        ></app-item-box>
+      </div>
     </div>
-    <span urTitle class="text-secondary mt-3">Click to open</span>
+    <ng-container *ngTemplateOutlet="statsLootbox"></ng-container>
+    <button
+      (click)="runRoulette(item.id)"
+      urTitle
+      class="button-rainbow"
+      [style.padding]="getResponsiveButtonSize()"
+    >
+      Click to open
+    </button>
   </div>
   <div class="second-phase" [ngClass]="{ 'd-none': currentPhase != 1 }">
     <app-item-roulette

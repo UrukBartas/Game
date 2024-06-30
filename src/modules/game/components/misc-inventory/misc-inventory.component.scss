@@ -14,7 +14,26 @@
   flex-direction: column;
 }
 
-.final-result-wrapper{
+.final-result-wrapper {
   display: flex;
   flex-direction: column;
+}
+
+.stats-info-lootbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex-direction: column;
+}
+
+.wrapper-lootbox {
+  position: relative;
+  i {
+    position: absolute;
+    cursor: pointer;
+    top: -30px;
+    right: -25px;
+    font-size: 25px;
+  }
 }
