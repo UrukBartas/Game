@@ -1,4 +1,8 @@
-<div class="w-100 h-100 d-flex justify-content-center align-items-center">
+<div #threeContainer class="three-container"></div>
+<div
+  id="login"
+  class="w-100 h-100 d-flex justify-content-center align-items-center"
+>
   @if (
     walletService.latestModalEvent().event == 'CONNECT_SUCCESS' ||
     (walletService.walletConnectIsLoggedIn$ | async) == true
