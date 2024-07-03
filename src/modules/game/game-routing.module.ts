@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { AdventuresComponent } from './activities/adventures/adventures.component';
 import { BlacksmithComponent } from './activities/blacksmith/blacksmith.component';
+import { ConnectComponent } from './activities/connect/connect.component';
 import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { InventoryComponent } from './activities/inventory/inventory.component';
@@ -21,8 +22,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'inventory',
-        pathMatch: 'full',
+        component: ConnectComponent,
       },
       {
         path: 'inventory',
