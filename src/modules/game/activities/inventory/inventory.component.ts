@@ -27,6 +27,7 @@ import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.mo
 import { ShopService } from 'src/services/shop.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Material } from 'src/modules/core/models/material.model';
+import { StatsService } from 'src/services/stats.service';
 
 @Component({
   selector: 'app-inventory',
@@ -85,28 +86,40 @@ export class InventoryComponent extends TemplatePage {
     return anything as Item;
   };
 
-  public getItem$ = (itemType: ItemType) => {
+  public getItem$ = (itemTypes: ItemType[], slotType: ItemType) => {
     return this.actualPlayer$.pipe(
       filter((player) => !!player),
       map((player) => player.items),
       map((items: Array<Item>) => {
         const foundItem = items.find(
-          (item) => item.itemData.itemType == itemType && item.equipped
+          (item) =>
+            itemTypes.includes(item.itemData.itemType) &&
+            item.equipped &&
+            (item.slotEquipped == slotType ||
+              !item.slotEquipped ||
+              (item.itemData.itemType == ItemType.Weapon2H &&
+                slotType == ItemType.Weapon1H))
         );
         return foundItem;
       })
     );
   };
 
-  public getHelmet$ = this.getItem$(ItemType.HELMET);
-  public getShield$ = this.getItem$(ItemType.SHIELD);
-  public getChest$ = this.getItem$(ItemType.CHEST);
-  public getWeapon$ = this.getItem$(ItemType.Weapon1H);
-  public getTrousers$ = this.getItem$(ItemType.TROUSERS);
-  public getBoots$ = this.getItem$(ItemType.BOOTS);
-  public getGloves$ = this.getItem$(ItemType.GLOVES);
-  public getCharm$ = this.getItem$(ItemType.CHARM);
-  public getRing$ = this.getItem$(ItemType.RING);
+  public getHelmet$ = this.getItem$([ItemType.HELMET], ItemType.HELMET);
+  public getShield$ = this.getItem$(
+    [ItemType.SHIELD, ItemType.Weapon1H],
+    ItemType.SHIELD
+  );
+  public getChest$ = this.getItem$([ItemType.CHEST], ItemType.CHEST);
+  public getWeapon$ = this.getItem$(
+    [ItemType.Weapon1H, ItemType.Weapon2H],
+    ItemType.Weapon1H
+  );
+  public getTrousers$ = this.getItem$([ItemType.TROUSERS], ItemType.TROUSERS);
+  public getBoots$ = this.getItem$([ItemType.BOOTS], ItemType.BOOTS);
+  public getGloves$ = this.getItem$([ItemType.GLOVES], ItemType.GLOVES);
+  public getCharm$ = this.getItem$([ItemType.CHARM], ItemType.CHARM);
+  public getRing$ = this.getItem$([ItemType.RING], ItemType.RING);
 
   public isViewingPlayer =
     this.route.snapshot.url[0].path.includes('view-player');
@@ -166,8 +179,8 @@ export class InventoryComponent extends TemplatePage {
     }
   }
 
-  public async equipItem(item: Item) {
-    this.playerService.equipItemFlow(item, () => {
+  public async equipItem(item: Item, equipType: ItemType) {
+    this.playerService.equipItemFlow(item, equipType, () => {
       this.inventoryUpdated$.next(true);
     });
   }
@@ -176,9 +189,9 @@ export class InventoryComponent extends TemplatePage {
     this.hoveredItem = item;
   }
 
-  onDrop(event: DndDropEvent) {
-    const item = event.data as Item;
-    this.equipItem(item);
+  onDrop(event: DndDropEvent, equipType: ItemType) {
+    const droppingItem = event.data as Item;
+    this.equipItem(droppingItem, equipType);
   }
 
   onDragStart(event: DragEvent, item: Item) {

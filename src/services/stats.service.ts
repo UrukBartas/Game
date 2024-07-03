@@ -20,4 +20,8 @@ export class StatsService extends ApiBaseService {
   lootboxPossibilities(type: MiscellanyItemType): Observable<any> {
     return this.get(`/lootbox-drop-rate/${type}`);
   }
+
+  getCappedStats(): Observable<any> {
+    return this.get('/capped-stats');
+  }
 }

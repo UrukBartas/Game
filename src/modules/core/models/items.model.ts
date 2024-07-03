@@ -24,6 +24,7 @@ export interface Item {
   equipped: boolean;
   enabled: boolean;
   price?: number;
+  slotEquipped?: ItemType;
 
   canBeUpgraded?: boolean;
 }

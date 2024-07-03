@@ -2,6 +2,7 @@ import { Component, Input, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { PlayerModel } from 'src/modules/core/models/player.model';
+import { StatsService } from 'src/services/stats.service';
 import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
@@ -13,6 +14,9 @@ export class StatsDetailComponent extends TemplatePage {
   public store: Store = inject(Store);
   @Input() player!: PlayerModel;
   @Input() isViewingAnotherPlayer = false;
+  public stats = inject(StatsService);
+  public cappedStats$ = this.stats.getCappedStats();
+
   private viewportService = inject(ViewportService);
 
   public getPlayerImageSize() {

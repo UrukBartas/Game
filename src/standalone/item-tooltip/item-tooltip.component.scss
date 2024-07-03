@@ -3,10 +3,20 @@
 @import 'node_modules/bootstrap/scss/variables';
 @import 'node_modules/bootstrap/scss/mixins';
 
+.locked {
+  transition: filter 1s ease;
+  filter: grayscale(100%);
+}
+.locked-level {
+  transition: color 1s ease;
+  color: $red;
+}
+
 #item-tooltip-wrapper {
   background-color: $black;
   padding: 15px;
   border-radius: 3px;
+
   ul {
     min-width: 180px;
     padding-left: 0;
@@ -59,5 +69,8 @@
   }
   .negative-rarity-bonus {
     color: $red;
+  }
+  .locked-level {
+    @extend .negative-rarity-bonus;
   }
 }

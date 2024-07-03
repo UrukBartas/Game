@@ -15,6 +15,7 @@ import { ShopService } from 'src/services/shop.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
+import { Memoize } from 'lodash-decorators';
 
 @Component({
   selector: 'app-shop',
@@ -34,10 +35,26 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
   shopItems = [];
   rollAnimation: string;
   premiumRollsNumber = 0;
+  public selectedTab = "0";
+
 
   player$ = this.store
     .select(MainState.getState)
     .pipe(map((entry) => entry.player));
+
+  public displayItemsDependingOnType(items: any) {
+    console.log(items);
+    if(!items) return []
+    if (this.selectedTab == "0") {
+      return items.filter((entry) => !!entry.itemDataId);
+    } else if (this.selectedTab == "2") {
+      return items.filter((entry) => !!entry.consumableType);
+    } else {
+      return items.filter(
+        (entry) => !entry.consumableType && !entry.itemDataId
+      );
+    }
+  }
 
   public getItem$ = (itemType: ItemType) => {
     return this.player$.pipe(

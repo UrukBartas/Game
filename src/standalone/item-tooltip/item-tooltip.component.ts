@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { Store } from '@ngxs/store';
 import { camelCase } from 'lodash';
+import { map } from 'rxjs';
 import {
   Item,
   ItemData,
@@ -11,6 +13,7 @@ import {
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
 import { getRarityColor, getRarityText } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
+import { MainState } from 'src/store/main.store';
 export const avoidableStats = [
   'id',
   'level',
@@ -29,16 +32,16 @@ export const avoidableStats = [
   'quantityToExport',
 ];
 const mapPercentLabels = {
-  per_health: 'health',
-  per_damage: 'avg. damage',
-  per_armor: 'armor',
-  per_speed: 'speed',
-  per_energy: 'energy',
-  per_dodge: 'dodge',
-  per_crit: 'crit',
-  per_block: 'block',
-  per_accuracy: 'accuracy',
-  per_penetration: 'penetration',
+  per_health: 'total health',
+  per_damage: 'total damage',
+  per_armor: 'total armor',
+  per_speed: 'total speed',
+  per_energy: 'total energy',
+  per_dodge: 'total dodge',
+  per_crit: 'total crit',
+  per_block: 'total block',
+  per_accuracy: 'total accuracy',
+  per_penetration: 'total penetration',
 };
 const mapTypeOfWeapon = {
   Weapon1H: 'One handed',
@@ -66,6 +69,11 @@ export class ItemTooltipComponent {
   public abs = Math.abs;
   public ceil = Math.ceil;
   public nonPorcentualStatsLength = 0;
+  private store = inject(Store);
+
+  public player$ = this.store
+    .select(MainState.getState)
+    .pipe(map((entry) => entry.player));
 
   public getLoopableStatsKeys(): Array<string> {
     if (!this.item) return [];
@@ -79,10 +87,18 @@ export class ItemTooltipComponent {
         (this.item[entry] > 0 || !!entry.startsWith('per_'))
     );
 
-    const nonPercentualStats = keys
+    let nonPercentualStats = keys
       .filter((key) => !key.startsWith('per_'))
       .sort();
     const percentualStats = keys.filter((key) => key.startsWith('per_')).sort();
+
+    if (nonPercentualStats.includes('damage')) {
+      nonPercentualStats = [
+        'damage',
+        ...nonPercentualStats.filter((key) => key !== 'damage'),
+      ];
+    }
+
     this.nonPorcentualStatsLength = nonPercentualStats.length;
     return [...nonPercentualStats, ...percentualStats];
   }

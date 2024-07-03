@@ -8,8 +8,13 @@
       @if (contextMenuTemplate == 'default') {
         <app-context-menu-inventory-options
           *ngIf="showContextualMenu"
+          [item]="item"
           (clickEquip)="
             onDoubleClick.emit(item); contextMenuService.hideContextMenu()
+          "
+          (equipLeftHand)="
+            equipSpecificSlot.emit({ item: item, itemType: itemType.SHIELD });
+            contextMenuService.hideContextMenu()
           "
           (clickDestroy)="
             onDestroyItem.emit(item); contextMenuService.hideContextMenu()

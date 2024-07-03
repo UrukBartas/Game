@@ -52,6 +52,7 @@ import { InventoryTopbarComponent } from './components/inventory-topbar/inventor
 import { MiscInventoryComponent } from './components/misc-inventory/misc-inventory.component';
 import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulette.component';
 import { BaseInventoryComponent } from './components/base-inventory/base-inventory.component';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 const directives = [
   ValidInputDirective,
@@ -119,6 +120,7 @@ const components = [
     ContextMenuInventoryOptionsComponent,
     BlacksmithContextMenuComponent,
     ItemRouletteComponent,
+    ButtonsModule
   ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe, StackPipe],

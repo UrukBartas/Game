@@ -99,6 +99,7 @@
     </div>
 
     <div class="form-group py-3 action-buttons gap-2">
+      <button (click)="location.back()" class="btn btn-dark">Back</button>
       <button
         [disabled]="form.invalid"
         (click)="save()"
@@ -106,7 +107,6 @@
       >
         Save
       </button>
-      <button (click)="location.back()" class="btn btn-dark">Back</button>
     </div>
   </div>
 
@@ -128,7 +128,9 @@
             }}
           </a>
         } @else {
-          <span class="text-secondary">Wallet address linked: {{ getPlayerAddress() }}</span>
+          <span class="text-secondary"
+            >Wallet address linked: {{ getPlayerAddress() }}</span
+          >
         }
       </div>
       <div class="col-12 col-sm-6">

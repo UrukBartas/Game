@@ -57,7 +57,13 @@
   </div>
   <div class="third-phase" [ngClass]="{ 'd-none': currentPhase != 2 }">
     <div class="result-item-showcase">
-      <div class="animate__animated animate__jackInTheBox delay_4">
+      <div
+        class="animate__animated animate__jackInTheBox delay_4 wrapper-lootbox"
+      >
+        <i
+          class="fa-regular fa-circle-xmark text-white"
+          (click)="endPhases()"
+        ></i>
         <app-item-box
           #itemResult
           #result
@@ -90,9 +96,6 @@
         <span urTitle class="text-secondary mt-3"
           >✨ Congratulations on {{ roll?.resultItem?.itemData?.name }}</span
         >
-        <button class="btn btn-primary" (click)="endPhases()">
-          <i class="fa fa-arrow-left px-2 pb-1"></i>Go back
-        </button>
       </div>
     </div>
   </div>

@@ -48,7 +48,16 @@
         {{ item.upgradeLevel ? '+' + item.upgradeLevel : null }}
         <span class="text-light" *ngIf="isBeingCompared">(equipped)</span>
       </p>
-      <p urTitle class="text-white m-0">Level {{ item.level }}</p>
+      <p
+        urTitle
+        class="m-0"
+        [ngClass]="{
+          'locked-level': (player$ | async).level < item.level,
+          'text-white': (player$ | async).level >= item.level
+        }"
+      >
+        Level {{ item.level }}
+      </p>
     </div>
     <div class="description w-100">
       <p
@@ -76,7 +85,10 @@
       </p>
     </div>
   </div>
-  <div class="d-flex flex-row pt-2">
+  <div
+    class="d-flex flex-row pt-2"
+    [ngClass]="{ locked: (player$ | async).level < item.level }"
+  >
     <div class="d-flex flex-column align-items-center">
       <img class="item-image" [src]="item.itemData?.imageLocal" priority />
     </div>

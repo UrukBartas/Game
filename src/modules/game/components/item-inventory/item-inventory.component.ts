@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { Item } from 'src/modules/core/models/items.model';
+import { Item, ItemType } from 'src/modules/core/models/items.model';
 import { fillInventoryBasedOnPlayerSockets } from 'src/modules/utils';
 import { ContextMenuService } from 'src/services/context-menu.service';
 import { ViewportService } from 'src/services/viewport.service';
@@ -19,10 +19,15 @@ export class ItemInventoryComponent extends BaseInventoryComponent {
   @Output() onDragStart = new EventEmitter<any>();
   @Output() onDragEnd = new EventEmitter<any>();
   @Output() onDoubleClick = new EventEmitter<any>();
+  @Output() equipSpecificSlot = new EventEmitter<{
+    item: Item;
+    itemType: ItemType;
+  }>();
   @Output() onHover = new EventEmitter<Item>();
   viewportService = inject(ViewportService);
   contextMenuService = inject(ContextMenuService);
   @Output() onDestroyItem = new EventEmitter<Item>();
+  public itemType = ItemType;
 
   public get filteredItems() {
     return fillInventoryBasedOnPlayerSockets(
