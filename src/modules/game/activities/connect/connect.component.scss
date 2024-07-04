@@ -8,6 +8,12 @@
     border-color: #844c0d !important;
   }
 
+  .logo {
+    width: 70vw;
+    max-width: 600px;
+    filter: drop-shadow(1px 1px 1em #000);
+  }
+
   .connect-wrapper {
     display: flex;
     flex-direction: column;

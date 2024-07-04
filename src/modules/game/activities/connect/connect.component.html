@@ -19,7 +19,8 @@
     @if (doingLogin) {
       <ng-container *ngTemplateOutlet="login"></ng-container>
     } @else {
-      <div class="connect-wrapper gap-3">
+      <div class="connect-wrapper gap-3 align-items-center">
+        <img class="logo" src="assets/login/title-2.png" />
         <button
           type="submit"
           class="btn btn-lg btn-primary save-button"
@@ -29,7 +30,7 @@
               : walletService.modal.open()
           "
         >
-          Begin your adventure
+          Enter the realms
           <i class="fa-solid fa-torii-gate pl-2"></i>
         </button>
         <p
