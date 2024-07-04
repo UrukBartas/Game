@@ -3,9 +3,18 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  button {
+    background-color: #be781c !important;
+    border-color: #844c0d !important;
+  }
+
   .connect-wrapper {
     display: flex;
     flex-direction: column;
+    margin-top: 14vh;
+    background: #00000073;
+    padding: 1rem;
+    border-radius: 10px;
   }
 }
 
