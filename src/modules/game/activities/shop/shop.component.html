@@ -10,12 +10,23 @@
     <div class="item-rack-bg"></div>
     <div class="tabs">
       <div class="btn-group" btnRadioGroup [(ngModel)]="selectedTab">
-        <label class="btn btn-secondary mb-0 d-flex justify-content-center" btnRadio="0"
-          >⚔️ <span class="d-none d-sm-block">Armory</span></label
+        <label
+          urText
+          class="btn btn-secondary mb-0 d-flex justify-content-center align-items-center"
+          btnRadio="0"
+          >⚔️ <span class="d-none d-md-block pl-2">Gear</span></label
         >
-        <label class="btn btn-secondary mb-0 d-flex justify-content-center" btnRadio="1">🧱 <span class="d-none d-sm-block">Materials</span></label>
-        <label class="btn btn-secondary mb-0 d-flex justify-content-center" btnRadio="2"
-          >⚗️ <span class="d-none d-sm-block">Consumables</span></label
+        <label
+          urText
+          class="btn btn-secondary mb-0 d-flex justify-content-center align-items-center"
+          btnRadio="1"
+          >🧱 <span class="d-none d-md-block pl-2">Mats</span></label
+        >
+        <label
+          urText
+          class="btn btn-secondary mb-0 d-flex justify-content-center align-items-center"
+          btnRadio="2"
+          >⚗️ <span class="d-none d-md-block pl-2">Potions</span></label
         >
       </div>
     </div>
@@ -24,6 +35,7 @@
         (buttonClicked)="dailyRoll()"
       ></app-daily-roll-button>
       <button
+        urText
         (click)="premiumRoll()"
         [class]="'btn btn-primary button-rainbow ' + getButtonSize()"
       >
@@ -66,6 +78,8 @@
           (click)="selectItem(item)"
           [ngbTooltip]="item.itemData ? itemTooltip : consumableTooltip"
           [tooltipContext]="{ item: item }"
+          [rarity]="item.rarity"
+          [disabled]="item.level > (player$ | async).level"
           [image]="item.itemData ? item.itemData.imageLocal : item.imageLocal"
         ></app-item-box>
         <div class="item-price">

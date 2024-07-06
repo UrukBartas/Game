@@ -69,11 +69,19 @@ export class EditCharacterComponent extends TemplatePage {
     this.editing = currentRoute.includes('edit');
     const passwordPattern =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const namePattern = /^[a-zA-Z0-9]+$/;
 
     this.form = this.formBuilder.group(
       {
         image: ['assets/free-portraits/knight.webp', [Validators.required]],
-        name: ['', [Validators.required]],
+        name: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.pattern(namePattern),
+          ],
+        ],
         email: ['', [Validators.required, Validators.email]],
         password: [
           '',

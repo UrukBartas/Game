@@ -20,15 +20,16 @@ export class ViewportService {
   }
 
   private getViewport() {
-    const width = Math.max(
-      document.documentElement.clientWidth,
-      window.innerWidth || 0
+    const vmax = Math.max(
+      Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+      Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
     );
-    if (width <= 576) return 'xs';
-    if (width <= 768) return 'sm';
-    if (width <= 992) return 'md';
-    if (width <= 1200) return 'lg';
-    if (width <= 1400) return 'xl';
+
+    if (vmax <= 576) return 'xs';
+    if (vmax <= 768) return 'sm';
+    if (vmax <= 992) return 'md';
+    if (vmax <= 1200) return 'lg';
+    if (vmax <= 1400) return 'xl';
     return 'xxl';
   }
 

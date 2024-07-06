@@ -22,6 +22,7 @@ export class ItemBoxComponent {
   @Input() calculatedStack: Function;
   @Input() rarity: Rarity;
   @Input() upgradeLevel: number;
+  @Input() disabled = false;
 
   public isNaNLocal = isNaN;
   getRarityColor = getRarityColor;

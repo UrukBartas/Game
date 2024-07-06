@@ -1,4 +1,5 @@
 import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { groupBy } from 'lodash';
@@ -17,17 +18,15 @@ import {
   tap,
 } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
+import { Item, ItemType } from 'src/modules/core/models/items.model';
+import { Material } from 'src/modules/core/models/material.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { ItemService } from 'src/services/item.service';
 import { PlayerService } from 'src/services/player.service';
+import { ShopService } from 'src/services/shop.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
-import { ShopService } from 'src/services/shop.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Material } from 'src/modules/core/models/material.model';
-import { StatsService } from 'src/services/stats.service';
 
 @Component({
   selector: 'app-inventory',
@@ -67,7 +66,7 @@ export class InventoryComponent extends TemplatePage {
   public hoveredItem: Item;
   private shopService = inject(ShopService);
 
-  public getPlayer$ = of(true).pipe(
+  public getPlayer$: Observable<PlayerModel> = of(true).pipe(
     switchMap(() => {
       if (this.isViewingPlayer) {
         return this.playerService.getPlayerByAddress(

@@ -49,6 +49,7 @@
       [rarity]="item?.itemData?.rarity"
       [active]="isMultipleSelected(item)"
       [displayTooltip]="!!item"
+      [disabled]="isViewingPlayer ? false : item?.level > player.level"
       [image]="item ? item?.itemData.imageLocal : null"
     >
       @if (!!item && !contextMenuService.menuVisible()) {

@@ -21,8 +21,10 @@
       priority
       [width]="width"
       [height]="height"
-      [ngClass]="{ selectedItem: active }"
+      [ngClass]="{ selectedItem: active, 'item-disabled': disabled }"
     />
+    <i *ngIf="disabled" class="bi bi-ban"></i>
+    
     <span
       [style.font-size]="width / 4 + 'px'"
       *ngIf="!!stack || !!calculatedStack"

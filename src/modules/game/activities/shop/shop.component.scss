@@ -63,12 +63,12 @@
   .tabs {
     position: absolute;
     bottom: 14vw;
-    left: 20px;
+    left: 0;
     @include media-breakpoint-down(sm) {
       bottom: 330px;
       left: 0px;
       width: 100%;
-      .btn-group{
+      .btn-group {
         width: 100%;
       }
     }

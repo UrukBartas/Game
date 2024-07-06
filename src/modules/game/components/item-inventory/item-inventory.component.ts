@@ -4,6 +4,9 @@ import { fillInventoryBasedOnPlayerSockets } from 'src/modules/utils';
 import { ContextMenuService } from 'src/services/context-menu.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { BaseInventoryComponent } from '../base-inventory/base-inventory.component';
+import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngxs/store';
+import { MainState } from 'src/store/main.store';
 
 @Component({
   selector: 'app-item-inventory',
@@ -26,8 +29,13 @@ export class ItemInventoryComponent extends BaseInventoryComponent {
   @Output() onHover = new EventEmitter<Item>();
   viewportService = inject(ViewportService);
   contextMenuService = inject(ContextMenuService);
+  private route = inject(ActivatedRoute);
+  private store = inject(Store);
   @Output() onDestroyItem = new EventEmitter<Item>();
   public itemType = ItemType;
+  public isViewingPlayer =
+    this.route.snapshot.url[0].path.includes('view-player');
+  public player = this.store.selectSnapshot(MainState).player;
 
   public get filteredItems() {
     return fillInventoryBasedOnPlayerSockets(
