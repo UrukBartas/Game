@@ -4,6 +4,9 @@ import { TemplatePage } from 'src/modules/core/components/template-page.componen
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { StatsService } from 'src/services/stats.service';
 import { ViewportService } from 'src/services/viewport.service';
+import { pvpTiers } from '../../activities/leadeboard/const/pvp-tiers';
+import { getRarityColor } from 'src/modules/utils';
+import { questTiers } from '../../activities/leadeboard/const/quest-tiers';
 
 @Component({
   selector: 'app-stats-detail',
@@ -18,6 +21,7 @@ export class StatsDetailComponent extends TemplatePage {
   public cappedStats$ = this.stats.getCappedStats();
 
   private viewportService = inject(ViewportService);
+  getRarityColor = getRarityColor;
 
   public getPlayerImageSize() {
     if (
@@ -28,5 +32,15 @@ export class StatsDetailComponent extends TemplatePage {
       return 120;
     }
     return 180;
+  }
+
+  public getPvpTier(pvpIndex: number) {
+    return pvpTiers.find(
+      (tier) => pvpIndex >= tier.range[0] && pvpIndex <= tier.range[1]
+    );
+  }
+
+  public getQuestTier(questCount: number) {
+    return questTiers.find(tier => questCount <= tier.maxQuests);
   }
 }

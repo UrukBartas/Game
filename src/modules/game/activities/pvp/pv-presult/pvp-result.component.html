@@ -1,0 +1,47 @@
+<ng-container *ngIf="getLastMatch$ | async as lastMatch">
+  <div class="result-quest-complete">
+    <div
+      class="description justify-content-center"
+      data-aos="fade-right"
+      data-aos-duration="1000"
+    >
+      <p urTitle>{{ lastMatch.win ? 'Victory!' : 'Defeat!' }}</p>
+    </div>
+    <div
+      class="row text-center pb-4"
+      data-aos="fade-right"
+      data-aos-duration="5000"
+    >
+      <span urText class="text-white pb-2"
+        >{{
+          lastMatch.win
+            ? 'Congratulations! You smashed'
+            : 'Sad! You were defeated by'
+        }}
+        <span class="text-secondary">{{ lastMatch.opponent.name }}</span
+        >!</span
+      >
+      <span urText class="text-white pb-2"
+        >You {{ lastMatch.win ? 'gained' : 'lost' }}
+        <span class="text-secondary">{{ lastMatch.mmrChange }}</span> Arena
+        Points</span
+      >
+      <span urText class="text-white pb-2"
+        >Current Arena Points
+        <span class="text-secondary">{{
+          lastMatch.playerMMR + lastMatch.mmrChange > 0
+            ? lastMatch.playerMMR + lastMatch.mmrChange
+            : 0
+        }}</span></span
+      >
+    </div>
+    <div class="d-flex justify-content-center align-items-center">
+      <button
+        (click)="router.navigateByUrl('/leaderboard')"
+        class="btn btn-primary"
+      >
+        <i class="fa fa-check px-2 pb-1"></i>Continue
+      </button>
+    </div>
+  </div>
+</ng-container>

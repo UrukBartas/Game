@@ -9,6 +9,7 @@ import { QuestModel } from './quest.model';
 export interface FightModel {
   questId: number;
   playerId: string;
+  playersData?: FightDataModel;
   baseStats: FightStatsModel;
   currentStats: FightStatsModel;
   turns: FightTurnModel[];
@@ -18,6 +19,11 @@ export interface FightModel {
 export interface FightStatsModel {
   player: FighterStats;
   enemy: FighterStats;
+}
+
+export interface FightDataModel {
+  player: PlayerModel;
+  enemy: PlayerModel;
 }
 
 export interface FightTurnModel {

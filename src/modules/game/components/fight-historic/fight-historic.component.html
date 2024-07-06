@@ -1,0 +1,46 @@
+<div id="historic-list">
+  <ng-container *ngIf="getPlayerHistoric$ | async as historic">
+    <div
+      *ngFor="let match of historic"
+      class="historic-element d-flex flex-row py-2 align-items-center"
+    >
+      <div class="player-info d-flex flex-row align-items-center gap-2">
+        <img [src]="match.player.image" class="player-img" />
+        <span urSubtext class="player-name text-white">{{
+          match.player.name
+        }}</span>
+      </div>
+      <span urSubtext class="result {{ match.win ? 'win' : 'lose' }}">{{
+        match.win ? 'Win' : 'Lose'
+      }}</span>
+      <div class="opponent-info d-flex flex-row align-items-center gap-2">
+        <img [src]="match.opponent.image" class="opponent-img" />
+        <span urSubtext class="opponent-name text-white">{{
+          match.opponent.name
+        }}</span>
+      </div>
+      <span urSubtext class="mmr-change {{ match.win ? 'win' : 'lose' }}">{{
+        match.mmrChange
+      }}</span>
+      <span urSubtext class="total-change text-white">{{
+        match.playerMMR + match.mmrChange
+      }}</span>
+    </div>
+    <div class="pagination-controls">
+      <button (click)="prevPage()" [disabled]="currentPage === 0">
+        <i
+          class="bi bi-caret-left-fill"
+          [ngClass]="{ 'disabled-icon': currentPage === 0 }"
+        ></i>
+      </button>
+      <button (click)="nextPage()" [disabled]="historic.length < pageSize">
+        <i
+          class="bi bi-caret-right-fill"
+          [ngClass]="{
+            'disabled-icon': historic.length < pageSize
+          }"
+        ></i>
+      </button>
+    </div>
+  </ng-container>
+</div>

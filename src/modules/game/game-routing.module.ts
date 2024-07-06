@@ -1,18 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { AdventuresComponent } from './activities/adventures/adventures.component';
+import { BlacksmithComponent } from './activities/blacksmith/blacksmith.component';
 import { ConnectComponent } from './activities/connect/connect.component';
 import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { InventoryComponent } from './activities/inventory/inventory.component';
 import { LeadeboardComponent } from './activities/leadeboard/leadeboard.component';
+import { PvPResultComponent } from './activities/pvp/pv-presult/pvp-result.component';
+import { PvPFightComponent } from './activities/pvp/pvp-fight/pvp-fight.component';
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
 import { ShopComponent } from './activities/shop/shop.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
-import { RegisterReferralComponent } from './activities/campaigns/register-referral/register-referral.component';
-import { AdventuresComponent } from './activities/adventures/adventures.component';
-import { BlacksmithComponent } from './activities/blacksmith/blacksmith.component';
 
 const routes: Routes = [
   {
@@ -86,6 +87,18 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         component: LeadeboardComponent,
         title: 'Leaderboard',
+      },
+      {
+        path: 'arena',
+        canActivate: [AuthGuard],
+        component: PvPFightComponent,
+        title: 'Arena',
+      },
+      {
+        path: 'arena-result',
+        canActivate: [AuthGuard],
+        component: PvPResultComponent,
+        title: 'Arena result',
       },
     ],
   },

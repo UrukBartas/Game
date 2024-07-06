@@ -14,6 +14,7 @@ import { AuthService } from 'src/services/auth.service';
 import { PlayerService } from 'src/services/player.service';
 import { SessionService } from 'src/services/session.service';
 import { WalletService } from 'src/services/wallet.service';
+import { WebSocketService } from 'src/services/websocket.service';
 
 export class ConnectWallet {
   static readonly type = '[Wallet] Connect';
@@ -83,6 +84,7 @@ export class MainState {
   toastService = inject(ToastrService);
   store = inject(Store);
   walletService = inject(WalletService);
+  websocket = inject(WebSocketService);
   authService = inject(AuthService);
 
   @Action(ConnectWallet)
@@ -150,6 +152,7 @@ export class MainState {
           disconnect();
           await this.walletService.modal.close();
           this.toastService.info('Session clossed.');
+          this.websocket.disconnect();
           const info = await Device.getInfo();
           if (info.platform == 'android') {
             App.exitApp();

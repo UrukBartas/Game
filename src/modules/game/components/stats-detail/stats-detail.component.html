@@ -10,19 +10,50 @@
       </div>
       <div class="col-12">
         <div class="description stat">
-          <p>Player</p>
+          <label urText class="text-center">{{ player.name }}</label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="description stat">
+          <p urText>Player</p>
           <ul>
-            <li class="d-flex justify-content-between gap-2">
-              <label class="text-third">Name:</label> {{ player.name }}
+            <li urSubtext class="d-flex justify-content-between gap-2">
+              <label class="text-third">Arena rank:</label>
+              <span
+                [ngStyle]="{
+                  color: getRarityColor(getPvpTier(player.pvpIndex).rarity)
+                }"
+              >
+                {{ getPvpTier(player.pvpIndex).title }}</span
+              >
             </li>
-            <li
-              class="d-flex justify-content-between gap-2"
-              *ngIf="!isViewingAnotherPlayer"
-            >
-              <label class="text-third">Email:</label>
-              {{ player.email }}
+            <li urSubtext class="d-flex justify-content-between gap-2">
+              <label class="text-third">Questing rank:</label>
+              <span
+                [ngStyle]="{
+                  color: getRarityColor(
+                    getQuestTier(player._count.quest).rarity
+                  )
+                }"
+              >
+                {{ getQuestTier(player._count.quest).title }}</span
+              >
             </li>
-            <li class="d-flex justify-content-between gap-2">
+            <li urSubtext class="d-flex justify-content-between gap-2">
+              <label class="text-third">Level:</label>
+              {{ player.level }}
+            </li>
+            <li urSubtext class="d-flex justify-content-between gap-2">
+              <label class="text-third">Quests completed:</label>
+              {{ player._count.quest }}
+            </li>
+            <li urSubtext class="d-flex justify-content-between gap-2">
+              <label class="text-third">Arena points:</label>
+              {{ player.mmr }}
+            </li>
+            <li urSubtext class="d-flex justify-content-between gap-2">
               <label class="text-third">Member since:</label>
               {{ player.createdAt | date }}
             </li>
@@ -33,26 +64,9 @@
     <div class="row">
       <div class="col">
         <div class="description stat">
-          <p>Progress</p>
+          <p urText>Stats</p>
           <ul>
-            <li class="d-flex justify-content-between gap-2">
-              <label class="text-third">Level:</label>
-              {{ player.level }}
-            </li>
-            <li class="d-flex justify-content-between gap-2">
-              <label class="text-third">Experience:</label>
-              {{ player.experience }}
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="description stat">
-          <p>Combat</p>
-          <ul>
-            <li class="d-flex justify-content-between gap-2">
+            <li urSubtext class="d-flex justify-content-between gap-2">
               <label class="text-third"
                 >Life:
                 <i
@@ -65,7 +79,7 @@
               </label>
               {{ player.stats.health | number: '1.0-2' }}
             </li>
-            <li class="d-flex justify-content-between gap-2">
+            <li urSubtext class="d-flex justify-content-between gap-2">
               <label class="text-third"
                 >Armor:
                 <i
@@ -78,7 +92,7 @@
               </label>
               {{ player.stats.armor | number: '1.0-2' }}
             </li>
-            <li class="d-flex justify-content-between gap-2">
+            <li urSubtext class="d-flex justify-content-between gap-2">
               <label class="text-third"
                 >Energy:
                 <i
@@ -91,7 +105,7 @@
               </label>
               {{ player.stats.energy | number: '1.0-2' }}
             </li>
-            <li class="d-flex justify-content-between gap-2">
+            <li urSubtext class="d-flex justify-content-between gap-2">
               <label class="text-third"
                 >Damage:
                 <i
@@ -104,7 +118,7 @@
               </label>
               {{ player.stats.damage | number: '1.0-2' }}
             </li>
-            <li class="d-flex justify-content-between gap-2">
+            <li urSubtext class="d-flex justify-content-between gap-2">
               <label class="text-third"
                 >Speed:
                 <i
@@ -117,7 +131,7 @@
               </label>
               {{ player.stats.speed | number: '1.0-2' }}
             </li>
-            <li class="d-flex justify-content-between gap-2">
+            <li urSubtext class="d-flex justify-content-between gap-2">
               <label class="text-third"
                 >Penetration:
                 <i
@@ -133,7 +147,7 @@
               </label>
               {{ player.stats.penetration | number: '1.0-2' }}%
             </li>
-            <li class="d-flex justify-content-between gap-2">
+            <li urSubtext class="d-flex justify-content-between gap-2">
               <label class="text-third"
                 >Crit:
                 <i
@@ -149,7 +163,7 @@
               </label>
               {{ player.stats.crit | number: '1.0-2' }}%
             </li>
-            <li class="d-flex justify-content-between gap-2">
+            <li urSubtext class="d-flex justify-content-between gap-2">
               <label class="text-third"
                 >Dodge:
                 <i
@@ -165,7 +179,7 @@
               </label>
               {{ player.stats.dodge | number: '1.0-2' }}%
             </li>
-            <li class="d-flex justify-content-between gap-2">
+            <li urSubtext class="d-flex justify-content-between gap-2">
               <label class="text-third"
                 >Block:
                 <i
@@ -181,7 +195,7 @@
               </label>
               {{ player.stats.block | number: '1.0-2' }}%
             </li>
-            <li class="d-flex justify-content-between gap-2">
+            <li urSubtext class="d-flex justify-content-between gap-2">
               <label class="text-third"
                 >Accuracy:
                 <i

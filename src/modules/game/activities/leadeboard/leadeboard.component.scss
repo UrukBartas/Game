@@ -52,11 +52,80 @@
     }
     &-right {
       display: flex;
-      flex-direction: column;
-      align-items: flex-end;
+      align-items: center;
       justify-content: space-around;
+      gap: 2vw;
       .view-player {
         font-size: 24px;
+      }
+      .duel-btn {
+        border-radius: 4px;
+        background-color: rgb(133 15 15);
+        box-shadow: 0px 1px 2px 2px rgb(66 6 6);
+        .icon {
+          width: 30px;
+          height: 30px;
+          background: white;
+        }
+
+        &.disabled {
+          background-color: rgb(100, 100, 100);
+          box-shadow: none;
+          cursor: not-allowed;
+          .icon {
+            background: grey;
+          }
+        }
+      }
+      .connected-dot {
+        background: $gray-500;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        .dot {
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          position: relative;
+          background: radial-gradient(circle at 30% 30%, #fff, #ccc 70%);
+          box-shadow:
+            inset -2px -2px 5px rgba(0, 0, 0, 0.5),
+            inset 2px 2px 5px rgba(255, 255, 255, 0.7),
+            0 0 8px rgba(0, 0, 0, 0.8);
+
+          &::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: rotate(-45deg);
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+          }
+        }
+
+        .online {
+          background: radial-gradient(circle at 30% 30%, #00ff00, #006400 70%);
+          box-shadow: 0 0 8px rgba(0, 255, 0, 0.7);
+        }
+
+        .offline {
+          background: radial-gradient(circle at 30% 30%, #ff0000, #8b0000 70%);
+          box-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
+        }
+
+        .fighting {
+          background: radial-gradient(circle at 30% 30%, #ffae00, #c28501 70%);
+          box-shadow: 0 0 8px rgba(255, 196, 0, 0.7);
+        }
       }
     }
     a {
@@ -83,8 +152,10 @@
     &-badge {
       border: 1px solid $secondary;
       padding: 0px 10px;
+      padding-top: 3px;
       border-radius: 10px;
       width: fit-content;
+      font-size: 14px;
     }
   }
   .active {

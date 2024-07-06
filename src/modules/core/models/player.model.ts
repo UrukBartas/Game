@@ -27,6 +27,14 @@ export interface PlayerModel {
   energy: number;
   //calculated based on quests
   pve?: { title: string; glow: string };
+  pvpIndex?: number;
+  mmr: number;
+  _count: { quest: number };
+  configuration: PlayerConfiguration;
+}
+
+export interface PlayerConfiguration {
+  disablePVP: boolean;
 }
 
 export interface PlayerStatsModel {

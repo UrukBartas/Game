@@ -1,7 +1,6 @@
 import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { map, take } from 'rxjs';
-import { TurnActionEnum } from 'src/modules/core/models/fight.model';
+import { take } from 'rxjs';
 import { FightService } from 'src/services/fight.service';
 import { ViewportService } from 'src/services/viewport.service';
 

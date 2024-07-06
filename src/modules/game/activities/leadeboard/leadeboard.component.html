@@ -1,42 +1,33 @@
-<ng-template
-  #questsAchevementsTooltip
-  let-completedQuests="completedQuests"
-  let-currentTier="currentTier"
->
-  <div id="player-tooltip-wrapper">
-    <p>Completed quests {{ completedQuests }}</p>
-    <p>Possible achievements</p>
-    <ul>
-      <li
-        *ngFor="let questTier of questTiers"
-        [ngStyle]="{ color: getRarityColor(questTier.rarity) }"
-      >
-        @if (questTier.title == currentTier.title) {
-          X
-        }
-        {{ questTier.title }} {{ questTier.maxQuests }} quests
-      </li>
-    </ul>
-  </div>
-</ng-template>
 <div class="description">
   <p urTitle>Hall of Uruks</p>
 </div>
-<div class="py-3 wrapper-search">
+<div class="pb-3 wrapper-search">
   <div class="form-group" [formGroup]="formGroup">
-    <input
-      type="text"
-      class="form-control"
-      placeholder="User or address"
-      formControlName="userOrWallet"
-    />
     <div class="d-flex">
+      <tabset class="pr-2">
+        <tab
+          heading="🌍 Questing"
+          id="tab1"
+          (selectTab)="setLevelLeaderboard()"
+        ></tab>
+        <tab
+          heading="⚔️ Arena"
+          id="tab2"
+          (selectTab)="setPvpLeaderboard()"
+        ></tab>
+      </tabset>
       <tabset>
         <tab heading="All time" id="tab1" (selectTab)="filterAllTime()"></tab>
         <tab heading="Monthly" id="tab2" (selectTab)="filterByMonth()"></tab>
         <tab heading="Weekly" id="tab3" (selectTab)="filterCurrentWeek()"></tab>
       </tabset>
     </div>
+    <input
+      type="text"
+      class="form-control"
+      placeholder="User or address"
+      formControlName="userOrWallet"
+    />
   </div>
   <div class="mover col d-flex align-items-center">
     <span urText class="text-white px-2 d-none d-md-flex"
@@ -74,7 +65,9 @@
               class="list-leaderboard-item-left-image-ranking"
             />
           } @else {
-            <div class="list-leaderboard-item-left-number-ranking">
+            <div
+              class="list-leaderboard-item-left-number-ranking d-flex align-items-center pl-1"
+            >
               {{ index + 1 + chunkSize() * activePage() }}
             </div>
           }
@@ -82,10 +75,36 @@
 
         <div class="list-leaderboard-item-left-container">
           <div class="list-leaderboard-item-name-container">
-            <a [routerLink]="['/view-player', player.id]">{{
-              truncateAddress(player.id)
-            }}</a>
-            <span>( {{ player.name }} )</span>
+            <a
+              class="pr-2"
+              [ngbTooltip]="player.id"
+              [routerLink]="['/view-player', player.id]"
+              >{{ truncateAddress(player.id) }}</a
+            >
+            <span>{{ player.name }}</span>
+            <span
+              *ngIf="leaderboardType === leaderboardTypes.PVE"
+              [ngStyle]="{
+                color: getRarityColor(
+                  getTitleForQuestsCompleted(player['_count'].quest).rarity
+                )
+              }"
+              [ngbTooltip]="questsAchevementsTooltip"
+              [tooltipContext]="{
+                completedQuests: player['_count'].quest,
+                currentTier: getTitleForQuestsCompleted(player['_count'].quest)
+              }"
+            >
+              - {{ player.pve.title }}</span
+            >
+            <span
+              *ngIf="leaderboardType === leaderboardTypes.PVP"
+              [ngStyle]="{
+                color: getRarityColor(player.pvp.rarity)
+              }"
+            >
+              - {{ player.pvp.title }}</span
+            >
           </div>
 
           <div class="tags d-flex gap-2">
@@ -94,33 +113,54 @@
             >
             <div class="expander gap-2">
               <span
+                *ngIf="leaderboardType === leaderboardTypes.PVE"
                 class="list-leaderboard-item-badge pointer"
-                (click)="player['expandPVE'] = !player['expandPVE']"
-                >PVE <i class="fa-solid fa-dragon"></i
-              ></span>
-              <ul *ngIf="!!player['expandPVE']">
-                <li
-                  class="list-item-stat"
-                  [ngbTooltip]="questsAchevementsTooltip"
-                  [tooltipContext]="{
-                    completedQuests: player['_count'].quest,
-                    currentTier: getTitleForQuestsCompleted(
-                      player['_count'].quest
-                    )
-                  }"
-                >
-                  <span
-                    class="list-leaderboard-item-badge"
-                    [ngClass]="'glowing-' + player.pve.glow"
-                    >{{ player.pve.title }}</span
-                  >
-                </li>
-              </ul>
+                >Completed quests: {{ player['_count'].quest }}</span
+              >
+              <span
+                *ngIf="leaderboardType === leaderboardTypes.PVP"
+                class="list-leaderboard-item-badge pointer"
+                >Arena points: {{ player.mmr }}
+              </span>
             </div>
           </div>
         </div>
       </div>
       <div class="list-leaderboard-item-right">
+        <div
+          *ngIf="
+            getPlayerState(player.id) === playerStates.ONLINE &&
+            player.id !== actualAddress
+          "
+          class="duel-btn"
+          [class.disabled]="player.configuration?.disablePVP"
+          [ngbTooltip]="tooltipTemplate"
+          [tooltipContext]="{
+            text: player.configuration?.disablePVP
+              ? 'Player has disabled PVP'
+              : 'Challenge player'
+          }"
+          (click)="challengePlayer(player)"
+          [attr.disabled]="player.configuration?.disablePVP ? true : null"
+        >
+          <div class="icon fa-sword"></div>
+        </div>
+        <div
+          class="connected-dot"
+          [ngbTooltip]="tooltipTemplate"
+          [tooltipContext]="{
+            text: getPlayerState(player.id) | capitalizeFirst
+          }"
+        >
+          <div
+            class="dot"
+            [ngClass]="{
+              online: getPlayerState(player.id) === playerStates.ONLINE,
+              offline: getPlayerState(player.id) === playerStates.OFFLINE,
+              fighting: getPlayerState(player.id) === playerStates.FIGHTING
+            }"
+          ></div>
+        </div>
         <i
           class="bi bi-eye-fill pointer view-player mx-2"
           [routerLink]="['/view-player', player.id]"
@@ -129,3 +169,31 @@
     </div>
   }
 </div>
+
+<ng-template #tooltipTemplate let-text="text">
+  <div class="px-2 py-1">
+    <span class="text-white bg-black">{{ text }}</span>
+  </div>
+</ng-template>
+
+<ng-template
+  #questsAchevementsTooltip
+  let-completedQuests="completedQuests"
+  let-currentTier="currentTier"
+>
+  <div id="player-tooltip-wrapper">
+    <p>Completed quests {{ completedQuests }}</p>
+    <p>Possible achievements</p>
+    <ul>
+      <li
+        *ngFor="let questTier of questTiers"
+        [ngStyle]="{ color: getRarityColor(questTier.rarity) }"
+      >
+        @if (questTier.title == currentTier.title) {
+          X
+        }
+        {{ questTier.title }} {{ questTier.maxQuests }} quests
+      </li>
+    </ul>
+  </div>
+</ng-template>

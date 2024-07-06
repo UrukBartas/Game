@@ -1,17 +1,17 @@
 import { inject, Injectable } from '@angular/core';
 import {
-  CanActivate,
   ActivatedRouteSnapshot,
+  CanActivate,
+  Router,
   RouterStateSnapshot,
   UrlTree,
-  Router,
 } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { getAccount } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
-import { filter, firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from 'src/services/auth.service';
 import { WalletService } from 'src/services/wallet.service';
+import { WebSocketService } from 'src/services/websocket.service';
 import { MainState } from 'src/store/main.store';
 
 @Injectable({
@@ -21,6 +21,7 @@ export class AuthGuard implements CanActivate {
   store = inject(Store);
   router = inject(Router);
   toastService = inject(ToastrService);
+  websocket = inject(WebSocketService);
   authService = inject(AuthService);
   walletService = inject(WalletService);
 
@@ -52,6 +53,12 @@ export class AuthGuard implements CanActivate {
     )
       this.router.navigate(['/']);
 
-    return isPlayerLogged && !sessionExpired;
+    const isPlayerAuthorized = isPlayerLogged && !sessionExpired;
+
+    if (isPlayerAuthorized && !this.websocket.socket?.active) {
+      this.websocket.connect();
+    }
+
+    return isPlayerAuthorized;
   }
 }
