@@ -229,7 +229,7 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
                       setTimeout(() => {
                         this.showRareRollDialog();
                       }, 500);
-                    }, 2000);
+                    }, 1000);
                   });
               }
               modalRef.hide();

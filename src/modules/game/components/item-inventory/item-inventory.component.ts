@@ -33,8 +33,8 @@ export class ItemInventoryComponent extends BaseInventoryComponent {
   private store = inject(Store);
   @Output() onDestroyItem = new EventEmitter<Item>();
   public itemType = ItemType;
-  public isViewingPlayer =
-    this.route.snapshot.url[0].path.includes('view-player');
+  public isInInventory =
+    this.route.snapshot.url[0].path.includes('inventory');
   public player = this.store.selectSnapshot(MainState).player;
 
   public get filteredItems() {

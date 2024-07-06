@@ -64,7 +64,7 @@ export abstract class BaseFightComponent extends TemplatePage {
   doAction(action: TurnActionEnum, consumableId?: number) {
     const currentTime = Date.now();
 
-    if (currentTime - this.lastClickTime < 500 || this.fight.result) {
+    if (currentTime - this.lastClickTime < 1000 || this.fight.result) {
       return;
     }
     this.lastClickTime = currentTime;

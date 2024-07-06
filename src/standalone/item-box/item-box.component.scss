@@ -17,13 +17,15 @@
   .item-disabled {
     filter: grayscale(100%);
   }
-  .bi-ban {
+  .fa-prohib {
     position: absolute;
     left: 0;
-    width: 50%;
-    height: 50%;
+    width: 30%;
+    height: 30%;
+    margin-top: 4%;
+    margin-left: 4%;
     display: inline-block;
-    color: $red;
+    background: $red;
   }
 }
 
