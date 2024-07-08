@@ -45,9 +45,12 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   @Input() selectedItem: MiscWithStack;
   @Output() updateInventory = new EventEmitter<void>();
   public currentPhase = 0;
+  public currentPortraitPhase = 0;
   @ViewChild('lootboxOpener') lootboxOpener: TemplateRef<any>;
+  @ViewChild('portraitActivator') portraitActivator: TemplateRef<any>;
   @ViewChild('itemRoulette') itemRoulette: ItemRouletteComponent;
   @ViewChild('itemResult', { read: ElementRef }) itemResult: ElementRef;
+  @ViewChild('portraitResult', { read: ElementRef }) portraitResult: ElementRef;
 
   contextMenuService = inject(ContextMenuService);
   focuserService = inject(FocuserService);
@@ -67,7 +70,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
       this.openingItem().miscellanyItemData.itemType
     );
   });
-  public camelCase = camelCase
+  public camelCase = camelCase;
   public getRarityColor = getRarityColor;
   public getRarityText = getRarityText;
 
@@ -138,6 +141,29 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   public open(miscLootbox: MiscWithStack) {
     this.openingItem.set(miscLootbox);
     this.focuserService.open(this.lootboxOpener, miscLootbox);
+  }
+
+  public activatePortrait(miscPortrait: MiscWithStack) {
+    this.currentPortraitPhase = 0;
+    this.focuserService.open(this.portraitActivator, miscPortrait);
+  }
+
+  public async confirmActivationPortrait(miscPortrait: MiscWithStack) {
+    await firstValueFrom(
+      this.miscelanyService.activatePortrait(miscPortrait.id)
+    );
+    this.currentPortraitPhase = 1;
+    setTimeout(() => {
+      party.confetti(this.portraitResult.nativeElement, {
+        count: party.variation.range(20, 40),
+      });
+    }, 500);
+  }
+
+  public closePortrait() {
+    this.focuserService.close();
+    this.currentPortraitPhase = 0;
+    this.updateInventory.emit();
   }
 
   public async runRoulette(idLootbox: number) {

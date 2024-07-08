@@ -7,21 +7,20 @@
   <div [formGroup]="form" class="d-flex flex-column gap-3">
     <div class="image-picker">
       <div class="image-thumbnails">
-        @for (image of images; track image) {
-          <div
-            class="image-container"
-            [style.height]="getImageContainerSizeByScreenSize() + 'px'"
-            [style.width]="getImageContainerSizeByScreenSize() + 'px'"
-            [class.selected]="form.value.image === image"
-            (click)="form.patchValue({ image })"
-          >
-            <img [src]="image" class="character-image" />
+        <div
+          *ngFor="let image of (images$ | async)"
+          class="image-container"
+          [style.height]="getImageContainerSizeByScreenSize() + 'px'"
+          [style.width]="getImageContainerSizeByScreenSize() + 'px'"
+          [class.selected]="form.value.image === image"
+          (click)="form.patchValue({ image })"
+        >
+          <img [src]="image" class="character-image" />
 
-            <div class="check-icon" *ngIf="form.value.image === image">
-              <i class="fa fa-check-circle"></i>
-            </div>
+          <div class="check-icon" *ngIf="form.value.image === image">
+            <i class="fa fa-check-circle"></i>
           </div>
-        }
+        </div>
       </div>
     </div>
 
