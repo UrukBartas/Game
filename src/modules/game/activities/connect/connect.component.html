@@ -1,4 +1,8 @@
-<div class="w-100 h-100 d-flex justify-content-center align-items-center">
+<div #threeContainer class="three-container"></div>
+<div
+  id="login"
+  class="w-100 h-100 d-flex justify-content-center align-items-center"
+>
   @if (
     walletService.latestModalEvent().event == 'CONNECT_SUCCESS' ||
     (walletService.walletConnectIsLoggedIn$ | async) == true
@@ -15,7 +19,8 @@
     @if (doingLogin) {
       <ng-container *ngTemplateOutlet="login"></ng-container>
     } @else {
-      <div class="connect-wrapper gap-3">
+      <div class="connect-wrapper gap-3 align-items-center">
+        <img class="logo" src="assets/login/title-2.png" />
         <button
           type="submit"
           class="btn btn-lg btn-primary save-button"
@@ -25,12 +30,12 @@
               : walletService.modal.open()
           "
         >
-          Begin your adventure
+          Enter the realms
           <i class="fa-solid fa-torii-gate pl-2"></i>
         </button>
         <p
           urText
-          class="text-third text-center pointer"
+          class="text-white text-center pointer"
           (click)="doingLogin = true"
         >
           Login with email
@@ -41,7 +46,7 @@
 </div>
 
 <ng-template #login>
-  <div [formGroup]="formGroup" class="connect-wrapper gap-3 w-100 px-3">
+  <div [formGroup]="formGroup" class="connect-wrapper gap-3 px-3">
     <div class="form-group">
       <label for="characterName" class="text-third">Email</label>
       <input

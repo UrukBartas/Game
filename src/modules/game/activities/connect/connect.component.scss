@@ -1,4 +1,34 @@
-.connect-wrapper {
-  display: flex;
-  flex-direction: column;
+#login {
+  background-image: url('../../../../assets/login/login.webp');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  button {
+    background-color: #be781c !important;
+    border-color: #844c0d !important;
+  }
+
+  .logo {
+    width: 70vw;
+    max-width: 600px;
+    filter: drop-shadow(1px 1px 1em #000);
+  }
+
+  .connect-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 14vh;
+    background: #00000073;
+    padding: 1rem;
+    border-radius: 10px;
+  }
+}
+
+.three-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
