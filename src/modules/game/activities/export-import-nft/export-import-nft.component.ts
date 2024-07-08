@@ -272,11 +272,6 @@ export class ExportImportNftComponent extends TemplatePage {
     this.filterAndMapNfts(ItemTypeSC.Miscellaneous)
   );
 
-  public refreshPlayer$ = this.createIntervalObservable(
-    5000,
-    this.store.dispatch(new RefreshPlayer())
-  );
-
   constructor() {
     super();
     this.whiteListedItemsInterval$
@@ -309,7 +304,10 @@ export class ExportImportNftComponent extends TemplatePage {
       .subscribe((data: any) => {
         this.erc20Balance$.next(data);
       });
-    this.refreshPlayer$.pipe(takeUntilDestroyed()).subscribe();
+    interval(5000)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.store.dispatch(new RefreshPlayer()));
+
     this.walletService.getValidAddress$.subscribe(() => {
       this.activeNetworkId.next(getNetwork()?.chain?.id);
     });
@@ -689,13 +687,13 @@ export class ExportImportNftComponent extends TemplatePage {
         const receipt = await waitForTransaction({
           hash: tx.hash,
         });
+        this.store.dispatch(new RefreshPlayer());
         this.spinnerService.hide();
         if (receipt.status !== 'success')
           throw new Error('Error exporting items!');
         this.toastService.success(
           'The coins got exported, you will receive them in your wallet soon!'
         );
-        this.store.dispatch(new RefreshPlayer());
         this.selectedUruksToExport = 0;
       } else {
         await this.contractService.executewriteContractOnUrukERC20(

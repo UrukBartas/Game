@@ -17,8 +17,12 @@ import { HttpUrukInterceptor } from 'src/services/http-uruk.interceptor';
 import { ContextMenuComponent } from 'src/standalone/context-menu/context-menu.component';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { FocuserComponent } from 'src/standalone/focuser/focuser.component';
+import { ConnectComponent } from 'src/modules/game/activities/connect/connect.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ThreePortalService } from 'src/modules/game/activities/connect/service/three-portal.service';
+
 @NgModule({
-  declarations: [AppComponent, TemplatePage],
+  declarations: [AppComponent, TemplatePage, ConnectComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -36,8 +40,11 @@ import { FocuserComponent } from 'src/standalone/focuser/focuser.component';
     ModalModule.forRoot(),
     ContextMenuComponent,
     FocuserComponent,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [
+    ThreePortalService,
     { provide: HTTP_INTERCEPTORS, useClass: HttpUrukInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],

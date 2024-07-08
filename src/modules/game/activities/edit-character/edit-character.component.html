@@ -97,11 +97,11 @@
       >
     </div>
 
-    <div class="description pt-3">
+    <div class="description pt-3" *ngIf="!!editing">
       <span urText>Settings</span>
     </div>
 
-    <div class="col-12 col-sm-6">
+    <div class="col-12 col-sm-6" *ngIf="!!editing">
       <div class="form-check form-switch">
         <input
           formControlName="disablePVP"
@@ -117,11 +117,13 @@
     </div>
 
     <div class="form-group py-3 action-buttons gap-2">
-      <button (click)="location.back()" class="btn btn-dark">Back</button>
+      <button (click)="location.back()" class="btn btn-dark btn-lg">
+        Back
+      </button>
       <button
         [disabled]="form.invalid"
         (click)="save()"
-        class="btn btn-secondary"
+        class="btn btn-secondary btn-lg"
       >
         Save
       </button>
