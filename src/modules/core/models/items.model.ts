@@ -35,14 +35,11 @@ export enum DamageType {
   SLASHING = 'SLASHING',
   FIRE = 'FIRE',
   COLD = 'COLD',
-  LIGHTNING = 'LIGHTNING',
-  THUNDER = 'THUNDER',
-  ACID = 'ACID',
+  ELECTRIC = 'ELECTRIC',
   POISON = 'POISON',
   PSYCHIC = 'PSYCHIC',
-  RADIANT = 'RADIANT',
-  NECROTIC = 'NECROTIC',
-  FORCE = 'FORCE',
+  HOLY = 'HOLY',
+  DARK = 'DARK',
 }
 
 export interface ItemData {
