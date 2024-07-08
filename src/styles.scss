@@ -323,6 +323,12 @@ app-adventures {
   mask: url(assets/icons/swords.svg) no-repeat center;
 }
 
+.fa-prohib {
+  -webkit-mask: url(assets/icons/ban.svg) no-repeat center;
+  mask: url(assets/icons/ban.svg) no-repeat center;
+}
+
+
 .fullscreen-mode {
   img.active-quest {
     display: none;

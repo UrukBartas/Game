@@ -24,8 +24,22 @@ export interface Item {
   equipped: boolean;
   enabled: boolean;
   price?: number;
+  slotEquipped?: ItemType;
 
   canBeUpgraded?: boolean;
+}
+
+export enum DamageType {
+  BLUDGEONING = 'BLUDGEONING',
+  PIERCING = 'PIERCING',
+  SLASHING = 'SLASHING',
+  FIRE = 'FIRE',
+  COLD = 'COLD',
+  ELECTRIC = 'ELECTRIC',
+  POISON = 'POISON',
+  PSYCHIC = 'PSYCHIC',
+  HOLY = 'HOLY',
+  DARK = 'DARK',
 }
 
 export interface ItemData {
@@ -35,6 +49,7 @@ export interface ItemData {
   imageLocal: string;
   rarity: Rarity;
   itemType: ItemType;
+  damageType: DamageType;
   trait?: Trait | null;
   description: string;
   items: Item[];
@@ -46,7 +61,8 @@ export enum ItemType {
   GLOVES = 'Gloves',
   TROUSERS = 'Trousers',
   BOOTS = 'Boots',
-  WEAPON = 'Weapon',
+  Weapon1H = 'Weapon1H',
+  Weapon2H = 'Weapon2H',
   SHIELD = 'Shield',
   RING = 'Ring',
   CHARM = 'Charm',

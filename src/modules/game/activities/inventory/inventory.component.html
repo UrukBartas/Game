@@ -51,7 +51,10 @@
                   [sockets]="currentSize$ | async"
                   [equippedItemOfType]="
                     !!hoveredItem
-                      ? (this.getItem$(hoveredItem.itemData.itemType) | async)
+                      ? (this.getItem$(
+                          [hoveredItem.itemData.itemType],
+                          hoveredItem.itemData.itemType
+                        ) | async)
                       : null
                   "
                   [showContextualMenu]="true"
@@ -59,8 +62,13 @@
                   (onDragStart)="onDragStart($event.event, $event.data)"
                   (onDragEnd)="onDragEnd($event)"
                   (onHover)="onHoverItem($event)"
-                  (onDoubleClick)="!!$event ? equipItem($event) : false"
+                  (onDoubleClick)="
+                    !!$event
+                      ? equipItem($event, $event.itemData.itemType)
+                      : false
+                  "
                   (onDestroyItem)="destroyItem($event)"
+                  (equipSpecificSlot)="equipItem($event.item, $event.itemType)"
                 >
                   <ng-container
                     extraItemBoxes
@@ -190,7 +198,8 @@
               equippedSlot;
               context: {
                 item$: getHelmet$,
-                hovered: activeDragAndDropItemType == itemTypePublic.HELMET
+                hovered: activeDragAndDropItemType == itemTypePublic.HELMET,
+                equipType: itemTypePublic.HELMET
               }
             "
           ></ng-container>
@@ -201,7 +210,8 @@
               equippedSlot;
               context: {
                 item$: getGloves$,
-                hovered: activeDragAndDropItemType == itemTypePublic.GLOVES
+                hovered: activeDragAndDropItemType == itemTypePublic.GLOVES,
+                equipType: itemTypePublic.GLOVES
               }
             "
           ></ng-container>
@@ -211,7 +221,8 @@
               equippedSlot;
               context: {
                 item$: getChest$,
-                hovered: activeDragAndDropItemType == itemTypePublic.CHEST
+                hovered: activeDragAndDropItemType == itemTypePublic.CHEST,
+                equipType: itemTypePublic.CHEST
               }
             "
           ></ng-container>
@@ -222,7 +233,10 @@
               equippedSlot;
               context: {
                 item$: getWeapon$,
-                hovered: activeDragAndDropItemType == itemTypePublic.WEAPON
+                hovered:
+                  activeDragAndDropItemType == itemTypePublic.Weapon1H ||
+                  activeDragAndDropItemType == itemTypePublic.Weapon2H,
+                equipType: itemTypePublic.Weapon1H
               }
             "
           ></ng-container>
@@ -231,7 +245,8 @@
               equippedSlot;
               context: {
                 item$: getTrousers$,
-                hovered: activeDragAndDropItemType == itemTypePublic.TROUSERS
+                hovered: activeDragAndDropItemType == itemTypePublic.TROUSERS,
+                equipType: itemTypePublic.TROUSERS
               }
             "
           ></ng-container>
@@ -240,7 +255,10 @@
               equippedSlot;
               context: {
                 item$: getShield$,
-                hovered: activeDragAndDropItemType == itemTypePublic.SHIELD
+                hovered:
+                  activeDragAndDropItemType == itemTypePublic.SHIELD ||
+                  activeDragAndDropItemType == itemTypePublic.Weapon1H,
+                equipType: itemTypePublic.SHIELD
               }
             "
           ></ng-container>
@@ -251,7 +269,8 @@
               equippedSlot;
               context: {
                 item$: getBoots$,
-                hovered: activeDragAndDropItemType == itemTypePublic.BOOTS
+                hovered: activeDragAndDropItemType == itemTypePublic.BOOTS,
+                equipType: itemTypePublic.BOOTS
               }
             "
           ></ng-container>
@@ -263,7 +282,8 @@
               context: {
                 item$: getCharm$,
                 isSmallItem: true,
-                hovered: activeDragAndDropItemType == itemTypePublic.CHARM
+                hovered: activeDragAndDropItemType == itemTypePublic.CHARM,
+                equipType: itemTypePublic.CHARM
               }
             "
           ></ng-container>
@@ -273,7 +293,8 @@
               context: {
                 item$: getRing$,
                 isSmallItem: true,
-                hovered: activeDragAndDropItemType == itemTypePublic.RING
+                hovered: activeDragAndDropItemType == itemTypePublic.RING,
+                equipType: itemTypePublic.RING
               }
             "
           ></ng-container>
@@ -288,10 +309,11 @@
   let-item$="item$"
   let-hovered="hovered"
   let-isSmallItem="isSmallItem"
+  let-equipType="equipType"
 >
   <app-item-box
     dndDropzone
-    (dndDrop)="onDrop($event)"
+    (dndDrop)="onDrop($event, equipType)"
     (appDoubleClick)="unEquipItem(item$)"
     [height]="getEquippedItemBoxSize() / (!!isSmallItem ? 2 : 1)"
     [width]="getEquippedItemBoxSize() / (!!isSmallItem ? 2 : 1)"

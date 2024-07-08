@@ -2,6 +2,7 @@ import { AsyncPipe, CommonModule, DecimalPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { DndModule } from 'ngx-drag-drop';
@@ -137,6 +138,7 @@ const pipes = [
     NgxSpinnerModule,
     SpinnerComponent,
     ItemRouletteComponent,
+    ButtonsModule,
   ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe, StackPipe],

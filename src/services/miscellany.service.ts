@@ -3,6 +3,7 @@ import { ApiBaseService } from '../modules/core/services/api-base.service';
 import { HttpClient } from '@angular/common/http';
 import { Item } from 'src/modules/core/models/items.model';
 import { Observable } from 'rxjs';
+import { MiscellanyItemData } from 'src/modules/core/models/misc.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,5 +19,13 @@ export class MiscellanyService extends ApiBaseService {
     resultItem: Item;
   }> {
     return this.get('/open-lootbox/' + lootboxId);
+  }
+
+  public activatePortrait(portraitId: number): Observable<void> {
+    return this.get('/active-portrait/' + portraitId);
+  }
+
+  public getPremiumPortraits(): Observable<MiscellanyItemData[]> {
+    return this.get('/premium-portraits');
   }
 }

@@ -30,7 +30,7 @@
     />
   </div>
   <div class="mover col d-flex align-items-center">
-    <span class="text-white px-2 d-none d-md-flex"
+    <span urText class="text-white px-2 d-none d-md-flex"
       >Page: {{ activePage() + 1 }}</span
     >
     <i
@@ -58,20 +58,30 @@
       [ngClass]="{ active: player.id == actualAddress }"
     >
       <div class="list-leaderboard-item-left">
-        @if (!formGroup.value.userOrWallet) {
-          @if (index >= 0 && index <= 2 && activePage() == 0) {
-            <img
-              [src]="getImgBasedOnRanking(index)"
-              class="list-leaderboard-item-left-image-ranking"
-            />
-          } @else {
-            <div
-              class="list-leaderboard-item-left-number-ranking d-flex align-items-center pl-1"
-            >
-              {{ index + 1 + chunkSize() * activePage() }}
-            </div>
-          }
-        }
+        <div class="rank">
+          <img
+            [src]="player.image"
+            class="list-leaderboard-item-left-image-ranking"
+            style="border-radius: 0px"
+          />
+
+          <div class="floating-rank">
+            @if (!formGroup.value.userOrWallet) {
+              @if (index >= 0 && index <= 2 && activePage() == 0) {
+                <img
+                  [src]="getImgBasedOnRanking(index)"
+                  class="list-leaderboard-item-left-image-ranking"
+                />
+              } @else {
+                <div
+                  class="list-leaderboard-item-left-number-ranking d-flex align-items-center pl-1"
+                >
+                  {{ index + 1 + chunkSize() * activePage() }}
+                </div>
+              }
+            }
+          </div>
+        </div>
 
         <div class="list-leaderboard-item-left-container">
           <div class="list-leaderboard-item-name-container">

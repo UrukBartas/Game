@@ -30,7 +30,7 @@
 
 .list-leaderboard {
   display: flex;
-  max-height: 73vh;
+  max-height: 70vh;
   gap: 10px;
   flex-direction: column;
   height: 100%;
@@ -184,5 +184,22 @@
     display: flex;
     flex-direction: row;
     gap: 5px;
+  }
+}
+
+.rank {
+  position: relative;
+  .floating-rank {
+    img,
+    div {
+      max-width: 32px;
+      max-height: 32px;
+      position: absolute;
+      bottom: -5px;
+      right: -15px;
+    }
+    div {
+      right: 0;
+    }
   }
 }

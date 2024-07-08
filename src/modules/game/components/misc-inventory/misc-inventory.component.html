@@ -1,18 +1,95 @@
+<ng-template #statsLootbox>
+  <div class="stats-info-lootbox py-4">
+    <p
+      class="mb-0"
+      *ngFor="
+        let distribution of parsePossibilities(lootboxPossibilities$() | async)
+      "
+      [ngStyle]="{ color: getRarityColor(distribution.rarity) }"
+    >
+      {{
+        distribution.value * 100 +
+          '% of getting a ' +
+          camelCase(distribution.rarity) +
+          ' item'
+      }}
+    </p>
+  </div>
+</ng-template>
+
+<ng-template #portraitActivator let-item="data">
+  <div
+    class="final-result-wrapper final-result-portrait px-3 text-center animate__animated animate__jackInTheBox delay_4"
+    [ngClass]="{ 'd-none': currentPortraitPhase != 1 }"
+    #portraitResult
+  >
+    <span urTitle class="text-secondary mt-3"
+      >✨ Congratulations on your new portrait!
+    </span>
+    <span class="text-light">
+      You can now choose it in the profile section.
+    </span>
+    <button class="btn-primary btn" urTitle (click)="closePortrait()">
+      Close
+    </button>
+  </div>
+  <div class="first-phase" [ngClass]="{ 'd-none': currentPortraitPhase != 0 }">
+    <div class="wrapper-lootbox">
+      <i
+        class="fa-regular fa-circle-xmark text-white"
+        (click)="focuserService.close()"
+      ></i>
+      <div class="animate__animated animate__pulse animate__infinite delay_4">
+        <app-item-box
+          (click)="confirmActivationPortrait(item)"
+          #result
+          [rarity]="item.miscellanyItemData.rarity"
+          [height]="200"
+          [width]="200"
+          [image]="item ? item?.miscellanyItemData.imageLocal : null"
+        ></app-item-box>
+      </div>
+    </div>
+    <button
+      urTitle
+      (click)="confirmActivationPortrait(item)"
+      class="button-rainbow mt-3"
+      [style.padding]="getResponsiveButtonSize()"
+    >
+      Click to activate
+    </button>
+  </div>
+</ng-template>
+
 <ng-template #lootboxOpener let-item="data">
   <div class="first-phase" [ngClass]="{ 'd-none': currentPhase != 0 }">
-    <div
-      class="animate__animated animate__pulse animate__infinite delay_4"
-      (click)="runRoulette(item.id)"
-    >
-      <app-item-box
-        #result
-        [rarity]="item.miscellanyItemData.rarity"
-        [height]="200"
-        [width]="200"
-        [image]="item ? item?.miscellanyItemData.imageLocal : null"
-      ></app-item-box>
+    <div class="wrapper-lootbox">
+      <i
+        class="fa-regular fa-circle-xmark text-white"
+        (click)="endPhases()"
+      ></i>
+      <div
+        class="animate__animated animate__pulse animate__infinite delay_4"
+        (click)="runRoulette(item.id)"
+      >
+        <app-item-box
+          #result
+          [rarity]="item.miscellanyItemData.rarity"
+          [height]="200"
+          [width]="200"
+          [image]="item ? item?.miscellanyItemData.imageLocal : null"
+        ></app-item-box>
+      </div>
     </div>
-    <span urTitle class="text-secondary mt-3">Click to open</span>
+    <ng-container *ngTemplateOutlet="statsLootbox"></ng-container>
+    <button
+      (click)="runRoulette(item.id)"
+      urTitle
+      class="button-rainbow"
+      [style.padding]="getResponsiveButtonSize()"
+    >
+      Click to open
+    </button>
   </div>
   <div class="second-phase" [ngClass]="{ 'd-none': currentPhase != 1 }">
     <app-item-roulette
@@ -24,7 +101,13 @@
   </div>
   <div class="third-phase" [ngClass]="{ 'd-none': currentPhase != 2 }">
     <div class="result-item-showcase">
-      <div class="animate__animated animate__jackInTheBox delay_4">
+      <div
+        class="animate__animated animate__jackInTheBox delay_4 wrapper-lootbox"
+      >
+        <i
+          class="fa-regular fa-circle-xmark text-white"
+          (click)="endPhases()"
+        ></i>
         <app-item-box
           #itemResult
           #result
@@ -57,9 +140,6 @@
         <span urTitle class="text-secondary mt-3"
           >✨ Congratulations on {{ roll?.resultItem?.itemData?.name }}</span
         >
-        <button class="btn btn-primary" (click)="endPhases()">
-          <i class="fa fa-arrow-left px-2 pb-1"></i>Go back
-        </button>
       </div>
     </div>
   </div>
@@ -71,6 +151,15 @@
     *ngIf="data.miscellanyItemData.itemType == 'Lootbox'"
   >
     <li (click)="open(data); contextMenuService.hideContextMenu()">Open</li>
+  </ul>
+
+  <ul
+    class="list-options"
+    *ngIf="data.miscellanyItemData.itemType == 'Portrait'"
+  >
+    <li (click)="activatePortrait(data); contextMenuService.hideContextMenu()">
+      Activate
+    </li>
   </ul>
 </ng-template>
 

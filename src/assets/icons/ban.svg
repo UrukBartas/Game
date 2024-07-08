@@ -1,0 +1,4 @@
+<svg style="width: 30px" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+  <circle cx="100" cy="100" r="90" stroke="red" stroke-width="25" fill="none"/>
+  <line x1="30" y1="30" x2="170" y2="170" stroke="red" stroke-width="25"/>
+</svg>

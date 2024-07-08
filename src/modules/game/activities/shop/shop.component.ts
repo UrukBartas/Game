@@ -34,10 +34,24 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
   shopItems = [];
   rollAnimation: string;
   premiumRollsNumber = 0;
+  public selectedTab = '0';
 
   player$ = this.store
     .select(MainState.getState)
     .pipe(map((entry) => entry.player));
+
+  public displayItemsDependingOnType(items: any) {
+    if (!items) return [];
+    if (this.selectedTab == '0') {
+      return items.filter((entry) => !!entry.itemDataId);
+    } else if (this.selectedTab == '2') {
+      return items.filter((entry) => !!entry.consumableType);
+    } else {
+      return items.filter(
+        (entry) => !entry.consumableType && !entry.itemDataId
+      );
+    }
+  }
 
   public getItem$ = (itemType: ItemType) => {
     return this.player$.pipe(
@@ -215,7 +229,7 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
                       setTimeout(() => {
                         this.showRareRollDialog();
                       }, 500);
-                    }, 2000);
+                    }, 1000);
                   });
               }
               modalRef.hide();

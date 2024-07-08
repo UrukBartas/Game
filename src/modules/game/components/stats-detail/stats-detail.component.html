@@ -1,5 +1,5 @@
 @if (!!player) {
-  <div class="stats-container pb-3">
+  <div class="stats-container pb-3" *ngIf="cappedStats$ | async as cappedStats">
     <div class="row gap-3">
       <div class="col-12 d-flex justify-content-center">
         <app-item-box
@@ -138,7 +138,10 @@
                   class="fa-solid fa-circle-info text-third fa-sm px-1"
                   [ngbTooltip]="statExplanation"
                   [tooltipContext]="{
-                    text: 'Reduce in a percent the armor of the oponent (deal more damage)'
+                    text:
+                      'Reduce in a percent the armor of the oponent (deal more damage). Capped at ' +
+                      cappedStats['penetration'] +
+                      ' %'
                   }"
                 ></i>
               </label>
@@ -151,7 +154,10 @@
                   class="fa-solid fa-circle-info text-third fa-sm px-1"
                   [ngbTooltip]="statExplanation"
                   [tooltipContext]="{
-                    text: 'Chance of doubling the final calculated damage'
+                    text:
+                      'Chance of doubling the final calculated damage. Capped at ' +
+                      cappedStats['crit'] +
+                      ' %'
                   }"
                 ></i>
               </label>
@@ -164,7 +170,10 @@
                   class="fa-solid fa-circle-info text-third fa-sm px-1"
                   [ngbTooltip]="statExplanation"
                   [tooltipContext]="{
-                    text: 'Chance of making an opponent miss an attack'
+                    text:
+                      'Chance of making an opponent miss an attack. Capped at ' +
+                      cappedStats['dodge'] +
+                      ' %'
                   }"
                 ></i>
               </label>
@@ -177,7 +186,10 @@
                   class="fa-solid fa-circle-info text-third fa-sm px-1"
                   [ngbTooltip]="statExplanation"
                   [tooltipContext]="{
-                    text: 'Chance of blocking an opponent attack'
+                    text:
+                      'Chance of blocking an opponent attack. Capped at ' +
+                      cappedStats['block'] +
+                      ' %'
                   }"
                 ></i>
               </label>
@@ -190,7 +202,10 @@
                   class="fa-solid fa-circle-info text-third fa-sm px-1"
                   [ngbTooltip]="statExplanation"
                   [tooltipContext]="{
-                    text: 'Reduces the chance of missing an attack'
+                    text:
+                      'Reduces the chance of missing an attack. Capped at ' +
+                      cappedStats['accuracy'] +
+                      ' %'
                   }"
                 ></i>
               </label>

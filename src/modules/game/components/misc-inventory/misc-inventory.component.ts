@@ -6,11 +6,20 @@ import {
   Output,
   TemplateRef,
   ViewChild,
+  computed,
   inject,
+  signal,
 } from '@angular/core';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
-import { MiscellanyItem } from 'src/modules/core/models/misc.model';
-import { fillInventoryBasedOnPlayerSockets } from 'src/modules/utils';
+import {
+  MiscellanyItem,
+  MiscellanyItemType,
+} from 'src/modules/core/models/misc.model';
+import {
+  fillInventoryBasedOnPlayerSockets,
+  getRarityColor,
+  getRarityText,
+} from 'src/modules/utils';
 import { ContextMenuService } from 'src/services/context-menu.service';
 import { FocuserService } from 'src/standalone/focuser/focuser.service';
 import { MiscellanyService } from 'src/services/miscellany.service';
@@ -22,6 +31,8 @@ import { MainState } from 'src/store/main.store';
 import { ViewportService } from 'src/services/viewport.service';
 import { BaseInventoryComponent } from '../base-inventory/base-inventory.component';
 import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
+import { StatsService } from 'src/services/stats.service';
+import { camelCase } from 'lodash';
 export interface MiscWithStack extends MiscellanyItem {
   stack?: number;
 }
@@ -34,16 +45,34 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   @Input() selectedItem: MiscWithStack;
   @Output() updateInventory = new EventEmitter<void>();
   public currentPhase = 0;
+  public currentPortraitPhase = 0;
   @ViewChild('lootboxOpener') lootboxOpener: TemplateRef<any>;
+  @ViewChild('portraitActivator') portraitActivator: TemplateRef<any>;
   @ViewChild('itemRoulette') itemRoulette: ItemRouletteComponent;
   @ViewChild('itemResult', { read: ElementRef }) itemResult: ElementRef;
+  @ViewChild('portraitResult', { read: ElementRef }) portraitResult: ElementRef;
 
   contextMenuService = inject(ContextMenuService);
   focuserService = inject(FocuserService);
   miscelanyService = inject(MiscellanyService);
   viewportService = inject(ViewportService);
   store = inject(Store);
+  stats = inject(StatsService);
   stack = inject(StackPipe);
+  openingItem = signal<MiscellanyItem>(null);
+  lootboxDistributions$ = computed(() => {
+    return this.stats.lootboxRrarityDistributions(
+      this.openingItem().miscellanyItemData.itemType
+    );
+  });
+  lootboxPossibilities$ = computed(() => {
+    return this.stats.lootboxPossibilities(
+      this.openingItem().miscellanyItemData.itemType
+    );
+  });
+  public camelCase = camelCase;
+  public getRarityColor = getRarityColor;
+  public getRarityText = getRarityText;
 
   public roll: {
     spinWheelItems: Array<Item>;
@@ -110,7 +139,31 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   }
 
   public open(miscLootbox: MiscWithStack) {
+    this.openingItem.set(miscLootbox);
     this.focuserService.open(this.lootboxOpener, miscLootbox);
+  }
+
+  public activatePortrait(miscPortrait: MiscWithStack) {
+    this.currentPortraitPhase = 0;
+    this.focuserService.open(this.portraitActivator, miscPortrait);
+  }
+
+  public async confirmActivationPortrait(miscPortrait: MiscWithStack) {
+    await firstValueFrom(
+      this.miscelanyService.activatePortrait(miscPortrait.id)
+    );
+    this.currentPortraitPhase = 1;
+    setTimeout(() => {
+      party.confetti(this.portraitResult.nativeElement, {
+        count: party.variation.range(20, 40),
+      });
+    }, 500);
+  }
+
+  public closePortrait() {
+    this.focuserService.close();
+    this.currentPortraitPhase = 0;
+    this.updateInventory.emit();
   }
 
   public async runRoulette(idLootbox: number) {
@@ -122,5 +175,37 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
     setTimeout(() => {
       this.itemRoulette.startRoulette();
     }, 0);
+  }
+
+  public parseDistributions(distributions: any) {
+    const rarity = this.openingItem().miscellanyItemData.rarity;
+    if (!rarity || !distributions) return null;
+    return Object.entries(distributions[rarity]);
+  }
+
+  public parsePossibilities(possibilities: any) {
+    const rarity = this.openingItem().miscellanyItemData.rarity;
+    if (!rarity || !possibilities) return null;
+    return Object.keys(possibilities[rarity]).map((key) => {
+      return {
+        rarity: key as Rarity,
+        value: possibilities[rarity][key] as number,
+      };
+    });
+  }
+
+  getResponsiveButtonSize() {
+    switch (this.viewportService.screenSize) {
+      case 'xxl':
+      case 'xl':
+      case 'lg':
+        return '0.8em 3em';
+      case 'md':
+        return '0.4em 1.5em';
+      case 'xs':
+      case 'sm':
+      default:
+        return '0.3em 1em';
+    }
   }
 }

@@ -60,6 +60,20 @@
     }
   }
 
+  .tabs {
+    position: absolute;
+    bottom: 14vw;
+    left: 0;
+    @include media-breakpoint-down(sm) {
+      bottom: 330px;
+      left: 0px;
+      width: 100%;
+      .btn-group {
+        width: 100%;
+      }
+    }
+  }
+
   .roll-buttons {
     position: absolute;
     bottom: 14vw;
@@ -67,7 +81,7 @@
     display: flex;
     gap: 5px;
     @include media-breakpoint-down(sm) {
-      bottom: 335px;
+      bottom: 375px;
     }
   }
 

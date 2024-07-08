@@ -1,9 +1,12 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { Item } from 'src/modules/core/models/items.model';
+import { Item, ItemType } from 'src/modules/core/models/items.model';
 import { fillInventoryBasedOnPlayerSockets } from 'src/modules/utils';
 import { ContextMenuService } from 'src/services/context-menu.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { BaseInventoryComponent } from '../base-inventory/base-inventory.component';
+import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngxs/store';
+import { MainState } from 'src/store/main.store';
 
 @Component({
   selector: 'app-item-inventory',
@@ -19,10 +22,20 @@ export class ItemInventoryComponent extends BaseInventoryComponent {
   @Output() onDragStart = new EventEmitter<any>();
   @Output() onDragEnd = new EventEmitter<any>();
   @Output() onDoubleClick = new EventEmitter<any>();
+  @Output() equipSpecificSlot = new EventEmitter<{
+    item: Item;
+    itemType: ItemType;
+  }>();
   @Output() onHover = new EventEmitter<Item>();
   viewportService = inject(ViewportService);
   contextMenuService = inject(ContextMenuService);
+  private route = inject(ActivatedRoute);
+  private store = inject(Store);
   @Output() onDestroyItem = new EventEmitter<Item>();
+  public itemType = ItemType;
+  public isInInventory =
+    this.route.snapshot.url[0].path.includes('inventory');
+  public player = this.store.selectSnapshot(MainState).player;
 
   public get filteredItems() {
     return fillInventoryBasedOnPlayerSockets(

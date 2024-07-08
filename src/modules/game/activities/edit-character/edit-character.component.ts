@@ -10,7 +10,16 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
-import { firstValueFrom, take } from 'rxjs';
+import {
+  Observable,
+  firstValueFrom,
+  from,
+  map,
+  of,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { AuthService } from 'src/services/auth.service';
 import { PlayerService } from 'src/services/player.service';
@@ -25,6 +34,7 @@ import { Location } from '@angular/common';
 import { WalletService } from 'src/services/wallet.service';
 import { getAccount } from '@wagmi/core';
 import { PlayerConfiguration } from 'src/modules/core/models/player.model';
+import { MiscellanyService } from 'src/services/miscellany.service';
 export function passwordMatchingValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const password = control.get('password');
@@ -44,6 +54,7 @@ export function passwordMatchingValidator(): ValidatorFn {
 export class EditCharacterComponent extends TemplatePage {
   playerService = inject(PlayerService);
   viewportService = inject(ViewportService);
+  miscService = inject(MiscellanyService);
   store = inject(Store);
   formBuilder = inject(FormBuilder);
   toastService = inject(ToastrService);
@@ -52,7 +63,7 @@ export class EditCharacterComponent extends TemplatePage {
   location = inject(Location);
   walletService = inject(WalletService);
   //public pushNotificationsService = inject(PushNotificationsService);
-  images = [
+  staticImages = [
     'assets/free-portraits/knight.webp',
     'assets/free-portraits/knight-f.webp',
     'assets/free-portraits/bartender.webp',
@@ -60,6 +71,7 @@ export class EditCharacterComponent extends TemplatePage {
     'assets/free-portraits/blacksmith.webp',
     'assets/free-portraits/blacksmith-f.webp',
   ];
+  images$ = of(this.staticImages);
 
   editing = false;
   form: FormGroup;
@@ -70,24 +82,40 @@ export class EditCharacterComponent extends TemplatePage {
     this.editing = currentRoute.includes('edit');
     const passwordPattern =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const namePattern = /^[a-zA-Z0-9]+$/;
 
     this.form = this.formBuilder.group(
       {
         image: ['assets/free-portraits/knight.webp', [Validators.required]],
-        name: ['', [Validators.required]],
+        name: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.pattern(namePattern),
+          ],
+        ],
         email: ['', [Validators.required, Validators.email]],
         password: [
           '',
           [Validators.required, Validators.pattern(passwordPattern)],
         ],
         repeatPassword: ['', [Validators.required]],
-        disablePVP: [false, [Validators.required]]
+        disablePVP: [false, []],
       },
       { validator: passwordMatchingValidator() }
     );
 
     if (this.editing) {
       this.load();
+      this.images$ = this.miscService.getPremiumPortraits().pipe(
+        map((portraits) => {
+          return [
+            ...portraits.map((entry) => entry.imageLocal),
+            ...this.staticImages,
+          ];
+        })
+      ) as Observable<any>;
     }
   }
 
@@ -126,7 +154,12 @@ export class EditCharacterComponent extends TemplatePage {
     const player = this.store.selectSnapshot(MainState.getState).player;
     if (player) {
       const { image, name, email, configuration } = player;
-      this.form.patchValue({ image, name, email, disablePVP: configuration?.disablePVP });
+      this.form.patchValue({
+        image,
+        name,
+        email,
+        disablePVP: configuration?.disablePVP,
+      });
     }
   }
 
@@ -181,7 +214,7 @@ export class EditCharacterComponent extends TemplatePage {
   edit() {
     const { email, name, image, password, disablePVP } = this.form.value;
     const configuration: PlayerConfiguration = { disablePVP };
-    
+
     this.playerService
       .update(email, name, image, password, configuration)
       .pipe(take(1))

@@ -8,11 +8,34 @@
       <span urTitle>{{ dialog }} </span>
     </div>
     <div class="item-rack-bg"></div>
+    <div class="tabs">
+      <div class="btn-group" btnRadioGroup [(ngModel)]="selectedTab">
+        <label
+          urText
+          class="btn btn-secondary mb-0 d-flex justify-content-center align-items-center"
+          btnRadio="0"
+          >⚔️ <span class="d-none d-md-block pl-2">Gear</span></label
+        >
+        <label
+          urText
+          class="btn btn-secondary mb-0 d-flex justify-content-center align-items-center"
+          btnRadio="1"
+          >🧱 <span class="d-none d-md-block pl-2">Mats</span></label
+        >
+        <label
+          urText
+          class="btn btn-secondary mb-0 d-flex justify-content-center align-items-center"
+          btnRadio="2"
+          >⚗️ <span class="d-none d-md-block pl-2">Potions</span></label
+        >
+      </div>
+    </div>
     <div class="roll-buttons">
       <app-daily-roll-button
         (buttonClicked)="dailyRoll()"
       ></app-daily-roll-button>
       <button
+        urText
         (click)="premiumRoll()"
         [class]="'btn btn-primary button-rainbow ' + getButtonSize()"
       >
@@ -44,27 +67,28 @@
       </button>
     </div>
     <div class="row item-row">
-      @for (item of items; track $index) {
-        <div
-          [class]="
-            'item-container col d-flex justify-content-center position-relative ' +
-            rollAnimation
-          "
-        >
-          <app-item-box
-            (click)="selectItem(item)"
-            [ngbTooltip]="item.itemData ? itemTooltip : consumableTooltip"
-            [tooltipContext]="{ item: item }"
-            [image]="item.itemData ? item.itemData.imageLocal : item.imageLocal"
-          ></app-item-box>
-          <div class="item-price">
-            <span class="text-white">{{ item.price | number: '1.0-2' }}</span>
-          </div>
-          <div class="check-icon" *ngIf="item.selected">
-            <i class="fa fa-check-circle"></i>
-          </div>
+      <div
+        *ngFor="let item of displayItemsDependingOnType(items)"
+        [class]="
+          'item-container col d-flex justify-content-center position-relative ' +
+          rollAnimation
+        "
+      >
+        <app-item-box
+          (click)="selectItem(item)"
+          [ngbTooltip]="item.itemData ? itemTooltip : consumableTooltip"
+          [tooltipContext]="{ item: item }"
+          [rarity]="item.rarity"
+          [disabled]="item.level > (player$ | async).level"
+          [image]="item.itemData ? item.itemData.imageLocal : item.imageLocal"
+        ></app-item-box>
+        <div class="item-price">
+          <span class="text-white">{{ item.price | number: '1.0-2' }}</span>
         </div>
-      }
+        <div class="check-icon" *ngIf="item.selected">
+          <i class="fa fa-check-circle"></i>
+        </div>
+      </div>
     </div>
   </div>
 </div>

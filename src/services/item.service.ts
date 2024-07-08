@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Item } from 'src/modules/core/models/items.model';
+import { Item, ItemType } from 'src/modules/core/models/items.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 import { ItemTypeSC } from 'src/modules/game/activities/export-import-nft/enums/ItemTypesSC';
 
@@ -37,8 +37,11 @@ export class ItemService extends ApiBaseService {
     return this.post('/' + item.id + '/unequip/', {}) as Observable<Item>;
   }
 
-  public equipItem(item: Item) {
-    return this.post('/' + item.id + '/equip/', {}) as Observable<Item>;
+  public equipItem(item: Item, equipType: ItemType) {
+    return this.post(
+      '/' + item.id + '/equip/' + equipType,
+      {}
+    ) as Observable<Item>;
   }
 
   public upgradeItem(itemId: number, useMagicDust: boolean) {

@@ -55,8 +55,8 @@
           [style.height]="getHealthBarHeight() + 'px'"
         >
           <span class="progress-text position-absolute"
-            >{{ fight.currentStats.player.health }}/{{
-              fight.baseStats.player.health
+            >{{ fight.currentStats.player.health | number }}/{{
+              fight.baseStats.player.health | number
             }}</span
           >
           <div
@@ -65,7 +65,7 @@
             aria-valuemin="0"
             aria-valuemax="100"
             [style.width]="
-              (fight.currentStats.player.health /
+              (fight.currentStats.player.health  /
                 fight.baseStats.player.health) *
                 100 +
               '%'
@@ -78,8 +78,8 @@
           [style.height]="getEnergyBarHeight() + 'px'"
         >
           <span class="progress-text position-absolute"
-            >{{ fight.currentStats.player.energy }}/{{
-              fight.baseStats.player.energy
+            >{{ fight.currentStats.player.energy | number }}/{{
+              fight.baseStats.player.energy | number
             }}</span
           >
           <div
@@ -143,8 +143,8 @@
           [style.height]="getHealthBarHeight() + 'px'"
         >
           <span class="progress-text position-absolute"
-            >{{ fight.currentStats.enemy.health }}/{{
-              fight.baseStats.enemy.health
+            >{{ fight.currentStats.enemy.health | number }}/{{
+              fight.baseStats.enemy.health | number
             }}</span
           >
           <div
@@ -165,8 +165,8 @@
           [style.height]="getEnergyBarHeight() + 'px'"
         >
           <span class="progress-text position-absolute"
-            >{{ fight.currentStats.enemy.energy }}/{{
-              fight.baseStats.enemy.energy
+            >{{ fight.currentStats.enemy.energy | number }}/{{
+              fight.baseStats.enemy.energy | number
             }}</span
           >
           <div

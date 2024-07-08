@@ -8,8 +8,13 @@
       @if (contextMenuTemplate == 'default') {
         <app-context-menu-inventory-options
           *ngIf="showContextualMenu"
+          [item]="item"
           (clickEquip)="
             onDoubleClick.emit(item); contextMenuService.hideContextMenu()
+          "
+          (equipLeftHand)="
+            equipSpecificSlot.emit({ item: item, itemType: itemType.SHIELD });
+            contextMenuService.hideContextMenu()
           "
           (clickDestroy)="
             onDestroyItem.emit(item); contextMenuService.hideContextMenu()
@@ -44,6 +49,7 @@
       [rarity]="item?.itemData?.rarity"
       [active]="isMultipleSelected(item)"
       [displayTooltip]="!!item"
+      [disabled]="isInInventory ? item?.level > player.level : false"
       [image]="item ? item?.itemData.imageLocal : null"
     >
       @if (!!item && !contextMenuService.menuVisible()) {

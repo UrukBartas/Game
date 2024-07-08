@@ -1,3 +1,6 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
 .misc-inventory {
   display: flex;
   flex-wrap: wrap;
@@ -14,7 +17,33 @@
   flex-direction: column;
 }
 
-.final-result-wrapper{
+.final-result-wrapper {
   display: flex;
   flex-direction: column;
+  gap: 5px;
+}
+
+.stats-info-lootbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  flex-direction: column;
+}
+
+.wrapper-lootbox {
+  position: relative;
+  i {
+    position: absolute;
+    cursor: pointer;
+    top: -30px;
+    right: -25px;
+    font-size: 25px;
+  }
+}
+
+.final-result-portrait {
+  @include media-breakpoint-up(sm) {
+    max-width: 700px;
+  }
 }

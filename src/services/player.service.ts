@@ -1,10 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, firstValueFrom, tap } from 'rxjs';
 import { Consumable } from 'src/modules/core/models/consumable.model';
-import { Item } from 'src/modules/core/models/items.model';
+import { Item, ItemType } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
 import {
   PlayerConfiguration,
@@ -14,7 +12,6 @@ import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 import { RefreshPlayer } from 'src/store/main.store';
 import { ItemService } from './item.service';
 import { MiscellanyItem } from 'src/modules/core/models/misc.model';
-import { ItemTypeSC } from 'src/modules/game/activities/export-import-nft/enums/ItemTypesSC';
 
 @Injectable({
   providedIn: 'root',
@@ -28,11 +25,15 @@ export class PlayerService extends ApiBaseService {
     this.controllerPrefix = '/player';
   }
 
-  public async equipItemFlow(item: Item, onEquip?: Function) {
+  public async equipItemFlow(
+    item: Item,
+    equipType: ItemType,
+    onEquip?: Function
+  ) {
     try {
       this.spinnerService.show();
       await firstValueFrom(
-        this.itemService.equipItem(item).pipe(
+        this.itemService.equipItem(item, equipType).pipe(
           tap(() => {
             this.store.dispatch(new RefreshPlayer());
             onEquip();

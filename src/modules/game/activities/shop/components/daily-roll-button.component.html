@@ -1,5 +1,6 @@
 <button
   *ngIf="showButton"
+  urText
   (click)="doDailyRoll()"
   [class]="'btn btn-primary ' + getButtonSize()"
   [disabled]="!dailyRollButtonStatus.enabled"
