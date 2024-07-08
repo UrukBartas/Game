@@ -189,6 +189,9 @@
 
 .rank {
   position: relative;
+  .player-portrait {
+    border-radius: 10px;
+  }
   .floating-rank {
     img,
     div {
