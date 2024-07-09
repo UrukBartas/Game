@@ -250,15 +250,23 @@
               }
             "
           ></ng-container>
+
           <ng-container
             *ngTemplateOutlet="
               equippedSlot;
               context: {
-                item$: getShield$,
+                item$:
+                  (getWeapon$ | async)?.itemData?.itemType ===
+                  itemTypePublic.Weapon2H
+                    ? getWeapon$
+                    : getShield$,
                 hovered:
                   activeDragAndDropItemType == itemTypePublic.SHIELD ||
                   activeDragAndDropItemType == itemTypePublic.Weapon1H,
-                equipType: itemTypePublic.SHIELD
+                equipType: itemTypePublic.SHIELD,
+                secondHandSlot:
+                  (getWeapon$ | async)?.itemData?.itemType ===
+                  itemTypePublic.Weapon2H
               }
             "
           ></ng-container>
@@ -310,9 +318,11 @@
   let-hovered="hovered"
   let-isSmallItem="isSmallItem"
   let-equipType="equipType"
+  let-secondHandSlot="secondHandSlot"
 >
   <app-item-box
     dndDropzone
+    [class.second-hand-slot]="secondHandSlot"
     (dndDrop)="onDrop($event, equipType)"
     (appDoubleClick)="unEquipItem(item$)"
     [height]="getEquippedItemBoxSize() / (!!isSmallItem ? 2 : 1)"

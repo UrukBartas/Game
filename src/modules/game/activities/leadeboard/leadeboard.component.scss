@@ -192,6 +192,11 @@
   .list-leaderboard-item-left-image-ranking {
     border-radius: 10px;
   }
+  .list-leaderboard-item-left-number-ranking {
+    background: $primary;
+    border-radius: 14%;
+    padding: 3px;
+  }
   .floating-rank {
     img,
     div {

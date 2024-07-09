@@ -52,8 +52,10 @@
         urTitle
         class="m-0"
         [ngClass]="{
-          'locked-level': (player$ | async).level < item.level,
-          'text-white': (player$ | async).level >= item.level
+          'locked-level':
+            !isViewingPlayer && (player$ | async).level < item.level,
+          'text-white':
+            !isViewingPlayer && (player$ | async).level >= item.level
         }"
       >
         Level {{ item.level }}
@@ -87,7 +89,9 @@
   </div>
   <div
     class="d-flex flex-row pt-2"
-    [ngClass]="{ locked: (player$ | async).level < item.level }"
+    [ngClass]="{
+      locked: !isViewingPlayer && (player$ | async).level < item.level
+    }"
   >
     <div class="d-flex flex-column align-items-center">
       <img class="item-image" [src]="item.itemData?.imageLocal" priority />

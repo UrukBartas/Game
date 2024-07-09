@@ -43,6 +43,7 @@ export class WebSocketService {
     this.socket.on('challengeReceived', ({ challenger }) => {
       this.soundService.playSound('assets/sounds/battle-horn.mp3');
       const config: ModalOptions = {
+        id: challenger.id,
         initialState: {
           player: challenger,
           challenger: false,
@@ -64,6 +65,10 @@ export class WebSocketService {
       });
     });
 
+    this.socket.on('challengeReceivedCanceled', ({ challenger }) => {
+      this.modalService.hide(challenger.id);
+    });
+
     this.socket.on('challengeAccepted', () => {
       this.acceptChallenge$.next(true);
     });
@@ -79,6 +84,13 @@ export class WebSocketService {
 
   sendChallenge(challenger, challengeeAddress: string): void {
     this.socket.emit('challengePlayer', { challenger, challengeeAddress });
+  }
+
+  cancelSentChallenge(challenger, challengeeAddress: string): void {
+    this.socket.emit('cancelChallengePlayer', {
+      challenger,
+      challengeeAddress,
+    });
   }
 
   acceptChallenge(challengerAddress: string, modalRef: BsModalRef): void {
