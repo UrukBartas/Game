@@ -1,4 +1,8 @@
 @import '../../../../variables.scss';
+@import 'node_modules/bootstrap/scss/mixins';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
 .list-leaderboard-item-left-container {
   width: 100%;
 }
@@ -12,6 +16,11 @@
   .form-group {
     width: 100%;
     max-width: 70%;
+  }
+  .btn-filters {
+    @include media-breakpoint-down(sm) {
+      flex-direction: column;
+    }
   }
 }
 
@@ -54,7 +63,12 @@
       display: flex;
       align-items: center;
       justify-content: space-around;
-      gap: 2vw;
+      gap: 2vmax;
+
+      @include media-breakpoint-down(sm) {
+        flex-direction: column;
+      }
+
       .view-player {
         font-size: 24px;
       }
@@ -189,6 +203,9 @@
 
 .rank {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   .list-leaderboard-item-left-image-ranking {
     border-radius: 10px;
   }
