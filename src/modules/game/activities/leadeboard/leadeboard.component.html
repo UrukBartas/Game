@@ -3,7 +3,7 @@
 </div>
 <div class="pb-3 wrapper-search">
   <div class="form-group" [formGroup]="formGroup">
-    <div class="d-flex">
+    <div class="btn-filters d-flex">
       <tabset class="pr-2">
         <tab
           heading="🌍 Questing"
@@ -62,7 +62,6 @@
           <img
             [src]="player.image"
             class="list-leaderboard-item-left-image-ranking"
-            style="border-radius: 0px"
           />
 
           <div class="floating-rank">
@@ -96,13 +95,15 @@
               *ngIf="leaderboardType === leaderboardTypes.PVE"
               [ngStyle]="{
                 color: getRarityColor(
-                  getTitleForQuestsCompleted(player['_count'].quest).rarity
+                  getTitleForQuestsCompleted(player.finishedQuestsCount).rarity
                 )
               }"
               [ngbTooltip]="questsAchevementsTooltip"
               [tooltipContext]="{
-                completedQuests: player['_count'].quest,
-                currentTier: getTitleForQuestsCompleted(player['_count'].quest)
+                completedQuests: player.finishedQuestsCount,
+                currentTier: getTitleForQuestsCompleted(
+                  player.finishedQuestsCount
+                )
               }"
             >
               - {{ player.pve.title }}</span
@@ -125,7 +126,7 @@
               <span
                 *ngIf="leaderboardType === leaderboardTypes.PVE"
                 class="list-leaderboard-item-badge pointer"
-                >Completed quests: {{ player['_count'].quest }}</span
+                >Completed quests: {{ player.finishedQuestsCount }}</span
               >
               <span
                 *ngIf="leaderboardType === leaderboardTypes.PVP"

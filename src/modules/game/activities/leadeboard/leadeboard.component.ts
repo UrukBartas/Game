@@ -52,9 +52,9 @@ export class LeadeboardComponent extends TemplatePage {
       .pipe(
         map((players) => {
           return players.map((player, index) => {
-            const playerCasted = player as PlayerModel & { _count: any };
-            const questsCompleted = playerCasted._count.quest;
-            const title = this.getTitleForQuestsCompleted(questsCompleted);
+            const title = this.getTitleForQuestsCompleted(
+              player.finishedQuestsCount
+            );
             return {
               ...player,
               pve: {
@@ -118,7 +118,13 @@ export class LeadeboardComponent extends TemplatePage {
     glow: string;
     rarity: Rarity;
   } {
-    return questTiers.find((tier) => questsCompleted <= tier.maxQuests);
+    for (let i = questTiers.length - 1; i >= 0; i--) {
+      if (questsCompleted >= questTiers[i].maxQuests) {
+        return questTiers[i];
+      }
+    }
+
+    return questTiers[0];
   }
 
   public filterAllTime() {
@@ -207,5 +213,8 @@ export class LeadeboardComponent extends TemplatePage {
       },
     };
     const modal = this.modalService.show(ChallengeModalComponent, config);
+    modal.onHidden.pipe(take(1)).subscribe(() => {
+      this.websocket.cancelSentChallenge({ id, name, level, image }, player.id);
+    });
   }
 }

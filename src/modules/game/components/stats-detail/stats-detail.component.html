@@ -34,11 +34,11 @@
               <span
                 [ngStyle]="{
                   color: getRarityColor(
-                    getQuestTier(player._count.quest).rarity
+                    getQuestTier(player.finishedQuestsCount).rarity
                   )
                 }"
               >
-                {{ getQuestTier(player._count.quest).title }}</span
+                {{ getQuestTier(player.finishedQuestsCount).title }}</span
               >
             </li>
             <li urSubtext class="d-flex justify-content-between gap-2">
@@ -47,7 +47,7 @@
             </li>
             <li urSubtext class="d-flex justify-content-between gap-2">
               <label class="text-third">Quests completed:</label>
-              {{ player._count.quest }}
+              {{ player.finishedQuestsCount }}
             </li>
             <li urSubtext class="d-flex justify-content-between gap-2">
               <label class="text-third">Arena points:</label>

@@ -18,7 +18,6 @@ export class StatsDetailComponent extends TemplatePage {
   @Input() player!: PlayerModel;
   @Input() isViewingAnotherPlayer = false;
 
-
   private viewportService = inject(ViewportService);
   getRarityColor = getRarityColor;
 
@@ -40,8 +39,12 @@ export class StatsDetailComponent extends TemplatePage {
   }
 
   public getQuestTier(questCount: number) {
-    return questTiers.find((tier) => questCount <= tier.maxQuests);
+    for (let i = questTiers.length - 1; i >= 0; i--) {
+      if (questCount >= questTiers[i].maxQuests) {
+        return questTiers[i];
+      }
+    }
+
+    return questTiers[0];
   }
-
-
 }

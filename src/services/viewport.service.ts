@@ -7,6 +7,8 @@ import { Subject } from 'rxjs';
 export class ViewportService {
   public screenSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' =
     this.getViewport();
+  public screenWidth: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' =
+    this.getViewportWidth();
   public screenSizeChanges: Subject<'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'> =
     new Subject();
 
@@ -14,6 +16,7 @@ export class ViewportService {
     window.addEventListener('resize', () => {
       this.zone.run(() => {
         this.screenSize = this.getViewport();
+        this.screenWidth = this.getViewportWidth();
         this.screenSizeChanges.next(this.screenSize);
       });
     });
@@ -30,6 +33,19 @@ export class ViewportService {
     if (vmax <= 992) return 'md';
     if (vmax <= 1200) return 'lg';
     if (vmax <= 1400) return 'xl';
+    return 'xxl';
+  }
+
+  public getViewportWidth() {
+    const width = Math.max(
+      document.documentElement.clientWidth,
+      window.innerWidth || 0
+    );
+    if (width <= 576) return 'xs';
+    if (width <= 768) return 'sm';
+    if (width <= 992) return 'md';
+    if (width <= 1200) return 'lg';
+    if (width <= 1400) return 'xl';
     return 'xxl';
   }
 

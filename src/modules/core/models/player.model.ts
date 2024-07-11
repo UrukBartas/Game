@@ -30,7 +30,7 @@ export interface PlayerModel {
   pve?: { title: string; glow: string };
   pvpIndex?: number;
   mmr: number;
-  _count: { quest: number };
+  finishedQuestsCount: number;
   configuration: PlayerConfiguration;
 }
 
