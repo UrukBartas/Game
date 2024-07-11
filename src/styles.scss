@@ -328,7 +328,6 @@ app-adventures {
   mask: url(assets/icons/ban.svg) no-repeat center;
 }
 
-
 .fullscreen-mode {
   img.active-quest {
     display: none;
@@ -343,4 +342,20 @@ app-adventures {
 .flex-row {
   display: flex;
   flex-direction: row;
+}
+
+.positive-rarity-bonus {
+  color: rgba(255, 215, 0, 1) !important;
+}
+.negative-rarity-bonus {
+  color: $red !important;
+}
+
+app-inventory{
+  app-only-stats{
+    li{
+      font-size: 0.8rem !important;
+    }
+  }
+
 }

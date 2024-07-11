@@ -1,0 +1,89 @@
+<ng-template #statExplanation let-text="text">
+  <div class="p-2">
+    <span class="text-white bg-black">{{ text }}</span>
+  </div>
+</ng-template>
+
+<div class="row" *ngIf="cappedPerStats$ | async as cappedPerStats">
+  <div class="col-12" *ngIf="cappedStats$ | async as cappedStats">
+    <div class="description stat text-center">
+      <div class="row">
+        <div class="col-12 col-lg-6">
+          <p urText class="section-title" *ngIf="!simplified">Stats</p>
+          <ul class="list-unstyled">
+            <ng-container *ngFor="let stat of statItems">
+              <li
+                urSubtext
+                class="d-flex justify-content-between align-items-center gap-2"
+              >
+                <label class="text-third">
+                  {{ stat.label }}:
+                  <i
+                    class="fa-solid fa-circle-info text-third fa-sm px-1"
+                    [ngbTooltip]="statExplanation"
+                    [tooltipContext]="{ text: stat.tooltip }"
+                  ></i>
+                </label>
+
+                <div class="d-flex flex-column">
+                  <span>
+                    {{ player.stats[stat.key] | number: '1.0-2' }}
+                    {{ stat.suffix ? stat.suffix : '' }}
+                  </span>
+                  @if (!simplified) {
+                    @if (cappedStats[stat.key]) {
+                      <span class="max-value">
+                        (Max: {{ cappedStats[stat.key] }}%)
+                      </span>
+                    } @else {
+                      <span class="max-value">
+                        (Max: <i class="fa-solid fa-infinity"></i>)
+                      </span>
+                    }
+                  }
+                </div>
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+        <div class="col-12 col-lg-6">
+          <p urText class="section-title" *ngIf="!simplified">Rarity stats</p>
+          <ul class="list-unstyled">
+            <ng-container *ngFor="let perStat of perStatItems">
+              <li
+                urSubtext
+                class="d-flex justify-content-between align-items-center gap-2"
+              >
+                <label class="text-third">
+                  {{ perStat.label }} %:
+                  <i
+                    class="fa-solid fa-circle-info text-third fa-sm px-1"
+                    [ngbTooltip]="statExplanation"
+                    [tooltipContext]="{ text: perStat.tooltip }"
+                  ></i>
+                </label>
+                <div class="d-flex flex-column">
+                  <span
+                    [ngClass]="{
+                      'positive-rarity-bonus':
+                        player.perStats[perStat.key] >= 0,
+                      'negative-rarity-bonus': player.perStats[perStat.key] < 0
+                    }"
+                  >
+                    {{ player.perStats[perStat.key] | number: '1.0-2' }}%
+                  </span>
+                  <span
+                    *ngIf="cappedPerStats[perStat.key] && !simplified"
+                    class="max-value"
+                  >
+                    (Max: {{ cappedPerStats[perStat.key] }}%)
+                  </span>
+                </div>
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

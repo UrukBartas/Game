@@ -60,6 +60,7 @@ import { MaterialsInventoryComponent } from './components/materials-inventory/ma
 import { MiscInventoryComponent } from './components/misc-inventory/misc-inventory.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
+import { OnlyStatsComponent } from './components/stats-detail/only-stats/only-stats/only-stats.component';
 
 const directives = [
   ValidInputDirective,
@@ -114,6 +115,7 @@ const pipes = [
     InventoryTopbarComponent,
     MiscInventoryComponent,
     BaseInventoryComponent,
+    OnlyStatsComponent
   ],
   imports: [
     ...directives,
