@@ -2,25 +2,50 @@
 @import 'node_modules/bootstrap/scss/functions';
 @import 'node_modules/bootstrap/scss/variables';
 @import 'node_modules/bootstrap/scss/mixins';
-* {
-  color: $white-100;
-}
-.stats-container {
-  display: flex;
-  gap: 15px;
-  flex-direction: column;
-}
 
-.stat {
-  display: flex;
-  flex-direction: column;
-  li {
-    padding: 5px;
-    list-style: none;
+#only-stats {
+  * {
+    color: $white-100;
   }
-}
 
-.max-value, .max-value i {
-  font-size: 12px;
-  color: $secondary;
+  .table-dark {
+    --bs-table-bg: #2a2a28;
+    --bs-table-striped-bg: #3e3e3c;
+    --bs-table-border-color: transparent;
+    color: var(--bs-table-color);
+    background-color: var(--bs-table-bg);
+    border-color: var(--bs-table-border-color);
+  }
+
+  .max-value,
+  .max-value i {
+    font-size: 12px;
+    color: $secondary;
+  }
+
+  .table-section {
+    background-color: $primary;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .table-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .stat-table,
+  .rarity-table {
+    flex: 1;
+    min-width: 300px;
+    margin: 10px;
+  }
+
+  .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
