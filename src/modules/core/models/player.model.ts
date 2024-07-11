@@ -17,6 +17,7 @@ export interface PlayerModel {
   uruks: number;
   // Calculated stats with items
   stats: PlayerStatsModel;
+  perStats?: TotalPerStats;
   sockets: number;
 
   // Base player stats
@@ -48,4 +49,17 @@ export interface PlayerStatsModel {
   crit: number;
   accuracy: number;
   dodge: number;
+}
+
+export interface TotalPerStats {
+  totalPerHealth: number;
+  totalPerDamage: number;
+  totalPerArmor: number;
+  totalPerSpeed: number;
+  totalPerEnergy: number;
+  totalPerDodge: number;
+  totalPerCrit: number;
+  totalPerBlock: number;
+  totalPerAccuracy: number;
+  totalPerPenetration: number;
 }

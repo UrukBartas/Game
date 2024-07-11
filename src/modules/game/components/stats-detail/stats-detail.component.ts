@@ -11,23 +11,21 @@ import { questTiers } from '../../activities/leadeboard/const/quest-tiers';
 @Component({
   selector: 'app-stats-detail',
   templateUrl: './stats-detail.component.html',
-  styleUrl: './stats-detail.component.scss',
+  styleUrls: ['./stats-detail.component.scss'],
 })
 export class StatsDetailComponent extends TemplatePage {
   public store: Store = inject(Store);
   @Input() player!: PlayerModel;
   @Input() isViewingAnotherPlayer = false;
-  public stats = inject(StatsService);
-  public cappedStats$ = this.stats.getCappedStats();
 
   private viewportService = inject(ViewportService);
   getRarityColor = getRarityColor;
 
   public getPlayerImageSize() {
     if (
-      this.viewportService.screenSize == 'xs' ||
-      this.viewportService.screenSize == 'sm' ||
-      this.viewportService.screenSize == 'md'
+      this.viewportService.screenSize === 'xs' ||
+      this.viewportService.screenSize === 'sm' ||
+      this.viewportService.screenSize === 'md'
     ) {
       return 120;
     }
