@@ -39,6 +39,14 @@
       <app-spinner></app-spinner>
     </div>
     <p urText class="text-white">Waiting for player confirmation...</p>
+    <div class="d-flex w-100 justify-content-end pt-3">
+      <button
+        class="btn btn-secondary btn-transparent"
+        (click)="modalRef.hide(); cancel ? cancel() : false"
+      >
+        Cancel
+      </button>
+    </div>
   </ng-container>
   <ng-container *ngIf="challengeResult">
     <ng-container *ngIf="!challengeAccepted">
@@ -59,7 +67,6 @@
             ? 'Player accepted the duel. Joining the fight...'
             : 'Joining the fight...'
         }}
-        
       </p>
     </ng-container>
   </ng-container>

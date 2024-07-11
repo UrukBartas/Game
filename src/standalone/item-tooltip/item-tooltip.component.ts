@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
 import { camelCase } from 'lodash';
 import { map } from 'rxjs';
 import {
   Item,
-  ItemData,
   ItemType,
-  Rarity,
+  Rarity
 } from 'src/modules/core/models/items.model';
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
 import { getRarityColor, getRarityText } from 'src/modules/utils';
@@ -63,6 +63,7 @@ export class ItemTooltipComponent {
   public getRarityColor = getRarityColor;
   public getRarityText = getRarityText;
   public viewportService = inject(ViewportService);
+  public route = inject(ActivatedRoute);
   public rarityEnum = Rarity;
   public itemType = ItemType;
   public camelToe = camelCase;
@@ -74,6 +75,9 @@ export class ItemTooltipComponent {
   public player$ = this.store
     .select(MainState.getState)
     .pipe(map((entry) => entry.player));
+
+  public isViewingPlayer =
+    this.route.snapshot.url[0].path.includes('view-player');
 
   public getLoopableStatsKeys(): Array<string> {
     if (!this.item) return [];

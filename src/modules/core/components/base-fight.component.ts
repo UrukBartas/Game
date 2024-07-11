@@ -100,7 +100,7 @@ export abstract class BaseFightComponent extends TemplatePage {
       lastPlayerAction === TurnActionEnum.CRIT
     ) {
       this.handlePlayerAnimation(
-        this.viewportService.screenSize == 'xs' ? 'attack-up' : 'attack-right',
+        this.viewportService.screenWidth == 'xs' ? 'attack-up' : 'attack-right',
         1
       );
       this.showReceivedEnemyDamage = true;
@@ -113,7 +113,9 @@ export abstract class BaseFightComponent extends TemplatePage {
       lastEnemyAction === TurnActionEnum.CRIT
     ) {
       this.handleEnemyAnimation(
-        this.viewportService.screenSize == 'xs' ? 'attack-down' : 'attack-left',
+        this.viewportService.screenWidth == 'xs'
+          ? 'attack-down'
+          : 'attack-left',
         1
       );
       if (enemyTurn.damage > 0) {
@@ -201,7 +203,7 @@ export abstract class BaseFightComponent extends TemplatePage {
   }
 
   getHealthBarHeight() {
-    switch (this.viewportService.screenSize) {
+    switch (this.viewportService.screenWidth) {
       case 'xxl':
       case 'xl':
       case 'lg':
@@ -216,7 +218,7 @@ export abstract class BaseFightComponent extends TemplatePage {
   }
 
   getEnergyBarHeight() {
-    switch (this.viewportService.screenSize) {
+    switch (this.viewportService.screenWidth) {
       case 'xxl':
       case 'xl':
       case 'lg':
@@ -231,7 +233,7 @@ export abstract class BaseFightComponent extends TemplatePage {
   }
 
   getTimerBarHeight() {
-    switch (this.viewportService.screenSize) {
+    switch (this.viewportService.screenWidth) {
       case 'xxl':
       case 'xl':
       case 'lg':
@@ -246,7 +248,7 @@ export abstract class BaseFightComponent extends TemplatePage {
   }
 
   getButtonSize() {
-    switch (this.viewportService.screenSize) {
+    switch (this.viewportService.screenWidth) {
       case 'xxl':
       case 'xl':
       case 'lg':
