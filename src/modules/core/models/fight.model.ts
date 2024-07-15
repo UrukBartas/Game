@@ -53,7 +53,34 @@ export interface FightResultModel {
   player?: PlayerModel;
   uruks?: number;
   completedAdventure?: boolean;
+  ganked?: GankMonsters;
 }
+
+export enum GankMonsters {
+  Sasquatch = 'Sasquatch',
+  Cyclops = 'Ciclop',
+  Manticore = 'Manticora',
+  Hydra = 'Hidra',
+  Cerberus = 'Cerberus',
+  Balrog = 'Balrog',
+  Leviathan = 'Leviathan',
+  Dragon = 'Dragon',
+  Kraken = 'Kraken',
+  Behemoth = 'Behemoth',
+}
+
+export const GankMonstersIds = [
+  { monster: GankMonsters.Sasquatch, questId: 56 },
+  { monster: GankMonsters.Cyclops, questId: 55 },
+  { monster: GankMonsters.Manticore, questId: 58 },
+  { monster: GankMonsters.Hydra, questId: 61 },
+  { monster: GankMonsters.Cerberus, questId: 62 },
+  { monster: GankMonsters.Balrog, questId: 59 },
+  { monster: GankMonsters.Leviathan, questId: 60 },
+  { monster: GankMonsters.Dragon, questId: 63 },
+  { monster: GankMonsters.Kraken, questId: 64 },
+  { monster: GankMonsters.Behemoth, questId: 57 },
+];
 
 export interface FighterTurnModel {
   action: TurnActionEnum;
