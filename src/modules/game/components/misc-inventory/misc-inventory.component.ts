@@ -60,11 +60,6 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   stats = inject(StatsService);
   stack = inject(StackPipe);
   openingItem = signal<MiscellanyItem>(null);
-  lootboxDistributions$ = computed(() => {
-    return this.stats.lootboxRrarityDistributions(
-      this.openingItem().miscellanyItemData.itemType
-    );
-  });
   lootboxPossibilities$ = computed(() => {
     return this.stats.lootboxPossibilities(
       this.openingItem().miscellanyItemData.itemType
@@ -190,6 +185,17 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
       return {
         rarity: key as Rarity,
         value: possibilities[rarity][key] as number,
+      };
+    });
+  }
+
+  public parsePosibilitiesComboBox(possibilities: any) {
+    const rarity = this.openingItem().miscellanyItemData.rarity;
+    if (!rarity || !possibilities) return null;
+    return Object.keys(possibilities[rarity].drop).map((key) => {
+      return {
+        rarity: key as Rarity,
+        value: possibilities[rarity].drop[key] as number,
       };
     });
   }

@@ -4,6 +4,7 @@ import { PlayerModel } from './player.model';
 export enum MiscellanyItemType {
   Lootbox = 'Lootbox',
   Recipe = 'Recipe',
+  ComboLootbox = 'ComboLootbox',
 }
 
 export enum MiscellanyItemIdentifier {

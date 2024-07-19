@@ -1,19 +1,39 @@
 <ng-template #statsLootbox>
   <div class="stats-info-lootbox py-4">
-    <p
-      class="mb-0"
-      *ngFor="
-        let distribution of parsePossibilities(lootboxPossibilities$() | async)
-      "
-      [ngStyle]="{ color: getRarityColor(distribution.rarity) }"
-    >
-      {{
-        distribution.value * 100 +
-          '% of getting a ' +
-          camelCase(distribution.rarity) +
-          ' item'
-      }}
-    </p>
+    @if (openingItem().miscellanyItemData.itemType == 'ComboLootbox') {
+      <p
+        class="mb-0"
+        *ngFor="
+          let distribution of parsePosibilitiesComboBox(
+            lootboxPossibilities$() | async
+          )
+        "
+      >
+        {{
+          distribution.value * 100 +
+            '% of getting a ' +
+            camelCase(distribution.rarity) +
+            ' item'
+        }}
+      </p>
+    } @else {
+      <p
+        class="mb-0"
+        *ngFor="
+          let distribution of parsePossibilities(
+            lootboxPossibilities$() | async
+          )
+        "
+        [ngStyle]="{ color: getRarityColor(distribution.rarity) }"
+      >
+        {{
+          distribution.value * 100 +
+            '% of getting a ' +
+            camelCase(distribution.rarity) +
+            ' item'
+        }}
+      </p>
+    }
   </div>
 </ng-template>
 
@@ -148,7 +168,10 @@
 <ng-template #contextOptions let-data="data">
   <ul
     class="list-options"
-    *ngIf="data.miscellanyItemData.itemType == 'Lootbox'"
+    *ngIf="
+      data.miscellanyItemData.itemType == 'Lootbox' ||
+      data.miscellanyItemData.itemType == 'ComboLootbox'
+    "
   >
     <li (click)="open(data); contextMenuService.hideContextMenu()">Open</li>
   </ul>
