@@ -9,16 +9,22 @@ import {
 } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { FightResultModel } from 'src/modules/core/models/fight.model';
+import {
+  FightResultModel,
+  GankMonsters,
+  GankMonstersIds,
+} from 'src/modules/core/models/fight.model';
 import { getRarityColor } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer, SetQuests } from 'src/store/main.store';
 import * as party from 'party-js';
 import { QuestService } from 'src/services/quest.service';
-import { take } from 'rxjs';
+import { firstValueFrom, take } from 'rxjs';
 import { QuestRouterModel } from '../models/quest-router.model';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { Title } from '@angular/platform-browser';
+import { camelCase, lowerCase } from 'lodash';
+import { SoundService } from 'src/services/sound.service';
 
 @Component({
   selector: 'app-quest-result',
@@ -33,12 +39,15 @@ export class QuestResultComponent extends TemplatePage {
   viewportService = inject(ViewportService);
   questService = inject(QuestService);
   titleService = inject(Title);
+  soundService = inject(SoundService);
   victory = false;
   questStatusEnum = QuestStatusEnum;
   player = this.store.selectSnapshot(MainState.getState).player;
   getRarityColor = getRarityColor;
   public openedChest = false;
   public closedChest = false;
+  public lowerCaseFn = lowerCase;
+  public questResultLayout: 'DEFAULT' | 'GANKED' = 'DEFAULT';
 
   constructor() {
     super();
@@ -99,5 +108,38 @@ export class QuestResultComponent extends TemplatePage {
       return 62.5;
     }
     return 125;
+  }
+
+  public thereIsLoot(fightResult: FightResultModel) {
+    return (
+      fightResult.loot ||
+      fightResult.lostLoot ||
+      fightResult.consumableLoot ||
+      fightResult.consumableLostLoot ||
+      fightResult.materialLoot ||
+      fightResult.materialLostLoot ||
+      fightResult.miscellanyLoot ||
+      fightResult.miscellanyLostLoot
+    );
+  }
+
+  public continueTrouble() {
+    this.questResultLayout = 'GANKED';
+    this.soundService.playSound('assets/sounds/battle-horn.mp3');
+  }
+
+  public async faceIt() {
+    const foundMonster = GankMonstersIds.find(
+      (entry) => entry.monster == this.fightResult.ganked
+    );
+    await firstValueFrom(
+      this.questService.startGank(foundMonster.questId, foundMonster.monster)
+    );
+    setTimeout(() => {
+      this.questStatusChange.emit({
+        status: this.questStatusEnum.PICKING,
+        force: true,
+      });
+    }, 100);
   }
 }

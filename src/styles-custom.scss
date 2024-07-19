@@ -110,6 +110,7 @@
   animation: glowing-common 4s infinite;
   position: relative;
   display: inline-block;
+  animation-timing-function: linear;
 }
 
 @keyframes glowing-uncommon {
@@ -128,6 +129,7 @@
   animation: glowing-uncommon 4s infinite;
   position: relative;
   display: inline-block;
+  animation-timing-function: linear;
 }
 
 @keyframes glowing-epic {
@@ -146,6 +148,7 @@
   animation: glowing-epic 4s infinite;
   position: relative;
   display: inline-block;
+  animation-timing-function: linear;
 }
 
 @keyframes glowing-legendary {
@@ -164,6 +167,7 @@
   animation: glowing-legendary 4s infinite;
   position: relative;
   display: inline-block;
+  animation-timing-function: linear;
 }
 
 @keyframes glowing-mythic {
@@ -182,6 +186,7 @@
   animation: glowing-mythic 4s infinite;
   position: relative;
   display: inline-block;
+  animation-timing-function: ease-in-out;
 }
 
 @keyframes glowing-highlight {

@@ -78,7 +78,7 @@
           (click)="selectItem(item)"
           [ngbTooltip]="item.itemData ? itemTooltip : consumableTooltip"
           [tooltipContext]="{ item: item }"
-          [rarity]="item.rarity"
+          [rarity]="item.itemData ? item.itemData.rarity : item.rarity"
           [disabled]="item.level > (player$ | async).level"
           [image]="item.itemData ? item.itemData.imageLocal : item.imageLocal"
         ></app-item-box>
