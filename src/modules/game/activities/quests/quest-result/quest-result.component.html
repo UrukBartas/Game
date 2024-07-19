@@ -188,6 +188,59 @@
   </div>
 </ng-template>
 
+<ng-template #ganked>
+  <div class="ganked" data-aos="fade-up" data-aos-duration="2000">
+    <span
+      urText
+      class="text-danger text-center pb-2 animate__animated animate__pulse animate__infinite"
+      >You were ganked by the
+      <strong>
+        {{ fightResult.ganked }}
+      </strong>
+      during your last quest.
+    </span>
+    <app-item-box
+      class=""
+      #lootItem
+      [height]="getItemBoxSize() * 2"
+      [width]="getItemBoxSize() * 2"
+      [image]="
+        '/assets/enemies/gankers/' + lowerCaseFn(fightResult.ganked) + '.png'
+      "
+    >
+      <div tooltip class="tooltip-uruk">
+        A ferocious and mighty beast. Defeating it can yield great rewards.
+      </div>
+    </app-item-box>
+    <div class="row">
+      <span urText class="text-danger text-center pb-2"
+        >You can either fight it or try to escape from it
+      </span>
+      <div class="col-6">
+        <button
+          (click)="faceIt()"
+          class="btn btn-secondary btn-lg w-100 animate__animated animate__pulse animate__infinite"
+        >
+          Face it
+        </button>
+      </div>
+      <div class="col-6">
+        <button
+          class="btn btn-dark btn-lg w-100"
+          (click)="
+            questStatusChange.emit({
+              status: questStatusEnum.PICKING,
+              force: true
+            })
+          "
+        >
+          Escape 🏃
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
 <div
   class="d-flex flex-column gap-2 overflow-x-hidden result-quest-complete h-100 align-items-center justify-content-center"
 >
@@ -236,85 +289,99 @@
   }
 
   <ng-container *ngIf="fightResult">
-    <div class="description justify-content-center">
-      <p urTitle>{{ victory ? 'Victory!' : 'Defeat!' }}</p>
-    </div>
+    @if (questResultLayout == 'GANKED' && !!fightResult.ganked) {
+      <ng-container *ngTemplateOutlet="ganked"></ng-container>
+    } @else {
+      <div class="description justify-content-center">
+        <p urTitle>{{ victory ? 'Victory!' : 'Defeat!' }}</p>
+      </div>
 
-    <div
-      class="row pb-4"
-      *ngIf="
-        fightResult.player?.level > player.level ||
-        fightResult.loot ||
-        fightResult.lostLoot ||
-        fightResult.consumableLoot ||
-        fightResult.consumableLostLoot ||
-        fightResult.materialLoot ||
-        fightResult.materialLostLoot ||
-        fightResult.miscellanyLoot ||
-        fightResult.miscellanyLostLoot
-      "
-    >
       <div
-        *ngIf="fightResult.player?.level > player.level"
-        class="col pb-md-4 col-12 d-flex flex-column gap-2"
+        class="row pb-4"
+        *ngIf="
+          fightResult.player?.level > player.level || thereIsLoot(fightResult)
+        "
       >
-        <span #levelUp urSubtitle class="text-rainbow text-center"
-          >LEVEL UP!</span
+        <div
+          *ngIf="fightResult.player?.level > player.level"
+          class="col pb-md-4 col-12 d-flex flex-column gap-2"
         >
-        <span urText class="text-white text-center"
-          >Level {{ player.level }} → {{ fightResult.player.level }}</span
+          <span #levelUp urSubtitle class="text-rainbow text-center"
+            >LEVEL UP!</span
+          >
+          <span urText class="text-white text-center"
+            >Level {{ player.level }} → {{ fightResult.player.level }}</span
+          >
+          <span urText class="text-white text-center"
+            >Health {{ player.stats.health }} →
+            {{ player.stats.health + 5 }}</span
+          >
+          <span urText class="text-white text-center"
+            >Attack {{ player.stats.damage }} →
+            {{ player.stats.damage + 2 }}</span
+          >
+          <span urText class="text-white text-center"
+            >Defense {{ player.stats.armor }} →
+            {{ player.stats.armor + 2 }}</span
+          >
+        </div>
+
+        <div
+          class="col col-12 d-flex flex-column"
+          *ngIf="thereIsLoot(fightResult)"
         >
-        <span urText class="text-white text-center"
-          >Health {{ player.stats.health }} →
-          {{ player.stats.health + 5 }}</span
-        >
-        <span urText class="text-white text-center"
-          >Attack {{ player.stats.damage }} →
-          {{ player.stats.damage + 2 }}</span
-        >
-        <span urText class="text-white text-center"
-          >Defense {{ player.stats.armor }} → {{ player.stats.armor + 2 }}</span
-        >
+          <ng-container *ngTemplateOutlet="lootWonDisplay"></ng-container>
+          <ng-container *ngTemplateOutlet="lootLostDisplay"></ng-container>
+        </div>
       </div>
 
-      <div class="col col-12 d-flex flex-column gap-2">
-        <ng-container *ngTemplateOutlet="lootWonDisplay"></ng-container>
-        <ng-container *ngTemplateOutlet="lootLostDisplay"></ng-container>
-      </div>
-    </div>
+      <span urText *ngIf="fightResult.exp" class="text-white pb-2"
+        >You gained
+        <span class="text-secondary">{{ fightResult.exp }}</span>
+        experience</span
+      >
+      <span urText *ngIf="fightResult.uruks" class="text-white pb-2"
+        >You gained
+        <span class="text-secondary">{{ fightResult.uruks }}</span> Uruks</span
+      >
+      <span urText class="text-white pb-2" *ngIf="!!fightResult.newQuest"
+        >{{
+          fightResult?.newQuest?.data?.isAdventurePhase
+            ? fightResult.newQuest.data.lost
+              ? "Don't surrender, try it again! 💪"
+              : 'New adventure phase unlocked:'
+            : 'New quest unlocked:'
+        }}
+        <span
+          [ngStyle]="{
+            color: getRarityColor(fightResult?.newQuest?.data?.rarity)
+          }"
+          >{{ fightResult?.newQuest?.data?.name }}</span
+        ></span
+      >
 
-    <span urText *ngIf="fightResult.exp" class="text-white pb-2"
-      >You gained
-      <span class="text-secondary">{{ fightResult.exp }}</span> experience</span
-    >
-    <span urText *ngIf="fightResult.uruks" class="text-white pb-2"
-      >You gained
-      <span class="text-secondary">{{ fightResult.uruks }}</span> Uruks</span
-    >
-    <span urText class="text-white pb-2" *ngIf="!!fightResult.newQuest"
-      >{{
-        fightResult?.newQuest?.data?.isAdventurePhase
-          ? fightResult.newQuest.data.lost
-            ? "Don't surrender, try it again! 💪"
-            : 'New adventure phase unlocked:'
-          : 'New quest unlocked:'
-      }}
       <span
-        [ngStyle]="{
-          color: getRarityColor(fightResult?.newQuest?.data?.rarity)
-        }"
-        >{{ fightResult?.newQuest?.data?.name }}</span
-      ></span
-    >
-    <span
-      urText
-      class="text-white pb-2"
-      *ngIf="!!fightResult.completedAdventure"
-    >
-      Congratulations! You have completed an adventure!
-    </span>
-    <div class="pb-2">
-      <ng-container *ngTemplateOutlet="pickingButton"></ng-container>
-    </div>
+        urText
+        class="text-white pb-2"
+        *ngIf="!!fightResult.completedAdventure"
+      >
+        Congratulations! You have completed an adventure!
+      </span>
+      <div class="pb-2">
+        @if (!!fightResult.ganked) {
+          <div class="d-flex flex-column">
+            <span class="text-warning">You find yourself in trouble...</span>
+            <button
+              class="btn btn-primary btn-lg animate__animated animate__pulse animate__infinite"
+              (click)="continueTrouble()"
+            >
+              Discover more
+            </button>
+          </div>
+        } @else {
+          <ng-container *ngTemplateOutlet="pickingButton"></ng-container>
+        }
+      </div>
+    }
   </ng-container>
 </div>
