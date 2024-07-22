@@ -116,18 +116,18 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
     this.materialUpdated$.next(true);
     const random = Math.floor(Math.random() * 5);
     if (random === 0) {
-      this.triggerDialog('Light weight ... Yeah buddy! 🛠️', 1500);
+      this.triggerDialog('Light weight ... Yeah buddy! 🛠️', 2500);
     } else if (random === 1) {
-      this.triggerDialog(`Ain't nuttin' to it, but ta do it!😎`, 1500);
+      this.triggerDialog(`Ain't nuttin' to it, but ta do it!😎`, 2500);
     } else if (random === 2) {
-      this.triggerDialog("Ain't nothin' but a peanut", 1500);
+      this.triggerDialog("Ain't nothin' but a peanut", 2500);
     } else if (random === 3) {
       this.triggerDialog(
         `Give it to me, and I will forge something nice!.🛠️😎`,
-        1500
+        2500
       );
     } else if (random === 4) {
-      this.triggerDialog(`That orc aint nothing but a goblin! 😎`, 1500);
+      this.triggerDialog(`That orc aint nothing but a goblin! 😎`, 2500);
     }
 
     this.store.dispatch(new RefreshPlayer());

@@ -47,3 +47,22 @@
     max-width: 700px;
   }
 }
+
+.bonus-items {
+  @include media-breakpoint-up(sm) {
+    font-size: xx-large;
+  }
+}
+p {
+  text-align: center;
+}
+
+.possible-drops {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  @include media-breakpoint-down(sm) {
+    max-height: 250px;
+    overflow: auto;
+  }
+}

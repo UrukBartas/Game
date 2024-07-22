@@ -11,8 +11,12 @@ import { ItemBoxComponent } from '../item-box/item-box.component';
 import { Item } from 'src/modules/core/models/items.model';
 import { ItemTooltipComponent } from '../item-tooltip/item-tooltip.component';
 import { Store } from '@ngxs/store';
-import { GenericItemTooltipComponent } from '../generic-item-tooltip/generic-item-tooltip.component';
+import {
+  GenericItem,
+  GenericItemTooltipComponent,
+} from '../generic-item-tooltip/generic-item-tooltip.component';
 import { SoundService } from 'src/services/sound.service';
+import { getGenericItemItemData } from 'src/modules/utils';
 
 @Component({
   selector: 'app-item-roulette',
@@ -27,24 +31,28 @@ import { SoundService } from 'src/services/sound.service';
   styleUrl: './item-roulette.component.scss',
 })
 export class ItemRouletteComponent {
-  @Input() items: Item[] = [];
-  displayedItems: Item[] = [];
+  @Input() items: any[] = [];
+  displayedItems: any[] = [];
   @Input() resultItem: Item;
+  @Input() duplicateItemsSize = 20;
   translateX: number = 0;
   interval: any;
   store = inject(Store);
-  sound = inject(SoundService)
+  sound = inject(SoundService);
 
   @Output() spinEnded = new EventEmitter<void>();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!!changes['items'].currentValue) {
-      this.displayedItems = this.repeatItems(this.items, 20); // Repetir ítems para simular infinitos
+      this.displayedItems = this.repeatItems(
+        this.items,
+        this.duplicateItemsSize
+      ); // Repetir ítems para simular infinitos
     }
   }
 
-  repeatItems(items: Item[], times: number): Item[] {
-    let repeatedItems: Item[] = [];
+  repeatItems(items: any[], times: number): any[] {
+    let repeatedItems: any[] = [];
     for (let i = 0; i < times; i++) {
       repeatedItems = repeatedItems.concat(items);
     }
@@ -56,7 +64,7 @@ export class ItemRouletteComponent {
       console.error('resultItem no está definido');
       return;
     }
-    this.sound.playSound('assets/sounds/roulette.mp3')
+    this.sound.playSound('assets/sounds/roulette.mp3');
 
     const itemWidth = 100; // Ancho del ítem
     const gap = 20; // Gap entre ítems
@@ -70,7 +78,12 @@ export class ItemRouletteComponent {
     let minDistance = Number.MAX_VALUE;
 
     for (let i = centerIndex; i < this.displayedItems.length; i++) {
-      if (this.displayedItems[i].itemData.id === this.resultItem.itemData.id) {
+      const compareId =
+        getGenericItemItemData(this.displayedItems[i])?.id ??
+        this.displayedItems[i]?.id;
+      const resultItemCompareId = getGenericItemItemData(this.resultItem)?.id;
+
+      if (compareId === resultItemCompareId) {
         const distance = Math.abs(i - centerIndex);
         if (distance < minDistance) {
           minDistance = distance;
@@ -94,7 +107,7 @@ export class ItemRouletteComponent {
         requestAnimationFrame(step);
       } else {
         this.translateX = -finalOffset; // Asegurarse de que termina en la posición exacta
-        this.spinEnded.emit()
+        this.spinEnded.emit();
       }
     };
 

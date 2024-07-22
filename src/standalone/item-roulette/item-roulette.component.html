@@ -5,13 +5,18 @@
   >
     <div *ngFor="let item of displayedItems" class="item">
       <app-item-box
-        [rarity]="item.itemData.rarity"
+        [rarity]="item?.itemData?.rarity ?? item.rarity"
         [height]="100"
         [width]="100"
-        [image]="item.itemData.imageLocal"
+        [image]="item?.itemData?.imageLocal ?? item.imageLocal"
       >
         <div tooltip class="tooltip-uruk">
-          <app-item-tooltip [item]="item"></app-item-tooltip>
+          @if (!!item.itemData) {
+            <app-item-tooltip [item]="item"></app-item-tooltip>
+          } @else {
+           <app-generic-item-tooltip [item]="item"></app-generic-item-tooltip>
+          }
+
         </div>
       </app-item-box>
     </div>

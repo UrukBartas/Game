@@ -21,7 +21,7 @@ function blendColors(color: string, percent: number): string {
   );
 }
 
-export function getRarityColor(rarity: Rarity , percent = 0): string {
+export function getRarityColor(rarity: Rarity, percent = 0): string {
   const baseColor = (() => {
     switch (rarity) {
       default:
@@ -39,6 +39,16 @@ export function getRarityColor(rarity: Rarity , percent = 0): string {
   })();
 
   return blendColors(baseColor, percent);
+}
+
+export function getGenericItemItemData(item: any) {
+  return (
+    item?.itemData ??
+    item?.miscellanyItemData ??
+    item?.consumableData ??
+    item?.materialData ??
+    null
+  );
 }
 
 export function getRarityText(rarity: Rarity): string {

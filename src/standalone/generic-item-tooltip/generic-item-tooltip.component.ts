@@ -6,7 +6,11 @@ import { MaterialData } from 'src/modules/core/models/material.model';
 import { MiscellanyItemData } from 'src/modules/core/models/misc.model';
 import { getRarityColor } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
-
+export type GenericItem =
+  | ConsumableData
+  | MaterialData
+  | (MiscellanyItemData & { price?: any })
+  | (ItemData & { price?: any });
 @Component({
   selector: 'app-generic-item-tooltip',
   standalone: true,
@@ -15,11 +19,7 @@ import { ViewportService } from 'src/services/viewport.service';
   styleUrl: './generic-item-tooltip.component.scss',
 })
 export class GenericItemTooltipComponent {
-  @Input() item:
-    | ConsumableData
-    | MaterialData
-    | (MiscellanyItemData & { price?: any })
-    | (ItemData & { price?: any });
+  @Input() item: GenericItem;
   @Input() showPrice = false;
   @Input() customTemplate: TemplateRef<any>;
 
