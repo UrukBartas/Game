@@ -20,6 +20,7 @@ export interface Item {
   crit?: number | null;
   block?: number | null;
   accuracy?: number | null;
+  item_rarity_stat?: number | null;
 
   equipped: boolean;
   enabled: boolean;
