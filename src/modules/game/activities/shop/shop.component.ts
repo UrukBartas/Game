@@ -203,7 +203,10 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
         const config: ModalOptions = {
           initialState: {
             title: 'Premium Roll',
-            description: `With each roll your chances for rarer items improve! \nNumber of rolls: ${rollData.rollNumber} \nNext item pool is: ${this.getItemsPoolByRolls(rollData.rollNumber)} \nCurrent roll price is at: ${rollData.price} \n\n Do you want to roll?`,
+            description: `With each roll your chances for rarer items improve! <br>
+            Number of rolls: <strong class='text-third'>${rollData.rollNumber} </strong> <br>
+            Current roll price is at: <strong class='text-third'>${rollData.price}</strong> <br>
+            Do you want to roll?`,
             accept: async () => {
               const actualUruks = await firstValueFrom(
                 this.player$.pipe(map((player) => player.uruks))
@@ -238,16 +241,6 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
         };
         const modalRef = this.modalService.show(ConfirmModalComponent, config);
       });
-  }
-
-  private getItemsPoolByRolls(rolls: number) {
-    if (rolls < 5) {
-      return 'COMMON, UNCOMMON, EPIC';
-    } else if (rolls > 4 && rolls < 10) {
-      return 'COMMON, UNCOMMON, EPIC, \nLEGENDARY';
-    } else {
-      return 'COMMON, UNCOMMON, EPIC, \nLEGENDARY, MYTHIC';
-    }
   }
 
   private showRareRollDialog() {
