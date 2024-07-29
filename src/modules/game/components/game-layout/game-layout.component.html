@@ -22,7 +22,7 @@
   <div class="d-flex flex-column h-100">
     <div
       *ngIf="(state$ | async).player as player"
-      class="topbar d-flex justify-content-center px-3 py-2 overflow-hidden {{
+      class="topbar d-flex justify-content-between align-items-center px-4 py-2 overflow-hidden {{
         !isSidebarOpened() ? 'content-extended' : 'content-collapsed'
       }}"
     >
@@ -38,7 +38,7 @@
       </ng-template>
 
       <div
-        class="uruks gap-2 px-4"
+        class="uruks gap-2"
         [ngbTooltip]="uruks"
         [tooltipContext]="{
           uruks: player.uruks
@@ -49,6 +49,7 @@
           player.uruks | compressNumber
         }}</span>
       </div>
+
       <app-progress-bar
         class="px-2"
         barClass="shadow"
@@ -56,6 +57,7 @@
         [text]="getProgressBarData(player).text"
         [style.height]="getProgressBarHeight() + 'px'"
       ></app-progress-bar>
+
       <div class="d-flex d-sm-none">
         <ng-container
           *ngTemplateOutlet="
@@ -66,7 +68,26 @@
           "
         ></ng-container>
       </div>
-      <span urText class="level text-white px-4">Level {{ player.level }}</span>
+
+      <ng-template #playerTemplate let-player="player">
+        <div class="px-3 py-2 mb-0 player">
+          <p>{{ player.name }}</p>
+          <p>Level: {{ player.level }}</p>
+        </div>
+      </ng-template>
+
+      <app-item-box
+        class="rounded"
+        [height]="getPlayerImageSize()"
+        [width]="getPlayerImageSize()"
+        [image]="player.image"
+        [ngbTooltip]="playerTemplate"
+        [tooltipContext]="{
+          player: player
+        }"
+      ></app-item-box>
+
+      <!-- <span urText class="level text-white px-4">Level {{ player.level }}</span> -->
     </div>
     <div
       class="container-fluid h-100 d-flex justify-content-center overflow-x-hidden align-items-center p-2 p-md-3 p-lg-4 content {{

@@ -21,7 +21,7 @@ function blendColors(color: string, percent: number): string {
   );
 }
 
-export function getRarityColor(rarity: Rarity , percent = 0): string {
+export function getRarityColor(rarity: Rarity, percent = 0): string {
   const baseColor = (() => {
     switch (rarity) {
       default:

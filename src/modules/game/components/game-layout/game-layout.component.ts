@@ -161,4 +161,15 @@ export class GameLayoutComponent {
         return 20;
     }
   }
+
+  public getPlayerImageSize() {
+    if (
+      this.viewportService.screenSize === 'xs' ||
+      this.viewportService.screenSize === 'sm' ||
+      this.viewportService.screenSize === 'md'
+    ) {
+      return 32;
+    }
+    return 50;
+  }
 }

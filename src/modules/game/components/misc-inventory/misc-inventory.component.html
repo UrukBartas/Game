@@ -1,19 +1,44 @@
+<ng-template
+  #chanceDisplayer
+  let-type="type"
+  let-rarity="rarity"
+  let-chance="chance"
+  let-image="image"
+>
+  <app-item-box
+    class="{{ rarity }}"
+    [height]="100"
+    [width]="100"
+    [stack]="chance * 100 + ' %'"
+    [rarity]="rarity"
+    [image]="image"
+  >
+    <div tooltip class="tooltip-uruk p-2">
+      <p class="mb-0" [ngStyle]="{ color: getRarityColor(rarity) }">
+        {{ chance * 100 + '% of getting a ' + camelCase(rarity) + ' item' }}
+      </p>
+    </div>
+  </app-item-box>
+</ng-template>
+
 <ng-template #statsLootbox>
-  <div class="stats-info-lootbox py-4">
-    <p
-      class="mb-0"
-      *ngFor="
-        let distribution of parsePossibilities(lootboxPossibilities$() | async)
-      "
-      [ngStyle]="{ color: getRarityColor(distribution.rarity) }"
-    >
-      {{
-        distribution.value * 100 +
-          '% of getting a ' +
-          camelCase(distribution.rarity) +
-          ' item'
-      }}
-    </p>
+  <div
+    class="stats-info-lootbox my-4 p-2"
+    *ngIf="parsePossibilities(lootboxPossibilities$() | async) as possibilities"
+  >
+    <ng-container *ngFor="let distribution of possibilities">
+      <ng-container
+        *ngTemplateOutlet="
+          chanceDisplayer;
+          context: {
+            type: itemType.Item,
+            rarity: distribution.rarity,
+            chance: distribution.value,
+            image: distribution.image
+          }
+        "
+      ></ng-container>
+    </ng-container>
   </div>
 </ng-template>
 

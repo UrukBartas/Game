@@ -33,6 +33,8 @@ import { BaseInventoryComponent } from '../base-inventory/base-inventory.compone
 import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
 import { StatsService } from 'src/services/stats.service';
 import { camelCase } from 'lodash';
+import { ItemTypeSC } from '../../activities/export-import-nft/enums/ItemTypesSC';
+import { Memoize } from 'lodash-decorators';
 export interface MiscWithStack extends MiscellanyItem {
   stack?: number;
 }
@@ -74,6 +76,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   public getRarityColor = getRarityColor;
   public getRarityText = getRarityText;
 
+  public itemType = ItemTypeSC;
   public roll: {
     spinWheelItems: Array<Item>;
     resultItem: Item;
@@ -182,16 +185,36 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
     if (!rarity || !distributions) return null;
     return Object.entries(distributions[rarity]);
   }
-
-  public parsePossibilities(possibilities: any) {
+  @Memoize()
+  public parsePossibilities(itemPossibilities: any) {
     const rarity = this.openingItem().miscellanyItemData.rarity;
-    if (!rarity || !possibilities) return null;
-    return Object.keys(possibilities[rarity]).map((key) => {
-      return {
-        rarity: key as Rarity,
-        value: possibilities[rarity][key] as number,
-      };
-    });
+    if (!rarity || !itemPossibilities) return null;
+    return Object.keys(itemPossibilities[rarity])
+      .map((key) => {
+        return {
+          rarity: key as Rarity,
+          value: itemPossibilities[rarity][key] as number,
+          image: this.getImageBasedOnType(0, key as Rarity),
+        };
+      })
+      .filter((entry) => entry.value > 0);
+  }
+  public getImageBasedOnType(itemType: ItemTypeSC, rarity: Rarity): string {
+    let path = '';
+    let possibleItems = Object.keys(ItemType).map((itemType) =>
+      itemType.toLowerCase()
+    );
+
+    if (itemType == ItemTypeSC.Item) {
+      const randomIndex = Math.floor(Math.random() * possibleItems.length);
+      let randomItem = possibleItems[randomIndex];
+      if (randomItem.toLowerCase().includes('weapon')) {
+        randomItem = 'weapon';
+      }
+      path = `assets/items/${randomItem}/${rarity.toLowerCase()}/1.webp`;
+    }
+
+    return path;
   }
 
   getResponsiveButtonSize() {

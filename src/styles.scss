@@ -351,11 +351,19 @@ app-adventures {
   color: $red !important;
 }
 
-app-inventory{
-  app-only-stats{
-    li{
+app-inventory {
+  app-only-stats {
+    li {
       font-size: 0.8rem !important;
     }
   }
+}
 
+app-item-box.rounded {
+  div {
+    border-radius: 50% !important;
+    img {
+      border-radius: 50% !important;
+    }
+  }
 }
