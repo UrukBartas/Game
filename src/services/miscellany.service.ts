@@ -17,8 +17,17 @@ export class MiscellanyService extends ApiBaseService {
   public openLootbox(lootboxId: number): Observable<{
     spinWheelItems: Array<Item>;
     resultItem: Item;
+    bonusDrops: Array<any>;
   }> {
     return this.get('/open-lootbox/' + lootboxId);
+  }
+
+  public openMoneyBag(moneyBagId: number): Observable<{}> {
+    return this.get('/open-money-bag/' + moneyBagId);
+  }
+
+  public openItemsSet(itemsSetId: number): Observable<Array<Item>> {
+    return this.get('/open-items-set/' + itemsSetId);
   }
 
   public activatePortrait(portraitId: number): Observable<void> {

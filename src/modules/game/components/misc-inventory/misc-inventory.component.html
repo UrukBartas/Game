@@ -1,44 +1,110 @@
 <ng-template
   #chanceDisplayer
-  let-type="type"
   let-rarity="rarity"
   let-chance="chance"
   let-image="image"
+  let-type="type"
 >
-  <app-item-box
-    class="{{ rarity }}"
-    [height]="100"
-    [width]="100"
-    [stack]="chance * 100 + ' %'"
-    [rarity]="rarity"
-    [image]="image"
-  >
-    <div tooltip class="tooltip-uruk p-2">
-      <p class="mb-0" [ngStyle]="{ color: getRarityColor(rarity) }">
-        {{ chance * 100 + '% of getting a ' + camelCase(rarity) + ' item' }}
-      </p>
-    </div>
-  </app-item-box>
+  <div class="wrapper-chance-displayer">
+    <app-item-box
+      class="{{ rarity }} chance-displayer"
+      [height]="getPossibleDropsSize()"
+      [width]="getPossibleDropsSize()"
+      [rarity]="rarity"
+      [image]="image"
+    >
+      <div tooltip class="tooltip-uruk p-2">
+        <p class="mb-0" [ngStyle]="{ color: getRarityColor(rarity) }">
+          {{
+            (chance * 100).toFixed(2) +
+              '% of getting a ' +
+              camelCase(rarity) +
+              ' ' +
+              type
+          }}
+        </p>
+      </div>
+    </app-item-box>
+    <span class="text-light">{{ (chance * 100).toFixed(2) + ' %' }}</span>
+  </div>
 </ng-template>
 
 <ng-template #statsLootbox>
-  <div
-    class="stats-info-lootbox my-4 p-2"
-    *ngIf="parsePossibilities(lootboxPossibilities$() | async) as possibilities"
-  >
-    <ng-container *ngFor="let distribution of possibilities">
+  <div class="stats-info-lootbox my-4 p-2">
+    @if (openingItem().miscellanyItemData.itemType == 'ComboLootbox') {
       <ng-container
-        *ngTemplateOutlet="
-          chanceDisplayer;
-          context: {
-            type: itemType.Item,
-            rarity: distribution.rarity,
-            chance: distribution.value,
-            image: distribution.image
-          }
+        *ngIf="
+          parsePossibilitiesComboBox(
+            lootboxPossibilities$() | async
+          ) as possibilitiesComboBox
         "
-      ></ng-container>
-    </ng-container>
+      >
+        <ng-container
+          *ngTemplateOutlet="
+            chanceDisplayer;
+            context: {
+              rarity: 'EPIC',
+              chance: possibilitiesComboBox.Portraits.toFixed(2),
+              image: pathPortrait,
+              type: 'portrait'
+            }
+          "
+        ></ng-container>
+
+        <ng-container
+          *ngTemplateOutlet="
+            chanceDisplayer;
+            context: {
+              rarity: 'EPIC',
+              chance: possibilitiesComboBox.Materials.toFixed(2),
+              image: pathMaterial,
+              type: 'material'
+            }
+          "
+        ></ng-container>
+
+        <ng-container *ngFor="let item of possibilitiesComboBox.Others">
+          <ng-container
+            *ngTemplateOutlet="
+              chanceDisplayer;
+              context: {
+                rarity: item.rarity,
+                chance: item.value,
+                image: item.image,
+                type: item.type
+              }
+            "
+          ></ng-container>
+        </ng-container>
+
+        <p
+          class="mb-0 bonus-items text-third"
+          *ngIf="possibilitiesComboBox.Bonus > 0"
+        >
+          + {{ possibilitiesComboBox.Bonus }} bonus items guaranteed.
+        </p>
+      </ng-container>
+    } @else {
+      <ng-container
+        *ngFor="
+          let distribution of parsePossibilities(
+            lootboxPossibilities$() | async
+          )
+        "
+      >
+        <ng-container
+          *ngTemplateOutlet="
+            chanceDisplayer;
+            context: {
+              type: 'item',
+              rarity: distribution.rarity,
+              chance: distribution.value,
+              image: distribution.image
+            }
+          "
+        ></ng-container>
+      </ng-container>
+    }
   </div>
 </ng-template>
 
@@ -86,6 +152,93 @@
   </div>
 </ng-template>
 
+<ng-template #itemSetOpener let-item="data">
+  <div class="result-item-showcase" [ngClass]="{ 'd-none': currentPhase != 0 }">
+    <div
+      class="animate__animated animate__jackInTheBox delay_4 wrapper-lootbox"
+    >
+      <i
+        class="fa-regular fa-circle-xmark text-white"
+        (click)="endPhases()"
+      ></i>
+      <app-item-box
+        #itemResult
+        #result
+        [height]="200"
+        [width]="200"
+        [image]="item?.lootbox?.miscellanyItemData?.imageLocal"
+      >
+        <div tooltip class="tooltip-uruk" *ngIf="!!item?.lootbox">
+          <app-generic-item-tooltip
+            [item]="item?.lootbox?.miscellanyItemData"
+          ></app-generic-item-tooltip>
+        </div>
+      </app-item-box>
+    </div>
+    <div class="final-result-wrapper px-3 text-center">
+      <!-- <span urTitle class="text-secondary mt-3"
+        >✨ Congratulations on
+        {{ getGenericItemItemData(roll?.resultItem)?.name }}</span
+      >-->
+      <span urTitle class="text-third mt-3"> Possible drops </span>
+      <div class="d-flex justify-content-center gap-2 possible-drops">
+        <app-item-box
+          *ngFor="let possibleResult of item?.possibleResults"
+          #itemResult
+          #result
+          [height]="getPossibleDropsSize()"
+          [width]="getPossibleDropsSize()"
+          [image]="possibleResult?.imageLocal"
+        >
+          <div tooltip class="tooltip-uruk" *ngIf="!!possibleResult">
+            <app-item-tooltip [item]="possibleResult | itemdataToItem">
+            </app-item-tooltip>
+          </div>
+        </app-item-box>
+      </div>
+    </div>
+    <button
+      (click)="openItemsSetBox()"
+      urTitle
+      class="button-rainbow mt-3"
+      [style.padding]="getResponsiveButtonSize()"
+    >
+      Click to open
+    </button>
+  </div>
+  <div class="result-item-showcase" [ngClass]="{ 'd-none': currentPhase != 1 }">
+    <div
+      class="final-result-wrapper px-3 text-center animate__animated animate__jackInTheBox delay_4 wrapper-lootbox"
+    >
+      <span urTitle class="text-secondary mt-3">✨ Congratulations </span>
+      <span
+        [ngStyle]="{
+          color: getRarityColor(openingItem()?.miscellanyItemData?.rarity)
+        }"
+        >Inside the box you find yourself a full set of items of rarity
+        {{ openingItem()?.miscellanyItemData?.rarity }}!</span
+      >
+      <div class="d-flex justify-content-center gap-2 possible-drops">
+        <app-item-box
+          *ngFor="let item of resultItemSet"
+          #itemResult
+          #result
+          [height]="getPossibleDropsSize()"
+          [width]="getPossibleDropsSize()"
+          [image]="item?.itemData?.imageLocal"
+        >
+          <div tooltip class="tooltip-uruk" *ngIf="!!item">
+            <app-item-tooltip [item]="item"> </app-item-tooltip>
+          </div>
+        </app-item-box>
+      </div>
+      <button class="btn-primary btn" urTitle (click)="endPhases()">
+        Close
+      </button>
+    </div>
+  </div>
+</ng-template>
+
 <ng-template #lootboxOpener let-item="data">
   <div class="first-phase" [ngClass]="{ 'd-none': currentPhase != 0 }">
     <div class="wrapper-lootbox">
@@ -119,6 +272,7 @@
   <div class="second-phase" [ngClass]="{ 'd-none': currentPhase != 1 }">
     <app-item-roulette
       #itemRoulette
+      [duplicateItemsSize]="(roll?.spinWheelItems ?? []).length > 100 ? 2 : 20"
       [items]="roll?.spinWheelItems ?? []"
       [resultItem]="roll?.resultItem"
       (spinEnded)="spinEndedHandle()"
@@ -138,33 +292,77 @@
           #result
           [height]="200"
           [width]="200"
-          [image]="
-            roll?.resultItem ? roll.resultItem?.itemData.imageLocal : null
-          "
+          [stack]="roll?.resultItem?.quantity | compressNumber"
+          [image]="getGenericItemItemData(roll?.resultItem)?.imageLocal"
         >
           <div tooltip class="tooltip-uruk" *ngIf="!!roll?.resultItem">
-            <app-item-tooltip
-              [item]="roll?.resultItem"
-              [compareWith]="
-                getItem$(roll.resultItem.itemData.itemType) | async
-              "
-            ></app-item-tooltip>
-            <app-item-tooltip
-              *ngIf="
-                getShowItemCompare() &&
-                  getItem$(roll.resultItem.itemData.itemType)
-                  | async as comparedItem
-              "
-              [item]="comparedItem"
-              [isBeingCompared]="true"
-            ></app-item-tooltip>
+            @if (!!roll?.resultItem && roll.resultItem.itemData) {
+              <app-item-tooltip
+                [item]="roll?.resultItem"
+                [compareWith]="
+                  getItem$(roll.resultItem.itemData.itemType) | async
+                "
+              ></app-item-tooltip>
+              <app-item-tooltip
+                *ngIf="
+                  getShowItemCompare() &&
+                    getItem$(roll.resultItem.itemData.itemType)
+                    | async as comparedItem
+                "
+                [item]="comparedItem"
+                [isBeingCompared]="true"
+              ></app-item-tooltip>
+            } @else {
+              <app-generic-item-tooltip
+                [item]="getGenericItemItemData(roll?.resultItem)"
+              ></app-generic-item-tooltip>
+            }
           </div>
         </app-item-box>
       </div>
       <div class="final-result-wrapper px-3 text-center">
         <span urTitle class="text-secondary mt-3"
-          >✨ Congratulations on {{ roll?.resultItem?.itemData?.name }}</span
+          >✨ Congratulations on
+          {{ getGenericItemItemData(roll?.resultItem)?.name }}</span
         >
+        @if (roll?.bonusDrops?.length > 0) {
+          <span urTitle class="text-third mt-3"> ++ BONUS DROP </span>
+          <div class="d-flex justify-content-center gap-2">
+            <app-item-box
+              *ngFor="let bonusDrop of roll.bonusDrops"
+              #itemResult
+              #result
+              [height]="100"
+              [width]="100"
+              [stack]="bonusDrop?.quantity | compressNumber"
+              [image]="getGenericItemItemData(bonusDrop)?.imageLocal"
+            >
+              <div tooltip class="tooltip-uruk" *ngIf="!!bonusDrop">
+                @if (!!bonusDrop && bonusDrop.itemData) {
+                  <app-item-tooltip
+                    [item]="bonusDrop"
+                    [compareWith]="
+                      getItem$(bonusDrop.itemData.itemType) | async
+                    "
+                  ></app-item-tooltip>
+                  <app-item-tooltip
+                    *ngIf="
+                      getShowItemCompare() &&
+                        getItem$(bonusDrop.itemData.itemType)
+                        | async as comparedItem
+                    "
+                    [item]="comparedItem"
+                    [isBeingCompared]="true"
+                  ></app-item-tooltip>
+                } @else {
+                  <app-generic-item-tooltip
+                    [item]="getGenericItemItemData(bonusDrop)"
+                  ></app-generic-item-tooltip>
+                }
+              </div>
+            </app-item-box>
+          </div>
+        }
       </div>
     </div>
   </div>
@@ -173,9 +371,30 @@
 <ng-template #contextOptions let-data="data">
   <ul
     class="list-options"
-    *ngIf="data.miscellanyItemData.itemType == 'Lootbox'"
+    *ngIf="
+      data.miscellanyItemData.itemType == 'Lootbox' ||
+      data.miscellanyItemData.itemType == 'ComboLootbox'
+    "
   >
     <li (click)="open(data); contextMenuService.hideContextMenu()">Open</li>
+  </ul>
+
+  <ul
+    class="list-options"
+    *ngIf="data.miscellanyItemData.itemType == 'MoneyBag'"
+  >
+    <li (click)="openBag(data); contextMenuService.hideContextMenu()">
+      Open bag
+    </li>
+  </ul>
+
+  <ul
+    class="list-options"
+    *ngIf="data.miscellanyItemData.itemType == 'ItemSet'"
+  >
+    <li (click)="openItemsSet(data); contextMenuService.hideContextMenu()">
+      Open
+    </li>
   </ul>
 
   <ul
@@ -193,7 +412,7 @@
   [disableSort]="true"
   [(searchTerm)]="searchTerm"
 ></app-inventory-topbar>
-<div class="misc-inventory">
+<div class="misc-inventory" #inventory>
   <app-item-box
     *ngFor="let item of filteredItems"
     (contextmenu)="

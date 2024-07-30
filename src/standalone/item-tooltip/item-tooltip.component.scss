@@ -18,6 +18,9 @@
 
   ul {
     min-width: 180px;
+    @include media-breakpoint-down(sm) {
+      min-width: unset;
+    }
     padding-left: 0;
     li {
       white-space: nowrap;
