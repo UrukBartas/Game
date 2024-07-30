@@ -1,5 +1,36 @@
+<ng-template
+  #chanceDisplayer
+  let-rarity="rarity"
+  let-chance="chance"
+  let-image="image"
+  let-type="type"
+>
+  <div class="wrapper-chance-displayer">
+    <app-item-box
+      class="{{ rarity }} chance-displayer"
+      [height]="getPossibleDropsSize()"
+      [width]="getPossibleDropsSize()"
+      [rarity]="rarity"
+      [image]="image"
+    >
+      <div tooltip class="tooltip-uruk p-2">
+        <p class="mb-0" [ngStyle]="{ color: getRarityColor(rarity) }">
+          {{
+            (chance * 100).toFixed(2) +
+              '% of getting a ' +
+              camelCase(rarity) +
+              ' ' +
+              type
+          }}
+        </p>
+      </div>
+    </app-item-box>
+    <span class="text-light">{{ (chance * 100).toFixed(2) + ' %' }}</span>
+  </div>
+</ng-template>
+
 <ng-template #statsLootbox>
-  <div class="stats-info-lootbox p-2">
+  <div class="stats-info-lootbox my-4 p-2">
     @if (openingItem().miscellanyItemData.itemType == 'ComboLootbox') {
       <ng-container
         *ngIf="
@@ -8,36 +39,43 @@
           ) as possibilitiesComboBox
         "
       >
-        <p
-          class="mb-0"
-          *ngFor="let possibilityComboBoxOther of possibilitiesComboBox.Others"
-          [ngStyle]="{ color: getRarityColor(possibilityComboBoxOther.rarity) }"
-        >
-          {{
-            (possibilityComboBoxOther.value * 100).toFixed(2) +
-              '% of getting a ' +
-              mapItemTypesToReadable[possibilityComboBoxOther.key]
-          }}
-        </p>
+        <ng-container
+          *ngTemplateOutlet="
+            chanceDisplayer;
+            context: {
+              rarity: 'EPIC',
+              chance: possibilitiesComboBox.Portraits.toFixed(2),
+              image: pathPortrait,
+              type: 'portrait'
+            }
+          "
+        ></ng-container>
 
-        <p
-          class="mb-0 text-warning"
-          *ngIf="possibilitiesComboBox.Portraits > 0"
-        >
-          {{
-            (possibilitiesComboBox.Portraits * 100).toFixed(2) +
-              ' % of getting a portrait'
-          }}
-        </p>
-        <p
-          class="mb-0 text-warning"
-          *ngIf="possibilitiesComboBox.Materials > 0"
-        >
-          {{
-            (possibilitiesComboBox.Materials * 100).toFixed(2) +
-              ' % of getting a material'
-          }}
-        </p>
+        <ng-container
+          *ngTemplateOutlet="
+            chanceDisplayer;
+            context: {
+              rarity: 'EPIC',
+              chance: possibilitiesComboBox.Materials.toFixed(2),
+              image: pathMaterial,
+              type: 'material'
+            }
+          "
+        ></ng-container>
+
+        <ng-container *ngFor="let item of possibilitiesComboBox.Others">
+          <ng-container
+            *ngTemplateOutlet="
+              chanceDisplayer;
+              context: {
+                rarity: item.rarity,
+                chance: item.value,
+                image: item.image,
+                type: item.type
+              }
+            "
+          ></ng-container>
+        </ng-container>
 
         <p
           class="mb-0 bonus-items text-third"
@@ -47,22 +85,25 @@
         </p>
       </ng-container>
     } @else {
-      <p
-        class="mb-0"
+      <ng-container
         *ngFor="
           let distribution of parsePossibilities(
             lootboxPossibilities$() | async
           )
         "
-        [ngStyle]="{ color: getRarityColor(distribution.rarity) }"
       >
-        {{
-          distribution.value * 100 +
-            '% of getting a ' +
-            camelCase(distribution.rarity) +
-            ' item'
-        }}
-      </p>
+        <ng-container
+          *ngTemplateOutlet="
+            chanceDisplayer;
+            context: {
+              type: itemType.Item,
+              rarity: distribution.rarity,
+              chance: distribution.value,
+              image: distribution.image
+            }
+          "
+        ></ng-container>
+      </ng-container>
     }
   </div>
 </ng-template>

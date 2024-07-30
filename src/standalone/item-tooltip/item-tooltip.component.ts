@@ -5,11 +5,7 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
 import { camelCase } from 'lodash';
 import { map } from 'rxjs';
-import {
-  Item,
-  ItemType,
-  Rarity
-} from 'src/modules/core/models/items.model';
+import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
 import { getRarityColor, getRarityText } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
@@ -30,6 +26,7 @@ export const avoidableStats = [
   'shopItemId',
   'quantity',
   'quantityToExport',
+  'item_rarity_stat',
 ];
 const mapPercentLabels = {
   per_health: 'total health',
@@ -71,6 +68,20 @@ export class ItemTooltipComponent {
   public ceil = Math.ceil;
   public nonPorcentualStatsLength = 0;
   private store = inject(Store);
+
+  public getRarityBasedOnIRI(iri: number) {
+    if (iri <= 20) {
+      return Rarity.COMMON;
+    } else if (iri > 20 && iri <= 40) {
+      return Rarity.UNCOMMON;
+    } else if (iri > 40 && iri <= 60) {
+      return Rarity.EPIC;
+    } else if (iri > 60 && iri <= 80) {
+      return Rarity.LEGENDARY;
+    } else {
+      return Rarity.MYTHIC;
+    }
+  }
 
   public player$ = this.store
     .select(MainState.getState)

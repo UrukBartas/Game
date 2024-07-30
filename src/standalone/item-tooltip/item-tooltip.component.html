@@ -95,6 +95,14 @@
   >
     <div class="d-flex flex-column align-items-center">
       <img class="item-image" [src]="item.itemData?.imageLocal" priority />
+      <span
+        [ngStyle]="{
+          color: getRarityColor(getRarityBasedOnIRI(item.item_rarity_stat))
+        }"
+        class="mt-2"
+        *ngIf="item.item_rarity_stat"
+        ><strong>IRI</strong> {{ item.item_rarity_stat.toFixed(2) }}</span
+      >
     </div>
     <div class="description stat px-3">
       <ul>
