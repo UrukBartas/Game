@@ -93,13 +93,13 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
     }, 250);
   }
 
-  openModal(upgrade: 'melt' | 'upgrade' | 'enchant') {
+  openModal(action: 'melt' | 'upgrade' | 'enchant') {
     const config: ModalOptions = {
       initialState: {
-        upgrade,
+        action,
         items: this.selectedMultipleItems,
         onJobDone: (result) => {
-          if (upgrade == 'upgrade' || upgrade == 'enchant') {
+          if (action == 'upgrade' || action == 'enchant') {
             this.onUpgradeDone(result);
           } else {
             this.onRecycleDone();

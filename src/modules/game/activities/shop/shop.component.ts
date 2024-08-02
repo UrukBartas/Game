@@ -41,19 +41,20 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
     .select(MainState.getState)
     .pipe(map((entry) => entry.player));
 
+  // TODO añadir itemTypes a todos los shopitems desde back
   public displayItemsDependingOnType(items: any) {
     if (!items) return [];
     if (this.selectedTab == '0') {
       return items.filter((entry) => !!entry.itemDataId);
+    } else if (this.selectedTab == '1') {
+      return items.filter(
+        (entry) => !entry.consumableType && !entry.itemDataId && !entry.itemType
+      );
     } else if (this.selectedTab == '2') {
       return items.filter((entry) => !!entry.consumableType);
     } else if (this.selectedTab == '3') {
       return items.filter(
         (entry) => entry?.itemType == MiscellanyItemType.Recipe
-      );
-    } else {
-      return items.filter(
-        (entry) => !entry.consumableType && !entry.itemDataId
       );
     }
   }

@@ -15,7 +15,7 @@ import { ViewportService } from 'src/services/viewport.service';
   styleUrl: './blacksmith-modal.component.scss',
 })
 export class BlacksmithModalComponent implements OnInit {
-  upgrade: 'melt' | 'upgrade' | 'enchant';
+  action: 'melt' | 'upgrade' | 'enchant';
   items: Array<Item>;
   modalRef = inject(BsModalRef);
   playerService = inject(PlayerService);
@@ -38,13 +38,13 @@ export class BlacksmithModalComponent implements OnInit {
     if (this.items) {
       this.getCurrentUserMaterials();
       let observable = of(null);
-      if (this.upgrade == 'upgrade') {
+      if (this.action == 'upgrade') {
         observable = this.itemService.getUpgradeItemPreview(this.items[0].id);
-      } else if (this.upgrade == 'melt') {
+      } else if (this.action == 'melt') {
         observable = this.itemService.getRecycleItemsPreview(
           this.items.map((entry) => entry.id)
         );
-      } else if (this.upgrade == 'enchant') {
+      } else if (this.action == 'enchant') {
         observable = this.itemService.getRecipes(this.items[0].id);
       }
       observable.pipe(take(1)).subscribe((preview) => {
@@ -56,16 +56,16 @@ export class BlacksmithModalComponent implements OnInit {
   accept() {
     if (this.items) {
       let observable = of(null);
-      if (this.upgrade == 'upgrade') {
+      if (this.action == 'upgrade') {
         observable = this.itemService.upgradeItem(
           this.items[0].id,
           this.useMagicDust.value
         );
-      } else if (this.upgrade == 'melt') {
+      } else if (this.action == 'melt') {
         observable = this.itemService.recycleItems(
           this.items.map((entry) => entry.id)
         );
-      } else if (this.upgrade == 'enchant') {
+      } else if (this.action == 'enchant') {
         observable = this.itemService.enchantItem(
           this.items[0].id,
           this.activeRecipe().id
