@@ -1,6 +1,6 @@
 <ng-template #header>
   <p class="text-third" urTitle>
-    @switch (upgrade) {
+    @switch (action) {
       @case ('melt') {
         Melt item <i class="fa fa-fire pl-1 pb-1"></i>
       }
@@ -16,7 +16,7 @@
 </ng-template>
 
 <ng-template #contextRow>
-  @switch (upgrade) {
+  @switch (action) {
     @case ('melt') {
       <p class="text-white" urText>
         Melting will destroy this item, but will give you the following
@@ -44,7 +44,7 @@
 </ng-template>
 
 <ng-template #previewRow>
-  @switch (upgrade) {
+  @switch (action) {
     @case ('melt') {
       <app-item-box
         *ngFor="let previewMaterial of preview.result"
@@ -203,7 +203,7 @@
 
 <ng-template #infoRow>
   <div class="col-12 col-sm-6">
-    <p *ngIf="upgrade == 'melt'" class="text-warning">
+    <p *ngIf="action == 'melt'" class="text-warning">
       There is a small possibility of getting a Magic Dust for each melted item.
     </p>
     <p class="text-white" urText>
@@ -216,7 +216,7 @@
       }}
       <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
     </p>
-    <p *ngIf="upgrade == 'upgrade'" class="text-white" urText>
+    <p *ngIf="action == 'upgrade'" class="text-white" urText>
       Current chance of <span class="text-warning">failing</span>
       {{ (items[0]?.upgradeLevel + 1) * 5 }} %
       <i
@@ -226,7 +226,7 @@
     </p>
     <p class="text-white" urText>Do you wish to continue?</p>
   </div>
-  <div class="col-12 col-sm-6" *ngIf="upgrade == 'upgrade'">
+  <div class="col-12 col-sm-6" *ngIf="action == 'upgrade'">
     <div class="text-secondary pb-2" urText>Avoid upgrade failure with:</div>
     <div class="wrapper-magic-dust">
       <app-item-box
