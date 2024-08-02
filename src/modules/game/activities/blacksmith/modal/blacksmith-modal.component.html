@@ -111,6 +111,9 @@
     }
     @case ('enchant') {
       <div class="col-12 col-sm-6 d-flex pb-2 overflow-auto flex-wrap">
+        @if (preview.length == 0) {
+         <span class="text-light">You don't have any recipes.</span>
+        }
         <app-item-box
           *ngFor="let enchant of preview | stack: 'miscellanyItemDataId'"
           [height]="getItemBoxSize()"

@@ -27,6 +27,7 @@ export const avoidableStats = [
   'quantity',
   'quantityToExport',
   'item_rarity_stat',
+  'canBeUpgraded'
 ];
 const mapPercentLabels = {
   per_health: 'total health',
