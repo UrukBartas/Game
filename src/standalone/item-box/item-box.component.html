@@ -2,7 +2,7 @@
   <ng-content select="[tooltip]"></ng-content>
 </ng-template>
 <div
-  [ngbTooltip]="displayTooltip ? tipContent : null"
+  [ngbTooltip]="displayTooltip && !overlayImage ? tipContent : null"
   class="box d-flex justify-content-center box-{{ rarity }}"
   [ngClass]="{
     selectedBox: active,
@@ -15,36 +15,45 @@
   [ngStyle]="{ height: height + 'px', width: width + 'px' }"
 >
   @if (!!image) {
-    <img
-      [src]="image"
-      class="w-100 h-100 rounded"
-      priority
-      [width]="width"
-      [height]="height"
-      [ngClass]="{ selectedItem: active, 'item-disabled': disabled }"
-    />
-    <i *ngIf="disabled" class="fa-prohib"></i>
+    <div class="image-container">
+      <img
+        [src]="image"
+        class="w-100 h-100 rounded"
+        priority
+        [width]="width"
+        [height]="height"
+        [ngClass]="{ selectedItem: active, 'item-disabled': disabled }"
+      />
+      <i *ngIf="disabled" class="fa-prohib"></i>
 
-    <span
-      [style.font-size]="width / 4 + 'px'"
-      *ngIf="!!stack || !!calculatedStack"
-      class="text-white stack"
-      >{{
-        !!calculatedStack
-          ? calculatedStack(item)
-          : !isNaNLocal(stack)
-            ? 'x' + stack
-            : stack
-      }}
-    </span>
-    <span
-      [style.font-size]="width / 4 + 'px'"
-      *ngIf="!!upgradeLevel"
-      [ngClass]="{
-        'text-white': upgradeLevel < 5,
-        'text-rainbow': upgradeLevel >= 5
-      }"
-      >{{ !isNaNLocal(upgradeLevel) ? '+' + upgradeLevel : upgradeLevel }}
-    </span>
+      <span
+        [style.font-size]="width / 4 + 'px'"
+        *ngIf="!!stack || !!calculatedStack"
+        class="text-white stack"
+        >{{
+          !!calculatedStack
+            ? calculatedStack(item)
+            : !isNaNLocal(stack)
+              ? 'x' + stack
+              : stack
+        }}
+      </span>
+      <span
+        [style.font-size]="width / 4 + 'px'"
+        *ngIf="!!upgradeLevel"
+        [ngClass]="{
+          'text-white': upgradeLevel < 5,
+          'text-rainbow': upgradeLevel >= 5
+        }"
+        >{{ !isNaNLocal(upgradeLevel) ? '+' + upgradeLevel : upgradeLevel }}
+      </span>
+      <img
+        *ngIf="overlayImage"
+        [src]="overlayImage"
+        class="overlay-image"
+        [style.width]="width + 'px'"
+        [style.height]="height + 'px'"
+      />
+    </div>
   }
 </div>

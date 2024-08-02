@@ -1,29 +1,53 @@
-<div id="confirm-modal">
-  <div class="row">
-    <p class="text-third" urTitle>
-      {{ upgrade ? 'Upgrade item' : 'Melt item' }}
-      <i *ngIf="upgrade" class="fa fa-gears pl-1 pb-1"></i>
-      <i *ngIf="!upgrade" class="fa fa-fire pl-1 pb-1"></i>
-    </p>
-  </div>
-  <div class="row">
-    <p *ngIf="!upgrade" class="text-white" urText>
-      Melting will destroy this item, but will give you the following materials:
-    </p>
-    <div *ngIf="upgrade" class="col-12 col-sm-6 text-secondary pb-2" urText>
-      Required materials:
-    </div>
-    <div
-      *ngIf="upgrade"
-      class="col-4 text-secondary pb-2 d-none d-sm-flex"
-      urText
-    >
-      Result:
-    </div>
-  </div>
-  <div *ngIf="!upgrade && preview" class="row">
-    <ng-container *ngFor="let previewMaterial of preview.result">
+<ng-template #header>
+  <p class="text-third" urTitle>
+    @switch (action) {
+      @case ('melt') {
+        Melt item <i class="fa fa-fire pl-1 pb-1"></i>
+      }
+      @case ('upgrade') {
+        Upgrade item <i class="fa fa-gears pl-1 pb-1"></i>
+      }
+      @case ('enchant') {
+        Enchant item <i class="fa fa-wand-magic-sparkles pl-1 pb-1"></i>
+      }
+      @default {}
+    }
+  </p>
+</ng-template>
+
+<ng-template #contextRow>
+  @switch (action) {
+    @case ('melt') {
+      <p class="text-white" urText>
+        Melting will destroy this item, but will give you the following
+        materials:
+      </p>
+    }
+    @case ('upgrade') {
+      <div class="col-12 col-sm-6 text-white pb-2" urText>
+        Required materials:
+      </div>
+      <div class="col-4 text-secondary pb-2 d-none d-sm-flex" urText>
+        Result:
+      </div>
+    }
+    @case ('enchant') {
+      <div class="col-12 col-sm-6 text-white pb-2" urText>
+        Select the enchant recipe to apply:
+      </div>
+      <div class="col-4 text-secondary pb-2 d-none d-sm-flex" urText>
+        Result:
+      </div>
+    }
+    @default {}
+  }
+</ng-template>
+
+<ng-template #previewRow>
+  @switch (action) {
+    @case ('melt') {
       <app-item-box
+        *ngFor="let previewMaterial of preview.result"
         [height]="getItemBoxSize()"
         [width]="getItemBoxSize()"
         [stack]="previewMaterial.quantity"
@@ -35,108 +59,214 @@
           ></app-generic-item-tooltip>
         </div>
       </app-item-box>
-    </ng-container>
-  </div>
-  <div *ngIf="upgrade && preview" class="row">
-    <div class="col-12 col-sm-6 d-flex pb-2 overflow-auto flex-wrap">
-      @for (material of preview.materials; track material.id) {
+    }
+    @case ('upgrade') {
+      <div class="col-12 col-sm-6 d-flex pb-2 overflow-auto flex-wrap">
+        @for (material of preview.materials; track material.id) {
+          <app-item-box
+            class="pr-1"
+            [height]="getItemBoxSize()"
+            [width]="getItemBoxSize()"
+            [stack]="material.quantity"
+            [image]="material.material.imageLocal"
+            [active]="userHasThisMaterial(material)"
+          >
+            <div tooltip class="tooltip-uruk">
+              <app-generic-item-tooltip
+                [item]="material.material"
+              ></app-generic-item-tooltip>
+            </div>
+          </app-item-box>
+        }
+      </div>
+      <div class="col-12 col-sm-4 d-flex justify-content-between">
         <app-item-box
-          class="pr-1"
           [height]="getItemBoxSize()"
           [width]="getItemBoxSize()"
-          [stack]="material.quantity"
-          [image]="material.material.imageLocal"
-          [active]="userHasThisMaterial(material)"
+          [image]="items[0].itemData.imageLocal"
+          [upgradeLevel]="items[0].upgradeLevel"
+        >
+          <div tooltip class="tooltip-uruk">
+            <app-item-tooltip [item]="items[0]"></app-item-tooltip>
+          </div>
+        </app-item-box>
+        <i
+          class="d-flex fa-solid fa-xl align-items-center text-white fa-chevron-right"
+        ></i>
+        <app-item-box
+          class="button-rainbow"
+          [height]="getItemBoxSize()"
+          [width]="getItemBoxSize()"
+          [image]="preview.item.itemData.imageLocal"
+          [upgradeLevel]="preview.item.upgradeLevel"
+        >
+          <div tooltip class="tooltip-uruk">
+            <app-item-tooltip
+              [item]="preview.item"
+              [compareWith]="items[0]"
+            ></app-item-tooltip>
+          </div>
+        </app-item-box>
+      </div>
+    }
+    @case ('enchant') {
+      <div class="col-12 col-sm-6 d-flex pb-2 overflow-auto flex-wrap">
+        @if (preview.length == 0) {
+         <span class="text-light">You don't have any recipes.</span>
+        }
+        <app-item-box
+          *ngFor="let enchant of preview | stack: 'miscellanyItemDataId'"
+          [height]="getItemBoxSize()"
+          [width]="getItemBoxSize()"
+          (click)="activeRecipe.set(enchant)"
+          [active]="
+            enchant?.miscellanyItemDataId ==
+            activeRecipe()?.miscellanyItemDataId
+          "
+          [stack]="enchant.stack"
+          [image]="enchant.miscellanyItemData.imageLocal"
         >
           <div tooltip class="tooltip-uruk">
             <app-generic-item-tooltip
-              [item]="material.material"
+              [item]="enchant.miscellanyItemData"
             ></app-generic-item-tooltip>
           </div>
         </app-item-box>
-      }
-    </div>
-    <div class="col-12 col-sm-4 d-flex justify-content-between">
-      <app-item-box
-        [height]="getItemBoxSize()"
-        [width]="getItemBoxSize()"
-        [image]="items[0].itemData.imageLocal"
-        [upgradeLevel]="items[0].upgradeLevel"
-      >
-        <div tooltip class="tooltip-uruk">
-          <app-item-tooltip [item]="items[0]"></app-item-tooltip>
+        <div
+          class="col-12 d-flex pb-2 overflow-auto flex-wrap"
+          *ngIf="
+            priceAndMaterialsActiveRecipe$()
+              | async as priceAndMaterialsActiveRecipe
+          "
+        >
+          <div
+            class="col-12 text-white pb-2"
+            *ngIf="
+              !!priceAndMaterialsActiveRecipe &&
+              priceAndMaterialsActiveRecipe?.materials?.length > 0
+            "
+            urText
+          >
+            Required materials:
+          </div>
+          @for (
+            material of priceAndMaterialsActiveRecipe?.materials ?? [];
+            track material.id
+          ) {
+            <app-item-box
+              class="pr-1"
+              [height]="getItemBoxSize()"
+              [width]="getItemBoxSize()"
+              [stack]="material.quantity"
+              [image]="material.material.imageLocal"
+              [active]="userHasThisMaterial(material)"
+            >
+              <div tooltip class="tooltip-uruk">
+                <app-generic-item-tooltip
+                  [item]="material.material"
+                ></app-generic-item-tooltip>
+              </div>
+            </app-item-box>
+          }
         </div>
-      </app-item-box>
-      <i
-        class="d-flex fa-solid fa-xl align-items-center text-white fa-chevron-right"
-      ></i>
-      <app-item-box
-        class="button-rainbow"
-        [height]="getItemBoxSize()"
-        [width]="getItemBoxSize()"
-        [image]="preview.item.itemData.imageLocal"
-        [upgradeLevel]="preview.item.upgradeLevel"
-      >
-        <div tooltip class="tooltip-uruk">
-          <app-item-tooltip
-            [item]="preview.item"
-            [compareWith]="items[0]"
-          ></app-item-tooltip>
-        </div>
-      </app-item-box>
-    </div>
-  </div>
-  <div class="row mt-3">
-    <div class="col-12 col-sm-6">
-      <p *ngIf="!upgrade" class="text-warning">
-        There is a small possibility of getting a Magic Dust for each melted
-        item.
-      </p>
-      <p class="text-white" urText>
-        Price is
-        {{ preview?.totalPrice ?? preview?.price ?? 0 | compressNumber }}
-        <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
-      </p>
-      <p *ngIf="upgrade" class="text-white" urText>
-        Current chance of <span class="text-warning">failing</span>
-        {{ (items[0]?.upgradeLevel + 1) * 5 }} %
-        <i
-          class="fa-solid fa-circle-info text-warning fa-sm px-1"
-          [ngbTooltip]="failExplanation"
-        ></i>
-      </p>
-      <p class="text-white" urText>Do you wish to continue?</p>
-    </div>
-    <div class="col-12 col-sm-6" *ngIf="upgrade">
-      <div class="text-secondary pb-2" urText>Avoid upgrade failure with:</div>
-      <div class="wrapper-magic-dust">
+      </div>
+      <div class="col-12 col-sm-4 d-flex justify-content-between h-fit-content">
         <app-item-box
           [height]="getItemBoxSize()"
           [width]="getItemBoxSize()"
-          [stack]="1"
-          [image]="'assets/materials/magic.webp'"
+          [image]="items[0].itemData.imageLocal"
+          [upgradeLevel]="items[0].upgradeLevel"
         >
           <div tooltip class="tooltip-uruk">
-            <ng-container
-              *ngTemplateOutlet="magicDustExplanation"
-            ></ng-container>
+            <app-item-tooltip [item]="items[0]"></app-item-tooltip>
           </div>
         </app-item-box>
-        <div class="form-check form-switch">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            [disabled]="true"
-            [formControl]="useMagicDust"
-          />
-          <label
-            class="form-check-label text-light"
-            for="flexSwitchCheckChecked"
-            >Use magic dust?
-          </label>
+        <i
+          class="d-flex fa-solid fa-xl align-items-center text-white fa-chevron-right"
+        ></i>
+        <app-item-box
+          [height]="getItemBoxSize()"
+          [width]="getItemBoxSize()"
+          [image]="items[0].itemData.imageLocal"
+          [upgradeLevel]="items[0].upgradeLevel"
+          [overlayImage]="'assets/icons/overlay_incognita.webp'"
+        >
+          <div tooltip class="tooltip-uruk">
+            <app-item-tooltip [item]="items[0]"></app-item-tooltip>
+          </div>
+        </app-item-box>
+      </div>
+    }
+    @default {}
+  }
+</ng-template>
+
+<ng-template #infoRow>
+  <div class="col-12 col-sm-6">
+    <p *ngIf="action == 'melt'" class="text-warning">
+      There is a small possibility of getting a Magic Dust for each melted item.
+    </p>
+    <p class="text-white" urText>
+      Price is
+      {{
+        (priceAndMaterialsActiveRecipe$() | async)?.price ??
+          preview?.totalPrice ??
+          preview?.price ??
+          0 | compressNumber
+      }}
+      <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+    </p>
+    <p *ngIf="action == 'upgrade'" class="text-white" urText>
+      Current chance of <span class="text-warning">failing</span>
+      {{ (items[0]?.upgradeLevel + 1) * 5 }} %
+      <i
+        class="fa-solid fa-circle-info text-warning fa-sm px-1"
+        [ngbTooltip]="failExplanation"
+      ></i>
+    </p>
+    <p class="text-white" urText>Do you wish to continue?</p>
+  </div>
+  <div class="col-12 col-sm-6" *ngIf="action == 'upgrade'">
+    <div class="text-secondary pb-2" urText>Avoid upgrade failure with:</div>
+    <div class="wrapper-magic-dust">
+      <app-item-box
+        [height]="getItemBoxSize()"
+        [width]="getItemBoxSize()"
+        [stack]="1"
+        [image]="'assets/materials/magic.webp'"
+      >
+        <div tooltip class="tooltip-uruk">
+          <ng-container *ngTemplateOutlet="magicDustExplanation"></ng-container>
         </div>
+      </app-item-box>
+      <div class="form-check form-switch">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [disabled]="true"
+          [formControl]="useMagicDust"
+        />
+        <label class="form-check-label text-light" for="flexSwitchCheckChecked"
+          >Use magic dust?
+        </label>
       </div>
     </div>
+  </div>
+</ng-template>
+
+<div id="confirm-modal">
+  <div class="row">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+  </div>
+  <div class="row">
+    <ng-container *ngTemplateOutlet="contextRow"></ng-container>
+  </div>
+  <div *ngIf="preview" class="row">
+    <ng-container *ngTemplateOutlet="previewRow"></ng-container>
+  </div>
+
+  <div class="row mt-3">
+    <ng-container *ngTemplateOutlet="infoRow"></ng-container>
   </div>
   <div class="d-flex w-100 justify-content-end pt-3">
     <button class="btn btn-secondary btn-transparent" (click)="modalRef.hide()">

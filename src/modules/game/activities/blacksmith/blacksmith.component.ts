@@ -93,13 +93,13 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
     }, 250);
   }
 
-  openModal(upgrade: boolean) {
+  openModal(action: 'melt' | 'upgrade' | 'enchant') {
     const config: ModalOptions = {
       initialState: {
-        upgrade,
+        action,
         items: this.selectedMultipleItems,
         onJobDone: (result) => {
-          if (upgrade) {
+          if (action == 'upgrade' || action == 'enchant') {
             this.onUpgradeDone(result);
           } else {
             this.onRecycleDone();
@@ -153,13 +153,26 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
     this.inventoryUpdated$.next(true);
     this.materialUpdated$.next(true);
   }
+  getRandomQuote() {
+    const ronnieColemanQuotes = [
+      'LIGHTWEIGHT BABY!!',
+      'Yeah buddy!',
+      'Light weight baby!',
+      "Ain't nothing but a peanut!",
+      "Ain't nothin' to it but to do it!",
+      'Train harder, grow bigger!',
+      'The real workout starts when you want to stop.',
+    ];
+    const randomIndex = Math.floor(Math.random() * ronnieColemanQuotes.length);
+    return ronnieColemanQuotes[randomIndex];
+  }
 
   public closeResult() {
     if (!this.resultItem) {
       this.selectedMultipleItems = [];
     }
     this.triggerDialog(
-      !this.resultItem ? 'OH BABY THAT HURTS!!' : 'LIGHTWEIGHT BABY!!',
+      !this.resultItem ? 'OH BABY THAT HURTS!!' : this.getRandomQuote(),
       1500
     );
     this.resultItem = null;

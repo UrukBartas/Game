@@ -15,6 +15,7 @@ import { ShopService } from 'src/services/shop.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
+import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
 
 @Component({
   selector: 'app-shop',
@@ -40,15 +41,20 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
     .select(MainState.getState)
     .pipe(map((entry) => entry.player));
 
+  // TODO añadir itemTypes a todos los shopitems desde back
   public displayItemsDependingOnType(items: any) {
     if (!items) return [];
     if (this.selectedTab == '0') {
       return items.filter((entry) => !!entry.itemDataId);
+    } else if (this.selectedTab == '1') {
+      return items.filter(
+        (entry) => !entry.consumableType && !entry.itemDataId && !entry.itemType
+      );
     } else if (this.selectedTab == '2') {
       return items.filter((entry) => !!entry.consumableType);
-    } else {
+    } else if (this.selectedTab == '3') {
       return items.filter(
-        (entry) => !entry.consumableType && !entry.itemDataId
+        (entry) => entry?.itemType == MiscellanyItemType.Recipe
       );
     }
   }

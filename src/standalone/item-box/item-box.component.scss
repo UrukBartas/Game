@@ -72,3 +72,14 @@
   cursor: pointer;
   transition: all 0.3s;
 }
+
+.image-container {
+  position: relative;
+}
+
+.overlay-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
