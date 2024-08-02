@@ -60,6 +60,19 @@ export class ItemService extends ApiBaseService {
     return this.post('/recycle-items-preview/', { ids: itemsIds });
   }
 
+  public getRecipes(itemId: number) {
+    return this.get('/recipes-for-item/' + itemId);
+  }
+
+  public getPreviewForRecipe(itemId: number, recipeId: number) {
+    return this.get(`/preview-for-recipe/${recipeId}/${itemId}`);
+  }
+
+
+  public enchantItem(itemId: number, recipeId: number) {
+    return this.get(`/enchant-item/${recipeId}/${itemId}`);
+  }
+
   public getItemDataByRarity(rarity: Rarity) {
     return this.get('/get-item-data-by-rarity/' + rarity);
   }

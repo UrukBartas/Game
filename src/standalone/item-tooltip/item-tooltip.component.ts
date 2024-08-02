@@ -88,7 +88,7 @@ export class ItemTooltipComponent {
     .pipe(map((entry) => entry.player));
 
   public isViewingPlayer =
-    this.route.snapshot.url[0].path.includes('view-player');
+    this.route?.snapshot?.url[0]?.path?.includes('view-player');
 
   public getLoopableStatsKeys(): Array<string> {
     if (!this.item) return [];

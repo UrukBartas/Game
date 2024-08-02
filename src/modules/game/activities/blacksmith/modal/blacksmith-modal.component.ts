@@ -1,8 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { firstValueFrom, take } from 'rxjs';
+import { firstValueFrom, of, take } from 'rxjs';
 import { Item } from 'src/modules/core/models/items.model';
 import { Material, MaterialData } from 'src/modules/core/models/material.model';
 import { ItemService } from 'src/services/item.service';
@@ -15,7 +15,7 @@ import { ViewportService } from 'src/services/viewport.service';
   styleUrl: './blacksmith-modal.component.scss',
 })
 export class BlacksmithModalComponent implements OnInit {
-  upgrade: boolean; //or recycle
+  upgrade: 'melt' | 'upgrade' | 'enchant';
   items: Array<Item>;
   modalRef = inject(BsModalRef);
   playerService = inject(PlayerService);
@@ -26,46 +26,54 @@ export class BlacksmithModalComponent implements OnInit {
   preview;
   public currentMaterials: Array<Material> = [];
   public useMagicDust = new FormControl(false);
+  public activeRecipe = signal(null);
+  public priceAndMaterialsActiveRecipe$ = computed(() => {
+    if (!this.activeRecipe()) return of([]);
+    return this.itemService.getPreviewForRecipe(
+      this.items[0].id,
+      this.activeRecipe().id
+    );
+  });
   ngOnInit() {
     if (this.items) {
       this.getCurrentUserMaterials();
-      const observable = this.upgrade
-        ? this.itemService.getUpgradeItemPreview(this.items[0].id)
-        : this.itemService.getRecycleItemsPreview(
-            this.items.map((entry) => entry.id)
-          );
-
-      observable.pipe(take(1)).subscribe((preview) => (this.preview = preview));
+      let observable = of(null);
+      if (this.upgrade == 'upgrade') {
+        observable = this.itemService.getUpgradeItemPreview(this.items[0].id);
+      } else if (this.upgrade == 'melt') {
+        observable = this.itemService.getRecycleItemsPreview(
+          this.items.map((entry) => entry.id)
+        );
+      } else if (this.upgrade == 'enchant') {
+        observable = this.itemService.getRecipes(this.items[0].id);
+      }
+      observable.pipe(take(1)).subscribe((preview) => {
+        this.preview = preview;
+      });
     }
   }
 
   accept() {
     if (this.items) {
-      const observable = this.upgrade
-        ? this.itemService.upgradeItem(
-            this.items[0].id,
-            this.useMagicDust.value
-          )
-        : this.itemService.recycleItems(this.items.map((entry) => entry.id));
-
+      let observable = of(null);
+      if (this.upgrade == 'upgrade') {
+        observable = this.itemService.upgradeItem(
+          this.items[0].id,
+          this.useMagicDust.value
+        );
+      } else if (this.upgrade == 'melt') {
+        observable = this.itemService.recycleItems(
+          this.items.map((entry) => entry.id)
+        );
+      } else if (this.upgrade == 'enchant') {
+        observable = this.itemService.enchantItem(
+          this.items[0].id,
+          this.activeRecipe().id
+        );
+      }
       observable.pipe(take(1)).subscribe((result) => {
         this.onJobDone(result);
         this.modalRef.hide();
-      });
-    }
-  }
-
-  doAction() {
-    if (this.items) {
-      const observable = this.upgrade
-        ? this.itemService.upgradeItem(
-            this.items[0].id,
-            this.useMagicDust.value
-          )
-        : this.itemService.recycleItems(this.items.map((entry) => entry.id));
-
-      observable.pipe(take(1)).subscribe((result) => {
-        this.onJobDone(result);
       });
     }
   }

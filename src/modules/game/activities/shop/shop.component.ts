@@ -15,6 +15,7 @@ import { ShopService } from 'src/services/shop.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
+import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
 
 @Component({
   selector: 'app-shop',
@@ -46,6 +47,10 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
       return items.filter((entry) => !!entry.itemDataId);
     } else if (this.selectedTab == '2') {
       return items.filter((entry) => !!entry.consumableType);
+    } else if (this.selectedTab == '3') {
+      return items.filter(
+        (entry) => entry?.itemType == MiscellanyItemType.Recipe
+      );
     } else {
       return items.filter(
         (entry) => !entry.consumableType && !entry.itemDataId

@@ -23,6 +23,7 @@ export class ItemBoxComponent {
   @Input() rarity: Rarity;
   @Input() upgradeLevel: number;
   @Input() disabled = false;
+  @Input() overlayImage: string = null;
 
   public isNaNLocal = isNaN;
   getRarityColor = getRarityColor;
