@@ -32,9 +32,9 @@ import { ViewportService } from 'src/services/viewport.service';
 import { BaseInventoryComponent } from '../base-inventory/base-inventory.component';
 import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
 import { StatsService } from 'src/services/stats.service';
-import { camelCase } from 'lodash';
+import { camelCase } from 'lodash-es';
 import { ItemTypeSC } from '../../activities/export-import-nft/enums/ItemTypesSC';
-import { Memoize } from 'lodash-decorators';
+
 export interface MiscWithStack extends MiscellanyItem {
   stack?: number;
 }
@@ -185,7 +185,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
     if (!rarity || !distributions) return null;
     return Object.entries(distributions[rarity]);
   }
-  @Memoize()
+
   public parsePossibilities(itemPossibilities: any) {
     const rarity = this.openingItem().miscellanyItemData.rarity;
     if (!rarity || !itemPossibilities) return null;
@@ -199,6 +199,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
       })
       .filter((entry) => entry.value > 0);
   }
+
   public getImageBasedOnType(itemType: ItemTypeSC, rarity: Rarity): string {
     let path = '';
     let possibleItems = Object.keys(ItemType).map((itemType) =>

@@ -1,0 +1,73 @@
+@import '../../../../variables.scss';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
+
+#inbox-modal {
+  padding: 10px 20px;
+  background: $black-300;
+  width: 80vw;
+  @include media-breakpoint-down(sm) {
+    width: 95vw;
+  }
+  height: 80vh;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  .title {
+    padding: 10px 0;
+  }
+  .notification-container {
+    border-radius: 3px;
+    height: 100%;
+    overflow-y: auto;
+    .notification {
+      padding: 10px 5px;
+      background: $black-200;
+      color: $white-100;
+      display: flex;
+      border-radius: 5px;
+      align-items: center;
+      cursor: pointer;
+      img {
+        max-height: 50px;
+        max-width: 50px;
+        border-radius: 5px;
+        margin: 0 10px;
+      }
+      &:hover {
+        background: $black-100;
+      }
+
+      .notification-text {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .new-notification {
+        display: flex;
+        align-items: center;
+        margin: 0 15px 0 5px;
+        background: #c62f39;
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+      }
+      img {
+        max-height: 30px;
+        max-width: 30px;
+      }
+    }
+  }
+  .notification-lector {
+    color: $white-200;
+    overflow-y: auto;
+    .markdown * {
+      font-family: sans-serif !important;
+    }
+  }
+  .back-btn {
+    width: 100px;
+    height: 35px;
+  }
+}

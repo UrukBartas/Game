@@ -1,0 +1,45 @@
+<div id="inbox-modal">
+  <div class="title d-flex justify-content-between">
+    <span urText class="text-third"
+      ><i class="fa fa-envelope pr-2"></i> Inbox</span
+    >
+    <div class="btn btn-transparent text-white" (click)="modalRef.hide()">
+      <i class="fa fa-x"></i>
+    </div>
+  </div>
+  @if (!openedNotification) {
+    <div class="notification-container">
+      @for (notification of notifications; track $index) {
+        <div
+          class="notification d-flex flex-row"
+          (click)="openedNotification = notification"
+        >
+          @if (!notification.opened.includes(playerId)) {
+            <div class="new-notification"></div>
+          }
+          @if (notification.titleImage) {
+            <img [src]="notification.titleImage" />
+          }
+          <div class="notification-text d-flex flex-column">
+            <span urText class="text-secondary">{{ notification.title }}</span>
+            <span urSubtext class="text-white">{{
+              notification.description
+            }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="notification-lector">
+      <markdown class='markdown' [data]="openedNotification.content" [disableSanitizer]="true">
+      </markdown>
+    </div>
+    <button
+      (click)="openedNotification = null"
+      class="btn btn-primary back-btn"
+      style="height: fit-content"
+    >
+      <i class="fa-solid fa-arrow-left"></i> Back
+    </button>
+  }
+</div>

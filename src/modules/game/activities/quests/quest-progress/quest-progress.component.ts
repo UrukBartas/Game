@@ -1,22 +1,19 @@
 import {
   Component,
   EventEmitter,
-  Input,
   NgZone,
   OnDestroy,
   Output,
 } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Store } from '@ngxs/store';
+import { filter, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { QuestRouterModel } from '../models/quest-router.model';
-import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
-import { Adventure } from 'src/services/adventures.service';
-import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'app-quest-progress',
@@ -87,7 +84,7 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
       }
       const startedAt = new Date(this.quest.startedAt);
       const finishedAt = new Date(this.quest.finishedAt);
-      //finishedAt.setMinutes(finishedAt.getMinutes() - 320);
+      //finishedAt.setMinutes(finishedAt.getMinutes() - 9999);
       const currentDate = new Date();
 
       if (currentDate > finishedAt) {

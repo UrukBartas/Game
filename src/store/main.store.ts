@@ -7,10 +7,12 @@ import { disconnect } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom, take } from 'rxjs';
 import { FightModel } from 'src/modules/core/models/fight.model';
+import { NotificationModel } from 'src/modules/core/models/notifications.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { SessionModel } from 'src/modules/core/models/session.model';
 import { AuthService } from 'src/services/auth.service';
+import { NotificationsService } from 'src/services/notifications.service';
 import { PlayerService } from 'src/services/player.service';
 import { SessionService } from 'src/services/session.service';
 import { WalletService } from 'src/services/wallet.service';
@@ -40,6 +42,11 @@ export class SetSession {
   constructor(public payload: SessionModel) {}
 }
 
+export class SetNotifications {
+  static readonly type = '[Notifications] Set';
+  constructor(public payload: NotificationModel[]) {}
+}
+
 export class DisconnectWallet {
   static readonly type = '[Wallet] Disconnect';
 }
@@ -65,6 +72,7 @@ export class MainStateModel {
   public session: SessionModel | null;
   public quests: QuestModel[] | null;
   public fight: FightModel | null;
+  public notifications: NotificationModel[] | null;
 }
 const defaultState = {
   address: '',
@@ -72,6 +80,7 @@ const defaultState = {
   session: null,
   quests: null,
   fight: null,
+  notifications: null,
 };
 @State<MainStateModel>({
   name: 'main',
@@ -86,6 +95,7 @@ export class MainState {
   walletService = inject(WalletService);
   websocket = inject(WebSocketService);
   authService = inject(AuthService);
+  notificationsService = inject(NotificationsService);
 
   @Action(ConnectWallet)
   connectWallet(
@@ -117,6 +127,16 @@ export class MainState {
     });
   }
 
+  @Action(SetNotifications)
+  setNotifications(
+    { patchState }: StateContext<MainStateModel>,
+    { payload }: SetNotifications
+  ) {
+    patchState({
+      notifications: payload,
+    });
+  }
+
   @Action(LoginPlayer)
   async loginPlayer({ patchState }: StateContext<MainStateModel>, { payload }) {
     let player = null;
@@ -132,7 +152,10 @@ export class MainState {
     try {
       if (player) {
         const session = await firstValueFrom(this.sessionService.open());
-        patchState({ player, session });
+        const notifications = await firstValueFrom(
+          this.notificationsService.getNotifications()
+        );
+        patchState({ player, session, notifications });
         this.router.navigateByUrl('/inventory');
       } else if (!this.router.url.includes('external')) {
         this.router.navigateByUrl('/create');

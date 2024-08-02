@@ -1,30 +1,29 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   Input,
+  Output,
   ViewChild,
   inject,
-  EventEmitter,
-  Output,
 } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { Store } from '@ngxs/store';
+import { lowerCase } from 'lodash-es';
+import * as party from 'party-js';
+import { firstValueFrom, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import {
   FightResultModel,
-  GankMonsters,
-  GankMonstersIds,
+  GankMonstersIds
 } from 'src/modules/core/models/fight.model';
 import { getRarityColor } from 'src/modules/utils';
+import { QuestService } from 'src/services/quest.service';
+import { SoundService } from 'src/services/sound.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer, SetQuests } from 'src/store/main.store';
-import * as party from 'party-js';
-import { QuestService } from 'src/services/quest.service';
-import { firstValueFrom, take } from 'rxjs';
-import { QuestRouterModel } from '../models/quest-router.model';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
-import { Title } from '@angular/platform-browser';
-import { camelCase, lowerCase } from 'lodash';
-import { SoundService } from 'src/services/sound.service';
+import { QuestRouterModel } from '../models/quest-router.model';
 
 @Component({
   selector: 'app-quest-result',
