@@ -119,7 +119,7 @@
 
     <div class="flex">
       <button
-        (click)="openModal(false)"
+        (click)="openModal('melt')"
         [disabled]="selectedMultipleItems.length == 0"
         [class]="'btn btn-primary ' + getButtonSize()"
       >
@@ -127,7 +127,7 @@
         Melt
       </button>
       <button
-        (click)="openModal(true)"
+        (click)="openModal('upgrade')"
         [disabled]="
           !!multipleSelection.value || selectedMultipleItems.length == 0
         "
@@ -135,6 +135,16 @@
       >
         <i class="fa fa-gears pl-1 pb-1"></i>
         Upgrade
+      </button>
+      <button
+        (click)="openModal('enchant')"
+        [disabled]="
+          !!multipleSelection.value || selectedMultipleItems.length == 0
+        "
+        [class]="'btn btn-dark  ' + getButtonSize()"
+      >
+        <i class="fa fa-wand-magic-sparkles pl-1 pb-1"></i>
+        Enchant
       </button>
     </div>
   </div>
