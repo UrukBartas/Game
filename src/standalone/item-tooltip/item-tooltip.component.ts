@@ -3,7 +3,7 @@ import { Component, inject, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
-import { camelCase } from 'lodash';
+import { camelCase } from 'lodash-es';
 import { map } from 'rxjs';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';

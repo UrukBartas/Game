@@ -1,0 +1,105 @@
+<div id="inbox-modal">
+  <div class="title d-flex justify-content-between">
+    <span urText class="text-third"
+      ><i class="fa fa-envelope pr-2"></i> Inbox</span
+    >
+    <div class="btn btn-transparent text-white" (click)="modalRef.hide()">
+      <i class="fa fa-x"></i>
+    </div>
+  </div>
+  @if (!openedNotification) {
+    <div class="notification-container">
+      @for (notification of (state | async).notifications; track $index) {
+        <div
+          class="notification d-flex flex-row"
+          (click)="openNotification(notification)"
+        >
+          @if (!notification.opened.includes(playerId)) {
+            <div class="new-notification"></div>
+          }
+          @if (hasAttachments(notification)) {
+            <i class="fa fa-gift px-2"></i>
+          }
+          @if (notification.titleImage) {
+            <img class="notification-image" [src]="notification.titleImage" />
+          }
+          <div class="notification-text px-2 d-flex flex-column">
+            <div class="d-flex justify-content-between">
+              <span urText class="text-secondary">{{
+                notification.title
+              }}</span>
+            </div>
+            <span urSubtext class="text-white">{{
+              notification.description
+            }}</span>
+          </div>
+          <div class="notification-date">
+            <i urSubtext class="text-white pr-2">{{
+              notification.createdAt | date: 'shortDate'
+            }}</i>
+          </div>
+        </div>
+      } @empty {
+        <span class="text-white">You have not received any notification yet.</span>
+      }
+    </div>
+  } @else {
+    <div class="notification-lector">
+      <div class="d-flex justify-content-between">
+        <span urText class="text-secondary">{{
+          openedNotification.title
+        }}</span>
+        <span urSubtext class="text-white">{{
+          openedNotification.createdAt | date: 'shortDate'
+        }}</span>
+      </div>
+      <markdown
+        class="markdown"
+        [data]="openedNotification.content"
+        [disableSanitizer]="true"
+      >
+      </markdown>
+    </div>
+
+    <div class="footer">
+      <button
+        (click)="openedNotification = null"
+        class="btn btn-primary back-btn"
+        style="height: fit-content"
+      >
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </button>
+      @if (attachments?.length > 0) {
+        <div class="attachments">
+          <div class="d-flex gap-1 overflow-auto">
+            @for (attachment of attachments; track $index) {
+              <app-item-box
+                [height]="getItemBoxSize()"
+                [width]="getItemBoxSize()"
+                [image]="attachment.data.imageLocal"
+                [stack]="attachment.quantity"
+              >
+                <div tooltip class="tooltip-uruk">
+                  <app-generic-item-tooltip
+                    [item]="attachment.data"
+                  ></app-generic-item-tooltip>
+                </div>
+              </app-item-box>
+            }
+          </div>
+          <button
+            (click)="claimItems(openedNotification)"
+            [disabled]="openedNotification.claimed.includes(playerId)"
+            class="btn btn-secondary ml-2"
+          >
+            @if (openedNotification.claimed.includes(playerId)) {
+              <i class="fa-solid fa-check"></i> Claimed
+            } @else {
+              <i class="fa-solid fa-gift"></i> Claim
+            }
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>

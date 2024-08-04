@@ -13,7 +13,7 @@ import { MainState } from 'src/store/main.store';
 import { QuestStatusEnum } from './enums/quest-status.enum';
 import { QuestRouterModel } from './models/quest-router.model';
 import { AdventureData } from 'src/services/adventures-data.service';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { QuestService } from 'src/services/quest.service';
 import { firstValueFrom } from 'rxjs';

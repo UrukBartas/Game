@@ -1,19 +1,18 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
+import { cloneDeep } from 'lodash-es';
+import { take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
+import { QuestModel } from 'src/modules/core/models/quest.model';
 import {
   AdventureData,
   AdventuresDataService,
 } from 'src/services/adventures-data.service';
 import { Adventure, AdventuresService } from 'src/services/adventures.service';
-import { QuestStatusEnum } from '../quests/enums/quest-status.enum';
-import { QuestRouterModel } from '../quests/models/quest-router.model';
-import { cloneDeep } from 'lodash';
 import { QuestService } from 'src/services/quest.service';
-import { take } from 'rxjs';
-import { SetQuests } from 'src/store/main.store';
-import { QuestModel } from 'src/modules/core/models/quest.model';
 import { ViewportService } from 'src/services/viewport.service';
+import { SetQuests } from 'src/store/main.store';
+import { QuestRouterModel } from '../quests/models/quest-router.model';
 export enum AdventureState {
   NON_STARTED,
   STARTED,

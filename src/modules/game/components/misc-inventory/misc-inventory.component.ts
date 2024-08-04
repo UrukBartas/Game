@@ -10,13 +10,18 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { Memoize } from 'lodash-decorators';
+import { camelCase } from 'lodash-es';
+import { ToastrService } from 'ngx-toastr';
+import * as party from 'party-js';
+import { firstValueFrom, map } from 'rxjs';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import {
   MiscellanyItem,
-  MiscellanyItemIdentifier,
   MiscellanyItemIdentifierDisplay,
-  MiscellanyItemType,
 } from 'src/modules/core/models/misc.model';
+import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
 import {
   fillInventoryBasedOnPlayerSockets,
   getGenericItemItemData,
@@ -24,22 +29,16 @@ import {
   getRarityText,
 } from 'src/modules/utils';
 import { ContextMenuService } from 'src/services/context-menu.service';
-import { FocuserService } from 'src/standalone/focuser/focuser.service';
-import { MiscellanyService } from 'src/services/miscellany.service';
-import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulette.component';
-import { firstValueFrom, map } from 'rxjs';
-import * as party from 'party-js';
-import { Store } from '@ngxs/store';
-import { MainState, RefreshPlayer } from 'src/store/main.store';
-import { ViewportService } from 'src/services/viewport.service';
-import { BaseInventoryComponent } from '../base-inventory/base-inventory.component';
-import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
-import { StatsService } from 'src/services/stats.service';
-import { camelCase } from 'lodash';
-import { ToastrService } from 'ngx-toastr';
 import { ItemService } from 'src/services/item.service';
+import { MiscellanyService } from 'src/services/miscellany.service';
+import { StatsService } from 'src/services/stats.service';
+import { ViewportService } from 'src/services/viewport.service';
+import { FocuserService } from 'src/standalone/focuser/focuser.service';
+import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulette.component';
+import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ItemTypeSC } from '../../activities/export-import-nft/enums/ItemTypesSC';
-import { Memoize } from 'lodash-decorators';
+import { BaseInventoryComponent } from '../base-inventory/base-inventory.component';
+
 export interface MiscWithStack extends MiscellanyItem {
   stack?: number;
 }
@@ -253,6 +252,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
     if (!rarity || !distributions) return null;
     return Object.entries(distributions[rarity]);
   }
+
   @Memoize()
   public parsePossibilities(itemPossibilities: any) {
     const rarity = this.openingItem().miscellanyItemData.rarity;
@@ -267,6 +267,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
       })
       .filter((entry) => entry.value > 0);
   }
+
   public getImageBasedOnType(
     itemType: 'ITEM' | 'MoneyBag' | 'ItemSet',
     rarity: Rarity,

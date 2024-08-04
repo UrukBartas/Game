@@ -55,7 +55,6 @@ i {
 .content {
   position: relative;
   margin: 0;
-  overflow: auto;
 }
 .content-collapsed {
   @extend .content;
@@ -122,7 +121,6 @@ nav a {
     white-space: nowrap;
   }
 
-
   app-progress-bar {
     height: 15px;
     width: 60%;
@@ -150,5 +148,54 @@ nav a {
     align-items: center;
     justify-content: center;
     text-align: center;
+  }
+}
+
+.player-dropdown {
+  hr {
+    margin: 0.2rem 0;
+  }
+  .notifications {
+    border-radius: 100%;
+    width: 15px;
+    height: 15px;
+    background: $red;
+    color: white;
+    display: flex;
+    font-size: 9px;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2px;
+  }
+  .notifications-player {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+  .dropdown-menu {
+    padding: 0 !important;
+    background: $black-300;
+    .player-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .dropdown-item {
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex !important;
+      align-items: center;
+      justify-content: space-between;
+      &:hover {
+        background: $black-200;
+      }
+      i {
+        color: $third;
+      }
+      color: $white-100;
+    }
   }
 }

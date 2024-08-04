@@ -2,7 +2,7 @@ import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { groupBy } from 'lodash';
+import { groupBy } from 'lodash-es';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -27,6 +27,7 @@ import { ShopService } from 'src/services/shop.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
+import { InventoryUpdateService } from './services/inventory-update.service';
 
 @Component({
   selector: 'app-inventory',
@@ -42,6 +43,7 @@ export class InventoryComponent extends TemplatePage {
   viewportService = inject(ViewportService);
   private route = inject(ActivatedRoute);
   public router = inject(Router);
+  public inventoryUpdateService = inject(InventoryUpdateService);
   public activeSlideIndex = 0;
   public maxLevel = 10;
   public currentSize$ = this.store.select(MainState.getState).pipe(
@@ -131,11 +133,14 @@ export class InventoryComponent extends TemplatePage {
       this.actualPlayer$.next(player);
     });
     if (!this.isViewingPlayer) {
-      this.loadInventories();
+      this.setupInventories();
     }
+    this.inventoryUpdateService.updateAllInventory$
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.loadInventories());
   }
 
-  private loadInventories() {
+  private setupInventories() {
     this.inventoryUpdated$.pipe(takeUntilDestroyed()).subscribe(async () => {
       this.currentInventory = await firstValueFrom(
         this.playerService.getItems()
@@ -156,7 +161,12 @@ export class InventoryComponent extends TemplatePage {
         this.playerService.getMiscellanyItems()
       );
     });
+    this.loadInventories();
+  }
+
+  private loadInventories() {
     this.inventoryUpdated$.next(true);
+    this.consumablesUpdated$.next(true);
     this.materialUpdated$.next(true);
     this.miscUpdated$.next(true);
   }

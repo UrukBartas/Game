@@ -65,13 +65,10 @@
     width: 30vw;
     height: 75vh;
     @include media-breakpoint-down(sm) {
-      height: 58vh;
+      height: 50vh;
       width: 88vw;
     }
   }
-
-
-
 
   .blacksmith-dialog {
     position: absolute;
@@ -123,8 +120,23 @@
   }
 }
 
-app-item-inventory{
-  .stack{
+.action-anvil {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+app-item-inventory {
+  .stack {
     font-size: 16px !important;
+  }
+  .item-inventory {
+    max-height: 25vh;
+  }
+}
+app-materials-inventory {
+  .materials-inventory {
+    max-height: 27vh;
   }
 }

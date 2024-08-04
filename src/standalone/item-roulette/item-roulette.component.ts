@@ -7,16 +7,13 @@ import {
   SimpleChanges,
   inject,
 } from '@angular/core';
-import { ItemBoxComponent } from '../item-box/item-box.component';
-import { Item } from 'src/modules/core/models/items.model';
-import { ItemTooltipComponent } from '../item-tooltip/item-tooltip.component';
 import { Store } from '@ngxs/store';
-import {
-  GenericItem,
-  GenericItemTooltipComponent,
-} from '../generic-item-tooltip/generic-item-tooltip.component';
-import { SoundService } from 'src/services/sound.service';
+import { Item } from 'src/modules/core/models/items.model';
 import { getGenericItemItemData } from 'src/modules/utils';
+import { SoundService } from 'src/services/sound.service';
+import { GenericItemTooltipComponent } from '../generic-item-tooltip/generic-item-tooltip.component';
+import { ItemBoxComponent } from '../item-box/item-box.component';
+import { ItemTooltipComponent } from '../item-tooltip/item-tooltip.component';
 
 @Component({
   selector: 'app-item-roulette',
@@ -28,7 +25,7 @@ import { getGenericItemItemData } from 'src/modules/utils';
     GenericItemTooltipComponent,
   ],
   templateUrl: './item-roulette.component.html',
-  styleUrl: './item-roulette.component.scss',
+  styleUrls: ['./item-roulette.component.scss'],
 })
 export class ItemRouletteComponent {
   @Input() items: any[] = [];
@@ -61,7 +58,7 @@ export class ItemRouletteComponent {
 
   startRoulette(): void {
     if (!this.resultItem) {
-      console.error('resultItem no está definido');
+      console.error('resultItem is not defined');
       return;
     }
     this.sound.playSound('assets/sounds/roulette.mp3');
@@ -93,7 +90,9 @@ export class ItemRouletteComponent {
     }
 
     // Calcular la posición final para centrar el ítem resultante
-    const finalOffset = closestIndex * totalWidth - (600 / 2 - itemWidth / 2);
+    const finalOffset =
+      closestIndex * totalWidth -
+      (document.documentElement.clientWidth / 2 - itemWidth / 2);
     const initialTranslateX = this.translateX;
     const totalDistance = finalOffset - initialTranslateX;
 

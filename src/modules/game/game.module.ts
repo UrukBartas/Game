@@ -115,7 +115,7 @@ const pipes = [
     InventoryTopbarComponent,
     MiscInventoryComponent,
     BaseInventoryComponent,
-    OnlyStatsComponent
+    OnlyStatsComponent,
   ],
   imports: [
     ...directives,

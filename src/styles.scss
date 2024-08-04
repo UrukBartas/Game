@@ -50,6 +50,12 @@ body {
   border-color: transparent !important;
 }
 
+.btn-third {
+  background: $black-100 !important;
+  border-color: $black-200 !important;
+  color: $white;
+}
+
 a {
   text-decoration: none;
   color: $secondary;
@@ -89,7 +95,7 @@ app-item-box {
 .modal-dialog {
   position: absolute !important;
   top: 43%;
-  left: 50%;
+  left: 48%;
   transform: translate(-50%, -50%) !important;
   display: flex;
   justify-content: center;
@@ -128,7 +134,7 @@ app-item-box {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #343432;
+  background: $black-200;
   border-radius: 3px;
 }
 

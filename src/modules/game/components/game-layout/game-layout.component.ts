@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { disconnect } from '@wagmi/core';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { calculateXPForLevel } from 'src/modules/utils';
 import { AuthService } from 'src/services/auth.service';
@@ -16,6 +16,7 @@ import {
   MainStateModel,
 } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component';
+import { InboxModalComponent } from '../inbox-modal/inbox-modal.component';
 
 @Component({
   selector: 'app-game-layout',
@@ -83,19 +84,9 @@ export class GameLayoutComponent {
     },
     {
       path: '/export-import',
-      displayText: 'Import/Export',
+      displayText: 'Bridge',
       icon: 'fa fa-bridge',
       onlyWeb3: true,
-    },
-    {
-      path: '/edit',
-      displayText: 'Settings',
-      icon: 'fa fa-gear',
-    },
-    {
-      displayText: 'Logout',
-      icon: 'fa fa-right-from-bracket',
-      click: this.logout.bind(this),
     },
   ];
 
@@ -108,8 +99,18 @@ export class GameLayoutComponent {
   public store = inject(Store);
   public modalService = inject(BsModalService);
   public displayingFullScreenModal = false;
-  modalRef?: BsModalRef;
+  public modalRef?: BsModalRef;
   public loggedWithemail = this.authService.loggedWithEmail;
+  public notifications$: Observable<number> = this.store
+  .select(MainState.getState)
+  .pipe(
+    map(
+      ({ player, notifications }) =>
+        notifications?.filter(
+          (notification) => !notification.opened.includes(player.id)
+        ).length ?? 0
+    )
+  );
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);
@@ -126,7 +127,7 @@ export class GameLayoutComponent {
     );
   }
 
-  private logout() {
+  public logout() {
     const config: ModalOptions = {
       initialState: {
         title: 'Logout',
@@ -138,6 +139,10 @@ export class GameLayoutComponent {
       },
     };
     const modalRef = this.modalService.show(ConfirmModalComponent, config);
+  }
+
+  public openInbox() {
+    this.modalService.show(InboxModalComponent);
   }
 
   getProgressBarData(player: PlayerModel) {
@@ -168,7 +173,7 @@ export class GameLayoutComponent {
       this.viewportService.screenSize === 'sm' ||
       this.viewportService.screenSize === 'md'
     ) {
-      return 32;
+      return 40;
     }
     return 50;
   }

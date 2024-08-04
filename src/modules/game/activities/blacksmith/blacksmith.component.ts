@@ -66,6 +66,11 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
     map((entry) => entry.player.sockets)
   );
 
+  public player$ = this.store.select(MainState.getState).pipe(
+    filter((store) => !!store?.player),
+    map((store) => store.player)
+  );
+
   constructor() {
     super();
     this.inventoryUpdated$.pipe(takeUntilDestroyed()).subscribe(async () => {

@@ -10,7 +10,7 @@
       *ngTemplateOutlet="
         menu;
         context: {
-          isMobile: false
+          isMobile: false,
         }
       "
     ></ng-container>
@@ -22,7 +22,7 @@
   <div class="d-flex flex-column h-100">
     <div
       *ngIf="(state$ | async).player as player"
-      class="topbar d-flex justify-content-between align-items-center px-4 py-2 overflow-hidden {{
+      class="topbar d-flex justify-content-between align-items-center px-4 py-2 {{
         !isSidebarOpened() ? 'content-extended' : 'content-collapsed'
       }}"
     >
@@ -41,7 +41,7 @@
         class="uruks gap-2"
         [ngbTooltip]="uruks"
         [tooltipContext]="{
-          uruks: player.uruks
+          uruks: player.uruks,
         }"
       >
         <img class="navbar-uruks-icon pb-1" src="assets/goldenuruks.png" />
@@ -63,29 +63,76 @@
           *ngTemplateOutlet="
             itemmenu;
             context: {
-              isMobile: true
+              isMobile: true,
             }
           "
         ></ng-container>
       </div>
 
-      <ng-template #playerTemplate let-player="player">
-        <div class="px-3 py-2 mb-0 player">
-          <p>{{ player.name }}</p>
-          <p>Level: {{ player.level }}</p>
+      <div class="player-dropdown">
+        <div
+          class="player-portrait position-relative"
+          data-bs-toggle="dropdown"
+        >
+          <app-item-box
+            class="rounded"
+            [height]="getPlayerImageSize()"
+            [width]="getPlayerImageSize()"
+            [image]="player.image"
+          >
+          </app-item-box>
+          <div
+            *ngIf="(notifications$ | async) > 0"
+            class="notifications notifications-player"
+          >
+            {{ notifications$ | async }}
+          </div>
         </div>
-      </ng-template>
 
-      <app-item-box
-        class="rounded"
-        [height]="getPlayerImageSize()"
-        [width]="getPlayerImageSize()"
-        [image]="player.image"
-        [ngbTooltip]="playerTemplate"
-        [tooltipContext]="{
-          player: player
-        }"
-      ></app-item-box>
+        <ul class="dropdown-menu">
+          <li class="player-info text-white">
+            <app-item-box
+              class="rounded"
+              [height]="getPlayerImageSize() * 2"
+              [width]="getPlayerImageSize() * 2"
+              [image]="player.image"
+            >
+            </app-item-box>
+            Level {{ player.level }}
+          </li>
+          <li (click)="openInbox()" class="position-relative">
+            <a class="dropdown-item">
+              <div>
+                <i class="fa-solid fa-envelope pr-2"></i>
+                <span>Inbox</span>
+              </div>
+              <div
+                *ngIf="(notifications$ | async) > 0"
+                class="notifications notifications-link"
+              >
+                {{ notifications$ | async }}
+              </div>
+            </a>
+          </li>
+          <hr />
+          <li (click)="router.navigateByUrl('/edit')">
+            <a class="dropdown-item">
+              <div>
+                <i class="fa-solid fa-gear pr-2"></i> <span>Settings</span>
+              </div>
+            </a>
+          </li>
+          <hr />
+          <li (click)="logout()">
+            <a class="dropdown-item">
+              <div>
+                <i class="fa-solid fa-right-from-bracket pr-2"></i>
+                <span>Log out</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
 
       <!-- <span urText class="level text-white px-4">Level {{ player.level }}</span> -->
     </div>
