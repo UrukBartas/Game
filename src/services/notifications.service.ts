@@ -30,4 +30,16 @@ export class NotificationsService extends ApiBaseService {
   getNotifications(): Observable<NotificationModel[]> {
     return this.get('/');
   }
+
+  openNotification(notificationId: number): Observable<void> {
+    return this.get(`/${notificationId}/open`);
+  }
+
+  getAttachments(notificationId: number) {
+    return this.get(`/${notificationId}/attachments`);
+  }
+
+  claimAttachments(notificationId: number) {
+    return this.get(`/${notificationId}/claim`);
+  }
 }

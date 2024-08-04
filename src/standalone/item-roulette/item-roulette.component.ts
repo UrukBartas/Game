@@ -24,7 +24,7 @@ import { SoundService } from 'src/services/sound.service';
     GenericItemTooltipComponent,
   ],
   templateUrl: './item-roulette.component.html',
-  styleUrl: './item-roulette.component.scss',
+  styleUrls: ['./item-roulette.component.scss'],
 })
 export class ItemRouletteComponent {
   @Input() items: Item[] = [];
@@ -33,13 +33,13 @@ export class ItemRouletteComponent {
   translateX: number = 0;
   interval: any;
   store = inject(Store);
-  sound = inject(SoundService)
+  sound = inject(SoundService);
 
   @Output() spinEnded = new EventEmitter<void>();
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!!changes['items'].currentValue) {
-      this.displayedItems = this.repeatItems(this.items, 20); // Repetir ítems para simular infinitos
+    if (changes['items'] && changes['items'].currentValue) {
+      this.displayedItems = this.repeatItems(this.items, 20);
     }
   }
 
@@ -53,10 +53,10 @@ export class ItemRouletteComponent {
 
   startRoulette(): void {
     if (!this.resultItem) {
-      console.error('resultItem no está definido');
+      console.error('resultItem is not defined');
       return;
     }
-    this.sound.playSound('assets/sounds/roulette.mp3')
+    this.sound.playSound('assets/sounds/roulette.mp3');
 
     const itemWidth = 100; // Ancho del ítem
     const gap = 20; // Gap entre ítems
@@ -80,7 +80,9 @@ export class ItemRouletteComponent {
     }
 
     // Calcular la posición final para centrar el ítem resultante
-    const finalOffset = closestIndex * totalWidth - (600 / 2 - itemWidth / 2);
+    const finalOffset =
+      closestIndex * totalWidth -
+      (document.documentElement.clientWidth / 2 - itemWidth / 2);
     const initialTranslateX = this.translateX;
     const totalDistance = finalOffset - initialTranslateX;
 
@@ -93,8 +95,8 @@ export class ItemRouletteComponent {
         this.translateX = initialTranslateX - totalDistance * easingProgress;
         requestAnimationFrame(step);
       } else {
-        this.translateX = -finalOffset; // Asegurarse de que termina en la posición exacta
-        this.spinEnded.emit()
+        this.translateX = -finalOffset;
+        this.spinEnded.emit();
       }
     };
 

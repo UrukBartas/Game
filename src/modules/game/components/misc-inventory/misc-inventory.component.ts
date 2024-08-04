@@ -34,6 +34,7 @@ import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
 import { StatsService } from 'src/services/stats.service';
 import { camelCase } from 'lodash-es';
 import { ItemTypeSC } from '../../activities/export-import-nft/enums/ItemTypesSC';
+import { Memoize } from 'lodash-decorators';
 
 export interface MiscWithStack extends MiscellanyItem {
   stack?: number;
@@ -186,6 +187,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
     return Object.entries(distributions[rarity]);
   }
 
+  @Memoize()
   public parsePossibilities(itemPossibilities: any) {
     const rarity = this.openingItem().miscellanyItemData.rarity;
     if (!rarity || !itemPossibilities) return null;

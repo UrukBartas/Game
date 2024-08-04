@@ -6,8 +6,9 @@ export interface NotificationModel {
   titleImage?: string;
   description: string;
   content: string;
-  attachments: string;
+  attachments: any;
   createdAt: Date;
   updatedAt: Date;
   opened: string[];
+  claimed: string[];
 }
