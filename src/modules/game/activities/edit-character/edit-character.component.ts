@@ -98,12 +98,14 @@ export class EditCharacterComponent extends TemplatePage {
         email: ['', [Validators.required, Validators.email]],
         password: [
           '',
-          [Validators.required, Validators.pattern(passwordPattern)],
+          this.editing
+            ? []
+            : [Validators.required, Validators.pattern(passwordPattern)],
         ],
-        repeatPassword: ['', [Validators.required]],
+        repeatPassword: ['', this.editing ? [] : [Validators.required]],
         disablePVP: [false, []],
       },
-      { validator: passwordMatchingValidator() }
+      this.editing ? {} : { validator: passwordMatchingValidator() }
     );
 
     if (this.editing) {

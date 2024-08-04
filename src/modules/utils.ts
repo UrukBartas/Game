@@ -41,6 +41,16 @@ export function getRarityColor(rarity: Rarity, percent = 0): string {
   return blendColors(baseColor, percent);
 }
 
+export function getGenericItemItemData(item: any) {
+  return (
+    item?.itemData ??
+    item?.miscellanyItemData ??
+    item?.consumableData ??
+    item?.materialData ??
+    null
+  );
+}
+
 export function getRarityText(rarity: Rarity): string {
   switch (rarity) {
     default:
