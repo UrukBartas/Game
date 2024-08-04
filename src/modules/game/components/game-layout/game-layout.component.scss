@@ -175,6 +175,13 @@ nav a {
   .dropdown-menu {
     padding: 0 !important;
     background: $black-300;
+    .player-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 5px;
+    }
     .dropdown-item {
       padding: 10px 15px;
       border-radius: 5px;

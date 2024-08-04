@@ -90,6 +90,16 @@
         </div>
 
         <ul class="dropdown-menu">
+          <li class="player-info text-white">
+            <app-item-box
+              class="rounded"
+              [height]="getPlayerImageSize() * 2"
+              [width]="getPlayerImageSize() * 2"
+              [image]="player.image"
+            >
+            </app-item-box>
+            Level {{ player.level }}
+          </li>
           <li (click)="openInbox()" class="position-relative">
             <a class="dropdown-item">
               <div>
