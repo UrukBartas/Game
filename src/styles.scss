@@ -17,6 +17,7 @@ $min-contrast-ratio: 2.5;
   padding: 0;
   box-sizing: border-box;
   font-family: 'UrukFont';
+  -webkit-font-smoothing: antialiased;
   user-select: none;
 }
 html,
@@ -115,12 +116,13 @@ app-item-box {
   top: 50%;
   margin: 0 !important;
   li {
-    background-color: $third !important;
-    border: 1px solid $primary !important;
-  }
-  li.nested {
-    background-color: $secondary !important;
-    border: 1px solid $primary !important;
+    background-color: $black-300 !important;
+    color: $white-100 !important;
+    border-radius: 5px;
+    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.4);
+    &.nested {
+      background-color: $black-200 !important;
+    }
   }
 }
 
@@ -374,6 +376,6 @@ app-item-box.rounded {
   }
 }
 
-.h-fit-content{
+.h-fit-content {
   height: fit-content;
 }
