@@ -9,6 +9,8 @@ export class ViewportService {
     this.getViewport();
   public screenWidth: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' =
     this.getViewportWidth();
+  public screenHeight: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' =
+    this.getViewportHeight();
   public screenSizeChanges: Subject<'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'> =
     new Subject();
 
@@ -17,6 +19,7 @@ export class ViewportService {
       this.zone.run(() => {
         this.screenSize = this.getViewport();
         this.screenWidth = this.getViewportWidth();
+        this.screenHeight = this.getViewportHeight();
         this.screenSizeChanges.next(this.screenSize);
       });
     });
@@ -40,6 +43,19 @@ export class ViewportService {
     const width = Math.max(
       document.documentElement.clientWidth,
       window.innerWidth || 0
+    );
+    if (width <= 576) return 'xs';
+    if (width <= 768) return 'sm';
+    if (width <= 992) return 'md';
+    if (width <= 1200) return 'lg';
+    if (width <= 1400) return 'xl';
+    return 'xxl';
+  }
+
+  public getViewportHeight() {
+    const width = Math.max(
+      document.documentElement.clientHeight,
+      window.innerHeight || 0
     );
     if (width <= 576) return 'xs';
     if (width <= 768) return 'sm';

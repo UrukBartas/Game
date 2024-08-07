@@ -285,12 +285,12 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
   }
 
   getShowItemCompare(): boolean {
-    switch (this.viewportService.screenSize) {
+    switch (this.viewportService.screenHeight) {
       case 'xxl':
       case 'xl':
       case 'lg':
-        return true;
       case 'md':
+        return true;
       case 'xs':
       case 'sm':
       default:
