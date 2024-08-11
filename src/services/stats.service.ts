@@ -28,4 +28,12 @@ export class StatsService extends ApiBaseService {
   getCappedPerStats(): Observable<any> {
     return this.get('/capped-per-stats');
   }
+
+  getDamageEffectiveness(): Observable<any> {
+    return this.get('/damage-effectiveness');
+  }
+
+  getMonsterWeakness(): Observable<any> {
+    return this.get('/creature-weakness');
+  }
 }

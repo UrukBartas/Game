@@ -14,3 +14,4 @@ export interface QuestModel {
   active: boolean;
   selected?: boolean;
 }
+
