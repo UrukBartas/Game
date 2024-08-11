@@ -15,6 +15,11 @@ export class BaseInventoryComponent {
 
   public addToSelectedItems(item: any) {
     if (!item) return;
+    if (this.selectedItems.length == 1 && item == this.selectedItems[0]) {
+      this.selectedItems = [];
+      this.selectedItemsChange.emit(this.selectedItems);
+      return;
+    }
     if (!item['quantityToExport']) item['quantityToExport'] = 1;
     if (!this.multipleSelection) {
       this.selectedItems = [item];

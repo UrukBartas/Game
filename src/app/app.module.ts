@@ -20,6 +20,7 @@ import { FocuserComponent } from 'src/standalone/focuser/focuser.component';
 import { ConnectComponent } from 'src/modules/game/activities/connect/connect.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ThreePortalService } from 'src/modules/game/activities/connect/service/three-portal.service';
+import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
 
 @NgModule({
   declarations: [AppComponent, TemplatePage, ConnectComponent],
@@ -45,6 +46,7 @@ import { ThreePortalService } from 'src/modules/game/activities/connect/service/
   ],
   providers: [
     ThreePortalService,
+    StackPipe,
     { provide: HTTP_INTERCEPTORS, useClass: HttpUrukInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],

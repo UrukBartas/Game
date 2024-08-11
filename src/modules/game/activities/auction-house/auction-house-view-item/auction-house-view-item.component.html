@@ -1,0 +1,53 @@
+<div id="confirm-modal" class="gap-2">
+  <div class="row">
+    <p class="text-third" urTitle>Viewing listing</p>
+  </div>
+  <div class="row d-flex justify-content-center">
+    @if (!!listing) {
+      <div
+        class="col d-flex flex-column gap-2 justify-content-center align-items-center"
+      >
+        <div class="seller d-flex align-items-center gap-2">
+          <span class="text-white mb-0 text-center" urSubtext
+            >Sold by {{ listing.seller.name }}</span
+          >
+          <app-item-box
+            class="rounded"
+            [height]="getPlayerImageSize()"
+            [width]="getPlayerImageSize()"
+            [image]="listing.seller.image"
+          >
+          </app-item-box>
+        </div>
+
+        @if (!!listing.item) {
+          <app-item-tooltip [item]="listing.item"></app-item-tooltip>
+        } @else {
+          <app-generic-item-tooltip class="text-white"
+            [item]="
+              getGenericItemItemData(
+                listing.item ??
+                  listing.material ??
+                  listing.consumable ??
+                  listing.miscellany
+              )
+            "
+          ></app-generic-item-tooltip>
+        }
+        <div class="price text-white text-center" urTitle>
+          {{ listing.price }}
+          <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+        </div>
+        <button
+          type="button"
+          class="btn btn-secondary btn-lg btn-block w-100 btn-pending"
+          (click)="buy()"
+        >
+          Buy
+        </button>
+      </div>
+    } @else {
+      No listing selected
+    }
+  </div>
+</div>

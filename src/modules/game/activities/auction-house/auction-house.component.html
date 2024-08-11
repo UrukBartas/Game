@@ -1,0 +1,101 @@
+<div id="auction-house">
+  <div class="auction-house-bg"></div>
+  <div class="auction-panel">
+    <div class="row" style="flex-grow: 1">
+      <div class="col-3 filters">
+        <accordion [isAnimated]="true">
+          <accordion-group heading="Gear">
+            <ul>
+              <li>All</li>
+              <li>Helmet</li>
+              <li>Chest</li>
+              <li>Gloves</li>
+              <li>Trousers</li>
+              <li>Boots</li>
+              <li>One Hand Weapon</li>
+              <li>Two Hand Weapon</li>
+              <li>Shield</li>
+              <li>Ring</li>
+              <li>Charm</li>
+            </ul>
+          </accordion-group>
+          <accordion-group heading="Materials">
+            <ul>
+              <li>All</li>
+            </ul>
+          </accordion-group>
+          <accordion-group heading="Consumables">
+            <ul>
+              <li>All</li>
+            </ul>
+          </accordion-group>
+          <accordion-group heading="Miscellany">
+            <ul>
+              <li>All</li>
+              <li>Lootbox</li>
+              <li>Recipe</li>
+              <li>Portrait</li>
+              <li>Money Bag</li>
+              <li>Item Set</li>
+            </ul>
+          </accordion-group>
+        </accordion>
+      </div>
+      <div class="col-9 list">
+        @for (
+          marketListing of getMarketListings() | async;
+          track marketListing.id
+        ) {
+          <div
+            class="list-item"
+            *ngIf="getData(marketListing) as data"
+            (click)="viewListing(marketListing)"
+            (appDoubleClick)="viewListing(marketListing)"
+          >
+            <div class="img-wrap" style="width: 100px">
+              <app-item-box
+                [width]="32"
+                [height]="32"
+                [image]="data.imageLocal"
+              >
+                <div tooltip class="tooltip-uruk">
+                  @if (!!marketListing.item) {
+                    <app-item-tooltip
+                      [item]="marketListing.item"
+                    ></app-item-tooltip>
+                  } @else {
+                    <app-generic-item-tooltip
+                      [item]="data"
+                    ></app-generic-item-tooltip>
+                  }
+                </div>
+              </app-item-box>
+            </div>
+
+            <div class="name text-center" style="width: 300px">
+              {{ data.name }}
+            </div>
+            <div class="price" style="width: 100px">
+              {{ marketListing.price }}
+              <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+            </div>
+          </div>
+        } @empty {
+          No items found!
+        }
+      </div>
+    </div>
+    <div class="footer">
+      <div class="d-flex filter-sections justify-content-start">
+        <button [class]="'btn btn-primary'">Marketplace</button>
+        <button [class]="'btn btn-primary '">My trades</button>
+        <button [class]="'btn btn-primary '">My bids</button>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button [class]="'btn btn-secondary'" (click)="createNewTrade()">
+          New trade
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
