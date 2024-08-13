@@ -2,6 +2,7 @@ import { AsyncPipe, CommonModule, DecimalPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -65,6 +66,7 @@ import { AuctionHouseComponent } from './activities/auction-house/auction-house.
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { AuctionHouseNewTradeComponent } from './activities/auction-house/auction-house-new-trade/auction-house-new-trade.component';
 import { AuctionHouseViewItemComponent } from './activities/auction-house/auction-house-view-item/auction-house-view-item.component';
+import { TimeAgoPipe } from 'src/app/time-ago.pipe';
 const directives = [
   ValidInputDirective,
   TextSizeDirective,
@@ -104,6 +106,7 @@ const pipes = [
   OrderByPipe,
   StackPipe,
   CompressNumberPipe,
+  TimeAgoPipe
 ];
 
 @NgModule({
@@ -128,6 +131,7 @@ const pipes = [
     ...pipes,
     CommonModule,
     TabsModule,
+    PaginationModule,
     GameRoutingModule,
     NgbModule,
     ItemBoxComponent,

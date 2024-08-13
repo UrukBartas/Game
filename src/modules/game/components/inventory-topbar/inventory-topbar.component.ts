@@ -4,7 +4,6 @@ import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { debounceTime, filter, map } from 'rxjs';
 import { Item, Rarity } from 'src/modules/core/models/items.model';
-import { InventoryService } from 'src/services/inventory.service';
 import { MainState } from 'src/store/main.store';
 
 @Component({

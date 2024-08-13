@@ -35,8 +35,10 @@ export class AuctionHouseNewTradeComponent {
   selectedConsumables: Array<Consumable> = [];
   selectedtableMisc: Array<MiscellanyItem> = [];
   public price = new FormControl(0, [Validators.min(0.0000001)]);
+  public quantity = new FormControl(1, [Validators.min(1)]);
   public getGenericItemItemData = getGenericItemItemData;
   onAccept: Function;
+  public marketItemType = MarketItemType;
 
   public getSelectedItem(): any {
     if (this.selectedItems.length > 0) return this.selectedItems[0];
@@ -83,6 +85,7 @@ export class AuctionHouseNewTradeComponent {
           price: this.price.value,
           itemId: selectedItem.id,
           itemType: this.getItemType(selectedItem),
+          quantity: this.quantity.value ?? 1,
         })
       );
       this.toast.success(
@@ -96,7 +99,7 @@ export class AuctionHouseNewTradeComponent {
     }
   }
 
-  private getItemType(selectedItem: any) {
+  public getItemType(selectedItem: any) {
     if (!!selectedItem.itemData) return MarketItemType.ITEM;
     if (!!selectedItem.miscellanyItemData) return MarketItemType.MISCELLANY;
     if (!!selectedItem.consumableData) return MarketItemType.CONSUMABLE;

@@ -23,6 +23,19 @@
     }
   }
 
+  .filters,
+  .show-all {
+    li {
+      height: 35px;
+      &:hover {
+        transition: 0.5s;
+        background-color: $third;
+        border-radius: 5px;
+        color: white;
+      }
+    }
+  }
+
   .auction-panel {
     position: absolute;
     z-index: 1;
@@ -37,7 +50,8 @@
       gap: 5px;
     }
     .filters {
-      max-height: 75vh;
+      max-height: 80vh;
+
       overflow: auto;
       ul {
         padding: 0px;
@@ -51,16 +65,10 @@
         }
       }
     }
-    .list-item {
-      padding: 10px;
-      border: 1px solid $primary;
-      color: white;
-      background-color: $primary;
-      cursor: pointer;
-      &:hover {
-        transition: 0.5s;
-        background-color: $secondary;
-      }
+
+    .activated-list-item {
+      color: white !important;
+      background-color: $secondary;
     }
     .footer {
       display: flex;
@@ -72,7 +80,7 @@
       display: flex;
       gap: 5px;
       flex-direction: column;
-      max-height: 70vh;
+      height: 70vh;
       overflow: auto;
       .list-item {
         display: flex;
@@ -81,7 +89,26 @@
         img {
           width: 24px;
         }
+        @include media-breakpoint-down(sm) {
+          font-size: 13px;
+        }
       }
+    }
+  }
+
+  .footer-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .show-all {
+    color: $third;
+    list-style: none;
+  }
+  .filters-topbar {
+    display: flex;
+    @include media-breakpoint-down(sm) {
+      flex-wrap: wrap;
     }
   }
 }

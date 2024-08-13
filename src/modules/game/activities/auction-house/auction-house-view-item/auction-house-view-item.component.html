@@ -23,7 +23,8 @@
         @if (!!listing.item) {
           <app-item-tooltip [item]="listing.item"></app-item-tooltip>
         } @else {
-          <app-generic-item-tooltip class="text-white"
+          <app-generic-item-tooltip
+            class="text-white"
             [item]="
               getGenericItemItemData(
                 listing.item ??
@@ -34,6 +35,9 @@
             "
           ></app-generic-item-tooltip>
         }
+        <div class="price text-light text-center" urSubtext>
+          Qty. {{ listing.quantity }}
+        </div>
         <div class="price text-white text-center" urTitle>
           {{ listing.price }}
           <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
@@ -44,6 +48,14 @@
           (click)="buy()"
         >
           Buy
+        </button>
+        <button
+          *ngIf="listing.seller.id == (player$ | async).id"
+          type="button"
+          class="btn btn-danger btn-lg btn-block w-100 btn-pending"
+          (click)="cancel()"
+        >
+          Cancel
         </button>
       </div>
     } @else {

@@ -22,6 +22,7 @@ export interface MarketListing {
   consumable?: Consumable | null;
   material?: Material | null;
   miscellany?: MiscellanyItem | null;
+  quantity?: number;
 }
 
 export interface Bid {

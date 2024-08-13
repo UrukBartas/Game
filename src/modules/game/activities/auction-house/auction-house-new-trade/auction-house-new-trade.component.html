@@ -1,4 +1,3 @@
-
 <div id="confirm-modal">
   <div class="row">
     <p class="text-third" urTitle>Select item</p>
@@ -21,6 +20,11 @@
               [disableDND]="false"
               [(selectedItems)]="selectedItems"
               [multipleSelection]="false"
+              (selectedItemsChange)="
+                selectedMaterials = [];
+                selectedConsumables = [];
+                selectedtableMisc = []
+              "
             >
             </app-item-inventory>
           </ng-container>
@@ -34,6 +38,11 @@
             [sockets]="currentSize$ | async"
             [(selectedItems)]="selectedMaterials"
             [multipleSelection]="false"
+            (selectedItemsChange)="
+              selectedItems = [];
+              selectedConsumables = [];
+              selectedtableMisc = []
+            "
           >
           </app-materials-inventory
         ></tab>
@@ -46,6 +55,9 @@
             [sockets]="currentSize$ | async"
             [(selectedItems)]="selectedConsumables"
             [multipleSelection]="false"
+            (selectedItemsChange)="
+              selectedItems = []; selectedMaterials = []; selectedtableMisc = []
+            "
           >
           </app-consumables-inventory>
         </tab>
@@ -58,6 +70,11 @@
             [sockets]="currentSize$ | async"
             [(selectedItems)]="selectedtableMisc"
             [multipleSelection]="false"
+            (selectedItemsChange)="
+              selectedConsumables = [];
+              selectedMaterials = [];
+              selectedItems = []
+            "
           >
           </app-misc-inventory>
         </tab>
@@ -82,17 +99,37 @@
           }
         </div>
       </app-item-box>
-      <div class="form-group">
-        <label for="characterName" class="text-third">Price</label>
-        <input
-          type="number"
-          class="form-control"
-          id="characterName"
-          [formControl]="price"
-          name="characterName"
-          placeholder="Item price"
-          validInput
-        />
+      <div class="col-12">
+        <div class="form-group">
+          <label for="characterName" class="text-third">Price</label>
+          <input
+            type="number"
+            class="form-control"
+            id="characterName"
+            [formControl]="price"
+            name="characterName"
+            placeholder="Item price"
+            validInput
+          />
+        </div>
+      </div>
+      <div
+        class="col-12"
+        *ngIf="getItemType(getSelectedItem()) == marketItemType.MATERIAL"
+      >
+        <div class="form-group">
+          <label for="quantity" class="text-third">Quantity</label>
+          <input
+            type="number"
+            class="form-control"
+            id="quantity"
+            max="{{ getSelectedItem()?.quantity ?? 1 }}"
+            [formControl]="quantity"
+            name="quantity"
+            placeholder="Quantity"
+            validInput
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -104,7 +141,12 @@
     <button
       class="btn btn-secondary"
       (click)="accept()"
-      [disabled]="!getSelectedItem() || price.invalid"
+      [disabled]="
+        !getSelectedItem() ||
+        price.invalid ||
+        (quantity.invalid &&
+          getItemType(getSelectedItem()) == marketItemType.MATERIAL)
+      "
     >
       Accept
     </button>
