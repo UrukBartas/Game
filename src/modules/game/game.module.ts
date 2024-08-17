@@ -61,6 +61,8 @@ import { MiscInventoryComponent } from './components/misc-inventory/misc-invento
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
 import { OnlyStatsComponent } from './components/stats-detail/only-stats/only-stats/only-stats.component';
+import { GenericStatsComponent } from './components/stats-detail/only-stats/only-stats/generic-stats/generic-stats.component';
+import { PercentStatsComponent } from './components/stats-detail/only-stats/only-stats/percent-stats/percent-stats.component';
 
 const directives = [
   ValidInputDirective,
@@ -116,6 +118,8 @@ const pipes = [
     MiscInventoryComponent,
     BaseInventoryComponent,
     OnlyStatsComponent,
+    GenericStatsComponent,
+    PercentStatsComponent,
   ],
   imports: [
     ...directives,

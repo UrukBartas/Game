@@ -20,3 +20,16 @@
     list-style: none;
   }
 }
+
+.player-info {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  .player-avatar {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .list-stats {
+    flex-grow: 1;
+  }
+}

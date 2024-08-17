@@ -21,6 +21,7 @@ import { TemplatePage } from 'src/modules/core/components/template-page.componen
 import { Item, ItemType } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
+import { getRarityBasedOnIRI, getRarityColor, getRarityText } from 'src/modules/utils';
 import { ItemService } from 'src/services/item.service';
 import { PlayerService } from 'src/services/player.service';
 import { ShopService } from 'src/services/shop.service';
@@ -69,6 +70,10 @@ export class InventoryComponent extends TemplatePage {
   public hoveredItem: Item;
   private shopService = inject(ShopService);
 
+  public getRarityColor = getRarityColor;
+  public getRarityText = getRarityText;
+  public getRarityBasedOnIRI = getRarityBasedOnIRI;
+
   public getPlayer$: Observable<PlayerModel> = of(true).pipe(
     switchMap(() => {
       if (this.isViewingPlayer) {
@@ -103,6 +108,22 @@ export class InventoryComponent extends TemplatePage {
                 slotType == ItemType.Weapon1H))
         );
         return foundItem;
+      })
+    );
+  };
+
+  public iriAverage$ = () => {
+    return this.actualPlayer$.pipe(
+      filter((player) => !!player),
+      map((player) => player.items),
+      map((items: Array<Item>) => {
+        const equippedItems = items.filter((item) => item.equipped);
+        let totalIRI = 0;
+        equippedItems.forEach(
+          (equippedItem) =>
+            (totalIRI = totalIRI + equippedItem.item_rarity_stat)
+        );
+        return totalIRI / equippedItems.length;
       })
     );
   };

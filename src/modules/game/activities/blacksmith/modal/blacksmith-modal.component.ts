@@ -1,10 +1,12 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
+import { camelCase } from 'lodash';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { firstValueFrom, of, take } from 'rxjs';
-import { Item } from 'src/modules/core/models/items.model';
+import { Item, Rarity } from 'src/modules/core/models/items.model';
 import { Material, MaterialData } from 'src/modules/core/models/material.model';
+import { getRarityColor } from 'src/modules/utils';
 import { ItemService } from 'src/services/item.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
@@ -15,7 +17,7 @@ import { ViewportService } from 'src/services/viewport.service';
   styleUrl: './blacksmith-modal.component.scss',
 })
 export class BlacksmithModalComponent implements OnInit {
-  action: 'melt' | 'upgrade' | 'enchant';
+  action: 'melt' | 'upgrade' | 'enchant' | 'combine';
   items: Array<Item>;
   modalRef = inject(BsModalRef);
   playerService = inject(PlayerService);
@@ -27,6 +29,26 @@ export class BlacksmithModalComponent implements OnInit {
   public currentMaterials: Array<Material> = [];
   public useMagicDust = new FormControl(false);
   public activeRecipe = signal(null);
+  public getRarityColor = getRarityColor;
+  public camelCase = camelCase;
+  public objectKeys = Object.keys;
+
+  public getItemImageBasedOnRarity = (rarity: Rarity | any) => {
+    switch (rarity) {
+      case Rarity.COMMON:
+        return 'assets/items/weapon/common/6.webp';
+      case Rarity.UNCOMMON:
+        return 'assets/items/weapon/uncommon/2.webp';
+      case Rarity.EPIC:
+        return 'assets/items/weapon/epic/1.webp';
+      case Rarity.LEGENDARY:
+        return 'assets/items/weapon/legendary/6.webp';
+      case Rarity.MYTHIC:
+        return 'assets/items/weapon/mythic/3.webp';
+    }
+    return 'assets/items/weapon/common/6.webp';
+  };
+
   public priceAndMaterialsActiveRecipe$ = computed(() => {
     if (!this.activeRecipe()) return of([]);
     return this.itemService.getPreviewForRecipe(
@@ -46,10 +68,25 @@ export class BlacksmithModalComponent implements OnInit {
         );
       } else if (this.action == 'enchant') {
         observable = this.itemService.getRecipes(this.items[0].id);
+      } else if (this.action == 'combine') {
+        observable = this.itemService.getCombineItemsPreview(
+          this.items.map((entry) => entry.id)
+        );
       }
       observable.pipe(take(1)).subscribe((preview) => {
         this.preview = preview;
       });
+    }
+  }
+
+  getPossibleDropsSize() {
+    switch (this.viewportService.screenSize) {
+      case 'xxl':
+      case 'xl':
+      case 'lg':
+        return 100;
+      default:
+        return 50;
     }
   }
 
@@ -69,6 +106,10 @@ export class BlacksmithModalComponent implements OnInit {
         observable = this.itemService.enchantItem(
           this.items[0].id,
           this.activeRecipe().id
+        );
+      } else if (this.action == 'combine') {
+        observable = this.itemService.getCombineItems(
+          this.items.map((entry) => entry.id)
         );
       }
       observable.pipe(take(1)).subscribe((result) => {

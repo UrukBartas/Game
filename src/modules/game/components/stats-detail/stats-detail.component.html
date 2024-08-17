@@ -1,63 +1,61 @@
 @if (!!player) {
   <div class="stats-container pb-3">
-    <div class="row gap-3">
-      <div class="col-12 d-flex justify-content-center">
-        <app-item-box
-          [height]="getPlayerImageSize()"
-          [width]="getPlayerImageSize()"
-          [image]="player.image"
-        ></app-item-box>
-      </div>
-      <div class="col-12">
-        <div class="description stat">
-          <label urText class="text-center">{{ player.name }}</label>
-        </div>
-      </div>
-    </div>
     <div class="row">
       <div class="col">
         <div class="description stat">
           <p urText>Player</p>
-          <ul>
-            <li urSubtext class="d-flex justify-content-between gap-2">
-              <label class="text-third">Arena rank:</label>
-              <span
-                [ngStyle]="{
-                  color: getRarityColor(getPvpTier(player.pvpIndex).rarity)
-                }"
-              >
-                {{ getPvpTier(player.pvpIndex).title }}</span
-              >
-            </li>
-            <li urSubtext class="d-flex justify-content-between gap-2">
-              <label class="text-third">Questing rank:</label>
-              <span
-                [ngStyle]="{
-                  color: getRarityColor(
-                    getQuestTier(player.finishedQuestsCount).rarity
-                  )
-                }"
-              >
-                {{ getQuestTier(player.finishedQuestsCount).title }}</span
-              >
-            </li>
-            <li urSubtext class="d-flex justify-content-between gap-2">
-              <label class="text-third">Level:</label>
-              {{ player.level }}
-            </li>
-            <li urSubtext class="d-flex justify-content-between gap-2">
-              <label class="text-third">Quests completed:</label>
-              {{ player.finishedQuestsCount }}
-            </li>
-            <li urSubtext class="d-flex justify-content-between gap-2">
-              <label class="text-third">Arena points:</label>
-              {{ player.mmr }}
-            </li>
-            <li urSubtext class="d-flex justify-content-between gap-2">
-              <label class="text-third">Member since:</label>
-              {{ player.createdAt | date }}
-            </li>
-          </ul>
+          <div class="player-info">
+            <div class="d-flex justify-content-center player-avatar">
+              <app-item-box
+                [height]="getPlayerImageSize()"
+                [width]="getPlayerImageSize()"
+                [image]="player.image"
+              ></app-item-box>
+              <div class="description stat">
+                <label urText class="text-center">{{ player.name }}</label>
+              </div>
+            </div>
+            <ul class="list-stats">
+              <li urSubtext class="d-flex justify-content-between gap-2">
+                <label class="text-third">Arena rank:</label>
+                <span
+                  [ngStyle]="{
+                    color: getRarityColor(getPvpTier(player.pvpIndex).rarity),
+                  }"
+                >
+                  {{ getPvpTier(player.pvpIndex).title }}</span
+                >
+              </li>
+              <li urSubtext class="d-flex justify-content-between gap-2">
+                <label class="text-third">Questing rank:</label>
+                <span
+                  [ngStyle]="{
+                    color: getRarityColor(
+                      getQuestTier(player.finishedQuestsCount).rarity
+                    ),
+                  }"
+                >
+                  {{ getQuestTier(player.finishedQuestsCount).title }}</span
+                >
+              </li>
+              <li urSubtext class="d-flex justify-content-between gap-2">
+                <label class="text-third">Level:</label>
+                {{ player.level }}
+              </li>
+              <li urSubtext class="d-flex justify-content-between gap-2">
+                <label class="text-third">Quests completed:</label>
+                {{ player.finishedQuestsCount }}
+              </li>
+              <li urSubtext class="d-flex justify-content-between gap-2">
+                <label class="text-third">Arena points:</label>
+                {{ player.mmr }}
+              </li>
+              <li urSubtext class="d-flex justify-content-between gap-2">
+                <label class="text-third">Member since:</label>
+                {{ player.createdAt | date }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

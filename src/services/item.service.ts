@@ -68,12 +68,19 @@ export class ItemService extends ApiBaseService {
     return this.get(`/preview-for-recipe/${recipeId}/${itemId}`);
   }
 
-
   public enchantItem(itemId: number, recipeId: number) {
     return this.get(`/enchant-item/${recipeId}/${itemId}`);
   }
 
   public getItemDataByRarity(rarity: Rarity) {
     return this.get('/get-item-data-by-rarity/' + rarity);
+  }
+
+  public getCombineItemsPreview(itemsIds: Array<number>) {
+    return this.post('/combine-items-preview/', { ids: itemsIds });
+  }
+
+  public getCombineItems(itemsIds: Array<number>) {
+    return this.post('/combine-items/', { ids: itemsIds });
   }
 }

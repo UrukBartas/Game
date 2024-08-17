@@ -1,3 +1,34 @@
+<ng-template
+  #chanceDisplayer
+  let-rarity="rarity"
+  let-chance="chance"
+  let-image="image"
+  let-type="type"
+>
+  <div class="wrapper-chance-displayer">
+    <app-item-box
+      class="{{ rarity }} chance-displayer"
+      [height]="getPossibleDropsSize()"
+      [width]="getPossibleDropsSize()"
+      [rarity]="rarity"
+      [image]="image"
+    >
+      <div tooltip class="tooltip-uruk p-2">
+        <p class="mb-0" [ngStyle]="{ color: getRarityColor(rarity) }">
+          {{
+            (chance * 100).toFixed(2) +
+              '% of getting a ' +
+              camelCase(rarity) +
+              ' ' +
+              type
+          }}
+        </p>
+      </div>
+    </app-item-box>
+    <span class="text-light">{{ (chance * 100).toFixed(2) + ' %' }}</span>
+  </div>
+</ng-template>
+
 <ng-template #header>
   <p class="text-third" urTitle>
     @switch (action) {
@@ -9,6 +40,9 @@
       }
       @case ('enchant') {
         Enchant item <i class="fa fa-wand-magic-sparkles pl-1 pb-1"></i>
+      }
+      @case ('combine') {
+        Combine item <i class="fa fa-hand-fist pl-1 pb-1"></i>
       }
       @default {}
     }
@@ -37,6 +71,11 @@
       </div>
       <div class="col-4 text-secondary pb-2 d-none d-sm-flex" urText>
         Result:
+      </div>
+    }
+    @case ('combine') {
+      <div class="col-12 col-sm-6 text-white pb-2" urText>
+        Possibilities of getting new item:
       </div>
     }
     @default {}
@@ -112,7 +151,7 @@
     @case ('enchant') {
       <div class="col-12 col-sm-6 d-flex pb-2 overflow-auto flex-wrap">
         @if (preview.length == 0) {
-         <span class="text-light">You don't have any recipes.</span>
+          <span class="text-light">You don't have any recipes.</span>
         }
         <app-item-box
           *ngFor="let enchant of preview | stack: 'miscellanyItemDataId'"
@@ -195,6 +234,25 @@
             <app-item-tooltip [item]="items[0]"></app-item-tooltip>
           </div>
         </app-item-box>
+      </div>
+    }
+    @case ('combine') {
+      <div class="list-items-combined">
+        <div *ngFor="let possibility of objectKeys(preview.result)">
+          @if (!!preview.result[possibility]) {
+            <ng-container
+              *ngTemplateOutlet="
+                chanceDisplayer;
+                context: {
+                  rarity: possibility,
+                  chance: preview.result[possibility].toFixed(2),
+                  image: getItemImageBasedOnRarity(possibility),
+                  type: 'item',
+                }
+              "
+            ></ng-container>
+          }
+        </div>
       </div>
     }
     @default {}

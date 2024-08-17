@@ -7,7 +7,11 @@ import { camelCase } from 'lodash-es';
 import { map } from 'rxjs';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
-import { getRarityColor, getRarityText } from 'src/modules/utils';
+import {
+  getRarityBasedOnIRI,
+  getRarityColor,
+  getRarityText,
+} from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
 export const avoidableStats = [
@@ -27,7 +31,7 @@ export const avoidableStats = [
   'quantity',
   'quantityToExport',
   'item_rarity_stat',
-  'canBeUpgraded'
+  'canBeUpgraded',
 ];
 const mapPercentLabels = {
   per_health: 'total health',
@@ -60,6 +64,7 @@ export class ItemTooltipComponent {
 
   public getRarityColor = getRarityColor;
   public getRarityText = getRarityText;
+  public getRarityBasedOnIRI = getRarityBasedOnIRI;
   public viewportService = inject(ViewportService);
   public route = inject(ActivatedRoute);
   public rarityEnum = Rarity;
@@ -69,20 +74,6 @@ export class ItemTooltipComponent {
   public ceil = Math.ceil;
   public nonPorcentualStatsLength = 0;
   private store = inject(Store);
-
-  public getRarityBasedOnIRI(iri: number) {
-    if (iri <= 20) {
-      return Rarity.COMMON;
-    } else if (iri > 20 && iri <= 40) {
-      return Rarity.UNCOMMON;
-    } else if (iri > 40 && iri <= 60) {
-      return Rarity.EPIC;
-    } else if (iri > 60 && iri <= 80) {
-      return Rarity.LEGENDARY;
-    } else {
-      return Rarity.MYTHIC;
-    }
-  }
 
   public player$ = this.store
     .select(MainState.getState)

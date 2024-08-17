@@ -1,0 +1,44 @@
+<ng-template #statExplanation let-text="text">
+  <div class="p-2">
+    <span class="text-white bg-black">{{ text }}</span>
+  </div>
+</ng-template>
+<div class="table-responsive rarity-table">
+  <table class="table table-dark" [ngClass]="{ 'table-striped': !simplified }">
+    <tbody [ngClass]="{ 'simplified-table-body': simplified }">
+      <tr *ngIf="!simplified">
+        <td colspan="3" class="table-section">Rarity Stats</td>
+      </tr>
+      <ng-container *ngFor="let perStat of perStatItems">
+        <tr>
+          <td class="flex justify-content-start">
+            {{ perStat.label }} %
+            <i
+              class="fa-solid fa-circle-info text-third fa-sm px-1"
+              [ngbTooltip]="statExplanation"
+              [tooltipContext]="{ text: perStat.tooltip }"
+            ></i>
+          </td>
+          <td>
+            <span
+              [ngClass]="{
+                'positive-rarity-bonus': player.perStats[perStat.key] >= 0,
+                'negative-rarity-bonus': player.perStats[perStat.key] < 0,
+              }"
+            >
+              {{ player.perStats[perStat.key] | number: '1.0-2' }}%
+            </span>
+          </td>
+          <td>
+            <span
+              *ngIf="cappedPerStats[perStat.key] && !simplified"
+              class="max-value"
+            >
+              (Max: {{ cappedPerStats[perStat.key] }}%)
+            </span>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>

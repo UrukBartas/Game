@@ -66,4 +66,14 @@
   .second-hand-slot {
     filter: grayscale(1);
   }
+
+  .stats-summary {
+    flex-direction: column;
+  }
+  .iri-summary {
+    position: absolute;
+    z-index: 1000;
+    bottom: 5%;
+    left: 5vw;
+  }
 }
