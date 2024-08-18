@@ -78,6 +78,11 @@
       div {
         flex-grow: 1;
       }
+      @include media-breakpoint-down(sm) {
+        button {
+          font-size: 10px;
+        }
+      }
     }
     .list {
       display: flex;
