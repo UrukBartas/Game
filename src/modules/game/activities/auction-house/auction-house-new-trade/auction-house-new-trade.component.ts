@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { BsModalRef } from 'ngx-bootstrap/modal';

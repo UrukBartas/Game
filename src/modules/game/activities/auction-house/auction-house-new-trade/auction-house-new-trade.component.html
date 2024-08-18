@@ -3,10 +3,7 @@
     <p class="text-third" urTitle>Select item</p>
   </div>
   <div class="row">
-    <div
-      class="inventory"
-      [ngClass]="{ 'col-12': !getSelectedItem(), 'col-6': getSelectedItem() }"
-    >
+    <div *ngIf="!getSelectedItem()" class="inventory">
       <tabset>
         <tab id="tab1">
           <ng-template tabHeading>
@@ -81,7 +78,7 @@
       </tabset>
     </div>
     <div
-      class="col-6 d-flex align-items-center justify-content-center preview-sell"
+      class="d-flex align-items-center justify-content-center preview-sell"
       *ngIf="!!getSelectedItem()"
     >
       <app-item-box
@@ -100,7 +97,7 @@
         </div>
       </app-item-box>
       <div class="col-12">
-        <div class="form-group">
+        <div class="form-group mb-2">
           <label for="characterName" class="text-third">Price</label>
           <input
             type="number"
@@ -112,6 +109,9 @@
             validInput
           />
         </div>
+        <span urSubtext class="fst-italic text-white"
+          >*There is a 1% fee for every sale</span
+        >
       </div>
       <div
         class="col-12"

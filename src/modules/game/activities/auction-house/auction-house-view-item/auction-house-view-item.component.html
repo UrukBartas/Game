@@ -1,7 +1,4 @@
 <div id="confirm-modal" class="gap-2">
-  <div class="row">
-    <p class="text-third" urTitle>Viewing listing</p>
-  </div>
   <div class="row d-flex justify-content-center">
     @if (!!listing) {
       <div
@@ -39,7 +36,7 @@
           Qty. {{ listing.quantity }}
         </div>
         <div class="price text-white text-center" urTitle>
-          {{ listing.price }}
+          {{ listing.price | compressNumber }}
           <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
         </div>
         <button
@@ -52,10 +49,11 @@
         <button
           *ngIf="listing.seller.id == (player$ | async).id"
           type="button"
-          class="btn btn-danger btn-lg btn-block w-100 btn-pending"
+          class="btn btn-transparent text-white btn-lg btn-block w-100 btn-pending"
           (click)="cancel()"
         >
-          Cancel
+          <i class="fa-solid fa-xmark"></i>
+          Remove
         </button>
       </div>
     } @else {
