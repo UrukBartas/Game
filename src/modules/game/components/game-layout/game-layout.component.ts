@@ -73,6 +73,11 @@ export class GameLayoutComponent {
       icon: 'fa fa-shop',
     },
     {
+      path: '/auction-house',
+      icon: 'fa fa-coins',
+      displayTexT: 'Auction House',
+    },
+    {
       path: '/blacksmith',
       displayText: 'Blacksmith',
       icon: 'fa fa-hammer',
@@ -102,15 +107,15 @@ export class GameLayoutComponent {
   public modalRef?: BsModalRef;
   public loggedWithemail = this.authService.loggedWithEmail;
   public notifications$: Observable<number> = this.store
-  .select(MainState.getState)
-  .pipe(
-    map(
-      ({ player, notifications }) =>
-        notifications?.filter(
-          (notification) => !notification.opened.includes(player.id)
-        ).length ?? 0
-    )
-  );
+    .select(MainState.getState)
+    .pipe(
+      map(
+        ({ player, notifications }) =>
+          notifications?.filter(
+            (notification) => !notification.opened.includes(player.id)
+          ).length ?? 0
+      )
+    );
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);
