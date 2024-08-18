@@ -1,7 +1,6 @@
 import { Component, TemplateRef, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { disconnect } from '@wagmi/core';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable, map } from 'rxjs';
 import { PlayerModel } from 'src/modules/core/models/player.model';
@@ -75,7 +74,7 @@ export class GameLayoutComponent {
     {
       path: '/auction-house',
       icon: 'fa fa-coins',
-      displayTexT: 'Auction House',
+      displayText: 'Auction House',
     },
     {
       path: '/blacksmith',
