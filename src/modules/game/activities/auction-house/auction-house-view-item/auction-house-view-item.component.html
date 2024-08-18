@@ -1,9 +1,27 @@
+<ng-template #uruks let-uruks="uruks">
+  <div id="uruks-tooltip-wrapper" class="py-2">
+    <p urText>
+      Price is {{ uruks }}
+      <img
+        class="navbar-uruks-icon pb-1"
+        src="assets/goldenuruks.png"
+        style="max-width: 32px"
+      />
+      Golden uruks
+    </p>
+  </div>
+</ng-template>
 <div id="confirm-modal" class="gap-2">
   <div class="row d-flex justify-content-center">
     @if (!!listing) {
       <div
+        style="position: relative"
         class="col d-flex flex-column gap-2 justify-content-center align-items-center"
       >
+        <i
+          class="fa-regular fa-circle-xmark close-icon pointer d-block d-sm-none"
+          (click)="modalRef.hide()"
+        ></i>
         <div class="seller d-flex align-items-center gap-2">
           <span class="text-white mb-0 text-center" urSubtext
             >Sold by {{ listing.seller.name }}</span
@@ -35,7 +53,14 @@
         <div class="price text-light text-center" urSubtext>
           Qty. {{ listing.quantity }}
         </div>
-        <div class="price text-white text-center" urTitle>
+        <div
+          class="price text-white text-center"
+          urTitle
+          [ngbTooltip]="uruks"
+          [tooltipContext]="{
+            uruks: listing.price,
+          }"
+        >
           {{ listing.price | compressNumber }}
           <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
         </div>

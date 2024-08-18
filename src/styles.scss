@@ -391,7 +391,7 @@ app-auction-house {
       transition: 0.5s;
       color: white !important;
       background-color: $secondary;
-      span{
+      span {
         color: white !important;
       }
     }
@@ -409,6 +409,16 @@ accordion {
     .panel {
       background-color: $black-500;
       color: $secondary;
+    }
+  }
+}
+
+app-auction-house {
+  .pager {
+    li {
+      a {
+        color: white;
+      }
     }
   }
 }
