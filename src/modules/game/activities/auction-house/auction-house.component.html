@@ -495,15 +495,24 @@
         </div>
 
         <div class="footer-pagination">
-          <span class="text-white">{{
+          <span class="text-white d-none d-block">{{
             (lastMarketListing()?.totalItems ?? 0) + ' total items'
           }}</span>
-          <pagination
+          <!-- <pagination
             [nextText]="'>'"
             [previousText]="'<'"
             [totalItems]="lastMarketListing()?.totalItems ?? 0"
             (pageChanged)="pageChanged($event)"
-          ></pagination>
+          ></pagination> -->
+          <pager
+            [totalItems]="lastMarketListing()?.totalItems ?? 0"
+            [align]="true"
+            (pageChanged)="pageChanged($event)"
+            pageBtnClass="btn"
+            [itemsPerPage]="10"
+            class="pull-left"
+          >
+          </pager>
         </div>
       </div>
     </div>
