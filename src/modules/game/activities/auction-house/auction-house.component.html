@@ -336,7 +336,7 @@
               [formControl]="searchTerm"
             />
             <select
-              class="form-select"
+              class="form-select d-none d-sm-block"
               [formControl]="selectRarity"
               style="max-width: 125px"
             >
@@ -375,18 +375,20 @@
             <input
               style="max-width: 150px"
               type="number"
-              class="form-control"
+              class="form-control d-none d-sm-block"
               placeholder="Min level"
               [formControl]="minLevel"
             />
             <input
               style="max-width: 150px"
               type="number"
-              class="form-control"
+              class="form-control d-none d-sm-block"
               placeholder="Max level"
               [formControl]="maxLevel"
             />
-            <div class="d-flex justify-content-end align-items-center">
+            <div
+              class="d-flex justify-content-end align-items-center d-none d-sm-block"
+            >
               <div class="d-flex">
                 <i
                   (click)="changeSortOrder()"
