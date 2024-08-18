@@ -2,6 +2,7 @@ import { AsyncPipe, CommonModule, DecimalPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TabsModule } from 'ngx-bootstrap/tabs';
@@ -61,7 +62,11 @@ import { MiscInventoryComponent } from './components/misc-inventory/misc-invento
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
 import { OnlyStatsComponent } from './components/stats-detail/only-stats/only-stats/only-stats.component';
-
+import { AuctionHouseComponent } from './activities/auction-house/auction-house.component';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { AuctionHouseNewTradeComponent } from './activities/auction-house/auction-house-new-trade/auction-house-new-trade.component';
+import { AuctionHouseViewItemComponent } from './activities/auction-house/auction-house-view-item/auction-house-view-item.component';
+import { TimeAgoPipe } from 'src/app/time-ago.pipe';
 const directives = [
   ValidInputDirective,
   TextSizeDirective,
@@ -91,6 +96,8 @@ const components = [
   PvPFightComponent,
   PvPResultComponent,
   FightHistoricComponent,
+  AuctionHouseNewTradeComponent,
+  AuctionHouseComponent,
 ];
 
 const pipes = [
@@ -99,6 +106,7 @@ const pipes = [
   OrderByPipe,
   StackPipe,
   CompressNumberPipe,
+  TimeAgoPipe
 ];
 
 @NgModule({
@@ -116,12 +124,14 @@ const pipes = [
     MiscInventoryComponent,
     BaseInventoryComponent,
     OnlyStatsComponent,
+    AuctionHouseViewItemComponent,
   ],
   imports: [
     ...directives,
     ...pipes,
     CommonModule,
     TabsModule,
+    PaginationModule,
     GameRoutingModule,
     NgbModule,
     ItemBoxComponent,
@@ -141,6 +151,7 @@ const pipes = [
     SpinnerComponent,
     ItemRouletteComponent,
     ButtonsModule,
+    AccordionModule,
   ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe, StackPipe],

@@ -13,6 +13,7 @@ import { QuestRouterComponent } from './activities/quests/quest-router.component
 import { ShopComponent } from './activities/shop/shop.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
+import { AuctionHouseComponent } from './activities/auction-house/auction-house.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,12 @@ const routes: Routes = [
         path: '',
         redirectTo: 'inventory',
         pathMatch: 'full',
+      },
+      {
+        path: 'auction-house',
+        canActivate: [AuthGuard],
+        component: AuctionHouseComponent,
+        title: 'Auction house',
       },
       {
         path: 'inventory',

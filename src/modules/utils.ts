@@ -41,6 +41,20 @@ export function getRarityColor(rarity: Rarity, percent = 0): string {
   return blendColors(baseColor, percent);
 }
 
+export function getRarityBasedOnIRI(iri: number) {
+  if (iri <= 20) {
+    return Rarity.COMMON;
+  } else if (iri > 20 && iri <= 40) {
+    return Rarity.UNCOMMON;
+  } else if (iri > 40 && iri <= 60) {
+    return Rarity.EPIC;
+  } else if (iri > 60 && iri <= 80) {
+    return Rarity.LEGENDARY;
+  } else {
+    return Rarity.MYTHIC;
+  }
+}
+
 export function getGenericItemItemData(item: any) {
   return (
     item?.itemData ??

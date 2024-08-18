@@ -1,0 +1,154 @@
+<div id="confirm-modal">
+  <div class="row">
+    <p class="text-third" urTitle>Select item</p>
+  </div>
+  <div class="row">
+    <div *ngIf="!getSelectedItem()" class="inventory">
+      <tabset>
+        <tab id="tab1">
+          <ng-template tabHeading>
+            <span>⚔️</span>
+          </ng-template>
+          <ng-container *ngIf="currentInventory$ | async as inventory">
+            <app-item-inventory
+              [items]="inventory"
+              [sockets]="currentSize$ | async"
+              [showContextualMenu]="false"
+              [disableDND]="false"
+              [(selectedItems)]="selectedItems"
+              [multipleSelection]="false"
+              (selectedItemsChange)="
+                selectedMaterials = [];
+                selectedConsumables = [];
+                selectedtableMisc = []
+              "
+            >
+            </app-item-inventory>
+          </ng-container>
+        </tab>
+        <tab>
+          <ng-template tabHeading>
+            <span>🧱</span>
+          </ng-template>
+          <app-materials-inventory
+            [items]="currentMaterials$ | async"
+            [sockets]="currentSize$ | async"
+            [(selectedItems)]="selectedMaterials"
+            [multipleSelection]="false"
+            (selectedItemsChange)="
+              selectedItems = [];
+              selectedConsumables = [];
+              selectedtableMisc = []
+            "
+          >
+          </app-materials-inventory
+        ></tab>
+        <tab>
+          <ng-template tabHeading>
+            <span>⚗️</span>
+          </ng-template>
+          <app-consumables-inventory
+            [items]="currentConsumableInventory$ | async"
+            [sockets]="currentSize$ | async"
+            [(selectedItems)]="selectedConsumables"
+            [multipleSelection]="false"
+            (selectedItemsChange)="
+              selectedItems = []; selectedMaterials = []; selectedtableMisc = []
+            "
+          >
+          </app-consumables-inventory>
+        </tab>
+        <tab>
+          <ng-template tabHeading>
+            <span>📜</span>
+          </ng-template>
+          <app-misc-inventory
+            [items]="currentMiscInventory$ | async"
+            [sockets]="currentSize$ | async"
+            [(selectedItems)]="selectedtableMisc"
+            [multipleSelection]="false"
+            (selectedItemsChange)="
+              selectedConsumables = [];
+              selectedMaterials = [];
+              selectedItems = []
+            "
+          >
+          </app-misc-inventory>
+        </tab>
+      </tabset>
+    </div>
+    <div
+      class="d-flex align-items-center justify-content-center preview-sell"
+      *ngIf="!!getSelectedItem()"
+    >
+      <app-item-box
+        [image]="getSelectedImage()"
+        [height]="getItemBoxSize()"
+        [width]="getItemBoxSize()"
+      >
+        <div tooltip class="tooltip-uruk">
+          @if (!!getSelectedItem()?.itemData) {
+            <app-item-tooltip [item]="getSelectedItem()"></app-item-tooltip>
+          } @else {
+            <app-generic-item-tooltip
+              [item]="getGenericItemItemData(getSelectedItem())"
+            ></app-generic-item-tooltip>
+          }
+        </div>
+      </app-item-box>
+      <div class="col-12">
+        <div class="form-group mb-2">
+          <label for="characterName" class="text-third">Price</label>
+          <input
+            type="number"
+            class="form-control"
+            id="characterName"
+            [formControl]="price"
+            name="characterName"
+            placeholder="Item price"
+            validInput
+          />
+        </div>
+        <span urSubtext class="fst-italic text-white"
+          >*There is a 1% fee for every sale</span
+        >
+      </div>
+      <div
+        class="col-12"
+        *ngIf="getItemType(getSelectedItem()) == marketItemType.MATERIAL"
+      >
+        <div class="form-group">
+          <label for="quantity" class="text-third">Quantity</label>
+          <input
+            type="number"
+            class="form-control"
+            id="quantity"
+            max="{{ getSelectedItem()?.quantity ?? 1 }}"
+            [formControl]="quantity"
+            name="quantity"
+            placeholder="Quantity"
+            validInput
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex w-100 justify-content-end pt-3">
+    <button class="btn btn-secondary btn-transparent" (click)="modalRef.hide()">
+      Cancel
+    </button>
+    <button
+      class="btn btn-secondary"
+      (click)="accept()"
+      [disabled]="
+        !getSelectedItem() ||
+        price.invalid ||
+        (quantity.invalid &&
+          getItemType(getSelectedItem()) == marketItemType.MATERIAL)
+      "
+    >
+      Accept
+    </button>
+  </div>
+</div>
