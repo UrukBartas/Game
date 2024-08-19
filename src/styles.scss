@@ -379,3 +379,48 @@ app-item-box.rounded {
 .h-fit-content {
   height: fit-content;
 }
+
+app-auction-house {
+  width: 100%;
+  height: 100%;
+  .list-item {
+    padding: 10px;
+    border: 1px solid $primary;
+    color: white;
+    background-color: $primary;
+    cursor: pointer;
+    &:hover {
+      transition: 0.5s;
+      color: white !important;
+      background-color: $secondary;
+      span {
+        color: white !important;
+      }
+    }
+  }
+}
+accordion {
+  display: flex !important;
+  gap: 5px;
+  flex-direction: column;
+  accordion-group {
+    button {
+      color: $third !important;
+      text-decoration: none !important;
+    }
+    .panel {
+      background-color: $black-500;
+      color: $secondary;
+    }
+  }
+}
+
+app-auction-house {
+  .pager {
+    li {
+      a {
+        color: white;
+      }
+    }
+  }
+}

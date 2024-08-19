@@ -134,8 +134,18 @@
               </ng-container>
             </tab>
           </tabset>
+          <div
+            class="description stats-summary"
+            style="margin-top: -30px"
+            *ngIf="['lg', 'xl', 'xxl'].includes(viewportService.screenSize)"
+          >
+            <p class="mb-0" urText>Stats summary</p>
+            <app-only-stats
+              [player]="actualPlayer$ | async"
+              [simplified]="true"
+            ></app-only-stats>
+          </div>
         </div>
-        <!-- <app-only-stats [player]="actualPlayer$ | async" [simplified]="true" class="d-none d-lg-block"></app-only-stats> -->
       </slide>
       <slide>
         <div class="description desc-mover">
@@ -191,7 +201,21 @@
       </button>
     </div>
     <div class="position-relative d-flex justify-content-center">
-      <div class="items-equipped-bg"></div>
+      <div class="items-equipped-bg">
+        <ng-container *ngIf="iriAverage$() | async as iriAverage">
+          <div
+            class="iri-summary"
+            urText
+            ngbTooltip="Your average of IRI from your equipped items"
+            [ngStyle]="{
+              color: getRarityColor(getRarityBasedOnIRI(iriAverage)),
+            }"
+          >
+            {{ iriAverage.toFixed(2) }}
+          </div>
+        </ng-container>
+      </div>
+
       <div>
         <div class="row justify-content-center row-item-character">
           <ng-container
@@ -200,7 +224,7 @@
               context: {
                 item$: getHelmet$,
                 hovered: activeDragAndDropItemType == itemTypePublic.HELMET,
-                equipType: itemTypePublic.HELMET
+                equipType: itemTypePublic.HELMET,
               }
             "
           ></ng-container>
@@ -212,7 +236,7 @@
               context: {
                 item$: getGloves$,
                 hovered: activeDragAndDropItemType == itemTypePublic.GLOVES,
-                equipType: itemTypePublic.GLOVES
+                equipType: itemTypePublic.GLOVES,
               }
             "
           ></ng-container>
@@ -223,7 +247,7 @@
               context: {
                 item$: getChest$,
                 hovered: activeDragAndDropItemType == itemTypePublic.CHEST,
-                equipType: itemTypePublic.CHEST
+                equipType: itemTypePublic.CHEST,
               }
             "
           ></ng-container>
@@ -237,7 +261,7 @@
                 hovered:
                   activeDragAndDropItemType == itemTypePublic.Weapon1H ||
                   activeDragAndDropItemType == itemTypePublic.Weapon2H,
-                equipType: itemTypePublic.Weapon1H
+                equipType: itemTypePublic.Weapon1H,
               }
             "
           ></ng-container>
@@ -247,7 +271,7 @@
               context: {
                 item$: getTrousers$,
                 hovered: activeDragAndDropItemType == itemTypePublic.TROUSERS,
-                equipType: itemTypePublic.TROUSERS
+                equipType: itemTypePublic.TROUSERS,
               }
             "
           ></ng-container>
@@ -267,7 +291,7 @@
                 equipType: itemTypePublic.SHIELD,
                 secondHandSlot:
                   (getWeapon$ | async)?.itemData?.itemType ===
-                  itemTypePublic.Weapon2H
+                  itemTypePublic.Weapon2H,
               }
             "
           ></ng-container>
@@ -279,7 +303,7 @@
               context: {
                 item$: getBoots$,
                 hovered: activeDragAndDropItemType == itemTypePublic.BOOTS,
-                equipType: itemTypePublic.BOOTS
+                equipType: itemTypePublic.BOOTS,
               }
             "
           ></ng-container>
@@ -292,7 +316,7 @@
                 item$: getCharm$,
                 isSmallItem: true,
                 hovered: activeDragAndDropItemType == itemTypePublic.CHARM,
-                equipType: itemTypePublic.CHARM
+                equipType: itemTypePublic.CHARM,
               }
             "
           ></ng-container>
@@ -303,7 +327,7 @@
                 item$: getRing$,
                 isSmallItem: true,
                 hovered: activeDragAndDropItemType == itemTypePublic.RING,
-                equipType: itemTypePublic.RING
+                equipType: itemTypePublic.RING,
               }
             "
           ></ng-container>

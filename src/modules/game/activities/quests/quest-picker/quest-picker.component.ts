@@ -1,4 +1,12 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  computed,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  signal,
+} from '@angular/core';
 import { Store } from '@ngxs/store';
 import { firstValueFrom, map, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
@@ -15,6 +23,11 @@ import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal
 import { PlayerService } from 'src/services/player.service';
 import { Title } from '@angular/platform-browser';
 import { AdventureData } from 'src/services/adventures-data.service';
+import {
+  MonsterType,
+  QuestDataModel,
+} from 'src/modules/core/models/quest-data.model';
+import { StatsService } from 'src/services/stats.service';
 
 @Component({
   selector: 'app-quest-picker',
@@ -34,15 +47,24 @@ export class QuestPickerComponent extends TemplatePage {
 
   quests: QuestModel[];
   getRarityColor = getRarityColor;
-  activeSlideIndex = 0;
+  activeSlideIndex = signal(0);
   modalService = inject(BsModalService);
   titleService = inject(Title);
+  statService = inject(StatsService);
   @Output() questChanged = new EventEmitter<QuestModel>();
   loading = false;
 
   public slots$ = this.store
     .select(MainState.getState)
     .pipe(map((entry) => entry.player.sockets));
+
+  public infoEffectiveness$ = computed(() => {
+    const activeQuest = this.quests[this.activeSlideIndex()];
+    const type = activeQuest.data.monsterType;
+    return this.statService
+      .getMonsterWeakness()
+      .pipe(map((entry) => entry[type]));
+  });
 
   public getApproxTimeOfQuestBasedOnRarity = (rarity: Rarity) => {
     switch (rarity) {
@@ -59,6 +81,21 @@ export class QuestPickerComponent extends TemplatePage {
       default:
         return '30 minutes';
     }
+  };
+
+  public getNameBasedOnType = (type: MonsterType) => {
+    switch (type) {
+      case MonsterType.MAGIC_BEAST:
+        return 'Magic Beast';
+      case MonsterType.GIANT_INSECT:
+        return 'Giant Insect';
+      default:
+        return type;
+    }
+  };
+
+  public getPathMonsterType = (questData: QuestDataModel) => {
+    return `assets/quests/types/${questData.monsterType}.png`;
   };
 
   constructor(
@@ -79,7 +116,7 @@ export class QuestPickerComponent extends TemplatePage {
     }
     return (
       adventureSelected.currentPhase + 1 ==
-      this.quests[this.activeSlideIndex]?.data?.phase
+      this.quests[this.activeSlideIndex()]?.data?.phase
     );
   }
 
@@ -93,6 +130,7 @@ export class QuestPickerComponent extends TemplatePage {
       .getActive()
       .pipe(take(1))
       .subscribe((quests) => {
+        this.activeSlideIndex.set(0);
         this.quests = quests.filter((quest) => {
           if (!!this.adventure) {
             return (
@@ -114,11 +152,11 @@ export class QuestPickerComponent extends TemplatePage {
   }
 
   previousSlide() {
-    if (this.activeSlideIndex > 0) {
-      this.activeSlideIndex--;
+    if (this.activeSlideIndex() > 0) {
+      this.activeSlideIndex.set(this.activeSlideIndex() - 1);
       const carousel: HTMLElement = document.querySelector('.carousel');
-      carousel.style.transform = `translateX(-${this.activeSlideIndex * 100}%)`;
-      this.questChanged.emit(this.quests[this.activeSlideIndex]);
+      carousel.style.transform = `translateX(-${this.activeSlideIndex() * 100}%)`;
+      this.questChanged.emit(this.quests[this.activeSlideIndex()]);
     }
   }
 
@@ -127,11 +165,11 @@ export class QuestPickerComponent extends TemplatePage {
     //   return;
     // }
 
-    if (this.activeSlideIndex < this.quests.length - 1) {
-      this.activeSlideIndex++;
+    if (this.activeSlideIndex() < this.quests.length - 1) {
+      this.activeSlideIndex.set(this.activeSlideIndex() + 1);
       const carousel: HTMLElement = document.querySelector('.carousel');
-      carousel.style.transform = `translateX(-${this.activeSlideIndex * 100}%)`;
-      this.questChanged.emit(this.quests[this.activeSlideIndex]);
+      carousel.style.transform = `translateX(-${this.activeSlideIndex() * 100}%)`;
+      this.questChanged.emit(this.quests[this.activeSlideIndex()]);
     }
   }
 
@@ -169,10 +207,10 @@ export class QuestPickerComponent extends TemplatePage {
     }
     if (!proceedWithQuest) return;
     this.questService
-      .start(this.quests[this.activeSlideIndex].data.id)
+      .start(this.quests[this.activeSlideIndex()].data.id)
       .subscribe(({ startedAt, finishedAt }) => {
-        this.quests[this.activeSlideIndex].startedAt = startedAt;
-        this.quests[this.activeSlideIndex].finishedAt = finishedAt;
+        this.quests[this.activeSlideIndex()].startedAt = startedAt;
+        this.quests[this.activeSlideIndex()].finishedAt = finishedAt;
         this.store.dispatch(new SetQuests(this.quests));
         this.questStatusChange.emit({ status: QuestStatusEnum.IN_PROGRESS });
       });

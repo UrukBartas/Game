@@ -131,8 +131,11 @@ app-item-inventory {
     font-size: 16px !important;
   }
   .item-inventory {
-    max-height: 25vh;
+    @include media-breakpoint-down(sm) {
+      max-height: 25vh;
+    }
   }
+
 }
 app-materials-inventory {
   .materials-inventory {

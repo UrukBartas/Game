@@ -5,6 +5,9 @@ export enum MiscellanyItemType {
   Lootbox = 'Lootbox',
   Recipe = 'Recipe',
   ComboLootbox = 'ComboLootbox',
+  Portrait = 'Portrait',
+  MoneyBag = 'MoneyBag',
+  ItemSet = 'ItemSet',
 }
 export enum MiscellanyItemIdentifier {
   LootboxCommon = 'LootboxCommon',

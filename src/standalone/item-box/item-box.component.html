@@ -2,7 +2,7 @@
   <ng-content select="[tooltip]"></ng-content>
 </ng-template>
 <div
-  [ngbTooltip]="displayTooltip && !overlayImage ? tipContent : null"
+  [ngbTooltip]="displayTooltip && !overlayImage ? tipContent : undefined"
   class="box d-flex justify-content-center box-{{ rarity }}"
   [ngClass]="{
     selectedBox: active,

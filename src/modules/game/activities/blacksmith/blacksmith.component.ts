@@ -6,22 +6,21 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl } from '@angular/forms';
+import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { DndDropEvent } from 'ngx-drag-drop';
+import * as party from 'party-js';
+import { filter, firstValueFrom, map, Subject } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Item } from 'src/modules/core/models/items.model';
+import { Material } from 'src/modules/core/models/material.model';
 import { animateElement } from 'src/modules/utils';
-import { InventoryService } from 'src/services/inventory.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { BlacksmithModalComponent } from './modal/blacksmith-modal.component';
-import * as party from 'party-js';
-import { Store } from '@ngxs/store';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
-import { DndDropEvent } from 'ngx-drag-drop';
-import { FormControl } from '@angular/forms';
-import { filter, firstValueFrom, map, Subject } from 'rxjs';
-import { Material } from 'src/modules/core/models/material.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BlacksmithModalComponent } from './modal/blacksmith-modal.component';
 
 @Component({
   selector: 'app-blacksmith',
@@ -98,13 +97,17 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
     }, 250);
   }
 
-  openModal(action: 'melt' | 'upgrade' | 'enchant') {
+  openModal(action: 'melt' | 'upgrade' | 'enchant' | 'combine') {
     const config: ModalOptions = {
       initialState: {
         action,
         items: this.selectedMultipleItems,
         onJobDone: (result) => {
-          if (action == 'upgrade' || action == 'enchant') {
+          if (
+            action == 'upgrade' ||
+            action == 'enchant' ||
+            action == 'combine'
+          ) {
             this.onUpgradeDone(result);
           } else {
             this.onRecycleDone();

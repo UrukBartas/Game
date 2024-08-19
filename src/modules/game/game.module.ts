@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { DndModule } from 'ngx-drag-drop';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -58,10 +59,17 @@ import { InventoryTopbarComponent } from './components/inventory-topbar/inventor
 import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
 import { MaterialsInventoryComponent } from './components/materials-inventory/materials-inventory.component';
 import { MiscInventoryComponent } from './components/misc-inventory/misc-inventory.component';
+import { GenericStatsComponent } from './components/stats-detail/only-stats/only-stats/generic-stats/generic-stats.component';
+import { OnlyStatsComponent } from './components/stats-detail/only-stats/only-stats/only-stats.component';
+import { PercentStatsComponent } from './components/stats-detail/only-stats/only-stats/percent-stats/percent-stats.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
-import { OnlyStatsComponent } from './components/stats-detail/only-stats/only-stats/only-stats.component';
 
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { TimeAgoPipe } from 'src/app/time-ago.pipe';
+import { AuctionHouseNewTradeComponent } from './activities/auction-house/auction-house-new-trade/auction-house-new-trade.component';
+import { AuctionHouseViewItemComponent } from './activities/auction-house/auction-house-view-item/auction-house-view-item.component';
+import { AuctionHouseComponent } from './activities/auction-house/auction-house.component';
 const directives = [
   ValidInputDirective,
   TextSizeDirective,
@@ -91,6 +99,8 @@ const components = [
   PvPFightComponent,
   PvPResultComponent,
   FightHistoricComponent,
+  AuctionHouseNewTradeComponent,
+  AuctionHouseComponent,
 ];
 
 const pipes = [
@@ -99,6 +109,7 @@ const pipes = [
   OrderByPipe,
   StackPipe,
   CompressNumberPipe,
+  TimeAgoPipe
 ];
 
 @NgModule({
@@ -116,12 +127,16 @@ const pipes = [
     MiscInventoryComponent,
     BaseInventoryComponent,
     OnlyStatsComponent,
+    GenericStatsComponent,
+    PercentStatsComponent,
+    AuctionHouseViewItemComponent,
   ],
   imports: [
     ...directives,
     ...pipes,
     CommonModule,
     TabsModule,
+    PaginationModule,
     GameRoutingModule,
     NgbModule,
     ItemBoxComponent,
@@ -141,6 +156,7 @@ const pipes = [
     SpinnerComponent,
     ItemRouletteComponent,
     ButtonsModule,
+    AccordionModule,
   ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe, StackPipe],

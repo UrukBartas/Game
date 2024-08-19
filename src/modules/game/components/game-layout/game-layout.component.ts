@@ -1,7 +1,6 @@
 import { Component, TemplateRef, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { disconnect } from '@wagmi/core';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable, map } from 'rxjs';
 import { PlayerModel } from 'src/modules/core/models/player.model';
@@ -73,6 +72,11 @@ export class GameLayoutComponent {
       icon: 'fa fa-shop',
     },
     {
+      path: '/auction-house',
+      icon: 'fa fa-coins',
+      displayText: 'Auction House',
+    },
+    {
       path: '/blacksmith',
       displayText: 'Blacksmith',
       icon: 'fa fa-hammer',
@@ -102,15 +106,15 @@ export class GameLayoutComponent {
   public modalRef?: BsModalRef;
   public loggedWithemail = this.authService.loggedWithEmail;
   public notifications$: Observable<number> = this.store
-  .select(MainState.getState)
-  .pipe(
-    map(
-      ({ player, notifications }) =>
-        notifications?.filter(
-          (notification) => !notification.opened.includes(player.id)
-        ).length ?? 0
-    )
-  );
+    .select(MainState.getState)
+    .pipe(
+      map(
+        ({ player, notifications }) =>
+          notifications?.filter(
+            (notification) => !notification.opened.includes(player.id)
+          ).length ?? 0
+      )
+    );
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);
