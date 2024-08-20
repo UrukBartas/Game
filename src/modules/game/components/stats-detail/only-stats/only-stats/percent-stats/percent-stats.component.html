@@ -29,11 +29,8 @@
               {{ player.perStats[perStat.key] | number: '1.0-2' }}%
             </span>
           </td>
-          <td>
-            <span
-              *ngIf="cappedPerStats[perStat.key] && !simplified"
-              class="max-value"
-            >
+          <td *ngIf="!simplified">
+            <span *ngIf="cappedPerStats[perStat.key]" class="max-value">
               (Max: {{ cappedPerStats[perStat.key] }}%)
             </span>
           </td>

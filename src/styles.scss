@@ -116,12 +116,12 @@ app-item-box {
   top: 50%;
   margin: 0 !important;
   li {
-    background-color: $black-300 !important;
+    background-color: $secondary !important;
     color: $white-100 !important;
     border-radius: 5px;
     box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.4);
     &.nested {
-      background-color: $black-200 !important;
+      background-color: $primary !important;
     }
   }
 }

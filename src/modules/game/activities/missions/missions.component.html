@@ -1,0 +1,32 @@
+<div id="missions">
+  <div class="container-fluid h-100">
+    <div class="row h-100">
+      <div
+        class="col-md-6 col-12 mission-container quest"
+        (click)="router.navigate(['/quests'])"
+      >
+        <div class="image-container"></div>
+        <div class="content">
+          <span urText>Questing Board</span>
+          <i urTitle class="fa fa-signs-post"></i>
+          <span urSubtext class="text-center">
+            Find missions posted by locals, help them out and get rewards
+          </span>
+        </div>
+      </div>
+      <div
+        class="col-md-6 col-12 mission-container adventure"
+        (click)="router.navigate(['/adventures'])"
+      >
+        <div class="image-container"></div>
+        <div class="content">
+          <span urText>Book of Sagas</span>
+          <i urTitle class="fa fa-book-open"></i>
+          <span urSubtext class="text-center">
+            Embark on timeless adventures and reap incredible rewards
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
