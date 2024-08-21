@@ -23,17 +23,15 @@
             {{ player.stats[stat.key] | number: '1.0-2' }}
             {{ stat.suffix ? stat.suffix : '' }}
           </td>
-          <td>
-            @if (!simplified) {
-              @if (cappedStats[stat.key]) {
-                <span class="max-value">
-                  (Max: {{ cappedStats[stat.key] }}%)
-                </span>
-              } @else {
-                <span class="max-value">
-                  (Max: <i class="fa-solid fa-infinity"></i>)
-                </span>
-              }
+          <td *ngIf="!simplified">
+            @if (cappedStats[stat.key]) {
+              <span class="max-value">
+                (Max: {{ cappedStats[stat.key] }}%)
+              </span>
+            } @else {
+              <span class="max-value">
+                (Max: <i class="fa-solid fa-infinity"></i>)
+              </span>
             }
           </td>
         </tr>

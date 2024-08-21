@@ -65,6 +65,7 @@
           <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
         </div>
         <button
+          *ngIf="listing.seller.id != (player$ | async).id"
           type="button"
           class="btn btn-secondary btn-lg btn-block w-100 btn-pending"
           (click)="buy()"
