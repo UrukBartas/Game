@@ -11,6 +11,7 @@
     </p>
   </div>
 </ng-template>
+
 <div id="confirm-modal" class="gap-2">
   <div class="row d-flex justify-content-center">
     @if (!!listing) {
@@ -50,36 +51,157 @@
             "
           ></app-generic-item-tooltip>
         }
-        <div class="price text-light text-center" urSubtext>
-          Qty. {{ listing.quantity }}
+        <div class="d-flex align-items-center gap-3">
+          <div
+            class="price text-light text-center"
+            urSubtext
+            *ngIf="listing.quantity > 1"
+          >
+            Stack of {{ listing.quantity }}
+          </div>
         </div>
-        <div
-          class="price text-white text-center"
-          urTitle
-          [ngbTooltip]="uruks"
-          [tooltipContext]="{
-            uruks: listing.price,
-          }"
+        <ng-container *ngIf="getBids$ | async as bids">
+          <div
+            class="table-responsive stat-table"
+            style="max-height: 15vh; overflow: auto; min-height: 15vh"
+            *ngIf="!!bids && bids.length > 0"
+          >
+            <span class="w-100 text-light"> Offers for this item</span>
+            <table class="table table-dark">
+              <tbody>
+                <ng-container>
+                  <tr
+                    *ngFor="let stat of bids"
+                    class="d-flex align-items-center"
+                  >
+                    <td *ngIf="stat?.bidder?.id != (player$ | async).id">
+                      <i
+                        class="fa-solid fa-check text-secondary pointer mt-1"
+                        urSubtitle
+                        (click)="acceptOffer(stat.id)"
+                      ></i>
+                    </td>
+
+                    <td *ngIf="stat?.bidder?.id == (player$ | async).id">
+                      <i
+                        class="fa-solid fa-xmark text-secondary pointer mt-1"
+                        urSubtitle
+                        (click)="cancelOffer(stat.id)"
+                      ></i>
+                    </td>
+                    <td
+                      [ngbTooltip]="uruks"
+                      [tooltipContext]="{
+                        uruks: stat?.amount,
+                      }"
+                      urSubtext
+                    >
+                      <div
+                        class="price text-white text-center"
+                        [ngbTooltip]="uruks"
+                        [tooltipContext]="{
+                          uruks: stat?.amount ?? 0,
+                        }"
+                      >
+                        {{ stat?.amount ?? 0 | compressNumber }}
+                        <img
+                          class="uruks-icon pb-1"
+                          src="assets/goldenuruks.png"
+                          style="width: 20px"
+                        />
+                      </div>
+                    </td>
+                    <td urSubtext>{{ stat?.bidder?.name ?? 'Unknown' }}</td>
+                    <td urSubtext>{{ stat?.createdAt | timeAgo }}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div></ng-container
         >
-          {{ listing.price | compressNumber }}
-          <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
-        </div>
-        <button
-          type="button"
-          class="btn btn-secondary btn-lg btn-block w-100 btn-pending"
-          (click)="buy()"
-        >
-          Buy
-        </button>
-        <button
-          *ngIf="listing.seller.id == (player$ | async).id"
-          type="button"
-          class="btn btn-transparent text-white btn-lg btn-block w-100 btn-pending"
-          (click)="cancel()"
-        >
-          <i class="fa-solid fa-xmark"></i>
-          Remove
-        </button>
+
+        @if (listing.status == 'SOLD') {
+          <div class="seller d-flex align-items-center gap-2">
+            <span class="text-white mb-0 text-center" urSubtext
+              >Sold to {{ listing?.tradeCloser?.name ?? 'Unknown' }}</span
+            >
+            <app-item-box
+              *ngIf="listing?.tradeCloser?.image"
+              class="rounded"
+              [height]="getPlayerImageSize()"
+              [width]="getPlayerImageSize()"
+              [image]="listing.tradeCloser.image"
+            >
+            </app-item-box>
+          </div>
+        }
+        @if (listing.status == 'ACTIVE') {
+          <div class="offer-btn w-100">
+            <div
+              class="offer d-flex align-items-center gap-2"
+              *ngIf="addingOffer"
+            >
+              <div class="form-group mb-2" style="flex-grow: 1">
+                <label for="characterName" class="text-third">Price</label>
+                <input
+                  type="number"
+                  class="form-control w-100"
+                  id="characterName"
+                  [formControl]="offerPrice"
+                  name="characterName"
+                  placeholder="Item price"
+                />
+              </div>
+              <i
+                class="fa-solid fa-check text-secondary pointer mt-2"
+                urSubtitle
+                (click)="confirmOffer()"
+              ></i>
+              <i
+                class="fa-solid fa-xmark text-danger pointer mt-2"
+                urSubtitle
+                (click)="offerPrice.reset(); addingOffer = false"
+              ></i>
+            </div>
+
+            <button
+              *ngIf="!addingOffer"
+              type="button"
+              class="btn btn-primary btn-lg btn-block w-100 btn-pending"
+              (click)="addingOffer = true"
+            >
+              Add offer
+            </button>
+          </div>
+          <button
+            type="button"
+            class="btn btn-secondary btn-lg btn-block w-100 btn-pending d-flex align-items-center justify-content-center gap-2"
+            (click)="buy()"
+          >
+            Buy for
+            <div
+              class="price text-white text-center"
+              urTitle
+              [ngbTooltip]="uruks"
+              [tooltipContext]="{
+                uruks: listing.price,
+              }"
+            >
+              {{ listing.price | compressNumber }}
+              <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+            </div>
+          </button>
+
+          <button
+            *ngIf="listing.seller.id == (player$ | async).id"
+            type="button"
+            class="btn btn-transparent text-white btn-lg btn-block w-100 btn-pending"
+            (click)="cancel()"
+          >
+            <i class="fa-solid fa-xmark"></i>
+            Remove
+          </button>
+        }
       </div>
     } @else {
       No listing selected

@@ -4,32 +4,29 @@ import {
   effect,
   inject,
   signal,
-  ViewChild,
+  TemplateRef,
   WritableSignal,
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { cloneDeep } from 'lodash';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { debounceTime, tap } from 'rxjs';
+import { ItemType, Rarity } from 'src/modules/core/models/items.model';
+import { MarketListing } from 'src/modules/core/models/market-listing.model';
+import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
+import {
+  getGenericItemItemData,
+  getRarityBasedOnIRI,
+  getRarityColor,
+} from 'src/modules/utils';
 import {
   AuctionHouseService,
   MarketItemType,
   MarketListingPayload,
 } from 'src/services/auction-house.service';
 import { AuctionHouseNewTradeComponent } from './auction-house-new-trade/auction-house-new-trade.component';
-import {
-  getGenericItemItemData,
-  getRarityBasedOnIRI,
-  getRarityColor,
-} from 'src/modules/utils';
-import { MarketListing } from 'src/modules/core/models/market-listing.model';
 import { AuctionHouseViewItemComponent } from './auction-house-view-item/auction-house-view-item.component';
-import { cloneDeep } from 'lodash';
-import {
-  PageChangedEvent,
-  PaginationComponent,
-} from 'ngx-bootstrap/pagination';
-import { debounceTime, tap } from 'rxjs';
-import { ItemType, Rarity } from 'src/modules/core/models/items.model';
-import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
-import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-auction-house',
@@ -38,6 +35,7 @@ import { FormControl } from '@angular/forms';
 })
 export class AuctionHouseComponent {
   auctionService = inject(AuctionHouseService);
+  bsModalService = inject(BsModalService);
   private marketListingFilter = signal<MarketListingPayload>({});
   public marketItemType = MarketItemType;
   public itemType = ItemType;
@@ -102,6 +100,13 @@ export class AuctionHouseComponent {
       });
     }
   );
+  public selectStatus = new FormControl<'ACTIVE' | 'SOLD'>('ACTIVE');
+  selectStatusChanged = this.selectStatus.valueChanges.subscribe((value) => {
+    this.marketListingFilter.set({
+      ...this.lastMarketListingFilter,
+      status: value,
+    });
+  });
   private modalService = inject(BsModalService);
   public createNewTrade() {
     const ref = this.modalService.show(AuctionHouseNewTradeComponent, {
@@ -183,5 +188,13 @@ export class AuctionHouseComponent {
       sortBy: this.sortType,
       sortOrder: !!this.sortOrderUp ? 'ASC' : 'DESC',
     });
+  }
+
+  openModal(template: TemplateRef<void>) {
+    this.modalService.show(template, { class: 'filters-modal' });
+  }
+
+  public closeModal(){
+    this.modalService.hide()
   }
 }
