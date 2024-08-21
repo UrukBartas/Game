@@ -1,0 +1,139 @@
+@import '../../../../variables.scss';
+@import 'node_modules/bootstrap/scss/mixins';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
+#auction-house {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+
+  .auction-house-bg {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../../../../assets/auction-house/auction-house.webp');
+    background-position: left;
+    background-repeat: no-repeat;
+    background-size: cover;
+    @include media-breakpoint-down(sm) {
+      background-position-x: 40%;
+    }
+  }
+
+  .filters,
+  .show-all {
+    li {
+      height: 35px;
+      &:hover {
+        transition: 0.5s;
+        background-color: $third;
+        border-radius: 5px;
+        color: white;
+      }
+    }
+  }
+
+  .auction-panel {
+    position: absolute;
+    z-index: 1;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .filter-sections {
+      display: flex;
+      gap: 5px;
+    }
+    .filters {
+      @include media-breakpoint-down(sm) {
+        max-height: 60vh;
+      }
+
+      overflow: auto;
+      ul {
+        padding: 0px;
+        flex-direction: column;
+        display: flex;
+        gap: 5px;
+        li {
+          list-style: none;
+          padding: 0px 10px;
+          cursor: pointer;
+          border-radius: 5px;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+
+    .activated-list-item {
+      color: white !important;
+      background-color: $secondary;
+    }
+    .footer {
+      display: flex;
+      div {
+        flex-grow: 1;
+      }
+      @include media-breakpoint-down(sm) {
+        button {
+          font-size: 10px;
+        }
+      }
+    }
+    .list {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      .listing-items {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        max-height: 60vh;
+        @include media-breakpoint-down(lg) {
+          max-height: 50vh;
+        }
+        overflow: auto;
+        .list-item {
+          border-radius: 5px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          background-color: $blacker-transparent;
+          border: none;
+          &:hover {
+            background-color: $black-300;
+          }
+          img {
+            width: 24px;
+          }
+          @include media-breakpoint-down(sm) {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+
+  .footer-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .show-all {
+    color: $third;
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+    list-style: none;
+  }
+  .filters-topbar {
+    display: flex;
+    @include media-breakpoint-down(sm) {
+      flex-wrap: wrap;
+    }
+  }
+}

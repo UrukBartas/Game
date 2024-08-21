@@ -1,0 +1,26 @@
+@import '../../../../../variables.scss';
+
+#confirm-modal {
+  padding: 20px 40px;
+  background: $black-300;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  .uruks-icon {
+    max-width: 40px;
+  }
+  .preview-sell {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .close-icon {
+    color: white;
+    position: absolute;
+    font-size: 22px;
+    top: -10px;
+    right: 20px;
+  }
+}

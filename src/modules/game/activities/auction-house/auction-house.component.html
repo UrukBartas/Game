@@ -1,0 +1,545 @@
+<div id="auction-house">
+  <div class="auction-house-bg"></div>
+  <div class="auction-panel">
+    <div class="row" style="flex-grow: 1">
+      <div class="col-12 col-md-3 filters d-none d-md-block">
+        <accordion [isAnimated]="true">
+          <li
+            class="pointer show-all ml-2"
+            (click)="applyItemFilterType(null, null, null)"
+          >
+            Show all listings
+          </li>
+          <accordion-group heading="Gear">
+            <ul>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.ITEM &&
+                    lastMarketListingFilter?.itemSubtype == null &&
+                    lastMarketListingFilter?.miscSubttype == null,
+                }"
+                (click)="applyItemFilterType(marketItemType.ITEM, null, null)"
+              >
+                All
+              </li>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.ITEM &&
+                    lastMarketListingFilter?.itemSubtype == itemType.HELMET,
+                }"
+                (click)="
+                  applyItemFilterType(
+                    marketItemType.ITEM,
+                    itemType.HELMET,
+                    null
+                  )
+                "
+              >
+                Helmet
+              </li>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.ITEM &&
+                    lastMarketListingFilter?.itemSubtype == itemType.CHEST,
+                }"
+                (click)="
+                  applyItemFilterType(marketItemType.ITEM, itemType.CHEST, null)
+                "
+              >
+                Chest
+              </li>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.ITEM &&
+                    lastMarketListingFilter?.itemSubtype == itemType.GLOVES,
+                }"
+                (click)="
+                  applyItemFilterType(
+                    marketItemType.ITEM,
+                    itemType.GLOVES,
+                    null
+                  )
+                "
+              >
+                Gloves
+              </li>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.ITEM &&
+                    lastMarketListingFilter?.itemSubtype == itemType.TROUSERS,
+                }"
+                (click)="
+                  applyItemFilterType(
+                    marketItemType.ITEM,
+                    itemType.TROUSERS,
+                    null
+                  )
+                "
+              >
+                Trousers
+              </li>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.ITEM &&
+                    lastMarketListingFilter?.itemSubtype == itemType.BOOTS,
+                }"
+                (click)="
+                  applyItemFilterType(marketItemType.ITEM, itemType.BOOTS, null)
+                "
+              >
+                Boots
+              </li>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.ITEM &&
+                    lastMarketListingFilter?.itemSubtype == itemType.Weapon1H,
+                }"
+                (click)="
+                  applyItemFilterType(
+                    marketItemType.ITEM,
+                    itemType.Weapon1H,
+                    null
+                  )
+                "
+              >
+                One Hand Weapon
+              </li>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.ITEM &&
+                    lastMarketListingFilter?.itemSubtype == itemType.Weapon2H,
+                }"
+                (click)="
+                  applyItemFilterType(
+                    marketItemType.ITEM,
+                    itemType.Weapon2H,
+                    null
+                  )
+                "
+              >
+                Two Hand Weapon
+              </li>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.ITEM &&
+                    lastMarketListingFilter?.itemSubtype == itemType.SHIELD,
+                }"
+                (click)="
+                  applyItemFilterType(
+                    marketItemType.ITEM,
+                    itemType.SHIELD,
+                    null
+                  )
+                "
+              >
+                Shield
+              </li>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.ITEM &&
+                    lastMarketListingFilter?.itemSubtype == itemType.RING,
+                }"
+                (click)="
+                  applyItemFilterType(marketItemType.ITEM, itemType.RING, null)
+                "
+              >
+                Ring
+              </li>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.ITEM &&
+                    lastMarketListingFilter?.itemSubtype == itemType.CHARM,
+                }"
+                (click)="
+                  applyItemFilterType(marketItemType.ITEM, itemType.CHARM, null)
+                "
+              >
+                Charm
+              </li>
+            </ul>
+          </accordion-group>
+          <accordion-group heading="Materials">
+            <ul>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.MATERIAL &&
+                    lastMarketListingFilter?.itemSubtype == null &&
+                    lastMarketListingFilter?.miscSubttype == null,
+                }"
+                (click)="
+                  applyItemFilterType(marketItemType.MATERIAL, null, null)
+                "
+              >
+                All
+              </li>
+            </ul>
+          </accordion-group>
+          <accordion-group heading="Consumables">
+            <ul>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.CONSUMABLE &&
+                    lastMarketListingFilter?.itemSubtype == null &&
+                    lastMarketListingFilter?.miscSubttype == null,
+                }"
+                (click)="
+                  applyItemFilterType(marketItemType.CONSUMABLE, null, null)
+                "
+              >
+                All
+              </li>
+            </ul>
+          </accordion-group>
+          <accordion-group heading="Miscellany">
+            <ul>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.MISCELLANY &&
+                    lastMarketListingFilter?.itemSubtype == null &&
+                    lastMarketListingFilter?.miscSubttype == null,
+                }"
+                (click)="
+                  applyItemFilterType(marketItemType.MISCELLANY, null, null)
+                "
+              >
+                All
+              </li>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.MISCELLANY &&
+                    lastMarketListingFilter?.miscSubttype ==
+                      miscItemType.Lootbox,
+                }"
+                (click)="
+                  applyItemFilterType(
+                    marketItemType.MISCELLANY,
+                    null,
+                    miscItemType.Lootbox
+                  )
+                "
+              >
+                Lootbox
+              </li>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.MISCELLANY &&
+                    lastMarketListingFilter?.miscSubttype ==
+                      miscItemType.Recipe,
+                }"
+                (click)="
+                  applyItemFilterType(
+                    marketItemType.MISCELLANY,
+                    null,
+                    miscItemType.Recipe
+                  )
+                "
+              >
+                Recipe
+              </li>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.MISCELLANY &&
+                    lastMarketListingFilter?.miscSubttype ==
+                      miscItemType.Portrait,
+                }"
+                (click)="
+                  applyItemFilterType(
+                    marketItemType.MISCELLANY,
+                    null,
+                    miscItemType.Portrait
+                  )
+                "
+              >
+                Portrait
+              </li>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.MISCELLANY &&
+                    lastMarketListingFilter?.miscSubttype ==
+                      miscItemType.MoneyBag,
+                }"
+                (click)="
+                  applyItemFilterType(
+                    marketItemType.MISCELLANY,
+                    null,
+                    miscItemType.MoneyBag
+                  )
+                "
+              >
+                Money Bag
+              </li>
+              <li
+                [ngClass]="{
+                  'activated-list-item':
+                    lastMarketListingFilter?.typeListing ==
+                      marketItemType.MISCELLANY &&
+                    lastMarketListingFilter?.miscSubttype ==
+                      miscItemType.ItemSet,
+                }"
+                (click)="
+                  applyItemFilterType(
+                    marketItemType.MISCELLANY,
+                    null,
+                    miscItemType.ItemSet
+                  )
+                "
+              >
+                Item Set
+              </li>
+            </ul>
+          </accordion-group>
+        </accordion>
+      </div>
+      <div class="col-12 col-md-9 list">
+        <div class="d-flex flex-column">
+          <div class="filters-topbar pb-4 gap-2">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search by name..."
+              [formControl]="searchTerm"
+            />
+            <select
+              class="form-select d-none d-sm-block"
+              [formControl]="selectRarity"
+              style="max-width: 125px"
+            >
+              <option selected>ALL</option>
+              <option
+                [ngStyle]="{ color: getRarityColor(rarity.COMMON) }"
+                [value]="rarity.COMMON"
+              >
+                Common
+              </option>
+              <option
+                [ngStyle]="{ color: getRarityColor(rarity.UNCOMMON) }"
+                [value]="rarity.UNCOMMON"
+              >
+                Uncommon
+              </option>
+              <option
+                [ngStyle]="{ color: getRarityColor(rarity.EPIC) }"
+                [value]="rarity.EPIC"
+              >
+                Epic
+              </option>
+              <option
+                [ngStyle]="{ color: getRarityColor(rarity.LEGENDARY) }"
+                [value]="rarity.LEGENDARY"
+              >
+                Legendary
+              </option>
+              <option
+                [ngStyle]="{ color: getRarityColor(rarity.MYTHIC) }"
+                [value]="rarity.MYTHIC"
+              >
+                Mythic
+              </option>
+            </select>
+            <input
+              style="max-width: 150px"
+              type="number"
+              class="form-control d-none d-sm-block"
+              placeholder="Min level"
+              [formControl]="minLevel"
+            />
+            <input
+              style="max-width: 150px"
+              type="number"
+              class="form-control d-none d-sm-block"
+              placeholder="Max level"
+              [formControl]="maxLevel"
+            />
+            <div
+              class="d-flex justify-content-end align-items-center d-none d-sm-block"
+            >
+              <div class="d-flex">
+                <i
+                  (click)="changeSortOrder()"
+                  class="bi bi-caret-down-fill text-secondary px-1 pointer"
+                  [ngClass]="{
+                    'bi-caret-down-fill': !sortOrderUp,
+                    'bi-caret-up-fill': sortOrderUp,
+                  }"
+                ></i>
+                <span class="pointer text-white" (click)="changeSortType()">{{
+                  sortType
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="listing-items">
+            @for (
+              marketListing of (getMarketListings() | async)?.data ?? [];
+              track marketListing.id
+            ) {
+              <div
+                class="list-item"
+                urSubtext
+                *ngIf="getData(marketListing) as data"
+                (click)="viewListing(marketListing)"
+                (appDoubleClick)="viewListing(marketListing)"
+                [ngStyle]="{ color: getRarityColor(data.rarity) }"
+              >
+                <div class="img-wrap" style="width: 100px">
+                  <app-item-box
+                    [width]="40"
+                    [height]="40"
+                    [image]="data.imageLocal"
+                    [stack]="marketListing?.quantity ?? 1"
+                  >
+                    <div tooltip class="tooltip-uruk">
+                      @if (!!marketListing.item) {
+                        <app-item-tooltip
+                          [item]="marketListing.item"
+                        ></app-item-tooltip>
+                      } @else {
+                        <app-generic-item-tooltip
+                          [item]="data"
+                        ></app-generic-item-tooltip>
+                      }
+                    </div>
+                  </app-item-box>
+                </div>
+
+                <div class="name text-center" style="width: 200px">
+                  {{ data.name }}
+                </div>
+                <div
+                  class="level text-center d-none d-md-block"
+                  style="width: 75px"
+                >
+                  <span>
+                    {{
+                      'Lvl. ' +
+                        (!!marketListing?.item ? marketListing?.item?.level : 1)
+                    }}</span
+                  >
+                </div>
+
+                <div
+                  class="iri text-center"
+                  style="width: 100px"
+                  [ngStyle]="{
+                    color: getRarityColor(
+                      getRarityBasedOnIRI(marketListing?.item?.item_rarity_stat)
+                    ),
+                  }"
+                >
+                  @if (marketListing.itemType == marketItemType.ITEM) {
+                    <span>{{
+                      'IRI ' + marketListing?.item.item_rarity_stat.toFixed(2)
+                    }}</span>
+                  } @else {}
+                </div>
+                <div
+                  class="soldBy text-light d-none d-md-block"
+                  style="width: 100px; font-size: 13px"
+                >
+                  <span>{{ marketListing?.seller?.name }}</span>
+                </div>
+                <div
+                  class="createdAt text-light d-none d-md-block"
+                  style="width: 100px; font-size: 13px"
+                >
+                  <span>{{ marketListing.createdAt | timeAgo }}</span>
+                </div>
+                <div class="price text-white" style="width: 100px">
+                  <span>
+                    {{ marketListing.price | compressNumber }}
+                    <img class="uruks-icon pb-1" src="assets/goldenuruks.png"
+                  /></span>
+                </div>
+              </div>
+            } @empty {
+              <div class="text-white">No items found!</div>
+            }
+          </div>
+        </div>
+
+        <div class="footer-pagination">
+          <span class="text-white d-none d-block">{{
+            (lastMarketListing()?.totalItems ?? 0) + ' total items'
+          }}</span>
+          <!-- <pagination
+            [nextText]="'>'"
+            [previousText]="'<'"
+            [totalItems]="lastMarketListing()?.totalItems ?? 0"
+            (pageChanged)="pageChanged($event)"
+          ></pagination> -->
+          <pager
+            [totalItems]="lastMarketListing()?.totalItems ?? 0"
+            [align]="true"
+            (pageChanged)="pageChanged($event)"
+            pageBtnClass="btn"
+            [itemsPerPage]="10"
+            class="pull-left"
+          >
+          </pager>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="d-flex justify-content-start pr-1">
+        <button [class]="'btn btn-secondary'" (click)="createNewTrade()">
+          <i class="fa-solid fa-plus"></i>
+          New trade
+        </button>
+      </div>
+      <div class="d-flex filter-sections justify-content-end">
+        <button
+          [class]="'btn btn-primary'"
+          [ngClass]="{ 'btn-secondary': activeTab() == 'marketplace' }"
+          (click)="activeTab.set('marketplace'); displayAllTrades()"
+        >
+          Marketplace
+        </button>
+        <button
+          [class]="'btn btn-primary '"
+          [ngClass]="{ 'btn-secondary': activeTab() == 'mytrades' }"
+          (click)="activeTab.set('mytrades'); displayMyTrades()"
+        >
+          My trades
+        </button>
+        <!-- <button [class]="'btn btn-primary '">My bids</button> -->
+      </div>
+    </div>
+  </div>
+</div>

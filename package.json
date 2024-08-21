@@ -14,7 +14,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^17.0.8",
+    "@angular/animations": "^17.3.12",
     "@angular/common": "^17.0.8",
     "@angular/compiler": "^17.0.8",
     "@angular/core": "^17.0.8",
@@ -42,6 +42,7 @@
     "aos": "^2.3.4",
     "bootstrap": "^5.3.2",
     "bootstrap-icons": "^1.11.3",
+    "date-fns": "^3.6.0",
     "ethers": "^6.9.1",
     "lodash-decorators": "^6.0.1",
     "lodash-es": "^4.17.21",

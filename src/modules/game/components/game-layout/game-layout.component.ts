@@ -1,7 +1,6 @@
 import { Component, TemplateRef, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
-import { disconnect } from '@wagmi/core';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable, map } from 'rxjs';
 import { PlayerModel } from 'src/modules/core/models/player.model';
@@ -31,46 +30,26 @@ export class GameLayoutComponent {
   public getActiveRoute = () => {
     return this.routesNavigation.find((entry) => entry.path == this.router.url);
   };
-  public routesNavigation = [
+  public routesNavigation: any[] = [
     {
       path: '/inventory',
       displayText: 'Character',
       icon: 'fa fa-shield-halved',
     },
     {
-      displayText: 'PvE',
+      path: '/missions',
+      displayText: 'Missions',
       icon: 'fa-solid fa-dragon',
-      nested: true,
-      expanded: () => !!this.displayPVE,
-      class: () => {
-        return !!this.displayPVE ? 'text-white' : '';
-      },
-      click: () => {
-        this.displayPVE = !this.displayPVE;
-      },
-    },
-    {
-      path: '/quests',
-      displayText: 'Quests',
-      icon: 'fa fa-signs-post',
-      class: () => 'bg-secondary nested',
-      display: () => {
-        return !!this.displayPVE;
-      },
-    },
-    {
-      path: '/adventures',
-      displayText: 'Adventures',
-      icon: 'fa fa-map',
-      class: () => 'bg-secondary nested',
-      display: () => {
-        return !!this.displayPVE;
-      },
     },
     {
       path: '/shop',
       displayText: 'Shop',
       icon: 'fa fa-shop',
+    },
+    {
+      path: '/auction-house',
+      icon: 'fa fa-coins',
+      displayText: 'Auction House',
     },
     {
       path: '/blacksmith',
@@ -102,15 +81,15 @@ export class GameLayoutComponent {
   public modalRef?: BsModalRef;
   public loggedWithemail = this.authService.loggedWithEmail;
   public notifications$: Observable<number> = this.store
-  .select(MainState.getState)
-  .pipe(
-    map(
-      ({ player, notifications }) =>
-        notifications?.filter(
-          (notification) => !notification.opened.includes(player.id)
-        ).length ?? 0
-    )
-  );
+    .select(MainState.getState)
+    .pipe(
+      map(
+        ({ player, notifications }) =>
+          notifications?.filter(
+            (notification) => !notification.opened.includes(player.id)
+          ).length ?? 0
+      )
+    );
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);
