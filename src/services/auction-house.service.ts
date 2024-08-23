@@ -25,7 +25,6 @@ export class MarketListingPayload {
   take?: number;
   sortBy?: 'price' | 'recent';
   sortOrder?: 'ASC' | 'DESC';
-  status?: 'ACTIVE' | 'SOLD' | 'CANCELED';
 }
 export class NewMarketListingPayloadDTO {
   price: number;
@@ -54,27 +53,11 @@ export class AuctionHouseService extends ApiBaseService {
     return this.post('/market-listings/new', payload);
   }
 
-  public addNewOffer(payload: { idListing: number; priceOffered: number }) {
-    return this.post('/market-listing/offer/place', payload);
-  }
-
-  public cancelOffer(payload: { idBid: number }) {
-    return this.post('/market-listing/offer/cancel', payload);
-  }
-
-  public acceptOffer(payload: { idListing: number; idBid: number }) {
-    return this.post('/market-listing/offer/accept', payload);
-  }
-
   public buy(idListing: number) {
     return this.post('/market-listing/buy/' + idListing, {});
   }
 
   public cancel(idListing: number) {
     return this.post('/market-listing/cancel/' + idListing, {});
-  }
-
-  public getBids(idListing: number) {
-    return this.get('/market-listing/bids/' + idListing);
   }
 }
