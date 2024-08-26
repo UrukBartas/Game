@@ -30,41 +30,16 @@ export class GameLayoutComponent {
   public getActiveRoute = () => {
     return this.routesNavigation.find((entry) => entry.path == this.router.url);
   };
-  public routesNavigation = [
+  public routesNavigation: any[] = [
     {
       path: '/inventory',
       displayText: 'Character',
       icon: 'fa fa-shield-halved',
     },
     {
-      displayText: 'PvE',
+      path: '/missions',
+      displayText: 'Missions',
       icon: 'fa-solid fa-dragon',
-      nested: true,
-      expanded: () => !!this.displayPVE,
-      class: () => {
-        return !!this.displayPVE ? 'text-white' : '';
-      },
-      click: () => {
-        this.displayPVE = !this.displayPVE;
-      },
-    },
-    {
-      path: '/quests',
-      displayText: 'Quests',
-      icon: 'fa fa-signs-post',
-      class: () => 'bg-secondary nested',
-      display: () => {
-        return !!this.displayPVE;
-      },
-    },
-    {
-      path: '/adventures',
-      displayText: 'Adventures',
-      icon: 'fa fa-map',
-      class: () => 'bg-secondary nested',
-      display: () => {
-        return !!this.displayPVE;
-      },
     },
     {
       path: '/shop',

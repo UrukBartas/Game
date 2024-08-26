@@ -140,15 +140,19 @@ export class MainState {
   @Action(LoginPlayer)
   async loginPlayer({ patchState }: StateContext<MainStateModel>, { payload }) {
     let player = null;
+
     if (!!payload?.email) {
-      player = await firstValueFrom(
+      const isValid = await firstValueFrom(
         this.authService.loginPlayer(payload.email, payload.password)
       );
-      if (!player)
+      if (!isValid) {
         this.toastService.error("Credentials don't match, try again!");
-    } else {
-      player = await firstValueFrom(this.playerService.get('/'));
+        return;
+      }
     }
+
+    player = await firstValueFrom(this.playerService.get('/'));
+
     try {
       if (player) {
         const session = await firstValueFrom(this.sessionService.open());

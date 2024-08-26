@@ -21,7 +21,11 @@ import { TemplatePage } from 'src/modules/core/components/template-page.componen
 import { Item, ItemType } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
-import { getRarityBasedOnIRI, getRarityColor, getRarityText } from 'src/modules/utils';
+import {
+  getRarityBasedOnIRI,
+  getRarityColor,
+  getRarityText,
+} from 'src/modules/utils';
 import { ItemService } from 'src/services/item.service';
 import { PlayerService } from 'src/services/player.service';
 import { ShopService } from 'src/services/shop.service';
@@ -151,6 +155,7 @@ export class InventoryComponent extends TemplatePage {
     super();
     if (this.isViewingPlayer) this.activeSlideIndex = 1;
     this.getPlayer$.subscribe((player) => {
+      console.warn('player', player);
       this.actualPlayer$.next(player);
     });
     if (!this.isViewingPlayer) {

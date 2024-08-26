@@ -64,12 +64,13 @@ import { OnlyStatsComponent } from './components/stats-detail/only-stats/only-st
 import { PercentStatsComponent } from './components/stats-detail/only-stats/only-stats/percent-stats/percent-stats.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
-
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { TimeAgoPipe } from 'src/app/time-ago.pipe';
 import { AuctionHouseNewTradeComponent } from './activities/auction-house/auction-house-new-trade/auction-house-new-trade.component';
 import { AuctionHouseViewItemComponent } from './activities/auction-house/auction-house-view-item/auction-house-view-item.component';
 import { AuctionHouseComponent } from './activities/auction-house/auction-house.component';
+import { MissionsComponent } from './activities/missions/missions.component';
+
 const directives = [
   ValidInputDirective,
   TextSizeDirective,
@@ -101,6 +102,7 @@ const components = [
   FightHistoricComponent,
   AuctionHouseNewTradeComponent,
   AuctionHouseComponent,
+  MissionsComponent,
 ];
 
 const pipes = [
@@ -109,7 +111,7 @@ const pipes = [
   OrderByPipe,
   StackPipe,
   CompressNumberPipe,
-  TimeAgoPipe
+  TimeAgoPipe,
 ];
 
 @NgModule({
