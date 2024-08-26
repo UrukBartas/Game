@@ -474,15 +474,15 @@ app-auction-house {
 .table-responsive {
   display: block;
   width: 100%;
-  overflow-x: auto;
+  overflow-x: hidden;
   min-height: 200px;
   max-width: 400px;
   -webkit-overflow-scrolling: touch;
 }
 
 .simplified-table-body {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  // display: flex;
+  // flex-wrap: wrap;
+  // justify-content: space-between;
   font-size: 14px;
 }

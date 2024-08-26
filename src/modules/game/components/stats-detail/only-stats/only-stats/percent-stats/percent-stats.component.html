@@ -5,37 +5,39 @@
 </ng-template>
 <div class="table-responsive rarity-table">
   <table class="table table-dark" [ngClass]="{ 'table-striped': !simplified }">
-    <tbody [ngClass]="{ 'simplified-table-body': simplified }">
+    <tbody [ngClass]="{ 'simplified-table-body row': simplified }">
       <tr *ngIf="!simplified">
         <td colspan="3" class="table-section">Rarity Stats</td>
       </tr>
-      <ng-container *ngFor="let perStat of perStatItems">
-        <tr>
-          <td class="flex justify-content-start">
-            {{ perStat.label }} %
-            <i
-              class="fa-solid fa-circle-info text-third fa-sm px-1"
-              [ngbTooltip]="statExplanation"
-              [tooltipContext]="{ text: perStat.tooltip }"
-            ></i>
-          </td>
-          <td>
-            <span
-              [ngClass]="{
-                'positive-rarity-bonus': player.perStats[perStat.key] >= 0,
-                'negative-rarity-bonus': player.perStats[perStat.key] < 0,
-              }"
-            >
-              {{ player.perStats[perStat.key] | number: '1.0-2' }}%
-            </span>
-          </td>
-          <td *ngIf="!simplified">
-            <span *ngIf="cappedPerStats[perStat.key]" class="max-value">
-              (Max: {{ cappedPerStats[perStat.key] }}%)
-            </span>
-          </td>
-        </tr>
-      </ng-container>
+      <tr
+        [ngClass]="{ 'col-6': simplified }"
+        *ngFor="let perStat of perStatItems"
+      >
+        <td class="flex justify-content-start">
+          {{ perStat.label }} %
+          <i
+            class="fa-solid fa-circle-info text-third fa-sm px-1"
+            [ngbTooltip]="statExplanation"
+            [tooltipContext]="{ text: perStat.tooltip }"
+          ></i>
+        </td>
+        <td>
+          <span
+            [ngClass]="{
+              'positive-rarity-bonus': player.perStats[perStat.key] > 0,
+              'negative-rarity-bonus': player.perStats[perStat.key] < 0,
+              'text-white': player.perStats[perStat.key] == 0,
+            }"
+          >
+            {{ player.perStats[perStat.key] | number: '1.0-2' }}%
+          </span>
+        </td>
+        <td *ngIf="!simplified">
+          <span *ngIf="cappedPerStats[perStat.key]" class="max-value">
+            (Max: {{ cappedPerStats[perStat.key] }}%)
+          </span>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>
