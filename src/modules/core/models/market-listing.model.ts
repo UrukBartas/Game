@@ -23,6 +23,8 @@ export interface MarketListing {
   material?: Material | null;
   miscellany?: MiscellanyItem | null;
   quantity?: number;
+  tradeCloserId?: string;
+  tradeCloser?: PlayerModel;
 }
 
 export interface Bid {

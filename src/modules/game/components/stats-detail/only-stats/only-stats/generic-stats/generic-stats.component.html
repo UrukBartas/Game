@@ -5,37 +5,33 @@
 </ng-template>
 <div class="table-responsive stat-table">
   <table class="table table-dark" [ngClass]="{ 'table-striped': !simplified }">
-    <tbody [ngClass]="{ 'simplified-table-body': simplified }">
+    <tbody [ngClass]="{ 'simplified-table-body row': simplified }">
       <tr *ngIf="!simplified">
         <td colspan="3" class="table-section">Stats</td>
       </tr>
-      <ng-container *ngFor="let stat of statItems">
-        <tr>
-          <td>
-            {{ stat.label }}
-            <i
-              class="fa-solid fa-circle-info text-third fa-sm px-1"
-              [ngbTooltip]="statExplanation"
-              [tooltipContext]="{ text: stat.tooltip }"
-            ></i>
-          </td>
-          <td>
-            {{ player.stats[stat.key] | number: '1.0-2' }}
-            {{ stat.suffix ? stat.suffix : '' }}
-          </td>
-          <td *ngIf="!simplified">
-            @if (cappedStats[stat.key]) {
-              <span class="max-value">
-                (Max: {{ cappedStats[stat.key] }}%)
-              </span>
-            } @else {
-              <span class="max-value">
-                (Max: <i class="fa-solid fa-infinity"></i>)
-              </span>
-            }
-          </td>
-        </tr>
-      </ng-container>
+      <tr [ngClass]="{ 'col-6': simplified }" *ngFor="let stat of statItems">
+        <td>
+          {{ stat.label }}
+          <i
+            class="fa-solid fa-circle-info text-third fa-sm px-1"
+            [ngbTooltip]="statExplanation"
+            [tooltipContext]="{ text: stat.tooltip }"
+          ></i>
+        </td>
+        <td>
+          {{ player.stats[stat.key] | number: '1.0-2' }}
+          {{ stat.suffix ? stat.suffix : '' }}
+        </td>
+        <td *ngIf="!simplified">
+          @if (cappedStats[stat.key]) {
+            <span class="max-value"> (Max: {{ cappedStats[stat.key] }}%) </span>
+          } @else {
+            <span class="max-value">
+              (Max: <i class="fa-solid fa-infinity"></i>)
+            </span>
+          }
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>
