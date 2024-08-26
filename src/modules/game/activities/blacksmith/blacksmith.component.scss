@@ -124,6 +124,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
 }
 
 app-item-inventory {
@@ -135,7 +137,6 @@ app-item-inventory {
       max-height: 25vh;
     }
   }
-
 }
 app-materials-inventory {
   .materials-inventory {
