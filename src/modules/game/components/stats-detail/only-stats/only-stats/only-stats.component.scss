@@ -19,4 +19,14 @@
     flex-wrap: wrap;
     justify-content: space-between;
   }
+  .list-deeds {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .inactive {
+    opacity: 0.3;
+    &:hover {
+      opacity: 1;
+    }
+  }
 }

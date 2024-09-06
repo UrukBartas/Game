@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom, tap } from 'rxjs';
 import { Consumable } from 'src/modules/core/models/consumable.model';
 import { Item, ItemType } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
+import { MiscellanyItem } from 'src/modules/core/models/misc.model';
 import {
   PlayerConfiguration,
   PlayerModel,
@@ -11,7 +12,6 @@ import {
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 import { RefreshPlayer } from 'src/store/main.store';
 import { ItemService } from './item.service';
-import { MiscellanyItem } from 'src/modules/core/models/misc.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +23,21 @@ export class PlayerService extends ApiBaseService {
   ) {
     super(http);
     this.controllerPrefix = '/player';
+  }
+
+  public getUpgradeCost(): Observable<{ cost: number }> {
+    return this.get(`/cost`);
+  }
+
+  public upgradeStat(stat: string): Observable<PlayerModel> {
+    return this.post(`/upgrade/${stat}`, {});
+  }
+
+  public getPlayerDeeds(): Observable<{
+    playerDeeds: Array<any>;
+    allDeeds: Array<any>;
+  }> {
+    return this.get('/deeds');
   }
 
   public async equipItemFlow(

@@ -1,5 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { Debounce } from 'lodash-decorators';
+import { ToastrService } from 'ngx-toastr';
+import { firstValueFrom, shareReplay, switchMap, tap } from 'rxjs';
 import { PlayerModel } from 'src/modules/core/models/player.model';
+import { PlayerService } from 'src/services/player.service';
+import { RefreshPlayer } from 'src/store/main.store';
 
 @Component({
   selector: 'app-generic-stats',
@@ -10,6 +16,15 @@ export class GenericStatsComponent {
   @Input() cappedStats: any;
   @Input() simplified = false;
   @Input() player!: PlayerModel;
+  playerService = inject(PlayerService);
+  toastService = inject(ToastrService);
+  store = inject(Store);
+  allowedStatsToUpgrade = ['health', 'armor', 'energy', 'damage', 'speed'];
+  allStatsUpgradeStatus$ = this.getUpgradeStatus();
+
+  private getUpgradeStatus() {
+    return this.playerService.getUpgradeCost().pipe(shareReplay(1));
+  }
   public statItems = [
     {
       label: 'Life',
@@ -65,4 +80,16 @@ export class GenericStatsComponent {
       suffix: '%',
     },
   ];
+  @Debounce(200)
+  public upgradeStat(stat: string) {
+    firstValueFrom(
+      this.playerService.upgradeStat(stat).pipe(
+        tap((e) => this.toastService.success('Stat upgraded successfully!')),
+        switchMap((e) => {
+          this.allStatsUpgradeStatus$ = this.getUpgradeStatus();
+          return this.store.dispatch(new RefreshPlayer());
+        })
+      )
+    );
+  }
 }

@@ -10,7 +10,7 @@
     'glowing-uncommon': rarity === rarityEnum.UNCOMMON,
     'glowing-epic': rarity === rarityEnum.EPIC,
     'glowing-legendary': rarity === rarityEnum.LEGENDARY,
-    'glowing-mythic': rarity === rarityEnum.MYTHIC
+    'glowing-mythic': rarity === rarityEnum.MYTHIC,
   }"
   [ngStyle]="{ height: height + 'px', width: width + 'px' }"
 >
@@ -43,7 +43,7 @@
         *ngIf="!!upgradeLevel"
         [ngClass]="{
           'text-white': upgradeLevel < 5,
-          'text-rainbow': upgradeLevel >= 5
+          'text-rainbow': upgradeLevel >= 5,
         }"
         >{{ !isNaNLocal(upgradeLevel) ? '+' + upgradeLevel : upgradeLevel }}
       </span>

@@ -1,5 +1,10 @@
 import { Component, Input, inject } from '@angular/core';
-import { PlayerModel } from 'src/modules/core/models/player.model';
+import {
+  Deed,
+  DeedId,
+  PlayerModel,
+} from 'src/modules/core/models/player.model';
+import { PlayerService } from 'src/services/player.service';
 import { StatsService } from 'src/services/stats.service';
 
 @Component({
@@ -11,9 +16,10 @@ export class OnlyStatsComponent {
   @Input() player!: PlayerModel;
   @Input() simplified = false;
   public statsService = inject(StatsService);
+  public playerService = inject(PlayerService);
   public cappedStats$ = this.statsService.getCappedStats();
   public cappedPerStats$ = this.statsService.getCappedPerStats();
-
+  public playerDeeds$ = this.playerService.getPlayerDeeds();
 
   public perStatItems = [
     {
@@ -67,4 +73,10 @@ export class OnlyStatsComponent {
       tooltip: 'Total percentage of accuracy added by the rarity bonuses',
     },
   ];
+
+  public getPlayerDeed(deedId: DeedId, deedsPlayer: Array<Deed>) {
+    return deedsPlayer.find((entry) => entry.deedDataId == deedId) as Deed & {
+      currentTierIndex: number;
+    };
+  }
 }

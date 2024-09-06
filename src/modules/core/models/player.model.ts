@@ -1,5 +1,5 @@
-import { QuestModel } from './quest.model';
 import { Item } from './items.model';
+import { QuestModel } from './quest.model';
 import { SessionModel } from './session.model';
 
 export interface PlayerModel {
@@ -62,4 +62,31 @@ export interface TotalPerStats {
   totalPerBlock: number;
   totalPerAccuracy: number;
   totalPerPenetration: number;
+}
+
+export enum DeedId {
+  PLAYER_LEVEL_DEED = 'PLAYER_LEVEL_DEED',
+  WON_PVP_BATTLES = 'WON_PVP_BATTLES',
+  MASTER_OF_QUESTS = 'MASTER_OF_QUESTS',
+  EXPLORER_OF_ADVENTURES = 'EXPLORER_OF_ADVENTURES',
+  CONQUEROR_OF_CRYPTS = 'CONQUEROR_OF_CRYPTS',
+  TIRELESS_WORKER = 'TIRELESS_WORKER',
+  HERALD_OF_COMPANIONS = 'HERALD_OF_COMPANIONS',
+}
+
+export interface DeedData {
+  id: DeedId; // Usamos el enum DeedId como el id
+  name: string; // Nombre del deed
+  description: string; // Descripción del deed
+  image: string; // Ruta de la imagen asociada al deed
+  tier: number; // Nivel del deed
+}
+
+export interface Deed {
+  id: number; // ID del registro del deed del jugador
+  playerId: string; // ID del jugador que ha alcanzado el deed
+  deedDataId: DeedId; // Referencia al ID del DeedData (enum DeedId)
+  tier: number; // Nivel alcanzado por el jugador en este deed
+  completed: boolean; // Si el deed ha sido completado
+  deedData: DeedData; // Relación con DeedData (opcional, se incluye para los datos relacionados)
 }
