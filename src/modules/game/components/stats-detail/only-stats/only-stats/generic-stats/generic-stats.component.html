@@ -40,14 +40,19 @@
             "
           >
             {{ allStatsUpgradeCost[stat.key] }}
-            <img
-              class="navbar-uruks-icon"
-              src="assets/goldenuruks.png"
-              style="max-width: 20px"
-            /><i
-              class="fa-solid fa-circle-up text-third pointer fa-md"
-              (click)="upgradeStat(stat.key)"
-            ></i>
+            @if (
+              player.stats[stat.key] < cappedStats[stat.key] ||
+              !cappedStats[stat.key]
+            ) {
+              <img
+                class="navbar-uruks-icon"
+                src="assets/goldenuruks.png"
+                style="max-width: 20px"
+              /><i
+                class="fa-solid fa-circle-up text-third pointer fa-md"
+                (click)="upgradeStat(stat.key)"
+              ></i>
+            }
           </span>
         </td>
       </tr>

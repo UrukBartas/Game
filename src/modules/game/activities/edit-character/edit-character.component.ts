@@ -1,40 +1,36 @@
+import { Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
-  FormControl,
   FormGroup,
   ValidatorFn,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
+import { getAccount } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
 import {
   Observable,
   firstValueFrom,
-  from,
   map,
   of,
-  switchMap,
-  take,
-  tap,
+  take
 } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
+import { PlayerConfiguration } from 'src/modules/core/models/player.model';
 import { AuthService } from 'src/services/auth.service';
+import { MiscellanyService } from 'src/services/miscellany.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
+import { WalletService } from 'src/services/wallet.service';
 import {
   DisconnectWallet,
   LoginPlayer,
   MainState,
   RefreshPlayer,
 } from 'src/store/main.store';
-import { Location } from '@angular/common';
-import { WalletService } from 'src/services/wallet.service';
-import { getAccount } from '@wagmi/core';
-import { PlayerConfiguration } from 'src/modules/core/models/player.model';
-import { MiscellanyService } from 'src/services/miscellany.service';
 export function passwordMatchingValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const password = control.get('password');
@@ -82,19 +78,11 @@ export class EditCharacterComponent extends TemplatePage {
     this.editing = currentRoute.includes('edit');
     const passwordPattern =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    const namePattern = /^[a-zA-Z0-9]+$/;
 
     this.form = this.formBuilder.group(
       {
         image: ['assets/free-portraits/knight.webp', [Validators.required]],
-        name: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(3),
-            Validators.pattern(namePattern),
-          ],
-        ],
+        name: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
         password: [
           '',

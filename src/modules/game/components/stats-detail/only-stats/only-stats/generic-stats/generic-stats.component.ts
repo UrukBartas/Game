@@ -19,7 +19,7 @@ export class GenericStatsComponent {
   playerService = inject(PlayerService);
   toastService = inject(ToastrService);
   store = inject(Store);
-  allowedStatsToUpgrade = ['health', 'armor', 'energy', 'damage', 'speed'];
+  allowedStatsToUpgrade = ['health', 'armor', 'energy', 'damage', 'speed','block', 'penetration', 'crit', 'accuracy', 'dodge'];
   allStatsUpgradeStatus$ = this.getUpgradeStatus();
 
   private getUpgradeStatus() {
