@@ -16,6 +16,10 @@ const routes: Routes = [
       import('../modules/game/game.module').then((m) => m.GameModule),
   },
   {
+    path: 'presale',
+    loadComponent: () => import('../modules/lootbox-presale/lootbox-presale.component').then((m) => m.LootboxPresaleComponent),
+  },
+  {
     path: 'external',
     children: [
       {

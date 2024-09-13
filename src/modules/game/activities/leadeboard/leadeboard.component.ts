@@ -196,7 +196,6 @@ export class LeadeboardComponent extends TemplatePage {
           )
             .pipe(first(), take(1))
             .subscribe((accept: boolean) => {
-              console.log('Result:', accept);
               modal.content.awaiting = false;
               modal.content.challengeResult = true;
               modal.content.challengeAccepted = accept;

@@ -5,7 +5,6 @@ import {
   Output,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { Debounce } from 'lodash-decorators';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { QuestRouterModel } from 'src/modules/game/activities/quests/models/quest-router.model';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
@@ -61,7 +60,6 @@ export abstract class BaseFightComponent extends TemplatePage {
   abstract afterDefeat(result: FightResultModel): void;
   abstract afterVictory(result: FightResultModel): void;
 
-  @Debounce(500)
   doAction(action: TurnActionEnum, consumableId?: number) {
     const currentTime = Date.now();
 
