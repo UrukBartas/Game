@@ -6,6 +6,7 @@ import { Item, ItemType } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
 import { MiscellanyItem } from 'src/modules/core/models/misc.model';
 import {
+  ItemSet,
   PlayerConfiguration,
   PlayerModel,
 } from 'src/modules/core/models/player.model';
@@ -169,5 +170,29 @@ export class PlayerService extends ApiBaseService {
 
   public getPlayerByAddress(address: string) {
     return this.get('/by-address/' + address);
+  }
+
+  public createItemSet(name: string, itemIds: number[]): Observable<ItemSet> {
+    return this.post('/item-set/create', { name, itemIds });
+  }
+
+  public getItemSets(): Observable<ItemSet[]> {
+    return this.get('/item-sets');
+  }
+
+  public updateItemSet(
+    setId: number,
+    name: string,
+    itemIds: number[]
+  ): Observable<ItemSet> {
+    return this.post(`/item-set/update/${setId}`, { name, itemIds });
+  }
+
+  public equipItemSet(setId: number): Observable<any> {
+    return this.get('/item-set/equip/' + setId);
+  }
+
+  public deleteItemSet(setId: number) {
+    return this.delete('/item-set/' + setId);
   }
 }

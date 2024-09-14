@@ -74,9 +74,9 @@ export class GenericStatsComponent {
       suffix: '%',
     },
     {
-      label: 'Accuracy',
+      label: 'Acc',
       key: 'accuracy',
-      tooltip: 'Reduces the chance of missing an attack',
+      tooltip: 'Accuracy, Reduces the chance of missing an attack',
       suffix: '%',
     },
   ];

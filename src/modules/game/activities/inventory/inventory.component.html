@@ -215,6 +215,76 @@
           </div>
         </ng-container>
       </div>
+      <div class="item-presets">
+        @for (itemSet of itemSets$ | async; track itemSet; let index = $index) {
+          <ng-template #tooltip let-itemSet="itemSet">
+            <div class="tooltip-uruk p-2">
+              @if (!!itemSet) {
+                Item preset
+                <strong class="text-secondary">{{ itemSet.name }}</strong
+                >. Click to apply it.
+              } @else {
+                Empty item preset. Click to save a new preset.
+              }
+            </div>
+          </ng-template>
+
+          <div class="item-grid">
+            <i
+              *ngIf="!itemSet"
+              class="fa-solid fa-plus pointer indicator"
+              (click)="saveSet(itemSet)"
+              [ngbTooltip]="tooltip"
+              [tooltipContext]="{
+                itemSet,
+              }"
+            ></i>
+            <span class="indicator" *ngIf="itemSet">{{
+              getDisplayedItemSet(itemSet)
+            }}</span>
+
+            <ng-template #contextOptions let-data="data">
+              <ul class="list-options">
+                <li
+                  (click)="saveSet(data); contextMenuService.hideContextMenu()"
+                >
+                  Update
+                </li>
+                <li
+                  (click)="
+                    deleteSet(data); contextMenuService.hideContextMenu()
+                  "
+                >
+                  Delete
+                </li>
+              </ul>
+            </ng-template>
+
+            <app-item-box
+              (click)="!itemSet ? saveSet() : equipSet(itemSet)"
+              [height]="getEquippedItemBoxSize() / 3"
+              [width]="getEquippedItemBoxSize() / 3"
+              [active]="
+                selectedItemSet && itemSet && selectedItemSet.id == itemSet.id
+              "
+              (contextmenu)="
+                itemSet
+                  ? contextMenuService.onContextMenu(
+                      $event,
+                      contextOptions,
+                      itemSet
+                    )
+                  : false
+              "
+            >
+              <ng-container
+                *ngTemplateOutlet="tooltip; context: { itemSet }"
+                tooltip
+              ></ng-container>
+            </app-item-box>
+          </div>
+        }
+      </div>
 
       <div>
         <div class="row justify-content-center row-item-character">

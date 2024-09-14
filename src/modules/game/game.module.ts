@@ -2,12 +2,14 @@ import { AsyncPipe, CommonModule, DecimalPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { DndModule } from 'ngx-drag-drop';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { TimeAgoPipe } from 'src/app/time-ago.pipe';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { BlacksmithContextMenuComponent } from 'src/standalone/context-menu/blacksmith-context-menu/blacksmith-context-menu.component';
 import { ContextMenuInventoryOptionsComponent } from 'src/standalone/context-menu/context-menu-inventory-options/context-menu-inventory-options.component';
@@ -33,13 +35,18 @@ import { StackPipe } from '../core/pipes/stack.pipe';
 import { AdventurePickerComponent } from './activities/adventures/adventure-picker/adventure-picker.component';
 import { AdventuresRouterComponent } from './activities/adventures/adventures-router.component';
 import { AdventuresComponent } from './activities/adventures/adventures.component';
+import { AuctionHouseNewTradeComponent } from './activities/auction-house/auction-house-new-trade/auction-house-new-trade.component';
+import { AuctionHouseViewItemComponent } from './activities/auction-house/auction-house-view-item/auction-house-view-item.component';
+import { AuctionHouseComponent } from './activities/auction-house/auction-house.component';
 import { BlacksmithComponent } from './activities/blacksmith/blacksmith.component';
 import { BlacksmithModalComponent } from './activities/blacksmith/modal/blacksmith-modal.component';
 import { RegisterReferralComponent } from './activities/campaigns/register-referral/register-referral.component';
 import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { InventoryComponent } from './activities/inventory/inventory.component';
+import { ItemSetModalComponent } from './activities/inventory/item-set-modal/item-set-modal.component';
 import { LeadeboardComponent } from './activities/leadeboard/leadeboard.component';
+import { MissionsComponent } from './activities/missions/missions.component';
 import { PvPResultComponent } from './activities/pvp/pv-presult/pvp-result.component';
 import { PvPFightComponent } from './activities/pvp/pvp-fight/pvp-fight.component';
 import { QuestFightComponent } from './activities/quests/quest-fight/quest-fight.component';
@@ -64,12 +71,6 @@ import { OnlyStatsComponent } from './components/stats-detail/only-stats/only-st
 import { PercentStatsComponent } from './components/stats-detail/only-stats/only-stats/percent-stats/percent-stats.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
-import { AccordionModule } from 'ngx-bootstrap/accordion';
-import { TimeAgoPipe } from 'src/app/time-ago.pipe';
-import { AuctionHouseNewTradeComponent } from './activities/auction-house/auction-house-new-trade/auction-house-new-trade.component';
-import { AuctionHouseViewItemComponent } from './activities/auction-house/auction-house-view-item/auction-house-view-item.component';
-import { AuctionHouseComponent } from './activities/auction-house/auction-house.component';
-import { MissionsComponent } from './activities/missions/missions.component';
 
 const directives = [
   ValidInputDirective,
@@ -132,6 +133,7 @@ const pipes = [
     GenericStatsComponent,
     PercentStatsComponent,
     AuctionHouseViewItemComponent,
+    ItemSetModalComponent,
   ],
   imports: [
     ...directives,

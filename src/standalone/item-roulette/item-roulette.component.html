@@ -10,7 +10,7 @@
         [width]="100"
         [image]="item?.itemData?.imageLocal ?? item.imageLocal"
       >
-        <div tooltip class="tooltip-uruk">
+        <div tooltip class="tooltip-uruk" *ngIf="!spinRunning">
           @if (!!item.itemData) {
             <app-item-tooltip [item]="item"></app-item-tooltip>
           } @else {

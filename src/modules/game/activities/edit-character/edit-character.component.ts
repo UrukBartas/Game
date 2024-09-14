@@ -5,21 +5,16 @@ import {
   FormBuilder,
   FormGroup,
   ValidatorFn,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { getAccount } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
-import {
-  Observable,
-  firstValueFrom,
-  map,
-  of,
-  take
-} from 'rxjs';
+import { Observable, firstValueFrom, map, of, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { PlayerConfiguration } from 'src/modules/core/models/player.model';
+import { truncateEthereumAddress } from 'src/modules/utils';
 import { AuthService } from 'src/services/auth.service';
 import { MiscellanyService } from 'src/services/miscellany.service';
 import { PlayerService } from 'src/services/player.service';
@@ -71,6 +66,7 @@ export class EditCharacterComponent extends TemplatePage {
 
   editing = false;
   form: FormGroup;
+  truncateAddress = truncateEthereumAddress;
 
   constructor(private route: ActivatedRoute) {
     super();
@@ -92,6 +88,7 @@ export class EditCharacterComponent extends TemplatePage {
         ],
         repeatPassword: ['', this.editing ? [] : [Validators.required]],
         disablePVP: [false, []],
+        disableSound: [false, []],
       },
       this.editing ? {} : { validator: passwordMatchingValidator() }
     );
@@ -149,6 +146,7 @@ export class EditCharacterComponent extends TemplatePage {
         name,
         email,
         disablePVP: configuration?.disablePVP,
+        disableSound: configuration?.disableSound,
       });
     }
   }
@@ -181,8 +179,9 @@ export class EditCharacterComponent extends TemplatePage {
   }
 
   create() {
-    const { email, name, image, password, disablePVP } = this.form.value;
-    const configuration: PlayerConfiguration = { disablePVP };
+    const { email, name, image, password, disablePVP, disableSound } =
+      this.form.value;
+    const configuration: PlayerConfiguration = { disablePVP, disableSound };
 
     if (this.authService.nativePlatform) {
       this.playerService
@@ -202,8 +201,9 @@ export class EditCharacterComponent extends TemplatePage {
   }
 
   edit() {
-    const { email, name, image, password, disablePVP } = this.form.value;
-    const configuration: PlayerConfiguration = { disablePVP };
+    const { email, name, image, password, disablePVP, disableSound } =
+      this.form.value;
+    const configuration: PlayerConfiguration = { disablePVP, disableSound };
 
     this.playerService
       .update(email, name, image, password, configuration)
