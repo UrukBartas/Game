@@ -1,0 +1,68 @@
+@import 'node_modules/bootstrap/scss/mixins';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import '../../../../variables.scss';
+#themine {
+  position: relative;
+  height: 100%;
+  .actions-add {
+    flex-direction: row;
+    @include media-breakpoint-down(sm) {
+      flex-direction: column;
+    }
+  }
+  .next-mining-gains {
+    border: 1px solid $white-100;
+    color: $white-100;
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    justify-content: center;
+    border-radius: 25px;
+  }
+  .description,
+  .row {
+    position: relative;
+    z-index: 100;
+  }
+  .themine-bg {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../../../../assets/mine/mine.webp');
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-x: 80%;
+    opacity: 0.5;
+    z-index: 0;
+    pointer-events: none;
+    @include media-breakpoint-down(sm) {
+      background-position-x: 65%;
+    }
+  }
+  .separate {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    @include media-breakpoint-down(sm) {
+      justify-content: start;
+    }
+  }
+
+  .rotating-icon {
+    animation: rotate 3s linear infinite;
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}

@@ -1,0 +1,81 @@
+@import '../../variables.scss';
+.rpg-progress-bar-horizontal {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 60px;
+  border: 2px solid $gray-400;
+  border-radius: 5px;
+  background-color: $black-400;
+  z-index: 1;
+}
+
+.tier {
+  position: relative;
+  flex-grow: 1;
+  border-right: 2px solid $light-brown;
+  height: 100%;
+  z-index: 2;
+  cursor: pointer;
+}
+
+.tier:last-child {
+  border-right: none;
+}
+
+.progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: $third;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  transition: width 0.5s ease;
+  z-index: 1;
+  &:hover {
+    opacity: 0.5;
+  }
+}
+
+.tier-image {
+  position: absolute;
+  top: 5px; /* Ajusta este valor para cambiar la distancia vertical de la imagen sobre el tier */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px; /* Puedes ajustar el tamaño de la imagen */
+  height: auto;
+  opacity: 0.8;
+  z-index: 3; /* Asegura que la imagen esté por encima del progreso y tier */
+}
+
+.tier-indicator {
+  position: absolute;
+  z-index: 2;
+  width: 20px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -40px;
+  right: -10px;
+  flex-direction: column;
+}
+
+.start-indicator {
+  left: 0;
+}
+
+.indicator {
+  width: 5px;
+  height: 40px;
+  background-color: $light-brown;
+  box-shadow: 0 0 5px $light-brown;
+}
+
+.indicator-value {
+  margin-top: 5px;
+  font-size: 14px;
+  color: $white-300;
+  text-shadow: 0 0 5px $black;
+}
