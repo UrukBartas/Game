@@ -1,25 +1,15 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
-import {
-  Chain,
-  connect,
-  Connector,
-  disconnect,
-  getAccount,
-  InjectedConnector,
-  signMessage,
-  watchAccount,
-} from '@wagmi/core';
+import { getAccount, signMessage, watchAccount } from '@wagmi/core';
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
-import { Event as Web3ModalEvent } from 'node_modules/@web3modal/core';
 import { Web3Modal } from '@web3modal/wagmi/dist/types/src/client';
 import { ToastrService } from 'ngx-toastr';
+import { Event as Web3ModalEvent } from 'node_modules/@web3modal/core';
 import {
   BehaviorSubject,
   catchError,
   debounceTime,
-  delay,
   filter,
   firstValueFrom,
   from,
@@ -46,7 +36,6 @@ import { SessionService } from './session.service';
 })
 export class WalletService {
   public modal: Web3Modal;
-  connectWalletInterval;
 
   public authService = inject(AuthService);
   public sessionService = inject(SessionService);
@@ -62,17 +51,31 @@ export class WalletService {
   public getValidAddress$ = this.address$.pipe(filter((entry) => !!entry));
   public walletConnectIsLoggedIn$ = this.address$.pipe(map((entry) => !!entry));
   public chains: BehaviorSubject<Array<any> | null> = new BehaviorSubject(null);
-
-  constructor() {
-    this.sessionService.getChains().subscribe((data) => {
-      this.chains.next(data);
-    });
-  }
+  public isWeb3Connected$ = new BehaviorSubject(false);
 
   getChainById = (id: number) =>
     this.chains.getValue().find((chain) => chain.id == id);
 
-  initWalletConnect() {
+  constructor() {
+    this.initWallet();
+  }
+
+  private initWallet() {
+    this.sessionService.getChains().subscribe((chains) => {
+      this.chains.next(chains);
+      this.setupWallet();
+
+      watchAccount(({ address }) => {
+        this.address$.next(address);
+      });
+
+      this.getValidAddress$
+        .pipe(debounceTime(300))
+        .subscribe((address) => this.controlWalletFlow(address));
+    });
+  }
+
+  private setupWallet() {
     const projectId = process.env['WALLET_CONNECT_PROJECT_ID'] ?? '';
     const metadata = {
       name: 'Uruk Bartas',
@@ -87,9 +90,6 @@ export class WalletService {
       chains: this.chains.getValue(),
       metadata,
     });
-    watchAccount(({ address }) => {
-      this.address$.next(address);
-    });
 
     this.modal = createWeb3Modal({
       wagmiConfig,
@@ -97,17 +97,15 @@ export class WalletService {
       chains: this.chains.getValue(),
     });
 
-    this.modal.subscribeEvents((event) =>
-      this.latestModalEvent.set(event.data)
-    );
+    this.modal.subscribeEvents((event) => {
+      this.latestModalEvent.set(event.data);
+    });
 
-    this.getValidAddress$
-      .pipe(debounceTime(300))
-      .subscribe((address) => this.controlWalletFlow(address));
+    this.isWeb3Connected$.next(true);
   }
 
   private async controlWalletFlow(address: `0x${string}` | undefined) {
-    if (this.router.url == '/edit') return;
+    if (this.router.url == '/edit' || this.router.url == '/presale') return;
     const state = this.store.selectSnapshot(MainState.getState);
 
     if (state.address) {

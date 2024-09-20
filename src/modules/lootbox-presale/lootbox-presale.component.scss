@@ -1,4 +1,5 @@
-@import "bootstrap/scss/bootstrap";
+@import 'bootstrap/scss/bootstrap';
+@import 'swiper/css/bundle';
 
 #presale-container {
   position: relative;
@@ -25,8 +26,8 @@
       cursor: grab;
 
       .lootbox-image {
-        width: 30vmax;
-        max-width: 500px;
+        width: 40vmax;
+        max-width: 700px;
         filter: drop-shadow(10px 10px 10px #000);
       }
 
@@ -44,14 +45,18 @@
   .lootbox-details {
     background: #00000025;
     border-radius: 10px;
-    padding: 20px;
+    padding: 4vmax;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
     .details {
-      width: 30vmax;
+      width: 40vmax;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 4vmax;
 
       .image-gallery {
         display: -webkit-inline-box;
@@ -72,13 +77,23 @@
         }
       }
 
+      .drop-list {
+        font-size: 1.2em;
+        list-style: none;
+        @include media-breakpoint-down(md) {
+          display: none;
+        }
+        .font-italic {
+          font-style: italic;
+        }
+      }
+
       h2 {
         font-size: 2em;
         @include media-breakpoint-down(lg) {
           font-size: 1.5em;
         }
         margin-bottom: 10px;
-        color: #ffcc00;
         text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
       }
 
@@ -88,7 +103,6 @@
           font-size: 1.25em;
         }
         margin-bottom: 10px;
-        color: #ffcc00;
         text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
       }
 
@@ -97,25 +111,118 @@
         @include media-breakpoint-down(lg) {
           font-size: 1em;
         }
-        margin: 10px 0;
-      }
-
-      .price {
-        font-size: 1.2em;
-        @include media-breakpoint-down(lg) {
-          font-size: 1em;
-        }
-        color: #00ff00;
+        margin: 0 !important;
         text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
       }
 
-      .button-rainbow {
+      .iota-icon {
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        border-radius: 100%;
+        padding: 2px;
+      }
+
+      .mint-button {
         padding: 10px 20px;
         font-size: 1.5em;
+        text-shadow: 1px 1px black;
         @include media-breakpoint-down(lg) {
           font-size: 1em;
         }
       }
     }
+  }
+
+  // RARITY GLOWINGS
+
+  @keyframes glowing-common {
+    0% {
+      filter: drop-shadow(0 0 1em #b0b5b35e);
+    }
+    50% {
+      filter: drop-shadow(0 0 1em #b0b5b3);
+    }
+    100% {
+      filter: drop-shadow(0 0 1em #b0b5b35e);
+    }
+  }
+
+  .glowing-common {
+    animation: glowing-common 2s infinite;
+    position: relative;
+    display: inline-block;
+  }
+
+  @keyframes glowing-uncommon {
+    0% {
+      filter: drop-shadow(0 0 1em #3d74b8a8);
+    }
+    50% {
+      filter: drop-shadow(0 0 1em #3d74b8);
+    }
+    100% {
+      filter: drop-shadow(0 0 1em #3d74b8a8);
+    }
+  }
+
+  .glowing-uncommon {
+    animation: glowing-uncommon 2s infinite;
+    position: relative;
+    display: inline-block;
+  }
+
+  @keyframes glowing-epic {
+    0% {
+      filter: drop-shadow(0 0 1em #9d44b57e);
+    }
+    50% {
+      filter: drop-shadow(0 0 1em #9d44b5);
+    }
+    100% {
+      filter: drop-shadow(0 0 1em #9d44b57e);
+    }
+  }
+
+  .glowing-epic {
+    animation: glowing-epic 2s infinite;
+    position: relative;
+    display: inline-block;
+  }
+
+  @keyframes glowing-legendary {
+    0% {
+      filter: drop-shadow(0 0 1em #ff801181);
+    }
+    50% {
+      filter: drop-shadow(0 0 1em #ff8011);
+    }
+    100% {
+      filter: drop-shadow(0 0 1em #ff801181);
+    }
+  }
+
+  .glowing-legendary {
+    animation: glowing-legendary 2s infinite;
+    position: relative;
+    display: inline-block;
+  }
+
+  @keyframes glowing-mythic {
+    0% {
+      filter: drop-shadow(0 0 1em #f34413a8);
+    }
+    50% {
+      filter: drop-shadow(0 0 1em #f34413);
+    }
+    100% {
+      filter: drop-shadow(0 0 1em #f34413a8);
+    }
+  }
+
+  .glowing-mythic {
+    animation: glowing-mythic 2s infinite;
+    position: relative;
+    display: inline-block;
   }
 }

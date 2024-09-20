@@ -1,62 +1,80 @@
-import { Rarity } from "src/modules/core/models/items.model";
+import { Rarity } from 'src/modules/core/models/items.model';
+import { LootboxPresaleModel } from '../models/lootbox-presale.model';
 
-export const lootboxes = [
-    {
-      name: 'Common Lootbox',
-      image: 'assets/presale/lootbox/common.png',
-      rarity: Rarity.COMMON,
-    },
-    {
-      name: 'Uncommon Lootbox',
-      image: 'assets/presale/lootbox/uncommon.png',
-      rarity: Rarity.UNCOMMON,
-    },
-    {
-      name: 'Epic Lootbox',
-      image: 'assets/presale/lootbox/epic.png',
-      rarity: Rarity.EPIC,
-    },
-    {
-      name: 'Legendary Lootbox',
-      image: 'assets/presale/lootbox/legendary.png',
-      rarity: Rarity.LEGENDARY,
-    },
-    {
-      name: 'Mythic Lootbox',
-      image: 'assets/presale/lootbox/mythic.png',
-      rarity: Rarity.MYTHIC,
-    },
-  ];
+export const lootboxes: LootboxPresaleModel[] = [
+  {
+    name: '⧫ Crate of Fortune ⧫',
+    image: 'assets/presale/common-combobox.png',
+    rarity: Rarity.COMMON,
+    total: 150,
+  },
+  {
+    name: '✦ Crate of Misteries ✦',
+    image: 'assets/presale/uncommon-combobox.png',
+    rarity: Rarity.UNCOMMON,
+    total: 150,
+  },
+  {
+    name: '★ Crate of Legends ★',
+    image: 'assets/presale/epic-combobox.png',
+    rarity: Rarity.EPIC,
+    total: 150,
+  },
+  {
+    name: '✶ Crate of Eternity ✶',
+    image: 'assets/presale/legendary-combobox.png',
+    rarity: Rarity.LEGENDARY,
+    total: 150,
+  },
+  {
+    name: '✹ Crate of Gods ✹',
+    image: 'assets/presale/mythic-combobox.png',
+    rarity: Rarity.MYTHIC,
+    total: 150,
+  },
+];
 
-  export const lootboxItemDropRateByRarity = {
-    [Rarity.COMMON]: {
-      [Rarity.COMMON]: 7,
-      [Rarity.UNCOMMON]: 2,
-      [Rarity.EPIC]: 1,
-    },
-    [Rarity.UNCOMMON]: {
-      [Rarity.COMMON]: 5,
-      [Rarity.UNCOMMON]: 3,
-      [Rarity.EPIC]: 1,
-      [Rarity.LEGENDARY]: 1,
-    },
-    [Rarity.EPIC]: {
-      [Rarity.COMMON]: 3,
-      [Rarity.UNCOMMON]: 4,
-      [Rarity.EPIC]: 2,
-      [Rarity.LEGENDARY]: 1,
-    },
-    [Rarity.LEGENDARY]: {
-      [Rarity.COMMON]: 2,
-      [Rarity.UNCOMMON]: 3,
-      [Rarity.EPIC]: 3,
-      [Rarity.LEGENDARY]: 2,
-    },
-    [Rarity.MYTHIC]: {
-      [Rarity.COMMON]: 1,
-      [Rarity.UNCOMMON]: 2,
-      [Rarity.EPIC]: 3,
-      [Rarity.LEGENDARY]: 3,
-      [Rarity.MYTHIC]: 1,
-    },
-  };
+export const lootboxItemDropsByRarity = {
+  [Rarity.COMMON]: [
+    'misc/bags/small_bag.png',
+    'misc/recipes/add_recipe.webp',
+    'items/boots/common/1.webp',
+    'items/weapon/common/1.webp',
+    'items/charm/common/2.webp',
+    'items/weapon/common/3.webp',
+  ],
+  [Rarity.UNCOMMON]: [
+    'misc/bags/medium_bag_money.png',
+    'misc/recipes/shuffle_recipe.webp',
+    'items/boots/uncommon/1.webp',
+    'items/weapon/uncommon/2.webp',
+    'items/weapon/uncommon/1.webp',
+    'items/charm/uncommon/1.webp',
+  ],
+  [Rarity.EPIC]: [
+    'misc/bags/medium_bag_money.png',
+    'misc/recipes/shuffle_recipe.webp',
+    'items/boots/epic/1.webp',
+    'items/weapon/epic/2.webp',
+    'items/charm/epic/1.webp',
+    'items/weapon/epic/1.webp',
+  ],
+  [Rarity.LEGENDARY]: [
+    'premium-portraits/1.webp',
+    'misc/bags/big_bag_money.png',
+    'items/boots/legendary/1.webp',
+    'items/weapon/legendary/2.webp',
+    'misc/recipes/upgrade_level_recipe.webp',
+    'items/charm/legendary/1.webp',
+    'items/weapon/legendary/1.webp',
+  ],
+  [Rarity.MYTHIC]: [
+    'premium-portraits/5.webp',
+    'misc/bags/big_bag_money.png',
+    'items/boots/mythic/1.webp',
+    'items/weapon/mythic/1.webp',
+    'misc/recipes/total_rebirth.webp',
+    'items/charm/mythic/1.webp',
+    'items/weapon/mythic/2.webp',
+  ],
+};

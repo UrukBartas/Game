@@ -14,7 +14,7 @@ export class LootboxPresaleThreeService {
 
   constructor(private ngZone: NgZone) {}
 
-  initialize(container: ElementRef<HTMLDivElement>): void {
+  initialize(container: ElementRef<HTMLDivElement>, fogColor: number): void {
     // Create the scene
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x000000);
@@ -51,7 +51,7 @@ export class LootboxPresaleThreeService {
     const loader = new THREE.TextureLoader();
     loader.load('assets/presale/fog.png', (texture) => {
       // Create smoke particles using the texture
-      this.createSmoke(texture);
+      this.createSmoke(texture, fogColor);
     });
 
     this.resizeListener = this.onWindowResize.bind(this);
@@ -60,13 +60,14 @@ export class LootboxPresaleThreeService {
     this.animate();
   }
 
-  private createSmoke(texture: THREE.Texture) {
+  private createSmoke(texture: THREE.Texture, fogColor: number) {
     this.smokeMaterial = new THREE.MeshBasicMaterial({
       map: texture,
       transparent: true,
       opacity: 0.2,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
+      color: fogColor,
     });
     const smokeGeometry = new THREE.PlaneGeometry(10, 10);
     for (let i = 0; i < 80; i++) {

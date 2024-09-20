@@ -1,4 +1,6 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import {
   getAccount,
@@ -10,7 +12,6 @@ import {
 import { ethers } from 'ethers';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   BehaviorSubject,
   EMPTY,
@@ -22,30 +23,25 @@ import {
   from,
   interval,
   map,
-  of,
   startWith,
   switchMap,
-  take,
-  tap,
 } from 'rxjs';
-import { shimmerTestnet, shimmer } from 'viem/chains';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { Item, ItemType } from 'src/modules/core/models/items.model';
-import { ContractService } from 'src/services/contract.service';
+import { Consumable } from 'src/modules/core/models/consumable.model';
+import { Item } from 'src/modules/core/models/items.model';
+import { Material } from 'src/modules/core/models/material.model';
+import { MiscellanyItem } from 'src/modules/core/models/misc.model';
+import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
+import { getItemTypeSCBasedOnItem } from 'src/modules/utils';
+import { ERC20ContractService } from 'src/services/contracts/erc20-contract.service';
+import { NFTContractService } from 'src/services/contracts/nft-contract.service';
 import { ExportImportService } from 'src/services/export-import.service';
 import { ItemService } from 'src/services/item.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { WalletService } from 'src/services/wallet.service';
-import { FormControl } from '@angular/forms';
+import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ItemTypeSC } from './enums/ItemTypesSC';
-import { NavigationEnd, Router } from '@angular/router';
-import { Material } from 'src/modules/core/models/material.model';
-import { Consumable } from 'src/modules/core/models/consumable.model';
-import { MiscellanyItem } from 'src/modules/core/models/misc.model';
-import { getItemTypeSCBasedOnItem } from 'src/modules/utils';
-import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
 
 @Component({
   selector: 'app-export-import-nft',
@@ -59,7 +55,6 @@ export class ExportImportNftComponent extends TemplatePage {
   public selectedUruksToExport = 0;
   private playerService = inject(PlayerService);
   viewportService = inject(ViewportService);
-  contractService = inject(ContractService);
   itemService = inject(ItemService);
   importExport = inject(ExportImportService);
   spinnerService = inject(NgxSpinnerService);
@@ -68,6 +63,8 @@ export class ExportImportNftComponent extends TemplatePage {
   router = inject(Router);
   walletService = inject(WalletService);
   stack = inject(StackPipe);
+  ERC20ContractService = inject(ERC20ContractService);
+  NFTContractService = inject(NFTContractService);
 
   public activeNetworkId = new BehaviorSubject<number>(0);
   public activeCorrectNetwork = this.activeNetworkId.pipe(
@@ -124,9 +121,7 @@ export class ExportImportNftComponent extends TemplatePage {
     }),
     switchMap(() => {
       return from(
-        this.contractService.executeReadContractOnUrukERC20('balanceOf', [
-          getAccount().address,
-        ])
+        this.ERC20ContractService.getBalanceOf(getAccount().address)
       ).pipe(
         catchError((err) => {
           console.error(err);
@@ -147,12 +142,7 @@ export class ExportImportNftComponent extends TemplatePage {
 
   public getERC20ExportFee$ = this.activeCorrectNetwork.pipe(
     switchMap(() => {
-      return from(
-        this.contractService.executeReadContractOnUrukERC20(
-          'getExportFee',
-          null
-        )
-      ).pipe(
+      return from(this.ERC20ContractService.getExportFee()).pipe(
         map((entry) => Number(ethers.formatEther(entry.toString())).toFixed(8))
       );
     })
@@ -160,9 +150,7 @@ export class ExportImportNftComponent extends TemplatePage {
 
   public getNFTExportFee$ = this.activeCorrectNetwork.pipe(
     switchMap(() => {
-      return from(
-        this.contractService.executeReadContractOnUrukNFT('getMintingFee', null)
-      ).pipe(
+      return from(this.NFTContractService.getMintingFee()).pipe(
         map((entry) => {
           return Number(ethers.formatEther(entry.toString()));
         })
@@ -189,12 +177,9 @@ export class ExportImportNftComponent extends TemplatePage {
       return this.walletService.getValidAddress$;
     }),
     switchMap((address) => {
-      return this.contractService.executeReadContractOnUrukNFT(
-        'getItemsWhitelisted',
-        [address]
-      );
+      return this.NFTContractService.getItemsWhitelisted(address);
     }),
-    switchMap((entry: { id: number; itemType: ItemTypeSC; uri: string }[]) => {
+    switchMap((entry) => {
       const itemsParsed = entry.map((entry) => {
         entry.id = Number(entry.id.toString());
         entry.itemType = Number(entry.itemType.toString());
@@ -402,8 +387,7 @@ export class ExportImportNftComponent extends TemplatePage {
         )
       );
       const fees = await firstValueFrom(this.getNFTExportFee$);
-      const tx = await this.contractService.executewriteContractOnUrukNFT(
-        'exportItemsToNfts',
+      const tx = await this.NFTContractService.exportItemsToNfts(
         [
           nftsUploaded.map((entry) => entry.id),
           nftsUploaded.map((entry) => entry.type),
@@ -652,10 +636,10 @@ export class ExportImportNftComponent extends TemplatePage {
       } else {
         const [finalIdsToImport, finalItemTypesToImport] =
           await this.getRawSelectedItems();
-        await this.contractService.executewriteContractOnUrukNFT(
-          'importNftToItem',
-          [finalIdsToImport, finalItemTypesToImport]
-        );
+        await this.NFTContractService.importNftToItem([
+          finalIdsToImport,
+          finalItemTypesToImport,
+        ]);
         this.spinnerService.hide();
         this.sendThemToTheAbyssAndBurnThemLikeJs();
         this.toastService.success(
@@ -675,37 +659,9 @@ export class ExportImportNftComponent extends TemplatePage {
     this.spinnerService.show();
     try {
       if (this.exportTypeActive == 'export') {
-        await firstValueFrom(
-          this.importExport.whiteListItemERC20(this.selectedUruksToExport)
-        );
-        const fees = await firstValueFrom(this.getERC20ExportFee$);
-        const tx = await this.contractService.executewriteContractOnUrukERC20(
-          'exportCoins',
-          [ethers.parseEther(this.selectedUruksToExport.toString())],
-          ethers.parseEther(fees)
-        );
-        const receipt = await waitForTransaction({
-          hash: tx.hash,
-        });
-        this.store.dispatch(new RefreshPlayer());
-        this.spinnerService.hide();
-        if (receipt.status !== 'success')
-          throw new Error('Error exporting items!');
-        this.toastService.success(
-          'The coins got exported, you will receive them in your wallet soon!'
-        );
-        this.selectedUruksToExport = 0;
+        this.exportERC20();
       } else {
-        await this.contractService.executewriteContractOnUrukERC20(
-          'importCoins',
-          [ethers.parseEther(this.selectedUruksToExport.toString())]
-        );
-        this.spinnerService.hide();
-        this.toastService.success(
-          'The coins got imported, you will receive them in your inventory soon!'
-        );
-        this.store.dispatch(new RefreshPlayer());
-        this.selectedUruksToExport = 0;
+        this.importERC20();
       }
     } catch (error: any) {
       this.toastService.error(
@@ -717,6 +673,39 @@ export class ExportImportNftComponent extends TemplatePage {
       );
       this.spinnerService.hide();
     }
+  }
+
+  private async exportERC20() {
+    await firstValueFrom(
+      this.importExport.whiteListItemERC20(this.selectedUruksToExport)
+    );
+    const fees = await firstValueFrom(this.getERC20ExportFee$);
+    const tx = await this.ERC20ContractService.exportCoins(
+      [ethers.parseEther(this.selectedUruksToExport.toString())],
+      ethers.parseEther(fees)
+    );
+    const receipt = await waitForTransaction({
+      hash: tx.hash,
+    });
+    this.store.dispatch(new RefreshPlayer());
+    this.spinnerService.hide();
+    if (receipt.status !== 'success') throw new Error('Error exporting items!');
+    this.toastService.success(
+      'The coins got exported, you will receive them in your wallet soon!'
+    );
+    this.selectedUruksToExport = 0;
+  }
+
+  private async importERC20() {
+    await this.ERC20ContractService.importCoins([
+      ethers.parseEther(this.selectedUruksToExport.toString()),
+    ]);
+    this.spinnerService.hide();
+    this.toastService.success(
+      'The coins got imported, you will receive them in your inventory soon!'
+    );
+    this.store.dispatch(new RefreshPlayer());
+    this.selectedUruksToExport = 0;
   }
 
   public async cancelAll(pendingItems: Array<any>) {
@@ -763,10 +752,7 @@ export class ExportImportNftComponent extends TemplatePage {
   ) {
     if (!slave) this.spinnerService.show();
     try {
-      await this.contractService.executewriteContractOnUrukNFT(
-        'deletePendingExport',
-        [idItems, itemsTypes]
-      );
+      await this.NFTContractService.deletePendingExport([idItems, itemsTypes]);
       if (!slave) {
         this.spinnerService.hide();
         this.toastService.success('Success');

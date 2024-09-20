@@ -15,16 +15,28 @@
                 'glowing-uncommon': lootbox.rarity === rarityEnum.UNCOMMON,
                 'glowing-epic': lootbox.rarity === rarityEnum.EPIC,
                 'glowing-legendary': lootbox.rarity === rarityEnum.LEGENDARY,
-                'glowing-mythic': lootbox.rarity === rarityEnum.MYTHIC
+                'glowing-mythic': lootbox.rarity === rarityEnum.MYTHIC,
               }"
               [src]="lootbox.image"
               class="lootbox-image"
             />
             <span
               [ngStyle]="{ color: getRarityColor(lootbox.rarity) }"
-              class="lootbox-name"
+              class="lootbox-name pb-4"
               >{{ lootbox.name }}</span
             >
+            <div
+              class="d-flex pt-4 animate__animated animate__bounce animate__infinite animate__slower"
+            >
+              <button
+                *ngIf="!openDetail"
+                (click)="openDetail = !openDetail"
+                [ngStyle]="{ background: getRarityColor(activeLootbox.rarity) }"
+                class="btn btn-lg text-white w-100 mint-button"
+              >
+                Open me!
+              </button>
+            </div>
           </div>
         </ng-template>
       </swiper>
@@ -32,29 +44,65 @@
   </div>
   <div *ngIf="openDetail" class="col-md-5 col-12 lootbox-details">
     <div class="details">
-      <div
-        *ngIf="lootboxItemDropRateByRarity[activeLootbox.rarity] as dropRates"
-        class="text-white"
-      >
-        <h3>Drop Rates:</h3>
-        <ul>
-          <li *ngFor="let rarity of dropRates | keyvalue">
-            {{ rarity.key }}: {{ rarity.value * 10 }} %
-          </li>
-        </ul>
-      </div>
-      <div class="d-flex justify-content-end gap-2">
-        <p class="price text-end">$9.99</p>
-        <p class="text-white text-end">0/1000</p>
-      </div>
-
-      <div class="image-gallery py-2">
-        <div *ngFor="let imageUrl of getImageUrls()" class="image-item">
-          <img [src]="imageUrl" alt="Lootbox Image" class="lootbox-image" />
+      <div class="drops">
+        <h2 [ngStyle]="{ color: getRarityColor(activeLootbox.rarity) }">
+          Possible Drops
+        </h2>
+        <div class="image-gallery">
+          <div *ngFor="let imageUrl of getImageUrls()" class="image-item">
+            <img [src]="imageUrl" alt="Lootbox Image" class="lootbox-image" />
+          </div>
+        </div>
+        <div class="drop-list pt-4">
+          <ul class="text-white">
+            <li>Equipment</li>
+            <li>Premium Portraits</li>
+            <li>Recipes</li>
+            <li>Money Bags</li>
+            <li class="font-italic">Much more...</li>
+          </ul>
         </div>
       </div>
-      <div class="d-flex pt-3">
-        <button class="button-rainbow">Mint now</button>
+      <div class="d-flex flex-column align-items-end gap-2">
+        <div class="price">
+          <p class="text-white">
+            {{ activeLootbox.price }}
+            <img
+              class="iota-icon"
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAOVBMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADLcPMfAAAAE3RSTlMAB9L/aJSHxU+y4EFdMBKkH/J1V7GuOAAAAVtJREFUeAF9zUGOpDAAA8AKJhAIBJr/P3YPfdiZVmvqZsmWfVWmzP5Sk/jL8llQ5mJdteZt27tfpkwlkZSt+GbN6mhabzkPjGv2W8MNWrAm55lX8YZr9aTe6Ui3JveWPMDoenI8WVqOdXK/L47kBiOpXhkGw/LU2dsoQEt2oAyoB1O6+wHeyTkdklInkFySzfB2DmsiKXvudOZ12FPnrGBJxpGLQhnT7Tyh2xIwJc1PybCslKsry6xnAm31tr9Ienne6wd4yhNwV2iLLZUkG85Icw+oOfR0Wjo16SjdSV6o90PP4WrgHLBvUl0zZw5yULL77x4a2sZQ+9o9c7/9N62O15AcWA/j3Cc/LY+a07GBcdWXD/XmxJKFcfl0pGqZ2PPy1UPPRp962RZf7JNiWbAlzScjoSWdK+m21+G31ksfyXCqszlJ8SGZkVQ83wsLPXnBmsenc4Y1hx/+AZ5YDCuuPXtEAAAAAElFTkSuQmCC"
+            />
+          </p>
+        </div>
+        <div class="avaible d-flex align-items-center text-white">
+          <p
+            [ngStyle]="{
+              color: getAvaibleColor(
+                activeLootbox.total,
+                activeLootbox.avaible
+              ),
+            }"
+          >
+            {{ activeLootbox.avaible }}
+          </p>
+          <p>/{{ activeLootbox.total }}</p>
+        </div>
+      </div>
+
+      <div class="d-flex">
+        <button
+          [disabled]="loading || activeLootbox.avaible <= 0"
+          [ngStyle]="{ background: getRarityColor(activeLootbox.rarity) }"
+          (click)="mint()"
+          class="btn text-white w-100 mint-button"
+        >
+          <span
+            *ngIf="loading"
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+          Mint now
+        </button>
       </div>
     </div>
   </div>
