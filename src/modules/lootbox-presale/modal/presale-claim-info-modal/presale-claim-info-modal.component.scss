@@ -1,0 +1,12 @@
+@import '../../../../variables.scss';
+
+#presale-modal-container {
+  height: 80vh;
+  width: 85vw;
+  max-width: 1500px;
+  position: relative;
+  background-color: #1f1f1d;
+  border-radius: 10px;
+  padding: 3vmax;
+  overflow-y: auto;
+}

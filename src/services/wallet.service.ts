@@ -15,7 +15,6 @@ import {
   from,
   map,
   of,
-  Subject,
   switchMap,
   take,
   tap,
@@ -36,7 +35,6 @@ import { SessionService } from './session.service';
 })
 export class WalletService {
   public modal: Web3Modal;
-
   public authService = inject(AuthService);
   public sessionService = inject(SessionService);
   public playerService = inject(PlayerService);

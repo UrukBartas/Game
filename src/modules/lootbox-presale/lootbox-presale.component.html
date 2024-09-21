@@ -73,18 +73,26 @@
             />
           </p>
         </div>
-        <div class="avaible d-flex align-items-center text-white">
-          <p
-            [ngStyle]="{
-              color: getAvaibleColor(
-                activeLootbox.total,
-                activeLootbox.avaible
-              ),
-            }"
-          >
-            {{ activeLootbox.avaible }}
+        <div
+          class="avaible w-100 d-flex align-items-center justify-content-between"
+        >
+          <p (click)="openClaimInfo()" class="text-white claim-info">
+            <i class="fa-solid fa-info-circle"></i>
+            Claim
           </p>
-          <p>/{{ activeLootbox.total }}</p>
+          <div class="text-white d-flex align-items-center">
+            <p
+              [ngStyle]="{
+                color: getAvaibleColor(
+                  activeLootbox.total,
+                  activeLootbox.avaible
+                ),
+              }"
+            >
+              {{ activeLootbox.avaible }}
+            </p>
+            <p>/{{ activeLootbox.total }}</p>
+          </div>
         </div>
       </div>
 

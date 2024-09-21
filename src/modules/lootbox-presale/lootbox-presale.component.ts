@@ -16,9 +16,10 @@ import {
 } from '@wagmi/core';
 
 import { ethers } from 'ethers';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import * as party from 'party-js';
-import { finalize, from } from 'rxjs';
+import { finalize, from, takeWhile } from 'rxjs';
 import {
   LootboxPresaleTypeEnum,
   PresaleContractService,
@@ -30,6 +31,7 @@ import { SwiperModule } from 'swiper/angular';
 import { Rarity } from '../core/models/items.model';
 import { getRarityColor } from '../utils';
 import { lootboxItemDropsByRarity, lootboxes } from './data/lootbox.const';
+import { PresaleClaimInfoModalComponent } from './modal/presale-claim-info-modal/presale-claim-info-modal.component';
 import { LootboxPresaleThreeService } from './services/lootbox-presale-threejs.service';
 
 SwiperCore.use([Navigation, EffectCoverflow]);
@@ -39,11 +41,7 @@ SwiperCore.use([Navigation, EffectCoverflow]);
   templateUrl: './lootbox-presale.component.html',
   styleUrls: ['./lootbox-presale.component.scss'],
   imports: [CommonModule, SwiperModule],
-  providers: [
-    LootboxPresaleThreeService,
-    PresaleContractService,
-    WalletService,
-  ],
+  providers: [LootboxPresaleThreeService, PresaleContractService],
   standalone: true,
   encapsulation: ViewEncapsulation.None,
 })
@@ -77,6 +75,7 @@ export class LootboxPresaleComponent implements AfterViewInit {
   private presaleContractService = inject(PresaleContractService);
   private walletService = inject(WalletService);
   private cdr = inject(ChangeDetectorRef);
+  private modalService = inject(BsModalService);
   toastService = inject(ToastrService);
   getRarityColor = getRarityColor;
   lootboxItemDropRateByRarity = lootboxItemDropsByRarity;
@@ -113,50 +112,73 @@ export class LootboxPresaleComponent implements AfterViewInit {
   async mint(): Promise<void> {
     const account = getAccount();
     if (!account.isConnected) {
-      this.walletService.modal.open();
-    }
+      this.walletService.address$.subscribe(async (address) => {
+        if (address) {
+          this.preMintCheck(address);
+        }
+      });
 
+      this.walletService.modal.open();
+    } else {
+      this.preMintCheck(account.address);
+    }
+  }
+
+  private async preMintCheck(address: string) {
+    const checkNetwork = await this.checkNetworkIsCorrect();
+
+    if (address && checkNetwork) {
+      this.mintLootbox(address);
+    }
+  }
+
+  private async checkNetworkIsCorrect(): Promise<boolean> {
     const network = getNetwork();
     if (network.chain?.id !== SHIMMER_TESTNET_CHAINID) {
       try {
         await switchNetwork({ chainId: SHIMMER_TESTNET_CHAINID });
-        console.log('Switched to Shimmer Testnet');
+        return true;
       } catch (error) {
-        console.error('Failed to switch network:', error);
-        return;
+        this.toastService.error('Failed to switch network');
+        return false;
       }
+    } else {
+      return true;
     }
+  }
 
-    const address = account.address;
-    if (address && network.chain?.id === SHIMMER_TESTNET_CHAINID) {
-      const priceInEther = ethers.parseEther(this.activeLootbox.price);
+  private async mintLootbox(address: string) {
+    const priceInEther = ethers.parseEther(this.activeLootbox.price);
 
-      try {
-        const tx = await this.presaleContractService.mintLootbox(
-          address,
-          LootboxPresaleTypeEnum[this.activeLootbox.rarity],
-          priceInEther
-        );
-        this.loading = true;
-        from(
-          waitForTransaction({
-            hash: tx.hash,
-          })
-        )
-          .pipe(finalize(() => (this.loading = false)))
-          .subscribe(async () => {
-            this.activeLootbox.avaible = this.activeLootbox.avaible - 1;
-            party.confetti(this.threeContainer.nativeElement, {
-              count: party.variation.range(100, 200),
-            });
-            this.toastService.success(
-              'NFT minted, you will receive it in your wallet soon!'
-            );
+    try {
+      const tx = await this.presaleContractService.mintLootbox(
+        address,
+        LootboxPresaleTypeEnum[this.activeLootbox.rarity],
+        priceInEther
+      );
+      this.loading = true;
+      from(
+        waitForTransaction({
+          hash: tx.hash,
+        })
+      )
+        .pipe(finalize(() => (this.loading = false)))
+        .subscribe(async () => {
+          this.activeLootbox.avaible = this.activeLootbox.avaible - 1;
+          party.confetti(this.threeContainer.nativeElement, {
+            count: party.variation.range(100, 200),
           });
-      } catch (error) {
-        this.toastService.error('Error during minting - Transaction canceled');
-      }
+          this.toastService.success(
+            'NFT minted, you will receive it in your wallet soon!'
+          );
+        });
+    } catch (error) {
+      this.toastService.error('Error during minting - Transaction canceled');
     }
+  }
+
+  openClaimInfo() {
+    this.modalService.show(PresaleClaimInfoModalComponent);
   }
 
   onSlideChange(swiper: any) {

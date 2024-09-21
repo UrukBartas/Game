@@ -1,0 +1,20 @@
+<div id="presale-modal-container">
+  <h3 class="text-white">How to claim your lootboxes in game!</h3>
+  <p class="text-white">First Login into the game, create one.</p>
+  <p class="text-white">Go into the export/import tab</p>
+  <p class="text-white">Select the import option in the slider</p>
+  <p class="text-white">
+    Then you will see your lootboxes in the grid, select them and click import
+  </p>
+  <p class="text-white">
+    Now your lootboxes will be avaible in your inventory!, just go to the misc
+    section and click them to open. Enjoy!
+  </p>
+  <button class="btn btn-secondary" (click)="modalRef.hide()">Close</button>
+  <button
+    class="btn btn-primary"
+    (click)="router.navigateByUrl('/'); modalRef.hide()"
+  >
+    Login
+  </button>
+</div>
