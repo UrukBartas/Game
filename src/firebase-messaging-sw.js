@@ -6,12 +6,11 @@ importScripts(
 );
 
 firebase.initializeApp({
-  apiKey: "AIzaSyARtOTOTqtsQx46kaxVCpsuFrn75C_6D6c",
-  authDomain: "uruk-bartas-push.firebaseapp.com",
-  projectId: "uruk-bartas-push",
-  storageBucket: "uruk-bartas-push.appspot.com",
-  messagingSenderId: "657642113527",
-  appId: "1:657642113527:web:097ccbdd8ba629025146f2",
+  apiKey: "AIzaSyDInFY0vQqlsTBQIRUynninKwu9W4aYIBQ",
+  authDomain: "uruk-push-v2.firebaseapp.com",
+  projectId: "uruk-push-v2",
+  storageBucket: "uruk-push-v2.appspot.com",
+  messagingSenderId: "706694829638",
+  appId: "1:706694829638:web:9a0c27ee414de9ee051c47",
 });
 const messaging = firebase.messaging();
-
