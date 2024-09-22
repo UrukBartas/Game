@@ -57,6 +57,7 @@ export class AppComponent {
       if (Capacitor.isNativePlatform()) {
         return;
       }
+      this.pushNotificationsService.init();
       initializeApp(environment.firebase);
     } catch (error) {
       console.error('An error happened while initializing Firebase', error);
