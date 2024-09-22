@@ -9,7 +9,7 @@
     [ngClass]="{
       'positive-rarity-bonus': isRarityBonus(key) && item[key] >= 0,
       'negative-rarity-bonus': isRarityBonus(key) && item[key] < 0,
-      'text-white': !isRarityBonus(key)
+      'text-white': !isRarityBonus(key),
     }"
     class="{{ class ?? '' }}"
   >
@@ -35,7 +35,7 @@
     'glowing-uncommon': item.itemData.rarity === rarityEnum.UNCOMMON,
     'glowing-epic': item.itemData.rarity === rarityEnum.EPIC,
     'glowing-legendary': item.itemData.rarity === rarityEnum.LEGENDARY,
-    'glowing-mythic': item.itemData.rarity === rarityEnum.MYTHIC
+    'glowing-mythic': item.itemData.rarity === rarityEnum.MYTHIC,
   }"
 >
   <div class="d-flex flex-column align-items-start gap-1">
@@ -55,7 +55,7 @@
           'locked-level':
             !isViewingPlayer && (player$ | async).level < item.level,
           'text-white':
-            !isViewingPlayer && (player$ | async).level >= item.level
+            !isViewingPlayer && (player$ | async).level >= item.level,
         }"
       >
         Level {{ item.level }}
@@ -65,7 +65,7 @@
       <p
         [ngStyle]="{
           color: getRarityColor(item.itemData.rarity, 0.7),
-          fontSize: '13px'
+          fontSize: '13px',
         }"
         class="m-0"
       >
@@ -90,14 +90,14 @@
   <div
     class="d-flex flex-row pt-2 wrapper-tooltip"
     [ngClass]="{
-      locked: !isViewingPlayer && (player$ | async).level < item.level
+      locked: !isViewingPlayer && (player$ | async).level < item.level,
     }"
   >
     <div class="d-flex flex-column align-items-center">
       <img class="item-image" [src]="item.itemData?.imageLocal" priority />
       <span
         [ngStyle]="{
-          color: getRarityColor(getRarityBasedOnIRI(item.item_rarity_stat))
+          color: getRarityColor(getRarityBasedOnIRI(item.item_rarity_stat)),
         }"
         class="mt-2"
         *ngIf="item.item_rarity_stat"
@@ -121,7 +121,7 @@
                 context: {
                   key,
                   avoidIndicator: false,
-                  index: i
+                  index: i,
                 }
               "
             ></ng-container>
@@ -132,7 +132,7 @@
                   negative:
                     (item | compareItem: compareWith : key).charAt(0) == '-',
                   neutral:
-                    (item | compareItem: compareWith : key).charAt(0) == '0'
+                    (item | compareItem: compareWith : key).charAt(0) == '0',
                 }"
               >
                 {{
@@ -148,7 +148,10 @@
   <p
     class="mt-3"
     [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }"
-    *ngIf="item.itemData?.description?.length > 0"
+    *ngIf="
+      item.itemData?.description?.length > 0 &&
+      viewportService.screenWidth != 'xs'
+    "
   >
     {{ item.itemData.description }}
   </p>

@@ -2,11 +2,10 @@ import { Component, inject, Input } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Debounce } from 'lodash-decorators';
 import { ToastrService } from 'ngx-toastr';
-import { firstValueFrom, shareReplay, switchMap, tap } from 'rxjs';
+import { firstValueFrom, map, shareReplay, switchMap, tap } from 'rxjs';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { PlayerService } from 'src/services/player.service';
-import { RefreshPlayer } from 'src/store/main.store';
-
+import { MainState, RefreshPlayer } from 'src/store/main.store';
 @Component({
   selector: 'app-generic-stats',
   templateUrl: './generic-stats.component.html',
@@ -19,9 +18,22 @@ export class GenericStatsComponent {
   playerService = inject(PlayerService);
   toastService = inject(ToastrService);
   store = inject(Store);
-  allowedStatsToUpgrade = ['health', 'armor', 'energy', 'damage', 'speed','block', 'penetration', 'crit', 'accuracy', 'dodge'];
+  allowedStatsToUpgrade = [
+    'health',
+    'armor',
+    'energy',
+    'damage',
+    'speed',
+    'block',
+    'penetration',
+    'crit',
+    'accuracy',
+    'dodge',
+  ];
   allStatsUpgradeStatus$ = this.getUpgradeStatus();
-
+  public player$ = this.store
+    .select(MainState.getState)
+    .pipe(map((entry) => entry.player));
   private getUpgradeStatus() {
     return this.playerService.getUpgradeCost().pipe(shareReplay(1));
   }
