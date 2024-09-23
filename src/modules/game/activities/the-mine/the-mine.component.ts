@@ -209,19 +209,25 @@ export class TheMineComponent extends TemplatePage {
 
   public async giveUruksToWorkers() {
     this.spinnerService.show();
-    const tx = await this.contractService.executewriteContractOnUrukERC20(
-      'stakeTokens',
-      [ethers.parseEther(this.selectedUruksToExport.toString())]
-    );
-    const receipt = await waitForTransaction({
-      hash: tx.hash,
-    });
-    this.toastService.success(
-      this.selectedUruksToExport + ' given to the goblin workers!'
-    );
+    try {
+      const tx = await this.contractService.executewriteContractOnUrukERC20(
+        'stakeTokens',
+        [ethers.parseEther(this.selectedUruksToExport.toString())]
+      );
+      const receipt = await waitForTransaction({
+        hash: tx.hash,
+      });
+      this.toastService.success(
+        this.selectedUruksToExport + ' given to the goblin workers!'
+      );
 
-    this.selectedUruksToExport = 0;
-    this.store.dispatch(new RefreshPlayer());
+      this.selectedUruksToExport = 0;
+      this.store.dispatch(new RefreshPlayer());
+    } catch (error) {
+      this.toastService.error(
+        'Error during transaction - Transaction canceled'
+      );
+    }
     this.spinnerService.hide();
   }
 

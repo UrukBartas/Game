@@ -23,12 +23,18 @@ export class ContractService {
 
   public async triggerTx(tx: Function, mesasge?: string) {
     this.spinnerService.show();
-    const txRes = await tx();
-    const receipt = await waitForTransaction({
-      hash: txRes.hash,
-    });
-    this.toastService.success(mesasge ?? 'Transaction completed successfully!');
-    this.store.dispatch(new RefreshPlayer());
+    try {
+      const txRes = await tx();
+      const receipt = await waitForTransaction({
+        hash: txRes.hash,
+      });
+      this.toastService.success(
+        mesasge ?? 'Transaction completed successfully!'
+      );
+      this.store.dispatch(new RefreshPlayer());
+    } catch (error) {
+      this.toastService.error('Eror during transaction - Transaction canceled');
+    }
     this.spinnerService.hide();
   }
 

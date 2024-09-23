@@ -172,7 +172,6 @@ export class InventoryComponent extends TemplatePage {
     super();
     if (this.isViewingPlayer) this.activeSlideIndex = 1;
     this.getPlayer$.subscribe((player) => {
-      console.warn('player', player);
       this.actualPlayer$.next(player);
     });
     if (!this.isViewingPlayer) {
