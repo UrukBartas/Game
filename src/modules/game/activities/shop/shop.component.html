@@ -32,7 +32,7 @@
           urText
           class="btn btn-secondary mb-0 d-flex justify-content-center align-items-center"
           btnRadio="3"
-          >📜 <span class="d-none d-lg-block pl-2">Recipes</span></label
+          >📜 <span class="d-none d-lg-block pl-2">Miscellany</span></label
         >
       </div>
     </div>
@@ -79,8 +79,11 @@
           'item-container col d-flex justify-content-center position-relative ' +
           rollAnimation
         "
+        [ngClass]="{ 'boost-item': item.itemType == miscellanyItemType.Boost }"
       >
         <app-item-box
+          [item]="item"
+          [calculatedStack]="obtainStacks"
           (click)="selectItem(item)"
           [ngbTooltip]="item.itemData ? itemTooltip : consumableTooltip"
           [tooltipContext]="{ item: item }"

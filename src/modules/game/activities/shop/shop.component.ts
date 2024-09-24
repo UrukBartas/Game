@@ -10,12 +10,12 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { filter, firstValueFrom, map, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
+import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
 import { animateElement } from 'src/modules/utils';
 import { ShopService } from 'src/services/shop.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
-import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
 
 @Component({
   selector: 'app-shop',
@@ -36,6 +36,7 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
   rollAnimation: string;
   premiumRollsNumber = 0;
   public selectedTab = '0';
+  public miscellanyItemType = MiscellanyItemType;
 
   player$ = this.store
     .select(MainState.getState)
@@ -54,7 +55,9 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
       return items.filter((entry) => !!entry.consumableType);
     } else if (this.selectedTab == '3') {
       return items.filter(
-        (entry) => entry?.itemType == MiscellanyItemType.Recipe
+        (entry) =>
+          entry?.itemType == MiscellanyItemType.Recipe ||
+          entry?.itemType == MiscellanyItemType.Boost
       );
     }
   }
@@ -75,6 +78,14 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
     super();
     this.loadItems();
   }
+
+  public obtainStacks = (item: any) => {
+    if (item.itemType == MiscellanyItemType.Boost) {
+      const parts = item.id.split('_');
+      return '+' + Number(parts[parts.length - 1]) + '%';
+    }
+    return '';
+  };
 
   ngAfterViewInit() {
     setTimeout(() => {

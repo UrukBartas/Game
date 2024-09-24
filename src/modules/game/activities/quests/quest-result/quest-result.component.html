@@ -3,7 +3,7 @@
     (click)="
       questStatusChange.emit({
         status: questStatusEnum.PICKING,
-        force: true
+        force: true,
       })
     "
     class="btn btn-primary"
@@ -101,7 +101,7 @@
       *ngTemplateOutlet="
         itemLootDrop;
         context: {
-          loot: fightResult?.lostLoot
+          loot: fightResult?.lostLoot,
         }
       "
     ></ng-container>
@@ -110,7 +110,7 @@
       *ngTemplateOutlet="
         consumableLootDrop;
         context: {
-          loot: fightResult?.consumableLostLoot
+          loot: fightResult?.consumableLostLoot,
         }
       "
     ></ng-container>
@@ -119,7 +119,7 @@
       *ngTemplateOutlet="
         materialLootDrop;
         context: {
-          loot: fightResult?.materialLostLoot
+          loot: fightResult?.materialLostLoot,
         }
       "
     ></ng-container>
@@ -127,7 +127,7 @@
       *ngTemplateOutlet="
         miscLootDrop;
         context: {
-          loot: fightResult?.miscellanyLostLoot
+          loot: fightResult?.miscellanyLostLoot,
         }
       "
     ></ng-container>
@@ -154,7 +154,7 @@
       *ngTemplateOutlet="
         itemLootDrop;
         context: {
-          loot: fightResult?.loot
+          loot: fightResult?.loot,
         }
       "
     ></ng-container>
@@ -163,7 +163,7 @@
       *ngTemplateOutlet="
         consumableLootDrop;
         context: {
-          loot: fightResult?.consumableLoot
+          loot: fightResult?.consumableLoot,
         }
       "
     ></ng-container>
@@ -172,7 +172,7 @@
       *ngTemplateOutlet="
         materialLootDrop;
         context: {
-          loot: fightResult?.materialLoot
+          loot: fightResult?.materialLoot,
         }
       "
     ></ng-container>
@@ -181,7 +181,7 @@
       *ngTemplateOutlet="
         miscLootDrop;
         context: {
-          loot: fightResult?.miscellanyLoot
+          loot: fightResult?.miscellanyLoot,
         }
       "
     ></ng-container>
@@ -230,7 +230,7 @@
           (click)="
             questStatusChange.emit({
               status: questStatusEnum.PICKING,
-              force: true
+              force: true,
             })
           "
         >
@@ -254,7 +254,7 @@
         src="../../../../../assets/misc/closed_chest.png"
         [ngStyle]="{
           height: viewportService.getResponsiveSizeChestImg()[1] + 'px',
-          width: viewportService.getResponsiveSizeChestImg()[0] + 'px'
+          width: viewportService.getResponsiveSizeChestImg()[0] + 'px',
         }"
         (click)="openChest()"
       />
@@ -270,7 +270,7 @@
           src="../../../../../assets/misc/opened_chest.png"
           [ngStyle]="{
             height: viewportService.getResponsiveSizeChestImg()[1] + 'px',
-            width: viewportService.getResponsiveSizeChestImg()[0] + 'px'
+            width: viewportService.getResponsiveSizeChestImg()[0] + 'px',
           }"
         />
         <ng-container *ngTemplateOutlet="lootWonDisplay"></ng-container>
@@ -338,11 +338,29 @@
       <span urText *ngIf="fightResult.exp" class="text-white pb-2"
         >You gained
         <span class="text-secondary">{{ fightResult.exp }}</span>
-        experience</span
+        experience
+        <span
+          class="text-warning animate__animated animate__pulse animate__infinite"
+          *ngIf="fightResult.expFactor > 1"
+          >Boosted
+          {{
+            fightResult.expFactor * 100 -
+              (fightResult.expFactor >= 2 ? 0 : 100)
+          }}%!</span
+        ></span
       >
       <span urText *ngIf="fightResult.uruks" class="text-white pb-2"
         >You gained
-        <span class="text-secondary">{{ fightResult.uruks }}</span> Uruks</span
+        <span class="text-secondary">{{ fightResult.uruks }}</span> Uruks
+        <span
+          class="text-warning animate__animated animate__pulse animate__infinite"
+          *ngIf="fightResult.uruksFactor > 1"
+          >Boosted
+          {{
+            fightResult.uruksFactor * 100 -
+              (fightResult.uruksFactor >= 2 ? 0 : 100)
+          }}%!</span
+        ></span
       >
       <span urText class="text-white pb-2" *ngIf="!!fightResult.newQuest"
         >{{
@@ -354,7 +372,7 @@
         }}
         <span
           [ngStyle]="{
-            color: getRarityColor(fightResult?.newQuest?.data?.rarity)
+            color: getRarityColor(fightResult?.newQuest?.data?.rarity),
           }"
           >{{ fightResult?.newQuest?.data?.name }}</span
         ></span

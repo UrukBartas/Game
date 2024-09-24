@@ -202,6 +202,26 @@
     </div>
     <div class="position-relative d-flex justify-content-center">
       <div class="items-equipped-bg">
+        <div class="boosts">
+          <app-item-box
+            *ngFor="let boost of (actualPlayer$ | async)?.boosts ?? []"
+            [height]="getEquippedItemBoxSize() / 3"
+            [width]="getEquippedItemBoxSize() / 3"
+            [image]="boost.boostData.imageLocal"
+            [rarity]="boost.boostData.rarity"
+          >
+            <div tooltip class="tooltip-uruk">
+              <ng-template #expiresOn>
+                <span>Expires on {{ boost.expiresAt | date: 'short' }}</span>
+              </ng-template>
+
+              <app-generic-item-tooltip
+                [item]="boost.boostData"
+                [customTemplate]="expiresOn"
+              ></app-generic-item-tooltip>
+            </div>
+          </app-item-box>
+        </div>
         <ng-container *ngIf="iriAverage$() | async as iriAverage">
           <div
             class="iri-summary"

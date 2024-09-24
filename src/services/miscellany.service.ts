@@ -39,6 +39,10 @@ export class MiscellanyService extends ApiBaseService {
     return this.get('/active-portrait/' + portraitId);
   }
 
+  public activateBoost(boostId: number): Observable<void> {
+    return this.get('/active-boost/' + boostId);
+  }
+
   public getPremiumPortraits(): Observable<MiscellanyItemData[]> {
     return this.get('/premium-portraits');
   }

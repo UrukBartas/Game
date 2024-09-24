@@ -288,7 +288,6 @@ export class InventoryComponent extends TemplatePage {
   }
 
   public getDisplayedItemSet(itemSet: ItemSet) {
-    console.log(this.viewportService.screenSize);
     if (['xs', 'sm'].includes(this.viewportService.screenSize)) {
       return (itemSet.name.length > 1 ? itemSet.name.slice(0, 1) : itemSet.name)
         .trim()
