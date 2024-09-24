@@ -38,6 +38,7 @@ export class ItemRouletteComponent {
   sound = inject(SoundService);
 
   @Output() spinEnded = new EventEmitter<void>();
+  public spinRunning = false;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!!changes['items'].currentValue) {
@@ -62,7 +63,7 @@ export class ItemRouletteComponent {
       return;
     }
     this.sound.playSound('assets/sounds/roulette.mp3');
-
+    this.spinRunning = true;
     const itemWidth = 100; // Ancho del ítem
     const gap = 20; // Gap entre ítems
     const totalWidth = itemWidth + gap;
@@ -107,6 +108,7 @@ export class ItemRouletteComponent {
       } else {
         this.translateX = -finalOffset; // Asegurarse de que termina en la posición exacta
         this.spinEnded.emit();
+        this.spinRunning = false;
       }
     };
 

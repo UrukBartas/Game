@@ -160,9 +160,9 @@ ngb-tooltip-window {
     display: table;
     padding: 0;
     width: fit-content;
-    @include media-breakpoint-down(sm) {
-      transform: scale(0.8);
-    }
+    // @include media-breakpoint-down(sm) {
+    //   transform: scale(0.8);
+    // }
     background: $black-400 !important;
   }
 }
@@ -228,11 +228,6 @@ ngb-tooltip-window {
     &:hover {
       background-color: $secondary;
     }
-  }
-}
-.tab-content {
-  tab {
-    padding: 10px 0px;
   }
 }
 
@@ -484,5 +479,16 @@ app-auction-house {
   // display: flex;
   // flex-wrap: wrap;
   // justify-content: space-between;
-  font-size: 14px;
+  font-size: 12px;
+  td {
+    padding: 5px 5px;
+  }
+}
+
+app-balance-selector {
+  width: 100%;
+}
+
+.uruks-icon {
+  max-width: 40px;
 }

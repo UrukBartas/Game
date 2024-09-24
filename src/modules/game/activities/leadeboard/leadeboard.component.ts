@@ -3,7 +3,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { getAccount } from '@wagmi/core';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { debounceTime, first, map, race, take, tap } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
@@ -14,10 +13,10 @@ import { PlayerService } from 'src/services/player.service';
 import { WebSocketService } from 'src/services/websocket.service';
 import { MainState } from 'src/store/main.store';
 import { ChallengeModalComponent } from '../../components/challengee-modal/challenge-modal.component';
-import { PlayerStateEnum } from './enum/player-state.enum';
+import { pvpTiers } from './const/pvp-tiers';
 import { questTiers } from './const/quest-tiers';
 import { LeaderboardType } from './enum/leaderboard-type.enum';
-import { pvpTiers } from './const/pvp-tiers';
+import { PlayerStateEnum } from './enum/player-state.enum';
 
 @Component({
   selector: 'app-leadeboard',

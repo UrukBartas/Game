@@ -46,7 +46,7 @@
               rarity: 'EPIC',
               chance: possibilitiesComboBox.Portraits.toFixed(2),
               image: pathPortrait,
-              type: 'portrait'
+              type: 'portrait',
             }
           "
         ></ng-container>
@@ -58,7 +58,7 @@
               rarity: 'EPIC',
               chance: possibilitiesComboBox.Materials.toFixed(2),
               image: pathMaterial,
-              type: 'material'
+              type: 'material',
             }
           "
         ></ng-container>
@@ -71,7 +71,7 @@
                 rarity: item.rarity,
                 chance: item.value,
                 image: item.image,
-                type: item.type
+                type: item.type,
               }
             "
           ></ng-container>
@@ -99,7 +99,7 @@
               type: 'item',
               rarity: distribution.rarity,
               chance: distribution.value,
-              image: distribution.image
+              image: distribution.image,
             }
           "
         ></ng-container>
@@ -213,7 +213,7 @@
       <span urTitle class="text-secondary mt-3">✨ Congratulations </span>
       <span
         [ngStyle]="{
-          color: getRarityColor(openingItem()?.miscellanyItemData?.rarity)
+          color: getRarityColor(openingItem()?.miscellanyItemData?.rarity),
         }"
         >Inside the box you find yourself a full set of items of rarity
         {{ openingItem()?.miscellanyItemData?.rarity }}!</span
@@ -260,6 +260,19 @@
       </div>
     </div>
     <ng-container *ngTemplateOutlet="statsLootbox"></ng-container>
+    <div class="quantity">
+      <p class="mb-0 bonus-items text-third w-100" urText>
+        How many to open? Open {{ quantityOpen.value }} boxes
+      </p>
+      <input
+        type="range"
+        class="form-range"
+        step="1"
+        min="1"
+        [max]="5"
+        [formControl]="quantityOpen"
+      />
+    </div>
     <button
       (click)="runRoulette(item.id)"
       urTitle
@@ -269,15 +282,20 @@
       Click to open
     </button>
   </div>
-  <div class="second-phase" [ngClass]="{ 'd-none': currentPhase != 1 }">
-    <app-item-roulette
-      #itemRoulette
-      [duplicateItemsSize]="(roll?.spinWheelItems ?? []).length > 100 ? 2 : 20"
-      [items]="roll?.spinWheelItems ?? []"
-      [resultItem]="roll?.resultItem"
-      (spinEnded)="spinEndedHandle()"
-    ></app-item-roulette>
-  </div>
+  @for (roll of rolls; track roll) {
+    <div class="second-phase" [ngClass]="{ 'd-none': currentPhase != 1 }">
+      <app-item-roulette
+        #itemRoulette
+        [duplicateItemsSize]="
+          (roll?.spinWheelItems ?? []).length > 100 ? 2 : 20
+        "
+        [items]="roll?.spinWheelItems ?? []"
+        [resultItem]="roll?.resultItem"
+        (spinEnded)="spinEndedHandle()"
+      ></app-item-roulette>
+    </div>
+  }
+
   <div class="third-phase" [ngClass]="{ 'd-none': currentPhase != 2 }">
     <div class="result-item-showcase">
       <div
@@ -287,47 +305,54 @@
           class="fa-regular fa-circle-xmark text-white"
           (click)="endPhases()"
         ></i>
-        <app-item-box
-          #itemResult
-          #result
-          [height]="200"
-          [width]="200"
-          [stack]="roll?.resultItem?.quantity | compressNumber"
-          [image]="getGenericItemItemData(roll?.resultItem)?.imageLocal"
-        >
-          <div tooltip class="tooltip-uruk" *ngIf="!!roll?.resultItem">
-            @if (!!roll?.resultItem && roll.resultItem.itemData) {
-              <app-item-tooltip
-                [item]="roll?.resultItem"
-                [compareWith]="
-                  getItem$(roll.resultItem.itemData.itemType) | async
-                "
-              ></app-item-tooltip>
-              <app-item-tooltip
-                *ngIf="
-                  getShowItemCompare() &&
-                    getItem$(roll.resultItem.itemData.itemType)
-                    | async as comparedItem
-                "
-                [item]="comparedItem"
-                [isBeingCompared]="true"
-              ></app-item-tooltip>
-            } @else {
-              <app-generic-item-tooltip
-                [item]="getGenericItemItemData(roll?.resultItem)"
-              ></app-generic-item-tooltip>
-            }
-          </div>
-        </app-item-box>
+        @for (roll of rolls; track roll) {
+          <app-item-box
+            #itemResult
+            #result
+            [height]="200"
+            [width]="200"
+            [stack]="roll?.resultItem?.quantity | compressNumber"
+            [image]="getGenericItemItemData(roll?.resultItem)?.imageLocal"
+          >
+            <div tooltip class="tooltip-uruk" *ngIf="!!roll?.resultItem">
+              @if (!!roll?.resultItem && roll.resultItem.itemData) {
+                <app-item-tooltip
+                  [item]="roll?.resultItem"
+                  [compareWith]="
+                    getItem$(roll.resultItem.itemData.itemType) | async
+                  "
+                ></app-item-tooltip>
+                <app-item-tooltip
+                  *ngIf="
+                    getShowItemCompare() &&
+                      getItem$(roll.resultItem.itemData.itemType)
+                      | async as comparedItem
+                  "
+                  [item]="comparedItem"
+                  [isBeingCompared]="true"
+                ></app-item-tooltip>
+              } @else {
+                <app-generic-item-tooltip
+                  [item]="getGenericItemItemData(roll?.resultItem)"
+                ></app-generic-item-tooltip>
+              }
+            </div>
+          </app-item-box>
+        }
       </div>
       <div class="final-result-wrapper px-3 text-center">
         <span urTitle class="text-secondary mt-3"
-          >✨ Congratulations on
-          {{ getGenericItemItemData(roll?.resultItem)?.name }}</span
+          >✨ Congratulations on {{ getGenericItemsItemData(rolls) }}</span
         >
-        @if (roll?.bonusDrops?.length > 0) {
-          <span urTitle class="text-third mt-3"> ++ BONUS DROP </span>
-          <div class="d-flex justify-content-center gap-2">
+        @for (roll of rolls; track roll; let index = $index) {
+          @if (roll?.bonusDrops?.length > 0) {
+            <span urTitle class="text-third mt-3" *ngIf="index == 0">
+              ++ BONUS DROP
+            </span>
+          }
+        }
+        <div class="d-flex justify-content-center gap-2">
+          @for (roll of rolls; track roll; let index = $index) {
             <app-item-box
               *ngFor="let bonusDrop of roll.bonusDrops"
               #itemResult
@@ -361,8 +386,8 @@
                 }
               </div>
             </app-item-box>
-          </div>
-        }
+          }
+        </div>
       </div>
     </div>
   </div>

@@ -1,11 +1,9 @@
 import {
   HttpClient,
-  HttpContext,
-  HttpErrorResponse,
+  HttpErrorResponse
 } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { disconnect } from '@wagmi/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, Observable, throwError } from 'rxjs';
@@ -27,6 +25,18 @@ export class ApiBaseService {
   ): Observable<any> {
     return this._http
       .get(environment.apiUrl + this.controllerPrefix + endpoint, {
+        withCredentials,
+      })
+      .pipe(catchError((err) => this.handleError(err, ignoreError)));
+  }
+
+  public delete(
+    endpoint: string,
+    ignoreError?: boolean,
+    withCredentials = true
+  ): Observable<any> {
+    return this._http
+      .delete(environment.apiUrl + this.controllerPrefix + endpoint, {
         withCredentials,
       })
       .pipe(catchError((err) => this.handleError(err, ignoreError)));

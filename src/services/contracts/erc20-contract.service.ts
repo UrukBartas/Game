@@ -17,8 +17,24 @@ export class ERC20ContractService extends ContractService {
     return this.executeReadContract<String>('balanceOf', [address]);
   }
 
+  getStakeInfo(address: string) {
+    return this.executeReadContract<String>('getStakeInfo', [address]);
+  }
+
   exportCoins(args: any[], value: any) {
     return this.executeWriteContract('exportCoins', args, value);
+  }
+
+  requestUnstake(args: any[], value: any) {
+    return this.executeWriteContract('requestUnstake', args, value);
+  }
+
+  stakeTokens(args: any[], value: any) {
+    return this.executeWriteContract('stakeTokens', args, value);
+  }
+
+  unstakeTokens(args: any[], value: any) {
+    return this.executeWriteContract('unstakeTokens', args, value);
   }
 
   importCoins(args: any[]) {

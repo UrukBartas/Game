@@ -342,15 +342,6 @@ export class ExportImportNftComponent extends TemplatePage {
     switchNetwork({ chainId });
   }
 
-  public async assignValueToSelectedUruks(factor: number) {
-    const player = await firstValueFrom(this.player$);
-    const erc20Balance = await firstValueFrom(this.erc20Balance$);
-    this.selectedUruksToExport =
-      (this.exportTypeActive == 'export'
-        ? player.uruks
-        : Number(erc20Balance)) * factor;
-  }
-
   public changeType(event: any) {
     event.target.checked
       ? (this.exportTypeActive = 'export')

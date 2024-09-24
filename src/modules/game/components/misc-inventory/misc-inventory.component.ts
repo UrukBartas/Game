@@ -1,15 +1,19 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   Input,
   Output,
+  QueryList,
   TemplateRef,
   ViewChild,
+  ViewChildren,
   computed,
   inject,
   signal,
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { Memoize } from 'lodash-decorators';
 import { camelCase } from 'lodash-es';
@@ -65,7 +69,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   @ViewChild('lootboxOpener') lootboxOpener: TemplateRef<any>;
   @ViewChild('itemSetOpener') itemSetOpener: TemplateRef<any>;
   @ViewChild('portraitActivator') portraitActivator: TemplateRef<any>;
-  @ViewChild('itemRoulette') itemRoulette: ItemRouletteComponent;
+  @ViewChildren('itemRoulette') itemRoulettes: QueryList<ItemRouletteComponent>;
   @ViewChild('itemResult', { read: ElementRef }) itemResult: ElementRef;
   @ViewChild('portraitResult', { read: ElementRef }) portraitResult: ElementRef;
 
@@ -76,6 +80,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   miscelanyService = inject(MiscellanyService);
   viewportService = inject(ViewportService);
   protected toast = inject(ToastrService);
+  private cd = inject(ChangeDetectorRef);
   store = inject(Store);
   stats = inject(StatsService);
   stack = inject(StackPipe);
@@ -88,15 +93,16 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   });
   mapItemTypesToReadable = mapItemTypesToReadable;
   public camelCase = camelCase;
+  quantityOpen = new FormControl(1);
   public getRarityColor = getRarityColor;
   public getRarityText = getRarityText;
 
   public itemType = ItemTypeSC;
-  public roll: {
+  public rolls: Array<{
     spinWheelItems: Array<any>;
     resultItem: any;
     bonusDrops: Array<any>;
-  } = null;
+  }> = null;
 
   public resultItemSet: Array<Item> = [];
   public pathPortrait = 'assets/premium-portraits/5.webp';
@@ -238,13 +244,23 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
 
   public async runRoulette(idLootbox: number) {
     this.currentPhase = 1;
-    const result = await firstValueFrom(
-      this.miscelanyService.openLootbox(idLootbox)
-    );
-    this.roll = result;
-    setTimeout(() => {
-      this.itemRoulette.startRoulette();
-    }, 0);
+    try {
+      const result = await firstValueFrom(
+        this.miscelanyService.openLootbox(idLootbox, this.quantityOpen.value)
+      );
+      this.rolls = result;
+      this.cd.detectChanges();
+      this.quantityOpen.reset(1);
+      setTimeout(() => {
+        this.itemRoulettes.forEach((roulette, index) => {
+          setTimeout(() => {
+            roulette.startRoulette();
+          }, 100 * index);
+        });
+      }, 0);
+    } catch (error) {
+      this.currentPhase = 0;
+    }
   }
 
   public parseDistributions(distributions: any) {
@@ -344,6 +360,14 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   @Memoize()
   public getGenericItemItemData(item: any) {
     return getGenericItemItemData(item);
+  }
+
+  @Memoize()
+  public getGenericItemsItemData(rolls: Array<any> = []) {
+    const itemsData = (rolls ?? []).map(
+      (entry) => getGenericItemItemData(entry.resultItem).name
+    );
+    return itemsData.join(', ');
   }
 
   getResponsiveButtonSize() {

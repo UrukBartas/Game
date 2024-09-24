@@ -6,6 +6,7 @@ import { groupBy } from 'lodash-es';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { DndDropEvent } from 'ngx-drag-drop';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 import {
   BehaviorSubject,
   filter,
@@ -20,18 +21,20 @@ import {
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Item, ItemType } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
-import { PlayerModel } from 'src/modules/core/models/player.model';
+import { ItemSet, PlayerModel } from 'src/modules/core/models/player.model';
 import {
   getRarityBasedOnIRI,
   getRarityColor,
   getRarityText,
 } from 'src/modules/utils';
+import { ContextMenuService } from 'src/services/context-menu.service';
 import { ItemService } from 'src/services/item.service';
 import { PlayerService } from 'src/services/player.service';
 import { ShopService } from 'src/services/shop.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
+import { ItemSetModalComponent } from './item-set-modal/item-set-modal.component';
 import { InventoryUpdateService } from './services/inventory-update.service';
 
 @Component({
@@ -49,12 +52,16 @@ export class InventoryComponent extends TemplatePage {
   private route = inject(ActivatedRoute);
   public router = inject(Router);
   public inventoryUpdateService = inject(InventoryUpdateService);
+  toastService = inject(ToastrService);
+  contextMenuService = inject(ContextMenuService);
   public activeSlideIndex = 0;
   public maxLevel = 10;
   public currentSize$ = this.store.select(MainState.getState).pipe(
     filter((player) => !!player),
     map((entry) => entry.player.sockets)
   );
+  public selectedItemSet!: ItemSet;
+
   //Level 4 is the default level. 80 is default socket size / 20 = 4. If it buys another it becomes 5 (100 /20)
   public currentLevel$ = this.currentSize$.pipe(map((sockets) => sockets / 20));
 
@@ -132,6 +139,16 @@ export class InventoryComponent extends TemplatePage {
     );
   };
 
+  public itemSets$ = this.actualPlayer$.pipe(
+    switchMap(() => {
+      return this.playerService.getItemSets().pipe(
+        map((entries) => {
+          return [...entries, ...[null, null, null, null]].slice(0, 4);
+        })
+      );
+    })
+  );
+
   public getHelmet$ = this.getItem$([ItemType.HELMET], ItemType.HELMET);
   public getShield$ = this.getItem$(
     [ItemType.SHIELD, ItemType.Weapon1H],
@@ -205,6 +222,79 @@ export class InventoryComponent extends TemplatePage {
       return 70;
     }
     return 140;
+  }
+
+  public async equipSet(itemSet: ItemSet) {
+    await firstValueFrom(this.playerService.equipItemSet(itemSet.id));
+    this.selectedItemSet = itemSet;
+    this.store.dispatch(new RefreshPlayer());
+    this.loadInventories();
+  }
+
+  public async deleteSet(itemSet: ItemSet) {
+    await firstValueFrom(this.playerService.deleteItemSet(itemSet.id));
+    this.store.dispatch(new RefreshPlayer());
+    this.loadInventories();
+  }
+
+  public async saveSet(itemSet?: ItemSet) {
+    let config: ModalOptions = {};
+    if (itemSet) {
+      const updated = await firstValueFrom(
+        this.playerService.updateItemSet(
+          itemSet.id,
+          itemSet.name,
+          this.actualPlayer$
+            .getValue()
+            .items.filter((entry) => !!entry.equipped)
+            .map((entry) => entry.id)
+        )
+      );
+      this.toastService.success('Item preset updated!');
+      this.store.dispatch(new RefreshPlayer());
+      this.loadInventories();
+    } else {
+      config = {
+        initialState: {
+          title: 'Create new item preset',
+          description: `This action will save your current item equipped set. Do you want to proceed?`,
+          accept: async (name: string) => {
+            try {
+              const newPreset = await firstValueFrom(
+                this.playerService.createItemSet(
+                  name,
+                  this.actualPlayer$
+                    .getValue()
+                    .items.filter((entry) => !!entry.equipped)
+                    .map((entry) => entry.id)
+                )
+              );
+              this.toastService.success(
+                'New preset with name ' + newPreset.name + ' created'
+              );
+              this.store.dispatch(new RefreshPlayer());
+              this.loadInventories();
+            } catch (error) {
+              console.error(error);
+            }
+
+            modalRef.hide();
+          },
+        },
+      };
+      const modalRef = this.modalService.show(ItemSetModalComponent, config);
+    }
+  }
+
+  public getDisplayedItemSet(itemSet: ItemSet) {
+    if (['xs', 'sm'].includes(this.viewportService.screenSize)) {
+      return (itemSet.name.length > 1 ? itemSet.name.slice(0, 1) : itemSet.name)
+        .trim()
+        .toUpperCase();
+    }
+    return (itemSet.name.length > 3 ? itemSet.name.slice(0, 3) : itemSet.name)
+      .trim()
+      .toUpperCase();
   }
 
   public async unEquipItem(item$: Observable<Item>) {

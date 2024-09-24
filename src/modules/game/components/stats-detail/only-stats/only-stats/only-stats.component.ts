@@ -68,7 +68,7 @@ export class OnlyStatsComponent {
       tooltip: 'Total percentage of block added by the rarity bonuses',
     },
     {
-      label: 'Accuracy',
+      label: 'Acc',
       key: 'totalPerAccuracy',
       tooltip: 'Total percentage of accuracy added by the rarity bonuses',
     },

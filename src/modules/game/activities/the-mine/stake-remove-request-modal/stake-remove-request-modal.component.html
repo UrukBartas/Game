@@ -1,0 +1,39 @@
+<div id="confirm-modal">
+  <div class="row">
+    <p class="text-third" urTitle>{{ title }}</p>
+  </div>
+  <div class="row">
+    <p class="text-white" urText [innerHTML]="description"></p>
+    <span class="text-third">You got {{ maxAmount }} staked Golden Uruks.</span>
+    <div class="col-12 mt-3">
+      <div class="form-group mb-2">
+        <label for="name" class="text-third">Amount to unstake</label>
+        <input
+          type="number"
+          class="form-control"
+          id="text"
+          [formControl]="input"
+          name="text"
+          [max]="maxAmount"
+          placeholder="Input the amount"
+          validInput
+        />
+      </div>
+    </div>
+  </div>
+  <div class="d-flex w-100 justify-content-end pt-3">
+    <button
+      class="btn btn-secondary btn-transparent"
+      (click)="modalRef.hide(); cancel ? cancel() : false"
+    >
+      Cancel
+    </button>
+    <button
+      class="btn btn-secondary"
+      (click)="accept(input.value)"
+      [disabled]="input.invalid"
+    >
+      Accept
+    </button>
+  </div>
+</div>

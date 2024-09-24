@@ -36,6 +36,8 @@ export interface PlayerModel {
 
 export interface PlayerConfiguration {
   disablePVP: boolean;
+  disableSound: boolean;
+  ignoreMine:boolean;
 }
 
 export interface PlayerStatsModel {
@@ -89,4 +91,10 @@ export interface Deed {
   tier: number; // Nivel alcanzado por el jugador en este deed
   completed: boolean; // Si el deed ha sido completado
   deedData: DeedData; // Relación con DeedData (opcional, se incluye para los datos relacionados)
+}
+
+export interface ItemSet {
+  id: number;
+  name: string;
+  items: Item[]; // Aquí va una lista de items, según cómo los tengas definidos
 }
