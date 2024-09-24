@@ -89,6 +89,7 @@ export class EditCharacterComponent extends TemplatePage {
         repeatPassword: ['', this.editing ? [] : [Validators.required]],
         disablePVP: [false, []],
         disableSound: [false, []],
+        ignoreMine: [false, []],
       },
       this.editing ? {} : { validator: passwordMatchingValidator() }
     );
@@ -147,6 +148,7 @@ export class EditCharacterComponent extends TemplatePage {
         email,
         disablePVP: configuration?.disablePVP,
         disableSound: configuration?.disableSound,
+        ignoreMine: configuration?.ignoreMine,
       });
     }
   }
@@ -179,9 +181,20 @@ export class EditCharacterComponent extends TemplatePage {
   }
 
   create() {
-    const { email, name, image, password, disablePVP, disableSound } =
-      this.form.value;
-    const configuration: PlayerConfiguration = { disablePVP, disableSound };
+    const {
+      email,
+      name,
+      image,
+      password,
+      disablePVP,
+      disableSound,
+      ignoreMine,
+    } = this.form.value;
+    const configuration: PlayerConfiguration = {
+      disablePVP,
+      disableSound,
+      ignoreMine,
+    };
 
     if (this.authService.nativePlatform) {
       this.playerService
@@ -201,9 +214,20 @@ export class EditCharacterComponent extends TemplatePage {
   }
 
   edit() {
-    const { email, name, image, password, disablePVP, disableSound } =
-      this.form.value;
-    const configuration: PlayerConfiguration = { disablePVP, disableSound };
+    const {
+      email,
+      name,
+      image,
+      password,
+      disablePVP,
+      disableSound,
+      ignoreMine,
+    } = this.form.value;
+    const configuration: PlayerConfiguration = {
+      disablePVP,
+      disableSound,
+      ignoreMine,
+    };
 
     this.playerService
       .update(email, name, image, password, configuration)

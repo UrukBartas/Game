@@ -2,19 +2,20 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { AdventuresComponent } from './activities/adventures/adventures.component';
+import { AuctionHouseComponent } from './activities/auction-house/auction-house.component';
 import { BlacksmithComponent } from './activities/blacksmith/blacksmith.component';
 import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { InventoryComponent } from './activities/inventory/inventory.component';
 import { LeadeboardComponent } from './activities/leadeboard/leadeboard.component';
+import { MissionsComponent } from './activities/missions/missions.component';
 import { PvPResultComponent } from './activities/pvp/pv-presult/pvp-result.component';
 import { PvPFightComponent } from './activities/pvp/pvp-fight/pvp-fight.component';
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
 import { ShopComponent } from './activities/shop/shop.component';
+import { TheMineComponent } from './activities/the-mine/the-mine.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
-import { AuctionHouseComponent } from './activities/auction-house/auction-house.component';
-import { MissionsComponent } from './activities/missions/missions.component';
 
 const routes: Routes = [
   {
@@ -95,6 +96,12 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         component: ExportImportNftComponent,
         title: 'Bridge',
+      },
+      {
+        path: 'the-mine',
+        canActivate: [AuthGuard],
+        component: TheMineComponent,
+        title: 'The Mine',
       },
       {
         path: 'leaderboard',

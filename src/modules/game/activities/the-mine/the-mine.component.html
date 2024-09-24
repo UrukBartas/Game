@@ -1,0 +1,297 @@
+<ng-template #uruks let-uruks="uruks">
+  <div id="uruks-tooltip-wrapper" class="py-2">
+    <p urText>
+      Quantity is {{ uruks }}
+      <img
+        class="navbar-uruks-icon pb-1"
+        src="assets/goldenuruks.png"
+        style="max-width: 32px"
+      />
+      Golden uruks
+    </p>
+  </div>
+</ng-template>
+<div class="h-100" id="themine">
+  <div class="themine-bg"></div>
+
+  <div class="row separate p-1 p-md-4">
+    <div class="row mb-3 d-flex align-items-center justify-content-center">
+      <div class="next-mining-gains gap-2">
+        <i class="fa-solid fa-hourglass-start rotating-icon"></i>
+        @if (!isBigScreen()) {
+          <span>{{ formattedTime }}</span>
+        } @else {
+          <span>Next mine rewards distribution: {{ formattedTime }}</span>
+        }
+      </div>
+    </div>
+    <div class="flex-row">
+      <div
+        class="col-12 d-flex justify-content-center align-items-center text-center"
+        *ngIf="phase == 0"
+      >
+        <ng-container
+          *ngIf="
+            getActiveTier((stakeInfo | async)?.amountStaked ?? 0) as activeTier;
+            else elseTemplate
+          "
+        >
+          <ng-container
+            *ngTemplateOutlet="
+              currentTierTemplate;
+              context: {
+                activeTier: activeTier,
+              }
+            "
+          ></ng-container>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <ng-container
+            *ngTemplateOutlet="
+              currentTierTemplate;
+              context: {
+                activeTier: null,
+              }
+            "
+          ></ng-container>
+        </ng-template>
+      </div>
+      @if (phase == 1) {
+        <div
+          *ngIf="subphase == 0"
+          class="amount-selector d-flex flex-column justify-content-center align-items-center px-1 px-md-5 gap-2 col-12"
+        >
+          <img
+            src="/assets/goldenuruks.png"
+            alt=""
+            srcset=""
+            style="height: 100px; width: 100px"
+          />
+
+          <!-- <div class="form-check form-switch">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="flexSwitchCheckChecked"
+              [formControl]="useWallet"
+              checked
+            />
+            <label
+              class="form-check-label text-light"
+              for="flexSwitchCheckChecked"
+              >{{ 'Use wallet balance' }}</label
+            >
+          </div> -->
+          <app-balance-selector
+            [type]="stakeType"
+            [hideSummary]="true"
+            [player$]="player$"
+            [erc20Balance$]="erc20Balance$"
+            [(selectedUruks)]="selectedUruksToExport"
+          ></app-balance-selector>
+
+          <div class="row w-100 actions-add">
+            <button
+              type="button"
+              (click)="giveUruksToWorkers()"
+              class="btn btn-secondary btn-lg btn-block w-100 btn-pending d-flex align-items-center justify-content-center gap-2 col"
+            >
+              Stake
+              <div
+                class="price text-white text-center"
+                urTitle
+                [ngbTooltip]="uruks"
+                [tooltipContext]="{
+                  uruks: selectedUruksToExport,
+                }"
+              >
+                {{ selectedUruksToExport | compressNumber }}
+                <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+              </div>
+            </button>
+            <div class="secondary-actions d-flex align-items-center justify-content-center gap-2 text-center">
+              <span
+                class="text-third pointer d-block text-center py-2"
+                (click)="subphase = 1"
+              >
+                Pending unstakes</span
+              >
+              <span
+                class="text-third pointer d-block text-center py-2"
+                (click)="phase = 0"
+              >
+                Go back</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="subphase == 1" class="unstakes px-1 px-md-5 col-12">
+          <ng-container *ngIf="stakeInfo | async as stakeInfoVar">
+            <span class="w-100 text-third d-block"> Ongoing unstakes</span>
+            <span
+              class="w-100 text-light d-block"
+              *ngIf="stakeInfoVar.requests.length == 0"
+              >You are not unstaking anything right now.</span
+            >
+            <ng-container>
+              <div
+                class="table-responsive stat-table"
+                style="max-height: 240px; overflow: auto; min-width: 100%"
+              >
+                <table class="table table-dark">
+                  <tbody>
+                    <ng-container>
+                      <tr
+                        *ngFor="
+                          let request of stakeInfoVar.requests;
+                          let i = index
+                        "
+                        class="d-flex align-items-center"
+                      >
+                        <td>
+                          <button
+                            type="button"
+                            class="btn btn-secondary"
+                            [disabled]="request?.remainingTime > today"
+                            (click)="claimTokens(i)"
+                          >
+                            Claim
+                          </button>
+                        </td>
+
+                        <td urSubtext>
+                          <div
+                            class="price text-white text-center"
+                            [ngbTooltip]="uruks"
+                            [tooltipContext]="{
+                              uruks: request?.amount ?? 0,
+                            }"
+                          >
+                            {{ request?.amount ?? 0 | number }}
+                            <img
+                              class="uruks-icon pb-1"
+                              src="assets/goldenuruks.png"
+                              style="width: 20px"
+                            />
+                          </div>
+                        </td>
+                        <td urSubtext>
+                          {{ request?.remainingTime | timeAgo }}
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </ng-container></ng-container
+          >
+          <div class="secondary-actions d-block text-center">
+            <span
+              class="text-third pointer d-block text-center py-2"
+              (click)="subphase = 0"
+            >
+              Go back</span
+            >
+          </div>
+        </div>
+      }
+
+      <ng-template #currentTierTemplate let-activeTier="activeTier">
+        <div
+          class="current-tier text-white d-flex gap-3 flex-column px-1 px-md-4"
+        >
+          <div
+            class="tier-image d-flex justify-content-center align-items-center"
+          >
+            <app-item-box
+              [height]="getCurrentTierImageSize()"
+              [width]="getCurrentTierImageSize()"
+              [rarity]="activeTier ? activeTier.rarity : null"
+              [image]="activeTier ? activeTier.image : CONTRACT_IMAGE"
+            >
+              <ng-container
+                tooltip
+                *ngTemplateOutlet="
+                  tooltipTier;
+                  context: {
+                    tier: activeTier,
+                  }
+                "
+              ></ng-container>
+            </app-item-box>
+          </div>
+          <ng-container
+            *ngTemplateOutlet="
+              tooltipTier;
+              context: {
+                tier: activeTier,
+                showAction: true,
+              }
+            "
+          ></ng-container>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="col-12">
+      <ng-template #tooltipTier let-tier="tier" let-showAction="showAction">
+        <div class="p-2">
+          <div>
+            <strong class="text-third">{{
+              tier?.name ?? 'Awaiting contract with goblins'
+            }}</strong>
+          </div>
+          @if (tier) {
+            You will earn
+            <strong class="text-third">x{{ tier.matFactor }}</strong> materials
+            per hour. Your goblin workers have a
+            <strong class="text-third"
+              >{{ tier.lootboxChance * 100 | number: '1.2-2' }}%</strong
+            >
+            chance to find a treasure in the mine.
+          } @else {
+            You do not have any goblin workers working for you at this moment.
+            Buy those goblins now and make them work! And earn up to
+            <strong class="text-third"
+              >x{{ getHighestTier().matFactor }}</strong
+            >
+            materials per hour. Your goblin workers have a
+            <strong class="text-third"
+              >{{
+                getHighestTier().lootboxChance * 100 | number: '1.2-2'
+              }}%</strong
+            >
+            chance to find a treasure in the mine.
+          }
+          <button
+            type="button"
+            *ngIf="showAction"
+            (click)="phase = 1"
+            class="btn btn-secondary btn-lg btn-block w-100 btn-pending d-flex align-items-center justify-content-center gap-2 mt-3"
+          >
+            Get workforce now!
+          </button>
+        </div>
+      </ng-template>
+
+      <div class="px-1 px-md-5" style="height: 60px">
+        <div class="col-12 d-flex align-items-end justify-content-end">
+          <div class="remove-circle mb-5">
+            <i
+              (click)="removeStaked()"
+              *ngIf="!!(stakeInfo | async)"
+              urSubtitle
+              class="fa-solid fa-circle-minus text-third pointer"
+            ></i>
+          </div>
+        </div>
+        <app-tierized-progress-bar
+          [currentValue]="(stakeInfo | async)?.amountStaked ?? 0"
+          [tooltipTemplate]="tooltipTier"
+          [tiers]="tiers"
+        ></app-tierized-progress-bar>
+      </div>
+    </div>
+  </div>
+</div>

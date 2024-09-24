@@ -172,7 +172,6 @@ export class InventoryComponent extends TemplatePage {
     super();
     if (this.isViewingPlayer) this.activeSlideIndex = 1;
     this.getPlayer$.subscribe((player) => {
-      console.warn('player', player);
       this.actualPlayer$.next(player);
     });
     if (!this.isViewingPlayer) {
@@ -288,7 +287,6 @@ export class InventoryComponent extends TemplatePage {
   }
 
   public getDisplayedItemSet(itemSet: ItemSet) {
-    console.log(this.viewportService.screenSize);
     if (['xs', 'sm'].includes(this.viewportService.screenSize)) {
       return (itemSet.name.length > 1 ? itemSet.name.slice(0, 1) : itemSet.name)
         .trim()

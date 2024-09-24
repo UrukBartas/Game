@@ -62,6 +62,12 @@ export class GameLayoutComponent {
       icon: 'fas fa-users',
     },
     {
+      path: '/the-mine',
+      displayText: 'The Mine',
+      icon: 'fa fa-gem',
+      onlyWeb3: true,
+    },
+    {
       path: '/export-import',
       displayText: 'Bridge',
       icon: 'fa fa-bridge',

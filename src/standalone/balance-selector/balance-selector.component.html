@@ -1,0 +1,45 @@
+<div class="w-full">
+  <div class="row">
+    <div class="description justify-content-center">
+      <p urSubtitle class="text-center">
+        Current
+        {{ type }} balance:
+        {{
+          type == 'in-game' ? (player$ | async).uruks : (erc20Balance$ | async)
+        }}
+      </p>
+    </div>
+  </div>
+
+  <div class="container-range">
+    <input
+      type="range"
+      class="form-range"
+      step="0.01"
+      min="0"
+      [max]="
+        type == 'in-game' ? (player$ | async).uruks : (erc20Balance$ | async)
+      "
+      [(ngModel)]="selectedUruks"
+      (ngModelChange)="selectedUruksChange.emit(selectedUruks)"
+    />
+    <button
+      type="button"
+      class="btn btn-secondary fit-content"
+      (click)="assignValueToSelectedUruks(0.5)"
+    >
+      HALF
+    </button>
+    <button
+      type="button"
+      class="btn btn-secondary fit-content"
+      (click)="assignValueToSelectedUruks(1)"
+    >
+      ALL
+    </button>
+  </div>
+
+  <p class="text-light text-center" *ngIf="selectedUruks > 0 && !hideSummary">
+    {{ selectedUruks + ' Golden Uruks selected' }}
+  </p>
+</div>

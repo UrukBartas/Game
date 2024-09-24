@@ -1,4 +1,6 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import {
   getAccount,
@@ -10,7 +12,6 @@ import {
 import { ethers } from 'ethers';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   BehaviorSubject,
   EMPTY,
@@ -22,30 +23,24 @@ import {
   from,
   interval,
   map,
-  of,
   startWith,
-  switchMap,
-  take,
-  tap,
+  switchMap
 } from 'rxjs';
-import { shimmerTestnet, shimmer } from 'viem/chains';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { Item, ItemType } from 'src/modules/core/models/items.model';
+import { Consumable } from 'src/modules/core/models/consumable.model';
+import { Item } from 'src/modules/core/models/items.model';
+import { Material } from 'src/modules/core/models/material.model';
+import { MiscellanyItem } from 'src/modules/core/models/misc.model';
+import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
+import { getItemTypeSCBasedOnItem } from 'src/modules/utils';
 import { ContractService } from 'src/services/contract.service';
 import { ExportImportService } from 'src/services/export-import.service';
 import { ItemService } from 'src/services/item.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { WalletService } from 'src/services/wallet.service';
-import { FormControl } from '@angular/forms';
+import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ItemTypeSC } from './enums/ItemTypesSC';
-import { NavigationEnd, Router } from '@angular/router';
-import { Material } from 'src/modules/core/models/material.model';
-import { Consumable } from 'src/modules/core/models/consumable.model';
-import { MiscellanyItem } from 'src/modules/core/models/misc.model';
-import { getItemTypeSCBasedOnItem } from 'src/modules/utils';
-import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
 
 @Component({
   selector: 'app-export-import-nft',
@@ -355,15 +350,6 @@ export class ExportImportNftComponent extends TemplatePage {
 
   public changeNetwork(chainId: number) {
     switchNetwork({ chainId });
-  }
-
-  public async assignValueToSelectedUruks(factor: number) {
-    const player = await firstValueFrom(this.player$);
-    const erc20Balance = await firstValueFrom(this.erc20Balance$);
-    this.selectedUruksToExport =
-      (this.exportTypeActive == 'export'
-        ? player.uruks
-        : Number(erc20Balance)) * factor;
   }
 
   public changeType(event: any) {

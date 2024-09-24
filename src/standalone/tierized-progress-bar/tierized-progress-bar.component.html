@@ -1,0 +1,30 @@
+<div class="rpg-progress-bar-horizontal">
+  <div
+    class="tier"
+    *ngFor="let tier of tiers; let i = index"
+    [ngbTooltip]="tooltipTemplate"
+    [tooltipContext]="{ tier: tier }"
+  >
+    <img
+      *ngIf="tier.image"
+      [src]="tier.image"
+      class="tier-image"
+      alt="Tier Image"
+    />
+
+    <!-- Barra de progreso individual por tier -->
+    <div class="progress" [style.width]="getTierProgress(tier) + '%'"></div>
+
+    <!-- Indicador de inicio del tier -->
+    <div class="tier-indicator start-indicator" *ngIf="i === 0">
+      <div class="indicator-value">{{ tier.start | compressNumber }}</div>
+      <span class="indicator"></span>
+    </div>
+
+    <!-- Indicador de fin del tier -->
+    <div class="tier-indicator end-indicator">
+      <div class="indicator-value">{{ tier.end | compressNumber }}</div>
+      <span class="indicator"></span>
+    </div>
+  </div>
+</div>
