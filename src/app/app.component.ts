@@ -21,10 +21,6 @@ export class AppComponent {
   public authService = inject(AuthService);
   //public pushNotificationsService = inject(PushNotificationsService);
   constructor() {
-    this.sessionService.getChains().pipe(delay(2000)).subscribe((data) => {
-      this.walletService.chains.next(data);
-      this.walletService.initWalletConnect();
-    });
     this.lockOrientation();
     //this.initializeFirebase();
     //this.pushNotificationsService.init();

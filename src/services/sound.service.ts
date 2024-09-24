@@ -20,7 +20,7 @@ export class SoundService {
         map((entry) => entry.player?.configuration)
       )
     );
-    if (!configuration.disableSound) {
+    if (!configuration?.disableSound) {
       this.audio.src = url;
       this.audio.load();
       this.audio.play();

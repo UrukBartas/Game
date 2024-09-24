@@ -14,13 +14,13 @@ import {
   interval,
   map,
   startWith,
-  switchMap,
-  tap,
+  switchMap
 } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Rarity } from 'src/modules/core/models/items.model';
 import { getRarityColor } from 'src/modules/utils';
-import { ContractService } from 'src/services/contract.service';
+import { ERC20ContractService } from 'src/services/contracts/erc20-contract.service';
+import { NFTContractService } from 'src/services/contracts/nft-contract.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
@@ -93,11 +93,12 @@ export class TheMineComponent extends TemplatePage {
   public CONTRACT_IMAGE = 'assets/materials/15.webp';
   store = inject(Store);
   walletService = inject(WalletService);
-  contractService = inject(ContractService);
   spinnerService = inject(NgxSpinnerService);
   toastService = inject(ToastrService);
   modalService = inject(BsModalService);
   viewportService = inject(ViewportService);
+  ERC20ContractService = inject(ERC20ContractService);
+  NFTContractService = inject(NFTContractService);
   useWallet = new FormControl(true);
   player$ = this.store
     .select(MainState.getState)
@@ -111,9 +112,7 @@ export class TheMineComponent extends TemplatePage {
     }),
     switchMap(() => {
       return from(
-        this.contractService.executeReadContractOnUrukERC20('balanceOf', [
-          getAccount().address,
-        ])
+        this.ERC20ContractService.getBalanceOf(getAccount().address)
       ).pipe(
         catchError((err) => {
           console.error(err);
@@ -133,9 +132,7 @@ export class TheMineComponent extends TemplatePage {
     }),
     switchMap(() => {
       return from(
-        this.contractService.executeReadContractOnUrukERC20('getStakeInfo', [
-          getAccount().address,
-        ])
+        this.ERC20ContractService.getStakeInfo(getAccount().address)
       ).pipe(
         catchError((err) => {
           console.error(err);
@@ -148,8 +145,7 @@ export class TheMineComponent extends TemplatePage {
             timeStaked: timeStaked.toString(),
             requests: [],
           };
-        }),
-        tap((entry) => console.log(entry))
+        })
       );
     })
   );
@@ -191,10 +187,10 @@ export class TheMineComponent extends TemplatePage {
         description:
           'You are about to request an unstake of your funds, this will take 18 days to get completed. Do you want to continue?',
         accept: async (data: number) => {
-          await this.contractService.triggerTx(() => {
-            return this.contractService.executewriteContractOnUrukERC20(
-              'requestUnstake',
-              [ethers.parseEther(data.toString())]
+          await this.ERC20ContractService.triggerTx(() => {
+            return this.ERC20ContractService.requestUnstake(
+              [ethers.parseEther(data.toString())],
+              []
             );
           });
           modalRef.hide();
@@ -210,9 +206,9 @@ export class TheMineComponent extends TemplatePage {
   public async giveUruksToWorkers() {
     this.spinnerService.show();
     try {
-      const tx = await this.contractService.executewriteContractOnUrukERC20(
-        'stakeTokens',
-        [ethers.parseEther(this.selectedUruksToExport.toString())]
+      const tx = await this.ERC20ContractService.stakeTokens(
+        [ethers.parseEther(this.selectedUruksToExport.toString())],
+        []
       );
       const receipt = await waitForTransaction({
         hash: tx.hash,
@@ -232,11 +228,8 @@ export class TheMineComponent extends TemplatePage {
   }
 
   public async claimTokens(index: number) {
-    await this.contractService.triggerTx(() => {
-      return this.contractService.executeReadContractOnUrukERC20(
-        'unstakeTokens',
-        [index]
-      );
+    await this.ERC20ContractService.triggerTx(() => {
+      return this.ERC20ContractService.unstakeTokens([index], []);
     });
   }
 

@@ -1,0 +1,34 @@
+<div id="presale-modal-container">
+  <h3 class="text-third">How to claim your lootboxes in game!</h3>
+  <p class="text-white">
+    First
+    <a href="/" (click)="router.navigateByUrl('/'); modalRef.hide()">Login</a>
+    into the game, if you don't have an account, create one.
+  </p>
+  <p class="text-white">Go into the export/import tab</p>
+  <img class="import-tab" src="assets/presale/claim-1.png" />
+  <p class="text-white">
+    Select the Import option in the slider and the correct network (IOTA
+    mainnet)
+  </p>
+  <img class="import-tab" src="assets/presale/claim-2.png" />
+  <p class="text-white">
+    Then you will see your lootboxes in the grid, select them and click import
+  </p>
+  <p class="text-white">
+    Now your lootboxes will be avaible in your inventory!, just go to the misc
+    section and click them to open. Enjoy!
+  </p>
+  <img class="import-tab" src="assets/presale/claim-3.png" />
+  <div class="d-flex align-items-center justify-content-end">
+    <button class="btn btn-transparent text-white" (click)="modalRef.hide()">
+      Close
+    </button>
+    <button
+      class="btn btn-third text-white"
+      (click)="router.navigateByUrl('/'); modalRef.hide()"
+    >
+      Login
+    </button>
+  </div>
+</div>
