@@ -55,7 +55,6 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/firebase-messaging-sw.js",
               "src/favicon.ico",
               "src/assets",
               {
