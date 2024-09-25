@@ -105,7 +105,7 @@ export class TheMineComponent extends TemplatePage {
     .pipe(map((entry) => entry.player));
   public selectedUruksToExport = 0;
   erc20Balance$ = new BehaviorSubject([]);
-  erc20BalanceInterval$ = interval(5000).pipe(
+  erc20BalanceInterval$ = interval(2000).pipe(
     startWith(0),
     switchMap(() => {
       return this.walletService.getValidAddress$;

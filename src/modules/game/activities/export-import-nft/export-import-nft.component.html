@@ -29,7 +29,8 @@
           <div class="description justify-content-center">
             <p urSubtitle>#1 Destination network</p>
           </div>
-          <div class="chain-list">
+          <app-chain-switcher></app-chain-switcher>
+          <!-- <div class="chain-list">
             @for (
               compatibleChain of walletService.chains | async;
               track compatibleChain.id
@@ -46,7 +47,7 @@
                 </div>
               </app-item-box>
             }
-          </div>
+          </div> -->
         </div>
         <div class="description justify-content-center">
           <p urSubtitle>#2 Export type</p>

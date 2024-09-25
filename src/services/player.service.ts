@@ -132,9 +132,6 @@ export class PlayerService extends ApiBaseService {
   getMiscellanyItems(): Observable<Array<MiscellanyItem>> {
     return this.get('/inventory-miscellany');
   }
-  updateFCMToken(fcmToken: string) {
-    return this.post('/add-fcm-token', { fcmToken });
-  }
 
   getItemsMaterial(): Observable<Array<Material>> {
     return this.get('/inventory-materials');

@@ -21,6 +21,7 @@ import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulett
 import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
 import { SpinnerComponent } from 'src/standalone/spinner/spinner.component';
 import { TierizedProgressBarComponent } from 'src/standalone/tierized-progress-bar/tierized-progress-bar.component';
+import { ChainSwitcherComponent } from "../../standalone/chain-switcher/chain-switcher.component";
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
 import { DoubleClickDirective } from '../core/directives/double-click.directive';
@@ -58,6 +59,7 @@ import { QuestResultComponent } from './activities/quests/quest-result/quest-res
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
 import { DailyRollButtonComponent } from './activities/shop/components/daily-roll-button.component';
 import { ShopComponent } from './activities/shop/shop.component';
+import { StakeRemoveRequestModalComponent } from './activities/the-mine/stake-remove-request-modal/stake-remove-request-modal.component';
 import { TheMineComponent } from './activities/the-mine/the-mine.component';
 import { BaseInventoryComponent } from './components/base-inventory/base-inventory.component';
 import { ChallengeModalComponent } from './components/challengee-modal/challenge-modal.component';
@@ -74,7 +76,6 @@ import { OnlyStatsComponent } from './components/stats-detail/only-stats/only-st
 import { PercentStatsComponent } from './components/stats-detail/only-stats/only-stats/percent-stats/percent-stats.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
-import { StakeRemoveRequestModalComponent } from './activities/the-mine/stake-remove-request-modal/stake-remove-request-modal.component';
 
 const directives = [
   ValidInputDirective,
@@ -169,7 +170,8 @@ const pipes = [
     AccordionModule,
     TierizedProgressBarComponent,
     BalanceSelectorComponent,
-  ],
+    ChainSwitcherComponent
+],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe, StackPipe],
 })

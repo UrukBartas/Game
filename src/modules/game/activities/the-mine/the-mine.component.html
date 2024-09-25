@@ -82,6 +82,7 @@
               >{{ 'Use wallet balance' }}</label
             >
           </div> -->
+          <app-chain-switcher></app-chain-switcher>
           <app-balance-selector
             [type]="stakeType"
             [hideSummary]="true"
@@ -109,7 +110,9 @@
                 <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
               </div>
             </button>
-            <div class="secondary-actions d-flex align-items-center justify-content-center gap-2 text-center">
+            <div
+              class="secondary-actions d-flex align-items-center justify-content-center gap-2 text-center"
+            >
               <span
                 class="text-third pointer d-block text-center py-2"
                 (click)="subphase = 1"

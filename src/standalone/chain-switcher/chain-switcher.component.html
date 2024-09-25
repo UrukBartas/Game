@@ -1,0 +1,18 @@
+<div class="chain-list">
+  @for (
+    compatibleChain of walletService.chains | async;
+    track compatibleChain.id
+  ) {
+    <app-item-box
+      [height]="50"
+      [width]="50"
+      [active]="activeNetworkId.getValue() == compatibleChain.id"
+      (click)="changeNetwork(compatibleChain.id)"
+      [image]="compatibleChain.img"
+    >
+      <div tooltip class="tooltip-uruk">
+        {{ compatibleChain.name }}
+      </div>
+    </app-item-box>
+  }
+</div>
