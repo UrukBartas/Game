@@ -173,6 +173,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   }
 
   public open(miscLootbox: MiscWithStack) {
+    if (miscLootbox.miscellanyItemData.itemType == 'Recipe') return;
     if (miscLootbox.miscellanyItemData.itemType == 'Boost') {
       this.activateBoost(miscLootbox);
     } else if (miscLootbox.miscellanyItemData.itemType == 'Portrait') {
