@@ -430,6 +430,11 @@
       Activate
     </li>
   </ul>
+  <ul class="list-options" *ngIf="data.miscellanyItemData.itemType == 'Boost'">
+    <li (click)="activateBoost(data); contextMenuService.hideContextMenu()">
+      Activate
+    </li>
+  </ul>
 </ng-template>
 
 <app-inventory-topbar

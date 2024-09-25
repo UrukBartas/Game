@@ -8,6 +8,7 @@ export enum MiscellanyItemType {
   Portrait = 'Portrait',
   MoneyBag = 'MoneyBag',
   ItemSet = 'ItemSet',
+  Boost = 'Boost',
 }
 export enum MiscellanyItemIdentifier {
   LootboxCommon = 'LootboxCommon',

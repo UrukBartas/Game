@@ -7,6 +7,12 @@
   position: relative;
   height: 100%;
   overflow: hidden;
+  .boost-item{
+    .stack{
+      bottom: unset;
+      font-size: 12px !important;
+    }
+  }
 
   .shop-bg {
     position: absolute;

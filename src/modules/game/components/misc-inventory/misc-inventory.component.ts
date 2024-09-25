@@ -17,14 +17,17 @@ import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { Memoize } from 'lodash-decorators';
 import { camelCase } from 'lodash-es';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import * as party from 'party-js';
 import { firstValueFrom, map } from 'rxjs';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import {
   MiscellanyItem,
+  MiscellanyItemIdentifier,
   MiscellanyItemIdentifierDisplay,
 } from 'src/modules/core/models/misc.model';
+import { BoostType } from 'src/modules/core/models/player.model';
 import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
 import {
   fillInventoryBasedOnPlayerSockets,
@@ -42,6 +45,7 @@ import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulett
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ItemTypeSC } from '../../activities/export-import-nft/enums/ItemTypesSC';
 import { BaseInventoryComponent } from '../base-inventory/base-inventory.component';
+import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component';
 
 export interface MiscWithStack extends MiscellanyItem {
   stack?: number;
@@ -86,6 +90,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   stack = inject(StackPipe);
   itemService = inject(ItemService);
   openingItem = signal<MiscellanyItem>(null);
+  modalService = inject(BsModalService);
   lootboxPossibilities$ = computed(() => {
     return this.stats.lootboxPossibilities(
       this.openingItem().miscellanyItemData.itemType
@@ -168,8 +173,18 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   }
 
   public open(miscLootbox: MiscWithStack) {
-    this.openingItem.set(miscLootbox);
-    this.focuserService.open(this.lootboxOpener, miscLootbox);
+    if (miscLootbox.miscellanyItemData.itemType == 'Boost') {
+      this.activateBoost(miscLootbox);
+    } else if (miscLootbox.miscellanyItemData.itemType == 'Portrait') {
+      this.activatePortrait(miscLootbox);
+    } else if (miscLootbox.miscellanyItemData.itemType == 'ItemSet') {
+      this.openItemsSet(miscLootbox);
+    } else if (miscLootbox.miscellanyItemData.itemType == 'MoneyBag') {
+      this.openBag(miscLootbox);
+    } else {
+      this.openingItem.set(miscLootbox);
+      this.focuserService.open(this.lootboxOpener, miscLootbox);
+    }
   }
 
   public async openBag(miscLootbox: MiscWithStack) {
@@ -187,7 +202,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
       this.updateInventory.emit();
       this.store.dispatch(new RefreshPlayer());
     } catch (error) {
-      this.toast.success(`Error opening the money bag ${error}`);
+      this.toast.error(`Error opening the money bag ${error}`);
       this.updateInventory.emit();
     }
   }
@@ -214,7 +229,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
       this.updateInventory.emit();
       this.store.dispatch(new RefreshPlayer());
     } catch (error) {
-      this.toast.success(`Error opening the item set ${error}`);
+      this.toast.error(`Error opening the item set ${error}`);
       this.updateInventory.emit();
     }
   }
@@ -222,6 +237,66 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   public activatePortrait(miscPortrait: MiscWithStack) {
     this.currentPortraitPhase = 0;
     this.focuserService.open(this.portraitActivator, miscPortrait);
+  }
+
+  private getActiveBootType(
+    boostIdentifier: MiscellanyItemIdentifier
+  ): BoostType {
+    return boostIdentifier.split('_')[1].toUpperCase() as BoostType;
+  }
+
+  confirmOverride() {
+    return new Promise((resolve, reject) => {
+      const config: ModalOptions = {
+        initialState: {
+          title: 'You have already this boost activated!',
+          description: `If you continue, you will override the current one. Proceed anyway?`,
+          accept: async () => {
+            modalRef.hide();
+            resolve(true);
+          },
+          cancel: () => {
+            resolve(false);
+          },
+        },
+      };
+      const modalRef = this.modalService.show(ConfirmModalComponent, config);
+    }) as Promise<boolean>;
+  }
+
+  public async activateBoost(miscBoost: MiscWithStack) {
+    try {
+      const currentPlayer = await firstValueFrom(
+        this.store.select(MainState.getState).pipe(map((e) => e.player))
+      );
+      const activatingBoostType = this.getActiveBootType(
+        miscBoost.miscellanyItemDataId
+      );
+      const overridingABost = !!currentPlayer.boosts.find(
+        (e) => e.type == activatingBoostType
+      );
+      if (overridingABost) {
+        const result = await this.confirmOverride();
+        if (!result) {
+          this.toast.info('Discarded');
+          this.updateInventory.emit();
+          this.store.dispatch(new RefreshPlayer());
+          return;
+        }
+      }
+      await firstValueFrom(this.miscelanyService.activateBoost(miscBoost.id));
+      setTimeout(() => {
+        party.confetti(this.inventory.nativeElement, {
+          count: party.variation.range(20, 40),
+        });
+      }, 500);
+      this.toast.success('You activated a boost!');
+      this.updateInventory.emit();
+      this.store.dispatch(new RefreshPlayer());
+    } catch (error) {
+      this.toast.error(`Error activating the boost ${error}`);
+      this.updateInventory.emit();
+    }
   }
 
   public async confirmActivationPortrait(miscPortrait: MiscWithStack) {

@@ -1,7 +1,19 @@
 import { Item } from './items.model';
+import { MiscellanyItemData, MiscellanyItemIdentifier } from './misc.model';
 import { QuestModel } from './quest.model';
 import { SessionModel } from './session.model';
-
+export type BoostType = 'EXP' | 'URUKS';
+export interface BoostActive {
+  id: number;
+  playerId: string;
+  player: PlayerModel;
+  boostId: MiscellanyItemIdentifier;
+  boostData: MiscellanyItemData;
+  activatedAt: Date;
+  expiresAt: Date;
+  active: boolean;
+  type: BoostType;
+}
 export interface PlayerModel {
   id: string;
   email: string;
@@ -14,6 +26,7 @@ export interface PlayerModel {
   items: Array<Item>;
   sessions: SessionModel[];
   activeQuests: QuestModel[];
+  boosts: BoostActive[];
   uruks: number;
   // Calculated stats with items
   stats: PlayerStatsModel;

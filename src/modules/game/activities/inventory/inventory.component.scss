@@ -9,6 +9,15 @@
     flex-direction: column;
   }
 
+  .boosts {
+    position: absolute;
+    right: 5px;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
   .desc-mover {
     display: flex;
     align-items: baseline;

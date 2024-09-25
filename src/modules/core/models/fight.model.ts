@@ -40,7 +40,6 @@ export interface FighterStatusModel {
 
 export interface FightResultModel {
   newQuest: QuestModel;
-  exp?: number;
   loot?: Array<Item>;
   lostLoot?: Array<Item>;
   consumableLoot?: Array<Consumable>;
@@ -52,6 +51,9 @@ export interface FightResultModel {
   material?: Material;
   player?: PlayerModel;
   uruks?: number;
+  uruksFactor?: number;
+  exp?: number;
+  expFactor?: number;
   completedAdventure?: boolean;
   ganked?: GankMonsters;
 }
