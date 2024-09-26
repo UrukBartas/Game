@@ -14,7 +14,7 @@ import {
   interval,
   map,
   startWith,
-  switchMap
+  switchMap,
 } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Rarity } from 'src/modules/core/models/items.model';
@@ -25,6 +25,7 @@ import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { StakeRemoveRequestModalComponent } from './stake-remove-request-modal/stake-remove-request-modal.component';
+import { TheMineInfoModalComponent } from './the-mine-help/the-mine-info-modal.component';
 export interface MineTier {
   start: number;
   end: number;
@@ -42,6 +43,7 @@ export class TheMineComponent extends TemplatePage {
   public subphase = 0;
   formattedTime: string = ''; // Formato de cuenta regresiva (MM:SS)
   getRarityColor = getRarityColor;
+
   public tiers = [
     {
       start: 1,
@@ -277,5 +279,9 @@ export class TheMineComponent extends TemplatePage {
 
   pad(value: number) {
     return value.toString().padStart(2, '0'); // Asegurar que minutos y segundos tengan 2 dígitos
+  }
+
+  public displayHelpMine(){
+    this.modalService.show(TheMineInfoModalComponent);
   }
 }

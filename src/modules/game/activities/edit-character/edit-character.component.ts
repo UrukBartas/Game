@@ -73,7 +73,7 @@ export class EditCharacterComponent extends TemplatePage {
     const currentRoute = this.route.snapshot.url.join('/');
     this.editing = currentRoute.includes('edit');
     const passwordPattern =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      /^(?=.*[A-Z])(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
 
     this.form = this.formBuilder.group(
       {

@@ -5,6 +5,14 @@
 #themine {
   position: relative;
   height: 100%;
+  .uruk-helper {
+    display: flex;
+    align-items: center;
+    .right {
+      flex-direction: column;
+      display: flex;
+    }
+  }
   .actions-add {
     flex-direction: row;
     @include media-breakpoint-down(sm) {

@@ -61,27 +61,23 @@
           *ngIf="subphase == 0"
           class="amount-selector d-flex flex-column justify-content-center align-items-center px-1 px-md-5 gap-2 col-12"
         >
-          <img
-            src="/assets/goldenuruks.png"
-            alt=""
-            srcset=""
-            style="height: 100px; width: 100px"
-          />
+          <div class="uruk-helper">
+            <div class="left">
+              <img
+                src="/assets/goldenuruks.png"
+                alt=""
+                srcset=""
+                style="height: 100px; width: 100px"
+              />
+            </div>
+            <div class="right">
+              <span urSubtext class="text-third">
+                Do you need some help?👀
+              </span>
+              <span class="text-light pointer" (click)="displayHelpMine()">Check this out!</span>
+            </div>
+          </div>
 
-          <!-- <div class="form-check form-switch">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="flexSwitchCheckChecked"
-              [formControl]="useWallet"
-              checked
-            />
-            <label
-              class="form-check-label text-light"
-              for="flexSwitchCheckChecked"
-              >{{ 'Use wallet balance' }}</label
-            >
-          </div> -->
           <app-chain-switcher></app-chain-switcher>
           <app-balance-selector
             [type]="stakeType"
@@ -95,23 +91,28 @@
             <button
               type="button"
               (click)="giveUruksToWorkers()"
+              [disabled]="!walletService.allowChainConnected()"
               class="btn btn-secondary btn-lg btn-block w-100 btn-pending d-flex align-items-center justify-content-center gap-2 col"
             >
-              Stake
-              <div
-                class="price text-white text-center"
-                urTitle
-                [ngbTooltip]="uruks"
-                [tooltipContext]="{
-                  uruks: selectedUruksToExport,
-                }"
-              >
-                {{ selectedUruksToExport | compressNumber }}
-                <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
-              </div>
+              @if (walletService.allowChainConnected()) {
+                Stake
+                <div
+                  class="price text-white text-center"
+                  urTitle
+                  [ngbTooltip]="uruks"
+                  [tooltipContext]="{
+                    uruks: selectedUruksToExport,
+                  }"
+                >
+                  {{ selectedUruksToExport | compressNumber }}
+                  <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+                </div>
+              } @else {
+                Switch to the correct chain before staking
+              }
             </button>
             <div
-              class="secondary-actions d-flex align-items-center justify-content-center gap-2 text-center"
+              class="secondary-actions d-flex align-items-center justify-content-end gap-3 text-center"
             >
               <span
                 class="text-third pointer d-block text-center py-2"
