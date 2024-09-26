@@ -1,7 +1,13 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { getAccount, signMessage, watchAccount } from '@wagmi/core';
+import {
+  getAccount,
+  getNetwork,
+  signMessage,
+  watchAccount,
+  watchNetwork,
+} from '@wagmi/core';
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
 import { Web3Modal } from '@web3modal/wagmi/dist/types/src/client';
 import { ToastrService } from 'ngx-toastr';
@@ -50,12 +56,43 @@ export class WalletService {
   public walletConnectIsLoggedIn$ = this.address$.pipe(map((entry) => !!entry));
   public chains: BehaviorSubject<Array<any> | null> = new BehaviorSubject(null);
   public isWeb3Connected$ = new BehaviorSubject(false);
+  public activeNetworkId = new BehaviorSubject<number>(0);
 
   getChainById = (id: number) =>
     this.chains.getValue().find((chain) => chain.id == id);
 
   constructor() {
     this.initWallet();
+    this.getValidAddress$.subscribe(() => {
+      this.activeNetworkId.next(getNetwork()?.chain?.id);
+    });
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.activeNetworkId.next(getNetwork()?.chain?.id);
+      }
+    });
+
+    this.getValidAddress$.subscribe(() => {
+      watchNetwork((network) => {
+        try {
+          const isAllowed = this.chains
+            .getValue()
+            .find((chain) => chain.id == network.chain.id);
+          if (!!isAllowed) {
+            this.activeNetworkId.next(network.chain.id);
+          } else {
+            this.activeNetworkId.next(0);
+          }
+        } catch (error) {
+          this.activeNetworkId.next(0);
+        }
+      });
+    });
+  }
+
+  public allowChainConnected(specificChainId?: number) {
+    const chainId = specificChainId ?? this.activeNetworkId.value;
+    return this.chains.getValue().find((chain) => chain.id == chainId);
   }
 
   private initWallet() {

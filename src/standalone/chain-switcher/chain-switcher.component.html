@@ -6,7 +6,7 @@
     <app-item-box
       [height]="50"
       [width]="50"
-      [active]="activeNetworkId.getValue() == compatibleChain.id"
+      [active]="walletService.activeNetworkId.getValue() == compatibleChain.id"
       (click)="changeNetwork(compatibleChain.id)"
       [image]="compatibleChain.img"
     >

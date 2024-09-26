@@ -9,6 +9,7 @@ import {
 
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { delay, filter, firstValueFrom, switchMap } from 'rxjs';
 import { RefreshPlayer } from 'src/store/main.store';
 import { WalletService } from './wallet.service';
 
@@ -71,9 +72,26 @@ export class ContractService {
     functionName: string,
     args: Array<any>
   ): Promise<T> {
-    const { address, abi } = this.getContractDetails();
-
-    return readContract({ address, abi, functionName, args }) as Promise<T>;
+    if (!this.wallet.allowChainConnected()) {
+      return firstValueFrom(
+        this.wallet.activeNetworkId.pipe(
+          filter((e) => this.wallet.allowChainConnected(e)),
+          delay(100),
+          switchMap(() => {
+            const { address, abi } = this.getContractDetails();
+            return readContract({
+              address,
+              abi,
+              functionName,
+              args,
+            }) as Promise<T>;
+          })
+        )
+      );
+    } else {
+      const { address, abi } = this.getContractDetails();
+      return readContract({ address, abi, functionName, args }) as Promise<T>;
+    }
   }
 
   protected executeWriteContract(
@@ -81,8 +99,20 @@ export class ContractService {
     args: Array<any>,
     value?: any
   ) {
-    const { address, abi } = this.getContractDetails();
-
-    return writeContract({ address, abi, functionName, args, value });
+    if (!this.wallet.allowChainConnected()) {
+      return firstValueFrom(
+        this.wallet.activeNetworkId.pipe(
+          filter((e) => this.wallet.allowChainConnected(e)),
+          delay(100),
+          switchMap(() => {
+            const { address, abi } = this.getContractDetails();
+            return writeContract({ address, abi, functionName, args, value });
+          })
+        )
+      );
+    } else {
+      const { address, abi } = this.getContractDetails();
+      return writeContract({ address, abi, functionName, args, value });
+    }
   }
 }

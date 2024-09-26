@@ -21,7 +21,7 @@ import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulett
 import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
 import { SpinnerComponent } from 'src/standalone/spinner/spinner.component';
 import { TierizedProgressBarComponent } from 'src/standalone/tierized-progress-bar/tierized-progress-bar.component';
-import { ChainSwitcherComponent } from "../../standalone/chain-switcher/chain-switcher.component";
+import { ChainSwitcherComponent } from '../../standalone/chain-switcher/chain-switcher.component';
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
 import { DoubleClickDirective } from '../core/directives/double-click.directive';
@@ -60,6 +60,7 @@ import { QuestRouterComponent } from './activities/quests/quest-router.component
 import { DailyRollButtonComponent } from './activities/shop/components/daily-roll-button.component';
 import { ShopComponent } from './activities/shop/shop.component';
 import { StakeRemoveRequestModalComponent } from './activities/the-mine/stake-remove-request-modal/stake-remove-request-modal.component';
+import { TheMineInfoModalComponent } from './activities/the-mine/the-mine-help/the-mine-info-modal.component';
 import { TheMineComponent } from './activities/the-mine/the-mine.component';
 import { BaseInventoryComponent } from './components/base-inventory/base-inventory.component';
 import { ChallengeModalComponent } from './components/challengee-modal/challenge-modal.component';
@@ -170,8 +171,9 @@ const pipes = [
     AccordionModule,
     TierizedProgressBarComponent,
     BalanceSelectorComponent,
-    ChainSwitcherComponent
-],
+    ChainSwitcherComponent,
+    TheMineInfoModalComponent,
+  ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe, StackPipe],
 })
