@@ -212,7 +212,11 @@
           >
             <div tooltip class="tooltip-uruk">
               <ng-template #expiresOn>
-                <span>Expires on {{ boost.expiresAt | date: 'short' }}</span>
+                @if (!!boost.expiresAt) {
+                  <span>Expires on {{ boost.expiresAt | date: 'short' }}</span>
+                } @else {
+                  <span>Never expires</span>
+                }
               </ng-template>
 
               <app-generic-item-tooltip

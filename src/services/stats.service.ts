@@ -36,4 +36,8 @@ export class StatsService extends ApiBaseService {
   getMonsterWeakness(): Observable<any> {
     return this.get('/creature-weakness');
   }
+
+  getMineTiers(): Observable<Array<any>> {
+    return this.get('/stake-tiers');
+  }
 }

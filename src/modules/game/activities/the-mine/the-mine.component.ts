@@ -15,12 +15,13 @@ import {
   map,
   startWith,
   switchMap,
+  tap,
 } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { Rarity } from 'src/modules/core/models/items.model';
 import { getRarityColor } from 'src/modules/utils';
 import { ERC20ContractService } from 'src/services/contracts/erc20-contract.service';
 import { NFTContractService } from 'src/services/contracts/nft-contract.service';
+import { StatsService } from 'src/services/stats.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
@@ -43,54 +44,11 @@ export class TheMineComponent extends TemplatePage {
   public subphase = 0;
   formattedTime: string = ''; // Formato de cuenta regresiva (MM:SS)
   getRarityColor = getRarityColor;
-
-  public tiers = [
-    {
-      start: 1,
-      end: 500,
-      image: 'assets/mine/bare-hands.png',
-      name: 'Bare hands',
-      matFactor: 1,
-      lootboxChance: 0.001,
-      rarity: Rarity.COMMON,
-    },
-    {
-      start: 500,
-      end: 1000,
-      name: 'Reinforcements',
-      image: 'assets/mine/reinforcements.png',
-      matFactor: 2,
-      lootboxChance: 0.002,
-      rarity: Rarity.UNCOMMON,
-    },
-    {
-      start: 1000,
-      end: 5000,
-      name: 'Pickaxe',
-      image: 'assets/mine/pico.png',
-      matFactor: 3,
-      lootboxChance: 0.01,
-      rarity: Rarity.EPIC,
-    },
-    {
-      start: 5000,
-      end: 10000,
-      name: 'Mine machine',
-      image: 'assets/mine/mine-machine.png',
-      matFactor: 5,
-      lootboxChance: 0.02,
-      rarity: Rarity.LEGENDARY,
-    },
-    {
-      start: 10000,
-      end: 100000,
-      name: 'Dynamite',
-      image: 'assets/mine/dinamite.png',
-      matFactor: 10,
-      lootboxChance: 0.05,
-      rarity: Rarity.MYTHIC,
-    },
-  ] as Array<any>;
+  statsService = inject(StatsService);
+  public tiers$ = this.statsService
+    .getMineTiers()
+    .pipe(tap((e) => (this.tiers = e)));
+  public tiers: Array<any> = [];
   public stakeType: 'in-game' | 'wallet' = 'wallet';
   public CONTRACT_IMAGE = 'assets/materials/15.webp';
   store = inject(Store);
@@ -264,24 +222,31 @@ export class TheMineComponent extends TemplatePage {
   startCountdown() {
     interval(1000).subscribe(() => {
       const now = new Date();
-      const nextHour = new Date();
-      nextHour.setHours(now.getHours() + 1, 0, 0, 0); // Siguiente hora completa
+      const nextMidnight = new Date();
+      // Ajustar la fecha al próximo día a medianoche
+      nextMidnight.setHours(24, 0, 0, 0);
 
+      // Diferencia en segundos hasta la medianoche
       const timeDifference = Math.floor(
-        (nextHour.getTime() - now.getTime()) / 1000
-      ); // Diferencia en segundos
-      const minutes = Math.floor(timeDifference / 60); // Obtener minutos
+        (nextMidnight.getTime() - now.getTime()) / 1000
+      );
+
+      // Obtener horas, minutos y segundos
+      const hours = Math.floor(timeDifference / 3600); // Obtener horas
+      const minutes = Math.floor((timeDifference % 3600) / 60); // Obtener minutos
       const seconds = timeDifference % 60; // Obtener segundos
 
-      this.formattedTime = `${this.pad(minutes)}:${this.pad(seconds)}`; // Formatear el tiempo
+      // Actualizar el formato del tiempo
+      this.formattedTime = `${this.pad(hours)}:${this.pad(minutes)}:${this.pad(seconds)}`; // Formatear el tiempo como HH:MM:SS
     });
   }
 
+  // Método para asegurarse de que los números tengan siempre 2 dígitos
   pad(value: number) {
-    return value.toString().padStart(2, '0'); // Asegurar que minutos y segundos tengan 2 dígitos
+    return value.toString().padStart(2, '0'); // Asegurar que horas, minutos y segundos tengan 2 dígitos
   }
 
-  public displayHelpMine(){
+  public displayHelpMine() {
     this.modalService.show(TheMineInfoModalComponent);
   }
 }

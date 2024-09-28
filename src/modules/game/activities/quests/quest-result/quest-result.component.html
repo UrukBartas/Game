@@ -335,34 +335,29 @@
         </div>
       </div>
 
-      <span urText *ngIf="fightResult.exp" class="text-white pb-2"
+      <span urText *ngIf="fightResult.exp" class="text-white pb-2 text-center"
         >You gained
-        <span class="text-secondary">{{ fightResult.exp }}</span>
+        <span class="text-secondary">{{ fightResult.exp.toFixed() }}</span>
         experience
         <span
           class="text-warning animate__animated animate__pulse animate__infinite"
           *ngIf="fightResult.expFactor > 1"
-          >Boosted
-          {{
-            fightResult.expFactor * 100 -
-              (fightResult.expFactor >= 2 ? 0 : 100)
-          }}%!</span
-        ></span
+          >Boosted {{ ((fightResult.expFactor - 1) * 100).toFixed(2) }}%!</span
+        >
+        </span
       >
-      <span urText *ngIf="fightResult.uruks" class="text-white pb-2"
+      <span urText *ngIf="fightResult.uruks" class="text-white pb-2 text-center"
         >You gained
-        <span class="text-secondary">{{ fightResult.uruks }}</span> Uruks
+        <span class="text-secondary">{{ fightResult.uruks.toFixed() }}</span>
+        Uruks
         <span
           class="text-warning animate__animated animate__pulse animate__infinite"
           *ngIf="fightResult.uruksFactor > 1"
           >Boosted
-          {{
-            fightResult.uruksFactor * 100 -
-              (fightResult.uruksFactor >= 2 ? 0 : 100)
-          }}%!</span
+          {{ ((fightResult.uruksFactor - 1) * 100).toFixed(2) }}%!</span
         ></span
       >
-      <span urText class="text-white pb-2" *ngIf="!!fightResult.newQuest"
+      <span urText class="text-white pb-2 text-center" *ngIf="!!fightResult.newQuest"
         >{{
           fightResult?.newQuest?.data?.isAdventurePhase
             ? fightResult.newQuest.data.lost

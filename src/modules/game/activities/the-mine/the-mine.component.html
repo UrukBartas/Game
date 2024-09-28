@@ -74,7 +74,9 @@
               <span urSubtext class="text-third">
                 Do you need some help?👀
               </span>
-              <span class="text-light pointer" (click)="displayHelpMine()">Check this out!</span>
+              <span class="text-light pointer" (click)="displayHelpMine()"
+                >Check this out!</span
+              >
             </div>
           </div>
 
@@ -250,23 +252,47 @@
             You will earn
             <strong class="text-third">x{{ tier.matFactor }}</strong> materials
             per hour. Your goblin workers have a
-            <strong class="text-third"
-              >{{ tier.lootboxChance * 100 | number: '1.2-2' }}%</strong
-            >
+            <strong class="text-third">
+              {{ tier.lootboxChance * 100 | number: '1.2-2' }}%
+            </strong>
             chance to find a treasure in the mine.
+            <br />
+            Additionally, you will receive a
+            <strong class="text-third"
+              >{{ tier.expBoost * 100 | number: '1.0-2' }}%</strong
+            >
+            experience boost and a
+            <strong class="text-third"
+              >{{ tier.uruksBoost * 100 | number: '1.0-2' }}%</strong
+            >
+            Golden Uruks boost per hour.
           } @else {
             You do not have any goblin workers working for you at this moment.
             Buy those goblins now and make them work! And earn up to
             <strong class="text-third"
-              >x{{ getHighestTier().matFactor }}</strong
+              >x{{ getHighestTier()?.matFactor ?? 0 }}</strong
             >
             materials per hour. Your goblin workers have a
+            <strong class="text-third">
+              {{
+                (getHighestTier()?.lootboxChance ?? 0) * 100 | number: '1.2-2'
+              }}%
+            </strong>
+            chance to find a treasure in the mine.
+            <br />
+            You can also get a
             <strong class="text-third"
               >{{
-                getHighestTier().lootboxChance * 100 | number: '1.2-2'
+                (getHighestTier()?.expBoost ?? 0) * 100 | number: '1.0-2'
               }}%</strong
             >
-            chance to find a treasure in the mine.
+            experience boost and a
+            <strong class="text-third"
+              >{{
+                (getHighestTier()?.uruksBoost ?? 0) * 100 | number: '1.0-2'
+              }}%</strong
+            >
+            Golden Uruks boost per hour.
           }
           <button
             type="button"
@@ -293,7 +319,7 @@
         <app-tierized-progress-bar
           [currentValue]="(stakeInfo | async)?.amountStaked ?? 0"
           [tooltipTemplate]="tooltipTier"
-          [tiers]="tiers"
+          [tiers]="tiers$ | async"
         ></app-tierized-progress-bar>
       </div>
     </div>
