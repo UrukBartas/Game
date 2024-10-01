@@ -15,10 +15,10 @@ const routes: Routes = [
     loadChildren: (): Promise<Type<GameModule>> =>
       import('../modules/game/game.module').then((m) => m.GameModule),
   },
-  // {
-  //   path: 'presale',
-  //   loadComponent: () => import('../modules/lootbox-presale/lootbox-presale.component').then((m) => m.LootboxPresaleComponent),
-  // },
+  {
+    path: 'presale',
+    loadComponent: () => import('../modules/lootbox-presale/soon-presale/soon-presale.component').then((m) => m.SoonPresaleComponent),
+  },
   {
     path: 'external',
     children: [
