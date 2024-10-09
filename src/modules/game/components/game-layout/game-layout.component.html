@@ -1,6 +1,8 @@
 <div class="wrapper">
   <div
-    class="d-none d-sm-flex flex-column flex-shrink-0 p-3 bg-secondary sidebar sidebar-lateral {{
+    class="d-none {{
+      !!(state$ | async).player ? 'd-sm-flex' : ''
+    }} flex-column flex-shrink-0 p-3 bg-secondary sidebar sidebar-lateral {{
       isSidebarOpened() ? 'collapsed' : ''
     }}"
   >

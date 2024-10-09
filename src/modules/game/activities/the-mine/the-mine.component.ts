@@ -95,7 +95,6 @@ export class TheMineComponent extends TemplatePage {
         this.ERC20ContractService.getStakeInfo(getAccount().address)
       ).pipe(
         catchError((err) => {
-          console.error(err);
           return err;
         }),
         map((entry: any) => {
@@ -103,7 +102,14 @@ export class TheMineComponent extends TemplatePage {
           return {
             amountStaked: Number(ethers.formatEther(amountStaked.toString())),
             timeStaked: timeStaked.toString(),
-            requests: [],
+            requests: (requests ?? []).map((entry) => {
+              const requestTime = Number(entry.requestTime.toString()) * 1000;
+              const additionalDays = 18 * 86400000; // 18 días en milisegundos TODO CONECTARLO AL SC
+              return {
+                amount: Number(ethers.formatEther(entry.amount.toString())),
+                remainingTime: new Date(requestTime + additionalDays), // Sumar 18 días
+              };
+            }),
           };
         })
       );

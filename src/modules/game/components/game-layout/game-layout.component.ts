@@ -26,7 +26,6 @@ export class GameLayoutComponent {
   @Select(MainState.getState) state$: Observable<MainStateModel>;
   private displayPVE = false;
   public walletService = inject(WalletService);
-
   public getActiveRoute = () => {
     return this.routesNavigation.find((entry) => entry.path == this.router.url);
   };

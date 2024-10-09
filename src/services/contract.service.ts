@@ -53,8 +53,8 @@ export class ContractService {
         mesasge ?? 'Transaction completed successfully!'
       );
       this.store.dispatch(new RefreshPlayer());
-    } catch (error) {
-      this.toastService.error('Eror during transaction - Transaction canceled');
+    } catch (error:any) {
+      this.toastService.error('Eror during transaction - Transaction canceled', error?.shortMessage ?? '');
     }
     this.spinnerService.hide();
   }
