@@ -166,11 +166,20 @@ nav a {
     justify-content: center;
     align-items: center;
     padding-top: 2px;
+    .icon {
+      width: 15px;
+      height: 15px;
+    }
   }
   .notifications-player {
     position: absolute;
     bottom: 0;
     right: 0;
+  }
+  .notification-quest-in-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
   }
   .dropdown-menu {
     padding: 0 !important;
@@ -194,6 +203,11 @@ nav a {
       }
       i {
         color: $third;
+      }
+      .icon {
+        width: 33px;
+        height: 33px;
+        background: $third;
       }
       color: $white-100;
     }

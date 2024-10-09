@@ -4,9 +4,11 @@ import { Select, Store } from '@ngxs/store';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable, map } from 'rxjs';
 import { PlayerModel } from 'src/modules/core/models/player.model';
+import { QuestModel } from 'src/modules/core/models/quest.model';
 import { calculateXPForLevel } from 'src/modules/utils';
 import { AuthService } from 'src/services/auth.service';
 import { PlayerService } from 'src/services/player.service';
+import { QuestTimerService } from 'src/services/quest-timer.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import {
@@ -24,9 +26,7 @@ import { InboxModalComponent } from '../inbox-modal/inbox-modal.component';
 })
 export class GameLayoutComponent {
   @Select(MainState.getState) state$: Observable<MainStateModel>;
-  private displayPVE = false;
   public walletService = inject(WalletService);
-
   public getActiveRoute = () => {
     return this.routesNavigation.find((entry) => entry.path == this.router.url);
   };
@@ -83,6 +83,7 @@ export class GameLayoutComponent {
   public viewportService = inject(ViewportService);
   public store = inject(Store);
   public modalService = inject(BsModalService);
+  public questTimerService = inject(QuestTimerService);
   public displayingFullScreenModal = false;
   public modalRef?: BsModalRef;
   public loggedWithemail = this.authService.loggedWithEmail;
