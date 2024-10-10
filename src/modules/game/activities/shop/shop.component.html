@@ -121,6 +121,7 @@
 <ng-template #consumableTooltip let-item="item">
   <app-generic-item-tooltip
     [showPrice]="true"
+    [souldBound]="!!item?.souldBoundByDefault"
     [item]="item"
   ></app-generic-item-tooltip>
 </ng-template>

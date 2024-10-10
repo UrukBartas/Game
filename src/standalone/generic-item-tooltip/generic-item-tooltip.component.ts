@@ -20,6 +20,7 @@ export type GenericItem =
 })
 export class GenericItemTooltipComponent {
   @Input() item: GenericItem;
+  @Input() souldBound = false;
   @Input() showPrice = false;
   @Input() customTemplate: TemplateRef<any>;
 

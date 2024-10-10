@@ -175,6 +175,6 @@ const pipes = [
     TheMineInfoModalComponent,
   ],
   exports: [GameLayoutComponent],
-  providers: [DecimalPipe, AsyncPipe, StackPipe],
+  providers: [DecimalPipe, AsyncPipe, StackPipe,...pipes],
 })
 export class GameModule {}

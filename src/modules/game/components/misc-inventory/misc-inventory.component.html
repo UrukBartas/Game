@@ -171,6 +171,7 @@
         <div tooltip class="tooltip-uruk" *ngIf="!!item?.lootbox">
           <app-generic-item-tooltip
             [item]="item?.lootbox?.miscellanyItemData"
+            [souldBound]="item?.lootbox"
           ></app-generic-item-tooltip>
         </div>
       </app-item-box>
@@ -334,6 +335,7 @@
               } @else {
                 <app-generic-item-tooltip
                   [item]="getGenericItemItemData(roll?.resultItem)"
+                  [souldBound]="roll?.resultItem?.souldBound"
                 ></app-generic-item-tooltip>
               }
             </div>
@@ -382,6 +384,7 @@
                 } @else {
                   <app-generic-item-tooltip
                     [item]="getGenericItemItemData(bonusDrop)"
+                    [souldBound]="bonusDrop?.souldBound"
                   ></app-generic-item-tooltip>
                 }
               </div>
@@ -465,6 +468,7 @@
       <div tooltip class="tooltip-uruk">
         <app-generic-item-tooltip
           [item]="item.miscellanyItemData"
+          [souldBound]="item?.souldBound"
         ></app-generic-item-tooltip>
       </div>
     }

@@ -1,3 +1,4 @@
+import { DecimalPipe } from '@angular/common';
 import { Component, TemplateRef, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
@@ -82,6 +83,7 @@ export class GameLayoutComponent {
   public viewportService = inject(ViewportService);
   public store = inject(Store);
   public modalService = inject(BsModalService);
+  public decimalPipe = inject(DecimalPipe);
   public displayingFullScreenModal = false;
   public modalRef?: BsModalRef;
   public loggedWithemail = this.authService.loggedWithEmail;
@@ -132,7 +134,7 @@ export class GameLayoutComponent {
   getProgressBarData(player: PlayerModel) {
     const totalExp = calculateXPForLevel(player.level);
     return {
-      text: `${player.experience}/${totalExp}`,
+      text: `${this.decimalPipe.transform(player.experience)}/${this.decimalPipe.transform(totalExp)}`,
       percent: (player.experience / totalExp) * 100,
     };
   }

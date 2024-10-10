@@ -110,6 +110,7 @@ export interface MiscellanyItem {
   miscellanyItemDataId: MiscellanyItemIdentifier;
   miscellanyItemData: MiscellanyItemData;
   extraData?: any | null; // JSON type, can be anything
+  souldBound: boolean;
 }
 
 export interface MiscellanyItemData {
@@ -121,4 +122,5 @@ export interface MiscellanyItemData {
   itemType: MiscellanyItemType;
   description: string;
   instances: MiscellanyItem[];
+  souldBoundByDefault: boolean;
 }

@@ -49,6 +49,14 @@
                   listing.miscellany
               )
             "
+            [souldBound]="
+              (
+                listing.item ??
+                listing.material ??
+                listing.consumable ??
+                listing.miscellany
+              ).souldBound
+            "
           ></app-generic-item-tooltip>
         }
         <div class="d-flex align-items-center gap-3">

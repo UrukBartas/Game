@@ -41,7 +41,10 @@
       [image]="lootItem.consumableData.imageLocal"
     >
       <div tooltip class="tooltip-uruk">
-        <app-generic-item-tooltip [item]="lootItem.consumableData">
+        <app-generic-item-tooltip
+          [item]="lootItem.consumableData"
+          [souldBound]="lootItem.souldBound"
+        >
         </app-generic-item-tooltip>
       </div>
     </app-item-box>
@@ -60,6 +63,7 @@
       <div tooltip class="tooltip-uruk">
         <app-generic-item-tooltip
           [item]="lootItem.materialData"
+          [souldBound]="lootItem.souldBound"
         ></app-generic-item-tooltip>
       </div>
     </app-item-box>
@@ -78,6 +82,7 @@
       <div tooltip class="tooltip-uruk">
         <app-generic-item-tooltip
           [item]="lootItem.miscellanyItemData"
+          [souldBound]="lootItem.souldBound"
         ></app-generic-item-tooltip>
       </div>
     </app-item-box>
@@ -344,8 +349,7 @@
           *ngIf="fightResult.expFactor > 1"
           >Boosted {{ ((fightResult.expFactor - 1) * 100).toFixed(2) }}%!</span
         >
-        </span
-      >
+      </span>
       <span urText *ngIf="fightResult.uruks" class="text-white pb-2 text-center"
         >You gained
         <span class="text-secondary">{{ fightResult.uruks.toFixed(2) }}</span>
@@ -357,7 +361,10 @@
           {{ ((fightResult.uruksFactor - 1) * 100).toFixed(2) }}%!</span
         ></span
       >
-      <span urText class="text-white pb-2 text-center" *ngIf="!!fightResult.newQuest"
+      <span
+        urText
+        class="text-white pb-2 text-center"
+        *ngIf="!!fightResult.newQuest"
         >{{
           fightResult?.newQuest?.data?.isAdventurePhase
             ? fightResult.newQuest.data.lost

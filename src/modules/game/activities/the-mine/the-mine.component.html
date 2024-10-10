@@ -185,7 +185,7 @@
 
       <ng-template #currentTierTemplate let-activeTier="activeTier">
         <div
-          class="current-tier text-white d-flex gap-3 flex-column px-1 px-md-4"
+          class="current-tier text-white d-flex gap-3 flex-column px-1 px-md-4 uruk-card"
         >
           <div
             class="tier-image d-flex justify-content-center align-items-center"
@@ -229,50 +229,121 @@
             }}</strong>
           </div>
           @if (tier) {
-            You will earn
-            <strong class="text-third">x{{ tier.matFactor }}</strong> materials
-            per hour. Your goblin workers have a
-            <strong class="text-third">
-              {{ tier.lootboxChance * 100 | number: '1.2-2' }}%
-            </strong>
-            chance to find a treasure in the mine.
-            <br />
-            Additionally, you will receive a
-            <strong class="text-third"
-              >{{ tier.expBoost * 100 | number: '1.0-2' }}%</strong
-            >
-            experience boost and a
-            <strong class="text-third"
-              >{{ tier.uruksBoost * 100 | number: '1.0-2' }}%</strong
-            >
-            Golden Uruks boost per hour.
+            @if (isBigScreen()) {
+              You will earn
+              <strong class="text-third">x{{ tier.matFactor }}</strong>
+              materials per hour. Your goblin workers have a
+              <strong class="text-third">
+                {{ tier.lootboxChance * 100 | number: '1.2-2' }}%
+              </strong>
+              chance to find a treasure in the mine.
+              <br />
+              Additionally, you will receive a
+              <strong class="text-third"
+                >{{ tier.expBoost * 100 | number: '1.0-2' }}%</strong
+              >
+              experience boost and a
+              <strong class="text-third"
+                >{{ tier.uruksBoost * 100 | number: '1.0-2' }}%</strong
+              >
+              Golden Uruks boost per hour.
+              <br />
+              Furthermore, your quest and adventure travel time will be reduced
+              by
+              <strong class="text-third"
+                >{{ tier.travelBoost * 100 | number: '1.0-2' }}%</strong
+              >.
+            } @else {
+              Earn
+              <strong class="text-third">x{{ tier.matFactor }}</strong>
+              materials,
+              <strong class="text-third"
+                >{{ tier.lootboxChance * 100 | number: '1.2-2' }}%</strong
+              >
+              treasure chance,
+              <strong class="text-third"
+                >{{ tier.expBoost * 100 | number: '1.0-2' }}%</strong
+              >
+              XP boost, and
+              <strong class="text-third"
+                >{{ tier.uruksBoost * 100 | number: '1.0-2' }}%</strong
+              >
+              Golden Uruks boost.
+              <br />
+              Travel time reduced by
+              <strong class="text-third"
+                >{{ tier.travelBoost * 100 | number: '1.0-2' }}%</strong
+              >.
+            }
           } @else {
-            You do not have any goblin workers working for you at this moment.
-            Buy those goblins now and make them work! And earn up to
-            <strong class="text-third"
-              >x{{ getHighestTier()?.matFactor ?? 0 }}</strong
-            >
-            materials per hour. Your goblin workers have a
-            <strong class="text-third">
-              {{
-                (getHighestTier()?.lootboxChance ?? 0) * 100 | number: '1.2-2'
-              }}%
-            </strong>
-            chance to find a treasure in the mine.
-            <br />
-            You can also get a
-            <strong class="text-third"
-              >{{
-                (getHighestTier()?.expBoost ?? 0) * 100 | number: '1.0-2'
-              }}%</strong
-            >
-            experience boost and a
-            <strong class="text-third"
-              >{{
-                (getHighestTier()?.uruksBoost ?? 0) * 100 | number: '1.0-2'
-              }}%</strong
-            >
-            Golden Uruks boost per hour.
+            @if (isBigScreen()) {
+              You do not have any goblin workers working for you at this moment.
+              Buy those goblins now and make them work! You can earn up to
+              <strong class="text-third"
+                >x{{ getHighestTier()?.matFactor ?? 0 }}</strong
+              >
+              materials per hour. Your goblin workers will have a
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.lootboxChance ?? 0) * 100
+                    | number: '1.2-2'
+                }}%</strong
+              >
+              chance to find a treasure in the mine.
+              <br />
+              You can also get a
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.expBoost ?? 0) * 100 | number: '1.0-2'
+                }}%</strong
+              >
+              experience boost and a
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.uruksBoost ?? 0) * 100 | number: '1.0-2'
+                }}%</strong
+              >
+              Golden Uruks boost per hour.
+              <br />
+              And finally, reduce your quest and adventure travel time by up to
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.travelBoost ?? 0) * 100 | number: '1.0-2'
+                }}%</strong
+              >.
+            } @else {
+              No goblins are working. Buy them now for up to
+              <strong class="text-third"
+                >x{{ getHighestTier()?.matFactor ?? 0 }}</strong
+              >
+              materials,
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.lootboxChance ?? 0) * 100
+                    | number: '1.2-2'
+                }}%</strong
+              >
+              treasure chance,
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.expBoost ?? 0) * 100 | number: '1.0-2'
+                }}%</strong
+              >
+              XP boost, and
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.uruksBoost ?? 0) * 100 | number: '1.0-2'
+                }}%</strong
+              >
+              Golden Uruks boost.
+              <br />
+              Travel time reduced by
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.travelBoost ?? 0) * 100 | number: '1.0-2'
+                }}%</strong
+              >.
+            }
           }
           <button
             type="button"
