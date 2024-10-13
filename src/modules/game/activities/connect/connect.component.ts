@@ -10,6 +10,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { AuthService } from 'src/services/auth.service';
 import { WalletService } from 'src/services/wallet.service';
@@ -26,7 +27,7 @@ export class ConnectComponent
 {
   @ViewChild('threeContainer', { static: true })
   threeContainer!: ElementRef<HTMLDivElement>;
-
+  public prefix = environment.permaLinkImgPref;
   walletService = inject(WalletService);
   authService = inject(AuthService);
   toast = inject(ToastrService);

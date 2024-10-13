@@ -12,6 +12,7 @@ import { cloneDeep } from 'lodash';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { debounceTime, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { MarketListing } from 'src/modules/core/models/market-listing.model';
 import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
@@ -46,7 +47,7 @@ export class AuctionHouseComponent {
   getRarityBasedOnIRI = getRarityBasedOnIRI;
   public sortOrderUp = false;
   public sortType: 'price' | 'recent' = 'recent';
-
+  public prefix = environment.permaLinkImgPref;
   private marketListingFitlerEffect = effect(() => {
     this.lastMarketListingFilter = this.marketListingFilter();
   });

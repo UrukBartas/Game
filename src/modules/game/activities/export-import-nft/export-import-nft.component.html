@@ -367,7 +367,7 @@
                 class="display-fee"
                 *ngIf="getActiveNetworkImg() as activeNetwork"
               >
-                <img src="{{ activeNetwork }}" />
+                <img src="{{ prefix+activeNetwork }}" />
                 <span>{{
                   calculateFeesBasedOnSelectedItems(
                     getNFTExportFee$ | async,
@@ -411,7 +411,7 @@
                 class="display-fee"
                 *ngIf="getActiveNetworkImg() as activeNetwork"
               >
-                <img src="{{ activeNetwork }}" />
+                <img src="{{ prefix+activeNetwork }}" />
                 <span>{{ getERC20ExportFee$ | async | number }}</span>
               </div>
             }

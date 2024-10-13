@@ -75,9 +75,12 @@
         ) {
           <img
             [ngStyle]="{ width: '20px' }"
-            src="assets/dmgtypes/64_nobg/{{
-              item.itemData.damageType.toLowerCase()
-            }}.png"
+            src="{{
+              prefix +
+                '/assets/dmgtypes/64_nobg/' +
+                item.itemData.damageType.toLowerCase() +
+                '.png'
+            }}"
           />
           {{ camelToe(item.itemData.damageType) }} -
         }
@@ -94,7 +97,11 @@
     }"
   >
     <div class="d-flex flex-column align-items-center">
-      <img class="item-image" [src]="item.itemData?.imageLocal" priority />
+      <img
+        class="item-image"
+        [src]="prefix + item.itemData?.imageLocal"
+        priority
+      />
       <span
         [ngStyle]="{
           color: getRarityColor(getRarityBasedOnIRI(item.item_rarity_stat)),
@@ -157,7 +164,10 @@
   </p>
   <div class="d-flex align-items-center justify-content-start">
     <p *ngIf="item.price" class="h6 mb-0 mt-3 d-flex align-items-center gap-1">
-      <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+      <img
+        class="uruks-icon pb-1"
+        src="{{ prefix + '/assets/goldenuruks.png' }}"
+      />
       <span urText class="text-white">{{ item.price | number: '1.0-2' }}</span>
     </p>
   </div>

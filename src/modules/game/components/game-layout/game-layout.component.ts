@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable, map } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { calculateXPForLevel } from 'src/modules/utils';
 import { AuthService } from 'src/services/auth.service';
@@ -30,6 +31,7 @@ export class GameLayoutComponent {
   public getActiveRoute = () => {
     return this.routesNavigation.find((entry) => entry.path == this.router.url);
   };
+  public prefix = environment.permaLinkImgPref;
   public routesNavigation: any[] = [
     {
       path: '/inventory',

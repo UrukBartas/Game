@@ -14,14 +14,13 @@
           @if (!!item.itemData) {
             <app-item-tooltip [item]="item"></app-item-tooltip>
           } @else {
-           <app-generic-item-tooltip [item]="item"></app-generic-item-tooltip>
+            <app-generic-item-tooltip [item]="item"></app-generic-item-tooltip>
           }
-
         </div>
       </app-item-box>
     </div>
   </div>
   <div class="arrow">
-    <img src="assets/misc/arrow.png" alt="" srcset="" />
+    <img src="{{ prefix + 'assets/misc/arrow.png' }}" alt="" srcset="" />
   </div>
 </div>

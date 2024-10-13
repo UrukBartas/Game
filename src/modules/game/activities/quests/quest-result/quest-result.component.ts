@@ -15,7 +15,7 @@ import { firstValueFrom, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import {
   FightResultModel,
-  GankMonstersIds
+  GankMonstersIds,
 } from 'src/modules/core/models/fight.model';
 import { getRarityColor } from 'src/modules/utils';
 import { QuestService } from 'src/services/quest.service';
@@ -43,23 +43,12 @@ export class QuestResultComponent extends TemplatePage {
   questStatusEnum = QuestStatusEnum;
   player = this.store.selectSnapshot(MainState.getState).player;
   getRarityColor = getRarityColor;
-  public openedChest = false;
-  public closedChest = false;
   public lowerCaseFn = lowerCase;
   public questResultLayout: 'DEFAULT' | 'GANKED' = 'DEFAULT';
 
   constructor() {
     super();
     this.titleService.setTitle('Quest result');
-  }
-
-  public openChest() {
-    this.openedChest = true;
-    setTimeout(() => {
-      party.confetti(this.loot.nativeElement, {
-        count: party.variation.range(20, 40),
-      });
-    });
   }
 
   @Output() questStatusChange = new EventEmitter<QuestRouterModel>();

@@ -24,7 +24,9 @@
 <div
   class="adventures-wrapper row pb-5 p-md-0"
   [ngClass]="{ 'fullscreen-mode': goFullScreen() }"
-  [ngStyle]="{ 'background-image': 'url(' + activeWallpaper + ')' }"
+  [ngStyle]="{
+    'background-image': 'url(' + prefix + '' + activeWallpaper + ')',
+  }"
 >
   <div
     class="adventure-slider col-12 col-sm-3 col-md-2 h-100"
@@ -42,7 +44,7 @@
         <div
           class="adventure"
           [ngClass]="{
-            'busted-effect': (player$ | async).level < adventure.minLevel
+            'busted-effect': (player$ | async).level < adventure.minLevel,
           }"
         >
           @if ((player$ | async).level < adventure.minLevel) {
@@ -63,7 +65,8 @@
 
           <app-item-box
             [ngClass]="{
-              'glowing-legendary': (player$ | async).level >= adventure.minLevel
+              'glowing-legendary':
+                (player$ | async).level >= adventure.minLevel,
             }"
             [height]="getResponsiveSizeAdventureImgs()[1]"
             [width]="getResponsiveSizeAdventureImgs()[0]"
@@ -98,11 +101,12 @@
         @if (index == availableAdventures.length - 1) {
           <app-item-box
             [ngClass]="{
-              'glowing-legendary': (player$ | async).level >= adventure.minLevel
+              'glowing-legendary':
+                (player$ | async).level >= adventure.minLevel,
             }"
             [height]="getResponsiveSizeAdventureImgs()[1]"
             [width]="getResponsiveSizeAdventureImgs()[0]"
-            image="../../../../../assets/misc/question-mark.webp"
+            [image]="'/assets/misc/question-mark.webp'"
           >
             <div tooltip class="tooltip-uruk p-3">
               <span class="text-info">More adventures coming Soon™ ⚔️</span>
@@ -125,7 +129,7 @@
     class="content col-12 col-sm-8 col-md-8 h-100"
     [ngClass]="{
       'col-12 col-sm-8 col-md-8': !this.goFullScreen(),
-      'col-12': this.goFullScreen() || getViewportSize() != 'xs'
+      'col-12': this.goFullScreen() || getViewportSize() != 'xs',
     }"
     *ngIf="shouldDisplayDetails()"
   >

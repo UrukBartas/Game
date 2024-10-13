@@ -7,27 +7,29 @@ import {
   Output,
   signal,
 } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { firstValueFrom, map, take } from 'rxjs';
-import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { QuestModel } from 'src/modules/core/models/quest.model';
-import { getRarityColor } from 'src/modules/utils';
-import { QuestService } from 'src/services/quest.service';
-import { ViewportService } from 'src/services/viewport.service';
-import { MainState, RefreshPlayer, SetQuests } from 'src/store/main.store';
-import { QuestStatusEnum } from '../enums/quest-status.enum';
-import { QuestRouterModel } from '../models/quest-router.model';
-import { Rarity } from 'src/modules/core/models/items.model';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
-import { PlayerService } from 'src/services/player.service';
 import { Title } from '@angular/platform-browser';
-import { AdventureData } from 'src/services/adventures-data.service';
+import { Store } from '@ngxs/store';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { firstValueFrom, map, take, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { TemplatePage } from 'src/modules/core/components/template-page.component';
+import { Rarity } from 'src/modules/core/models/items.model';
 import {
   MonsterType,
   QuestDataModel,
 } from 'src/modules/core/models/quest-data.model';
+import { QuestModel } from 'src/modules/core/models/quest.model';
+import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
+import { getRarityColor } from 'src/modules/utils';
+import { AdventureData } from 'src/services/adventures-data.service';
+import { AdventuresService } from 'src/services/adventures.service';
+import { PlayerService } from 'src/services/player.service';
+import { QuestService } from 'src/services/quest.service';
 import { StatsService } from 'src/services/stats.service';
+import { ViewportService } from 'src/services/viewport.service';
+import { MainState, SetQuests } from 'src/store/main.store';
+import { QuestStatusEnum } from '../enums/quest-status.enum';
+import { QuestRouterModel } from '../models/quest-router.model';
 
 @Component({
   selector: 'app-quest-picker',
@@ -53,6 +55,7 @@ export class QuestPickerComponent extends TemplatePage {
   statService = inject(StatsService);
   @Output() questChanged = new EventEmitter<QuestModel>();
   loading = false;
+  public prefix = environment.permaLinkImgPref;
 
   public slots$ = this.store
     .select(MainState.getState)
@@ -95,14 +98,15 @@ export class QuestPickerComponent extends TemplatePage {
   };
 
   public getPathMonsterType = (questData: QuestDataModel) => {
-    return `assets/quests/types/${questData.monsterType}.png`;
+    return environment.permaLinkImgPref+ `/assets/quests/types/${questData.monsterType}.png`;
   };
 
   constructor(
     private store: Store,
     public viewportService: ViewportService,
     private questService: QuestService,
-    private playerService: PlayerService
+    private playerService: PlayerService,
+    private adventureService: AdventuresService
   ) {
     super();
     this.titleService.setTitle('Pick an adventure');
@@ -120,8 +124,20 @@ export class QuestPickerComponent extends TemplatePage {
     );
   }
 
+  public isCurrentQuestNonActive() {
+    return this.quests[this.activeSlideIndex()].active == false;
+  }
+
   ngOnInit(): void {
     this.getPlayerQuests();
+  }
+
+  public unstuckPhase() {
+    firstValueFrom(
+      this.adventureService
+        .unstuckAdventure(this.adventure.id)
+        .pipe(tap((e) => this.getPlayerQuests()))
+    );
   }
 
   getPlayerQuests() {

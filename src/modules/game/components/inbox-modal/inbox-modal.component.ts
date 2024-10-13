@@ -11,6 +11,7 @@ import { isEmpty } from 'lodash';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { MarkdownComponent, provideMarkdown } from 'ngx-markdown';
 import { take } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { SubtextSizeDirective } from 'src/modules/core/directives/subtext-size.directive';
 import { TextSizeDirective } from 'src/modules/core/directives/text-size.directive';
 import { NotificationModel } from 'src/modules/core/models/notifications.model';
@@ -47,7 +48,7 @@ export class InboxModalComponent implements OnInit {
   playerId: string;
   openedNotification: NotificationModel;
   attachments: { data; quantity: number }[];
-
+  public prefix = environment.permaLinkImgPref;
   ngOnInit(): void {
     this.playerId = this.store.selectSnapshot(MainState.getState).player?.id;
     this.refreshNotifications();

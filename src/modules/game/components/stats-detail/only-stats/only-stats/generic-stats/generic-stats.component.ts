@@ -3,6 +3,7 @@ import { Store } from '@ngxs/store';
 import { Debounce } from 'lodash-decorators';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom, map, shareReplay, switchMap, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { PlayerService } from 'src/services/player.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
@@ -18,6 +19,7 @@ export class GenericStatsComponent {
   playerService = inject(PlayerService);
   toastService = inject(ToastrService);
   store = inject(Store);
+  public prefix = environment.permaLinkImgPref;
   allowedStatsToUpgrade = [
     'health',
     'armor',

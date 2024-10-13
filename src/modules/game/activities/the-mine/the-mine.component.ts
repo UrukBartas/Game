@@ -17,6 +17,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { getRarityColor } from 'src/modules/utils';
 import { ERC20ContractService } from 'src/services/contracts/erc20-contract.service';
@@ -51,6 +52,7 @@ export class TheMineComponent extends TemplatePage {
   public tiers: Array<any> = [];
   public stakeType: 'in-game' | 'wallet' = 'wallet';
   public CONTRACT_IMAGE = 'assets/materials/15.webp';
+  public prefix = environment.permaLinkImgPref;
   store = inject(Store);
   walletService = inject(WalletService);
   spinnerService = inject(NgxSpinnerService);

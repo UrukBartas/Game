@@ -66,26 +66,10 @@
                 <div class="row">
                   <div class="col-12">
                     <p>
-                      When completed the adventure successfully, this chest will
-                      open and will contain the following rewards:
+                      Upon completing the adventure successfully, the chest will
+                      open, revealing untold treasures and mysterious rewards
+                      waiting to be discovered.
                     </p>
-
-                    <span class="value">
-                      {{ selectedAdventure.itemData.length + ' items' }}
-                    </span>
-                    +
-                    <span class="value">
-                      {{
-                        selectedAdventure.consumablesData.length +
-                          ' consumables'
-                      }}
-                    </span>
-                    +
-                    <span class="value">
-                      {{ selectedAdventure.materialsData.length + ' materials' }}
-                    </span>
-                    +
-                    <span class="value"> ??????? </span>
                   </div>
                 </div>
               </div>
@@ -93,10 +77,10 @@
 
             <img
               [ngbTooltip]="tooltipChest"
-              src="../../../../../assets/misc/closed_chest.png"
+              src="https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/misc/closed_chest.png"
               [ngStyle]="{
                 height: viewportService.getResponsiveSizeChestImg()[1] + 'px',
-                width: viewportService.getResponsiveSizeChestImg()[0] + 'px'
+                width: viewportService.getResponsiveSizeChestImg()[0] + 'px',
               }"
             />
             <span urSubtitle class="text-third">X1 Adventure Chest!</span>

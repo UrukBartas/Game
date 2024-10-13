@@ -38,7 +38,7 @@ export enum AdventureState {
             {{ selectedAdventure.name }} is completed!</span
           >
           <img
-            src="../../../../../assets/misc/opened_chest.png"
+            src="https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/misc/opened_chest.png"
             [ngStyle]="{
               height: viewportService.getResponsiveSizeChestImg()[1] + 'px',
               width: viewportService.getResponsiveSizeChestImg()[0] + 'px'

@@ -17,7 +17,7 @@
   @if (!!image) {
     <div class="image-container">
       <img
-        [src]="image"
+        [src]="addPrefix(image)"
         class="w-100 h-100 rounded"
         priority
         [width]="width"
@@ -49,7 +49,7 @@
       </span>
       <img
         *ngIf="overlayImage"
-        [src]="overlayImage"
+        [src]="addPrefix(overlayImage)"
         class="overlay-image"
         [style.width]="width + 'px'"
         [style.height]="height + 'px'"

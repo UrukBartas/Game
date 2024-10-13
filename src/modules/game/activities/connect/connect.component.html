@@ -20,7 +20,7 @@
       <ng-container *ngTemplateOutlet="login"></ng-container>
     } @else {
       <div class="connect-wrapper gap-3 align-items-center">
-        <img class="logo" src="assets/login/title-2.png" />
+        <img class="logo" src="{{ prefix + '/assets/login/title-2.png' }}" />
         <button
           type="submit"
           class="btn btn-lg btn-primary save-button"

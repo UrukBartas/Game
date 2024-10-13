@@ -276,7 +276,10 @@
           preview?.price ??
           0 | compressNumber
       }}
-      <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+      <img
+        class="uruks-icon pb-1"
+        src="{{ prefix + '/assets/goldenuruks.png' }}"
+      />
     </p>
     <p *ngIf="action == 'upgrade'" class="text-white" urText>
       Current chance of <span class="text-warning">failing</span>

@@ -9,14 +9,17 @@
       </p>
     </div>
     <p class="h6 d-flex align-items-center gap-1">
-      <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+      <img
+        class="uruks-icon pb-1"
+        src="{{ prefix + '/assets/goldenuruks.png' }}"
+      />
       <span urText class="text-white">{{ cost | number: '1.0-2' }}</span>
     </p>
   </div>
   <div class="row">
     <div class="col-6">
       <img
-        [src]="'../assets/inventory-expand.jpg'"
+        [src]="prefix + '/assets/inventory-expand.jpg'"
         priority
         [width]="getItemBoxSize()"
         [height]="getItemBoxSize()"

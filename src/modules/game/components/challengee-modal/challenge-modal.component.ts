@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { environment } from 'src/environments/environment';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 
 @Component({
@@ -16,4 +17,5 @@ export class ChallengeModalComponent {
   accept: () => void;
   cancel: () => void;
   modalRef = inject(BsModalRef);
+  public prefix = environment.permaLinkImgPref;
 }

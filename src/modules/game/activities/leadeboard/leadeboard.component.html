@@ -56,7 +56,7 @@
       <div class="list-leaderboard-item-left">
         <div class="rank">
           <img
-            [src]="player.image"
+            [src]="prefix+'/'+player.image"
             class="list-leaderboard-item-left-image-ranking"
           />
 
@@ -64,7 +64,7 @@
             @if (!formGroup.value.userOrWallet) {
               @if (index >= 0 && index <= 2 && activePage() == 0) {
                 <img
-                  [src]="getImgBasedOnRanking(index)"
+                  [src]="prefix+'/'+getImgBasedOnRanking(index)"
                   class="list-leaderboard-item-left-image-ranking"
                 />
               } @else {

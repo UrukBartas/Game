@@ -4,7 +4,7 @@
       Price is {{ uruks }}
       <img
         class="navbar-uruks-icon pb-1"
-        src="assets/goldenuruks.png"
+        src="{{ prefix + '/assets/goldenuruks.png' }}"
         style="max-width: 32px"
       />
       Golden uruks
@@ -114,7 +114,7 @@
                         {{ stat?.amount ?? 0 | compressNumber }}
                         <img
                           class="uruks-icon pb-1"
-                          src="assets/goldenuruks.png"
+                          src="{{ prefix + '/assets/goldenuruks.png' }}"
                           style="width: 20px"
                         />
                       </div>
@@ -196,7 +196,10 @@
               }"
             >
               {{ listing.price | compressNumber }}
-              <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+              <img
+                class="uruks-icon pb-1"
+                src="{{ prefix + '/assets/goldenuruks.png' }}"
+              />
             </div>
           </button>
 

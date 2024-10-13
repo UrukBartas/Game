@@ -149,7 +149,7 @@
     <span urText class="text-white text-center">
       {{
         fightResult.completedAdventure
-          ? 'You opened the adventure chest!'
+          ? 'You finished the adventure!'
           : 'Your enemy dropped something.'
       }}
     </span>
@@ -249,50 +249,6 @@
 <div
   class="d-flex flex-column gap-2 overflow-x-hidden result-quest-complete h-100 align-items-center justify-content-center"
 >
-  @if (!!fightResult.completedAdventure && !closedChest) {
-    <div class="focused-screen">
-      <img
-        *ngIf="openedChest == false"
-        data-aos="fade-up"
-        data-aos-duration="2000"
-        class="animate__animated animate__pulse animate__infinite pointer"
-        src="../../../../../assets/misc/closed_chest.png"
-        [ngStyle]="{
-          height: viewportService.getResponsiveSizeChestImg()[1] + 'px',
-          width: viewportService.getResponsiveSizeChestImg()[0] + 'px',
-        }"
-        (click)="openChest()"
-      />
-      <div
-        class="item-wrapper d-flex flex-column align-items-center justify-content-center gap-2"
-        data-aos="fade-left"
-        data-aos-duration="2000"
-        *ngIf="openedChest"
-      >
-        <img
-          data-aos="fade-up"
-          data-aos-duration="2000"
-          src="../../../../../assets/misc/opened_chest.png"
-          [ngStyle]="{
-            height: viewportService.getResponsiveSizeChestImg()[1] + 'px',
-            width: viewportService.getResponsiveSizeChestImg()[0] + 'px',
-          }"
-        />
-        <ng-container *ngTemplateOutlet="lootWonDisplay"></ng-container>
-        <div
-          class="d-flex justify-content-center align-items-center"
-          data-aos="fade-down"
-          data-aos-duration="4000"
-        >
-          <button (click)="closedChest = true" class="btn btn-primary">
-            <i class="fa fa-check px-2 pb-1"></i>Continue
-          </button>
-        </div>
-        <ng-container *ngTemplateOutlet="lootLostDisplay"></ng-container>
-      </div>
-    </div>
-  }
-
   <ng-container *ngIf="fightResult">
     @if (questResultLayout == 'GANKED' && !!fightResult.ganked) {
       <ng-container *ngTemplateOutlet="ganked"></ng-container>

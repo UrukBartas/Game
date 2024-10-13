@@ -6,7 +6,7 @@
   </div>
   <div class="d-flex flex-row pt-2">
     <div class="d-flex align-items-center pb-3">
-      <img [src]="item.imageLocal" priority />
+      <img [src]="prefix+item.imageLocal" priority />
     </div>
     <div class="px-3">
       <div class="description mx-2">
@@ -24,7 +24,10 @@
       *ngIf="item.price && showPrice"
       class="h6 mb-0 d-flex align-items-center gap-1"
     >
-      <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+      <img
+        class="uruks-icon pb-1"
+        src="{{ prefix + '/assets/goldenuruks.png' }}"
+      />
       <span urText class="text-white">{{ item.price | number: '1.0-2' }}</span>
     </p>
     <p *ngIf="souldBound">

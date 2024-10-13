@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, firstValueFrom, map, pipe } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, map } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import {
   AdventureData,
@@ -11,7 +12,6 @@ import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
 import { QuestStatusEnum } from '../quests/enums/quest-status.enum';
 import { QuestRouterModel } from '../quests/models/quest-router.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-adventures',
@@ -28,7 +28,8 @@ export class AdventuresComponent extends TemplatePage {
   public player$ = this.store
     .select(MainState.getState)
     .pipe(map((entry) => entry.player));
-  public activeWallpaper = '../../../../assets/backgrounds/adventures.png';
+  public prefix = environment.permaLinkImgPref;
+  public activeWallpaper = '/assets/backgrounds/adventures.png';
   public questStatusRouter: QuestRouterModel;
   public currentlyDisplayedLayout: 'selector' | 'details' = 'selector';
   constructor() {
@@ -128,7 +129,7 @@ export class AdventuresComponent extends TemplatePage {
     );
   }
 
-  public getViewportSize(){
+  public getViewportSize() {
     return this.viewportService.screenSize;
   }
 

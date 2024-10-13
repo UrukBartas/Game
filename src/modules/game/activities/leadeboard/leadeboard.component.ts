@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { debounceTime, first, map, race, take, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Rarity } from 'src/modules/core/models/items.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
@@ -37,6 +38,7 @@ export class LeadeboardComponent extends TemplatePage {
   public to = signal<Date>(new Date());
   public nameOrWallet = signal('');
   public lastPageSize = 0;
+  public prefix = environment.permaLinkImgPref;
   public getLeaderboard$ = computed(() => {
     return this.playerService
       .getLeaderboard(

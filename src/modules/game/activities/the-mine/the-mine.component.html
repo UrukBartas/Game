@@ -4,7 +4,7 @@
       Quantity is {{ uruks }}
       <img
         class="navbar-uruks-icon pb-1"
-        src="assets/goldenuruks.png"
+        src="{{ prefix + '/assets/goldenuruks.png' }}"
         style="max-width: 32px"
       />
       Golden uruks
@@ -64,7 +64,7 @@
           <div class="uruk-helper">
             <div class="left">
               <img
-                src="/assets/goldenuruks.png"
+                src="{{ prefix + '/assets/goldenuruks.png' }}"
                 alt=""
                 srcset=""
                 style="height: 100px; width: 100px"
@@ -107,7 +107,10 @@
                   }"
                 >
                   {{ selectedUruksToExport | compressNumber }}
-                  <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+                  <img
+                    class="uruks-icon pb-1"
+                    src="{{ prefix + '/assets/goldenuruks.png' }}"
+                  />
                 </div>
               } @else {
                 Switch to the correct chain before staking
@@ -161,7 +164,7 @@
                             {{ request?.amount ?? 0 | number }}
                             <img
                               class="uruks-icon pb-1"
-                              src="assets/goldenuruks.png"
+                              src="{{ prefix + '/assets/goldenuruks.png' }}"
                               style="width: 20px"
                             />
                           </div>

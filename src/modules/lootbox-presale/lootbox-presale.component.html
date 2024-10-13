@@ -17,7 +17,7 @@
                 'glowing-legendary': lootbox.rarity === rarityEnum.LEGENDARY,
                 'glowing-mythic': lootbox.rarity === rarityEnum.MYTHIC,
               }"
-              [src]="lootbox.image"
+              [src]="prefix+lootbox.image"
               class="lootbox-image"
             />
             <span
@@ -50,7 +50,7 @@
         </h2>
         <div class="image-gallery">
           <div *ngFor="let imageUrl of getImageUrls()" class="image-item">
-            <img [src]="imageUrl" alt="Lootbox Image" class="lootbox-image" />
+            <img [src]="prefix+imageUrl" alt="Lootbox Image" class="lootbox-image" />
           </div>
         </div>
         <div class="drop-list pt-4">

@@ -5,6 +5,7 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
 import { camelCase } from 'lodash-es';
 import { map } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
 import {
@@ -74,6 +75,7 @@ export class ItemTooltipComponent {
   public ceil = Math.ceil;
   public nonPorcentualStatsLength = 0;
   private store = inject(Store);
+  public prefix = environment.permaLinkImgPref;
 
   public player$ = this.store
     .select(MainState.getState)

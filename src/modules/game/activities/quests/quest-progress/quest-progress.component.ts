@@ -8,6 +8,7 @@ import {
 import { Title } from '@angular/platform-browser';
 import { Store } from '@ngxs/store';
 import { filter, take } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { ViewportService } from 'src/services/viewport.service';
@@ -29,7 +30,7 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
   time: string;
   interval;
   questStarted = false;
-
+  public prefix = environment.permaLinkImgPref;
   constructor(
     public viewportService: ViewportService,
     private store: Store,

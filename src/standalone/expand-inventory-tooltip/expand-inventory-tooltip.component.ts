@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import { Rarity } from 'src/modules/core/models/items.model';
 import { getRarityColor, getRarityText } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
@@ -15,7 +16,7 @@ export class ExpandInventoryTooltipComponent {
   public getRarityColor = getRarityColor;
   public getRarityText = getRarityText;
   public viewportService = inject(ViewportService);
-
+  public prefix = environment.permaLinkImgPref;
   @Input() currentLevelInventory = 4;
   @Input() cost = 100;
 

@@ -1,7 +1,7 @@
 <div *ngIf="fight" id="fight-container" class="container-fluid h-100">
   <div
     class="background-image"
-    [style.background-image]="'url(' + fightBackgroundImage + ')'"
+    [style.background-image]="'url(' + prefix + fightBackgroundImage + ')'"
   ></div>
 
   <ng-container *ngIf="!victory && !defeat && fight">
@@ -19,11 +19,11 @@
         class="col-12 col-sm-6 fighter-container player-container animate__animated animate__backInLeft"
       >
         <img
-          [src]="player.image"
+          [src]="prefix + '/'+player.image"
           [ngbTooltip]="playerStats"
           [tooltipContext]="{
             player: playerBaseStats,
-            playerName: player.name
+            playerName: player.name,
           }"
           class="player-image shadow"
           [style.animation]="playerAnimation"
@@ -40,7 +40,7 @@
           style="right: 5vw"
           urTitle
           [ngClass]="{
-            'crit-text': getTurn().enemyTurn.action === 'crit'
+            'crit-text': getTurn().enemyTurn.action === 'crit',
           }"
           class="text-white animate__animated animate__fadeInUp position-absolute z-2"
           >-{{ getTurn().enemyTurn.damage }}</span
@@ -95,7 +95,7 @@
           <div
             class="progress-bar progress-bar-timer progress-bar-animated shadow"
             [ngClass]="{
-              'progress-bar-timer-ready': awaitingOpponent
+              'progress-bar-timer-ready': awaitingOpponent,
             }"
             role="progressbar"
             aria-valuemin="0"
@@ -108,7 +108,7 @@
         <ng-container
           [ngTemplateOutlet]="statusBar"
           [ngTemplateOutletContext]="{
-            fighterStatus: playerCurrentStats
+            fighterStatus: playerCurrentStats,
           }"
         >
         </ng-container>
@@ -128,18 +128,18 @@
           style="left: 5vw"
           urTitle
           [ngClass]="{
-            'crit-text': getTurn().playerTurn.action === 'crit'
+            'crit-text': getTurn().playerTurn.action === 'crit',
           }"
           class="text-white animate__animated animate__fadeInUp position-absolute z-2"
           >-{{ getTurn().playerTurn.damage }}</span
         >
         <div class="enemy-image-container">
           <img
-            [src]="enemy.image"
+            [src]="prefix + '/'+ enemy.image"
             [ngbTooltip]="playerStats"
             [tooltipContext]="{
               player: fight.baseStats.enemy,
-              playerName: enemy.name
+              playerName: enemy.name,
             }"
             class="enemy-image shadow"
             [style.animation]="enemyAnimation"
@@ -200,7 +200,7 @@
           <div
             class="progress-bar progress-bar-timer progress-bar-animated shadow"
             [ngClass]="{
-              'progress-bar-timer-ready': awaitingPlayer && showEnemyStatus
+              'progress-bar-timer-ready': awaitingPlayer && showEnemyStatus,
             }"
             role="progressbar"
             aria-valuemin="0"
@@ -216,7 +216,7 @@
         <ng-container
           [ngTemplateOutlet]="statusBar"
           [ngTemplateOutletContext]="{
-            fighterStatus: enemyCurrentStats
+            fighterStatus: enemyCurrentStats,
           }"
         >
         </ng-container>
@@ -263,8 +263,11 @@
   </ng-container>
 
   <div *ngIf="victory" class="finish-quest-screen">
-    <img class="player-image" [src]="player.image" />
-    <img class="finish-quest-bg" src="assets/fight-screens/victory.png" />
+    <img class="player-image" [src]="prefix + '/' + player.image" />
+    <img
+      class="finish-quest-bg"
+      src="{{ prefix + '/assets/fight-screens/victory.png' }}"
+    />
   </div>
   <div *ngIf="defeat" class="finish-quest-screen">
     <div class="h1 defeat-title text-white">DEFEAT ☠️</div>
