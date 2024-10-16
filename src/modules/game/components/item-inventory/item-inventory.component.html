@@ -1,6 +1,8 @@
 <app-inventory-topbar
   [(inventory)]="items"
   [(searchTerm)]="searchTerm"
+  [activeFilterByItemTypes]="true"
+  [(filteredItemTypes)]="filteredItemTypes"
 ></app-inventory-topbar>
 <div class="item-inventory" *ngIf="items">
   <div class="box-wrapper" *ngFor="let item of filteredItems">

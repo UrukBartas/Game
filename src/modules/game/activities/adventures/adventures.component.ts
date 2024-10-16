@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, firstValueFrom, map } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, interval, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import {
@@ -36,14 +36,18 @@ export class AdventuresComponent extends TemplatePage {
     super();
     this.refreshAdventures();
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    interval(1000).subscribe((data) =>
+      console.log(this.currentlyDisplayedLayout)
+    );
+  }
 
   public selectAdventure(adventure: AdventureData) {
     this.selectedAdventure = adventure;
     this.activeWallpaper = this.selectedAdventure.image;
     this.getActiveWallpaperFromQuest();
     setTimeout(() => {
-      if (this.viewportService.screenSize == 'xs') {
+      if (!!['xs', 'md'].includes(this.viewportService.screenSize)) {
         this.currentlyDisplayedLayout = 'details';
       }
     }, 0);
@@ -122,9 +126,9 @@ export class AdventuresComponent extends TemplatePage {
   }
 
   public shouldDisplayDetails() {
-    if (this.viewportService.screenSize != 'xs') return true;
+    if (!['xs', 'md'].includes(this.viewportService.screenSize)) return true;
     return (
-      this.viewportService.screenSize == 'xs' &&
+      ['xs', 'md'].includes(this.viewportService.screenSize) &&
       this.currentlyDisplayedLayout == 'details'
     );
   }
@@ -134,9 +138,9 @@ export class AdventuresComponent extends TemplatePage {
   }
 
   public shouldDisplaySelector() {
-    if (this.viewportService.screenSize != 'xs') return true;
+    if (!['xs', 'md'].includes(this.viewportService.screenSize)) return true;
     return (
-      this.viewportService.screenSize == 'xs' &&
+      ['xs', 'md'].includes(this.viewportService.screenSize) &&
       this.currentlyDisplayedLayout == 'selector'
     );
   }

@@ -69,6 +69,7 @@
                   [player]="player"
                   [simplified]="simplified"
                   [cappedStats]="cappedStats"
+                  [hoveredItemStats]="combinedPlayerHoveredItem$ | async"
                 ></app-generic-stats>
               </div>
               <div class="col-12 col-xxl-6">
@@ -77,6 +78,7 @@
                   [simplified]="simplified"
                   [perStatItems]="perStatItems"
                   [cappedPerStats]="cappedPerStats"
+                  [hoveredItemStats]="combinedPlayerHoveredItem$ | async"
                 >
                 </app-percent-stats>
               </div>

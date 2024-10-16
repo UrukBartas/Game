@@ -3,8 +3,55 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { debounceTime, filter, map } from 'rxjs';
-import { Item, Rarity } from 'src/modules/core/models/items.model';
+import { ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { MainState } from 'src/store/main.store';
+const itemFilterTypes = [
+  {
+    id: 1,
+    image: '/assets/icons/crested-helmet.png',
+    type: [ItemType.HELMET],
+  },
+  {
+    id: 2,
+    image: '/assets/icons/chest-armor.png',
+    type: [ItemType.CHEST],
+  },
+  {
+    id: 3,
+    image: '/assets/icons/gauntlet.png',
+    type: [ItemType.GLOVES],
+  },
+  {
+    id: 4,
+    image: '/assets/icons/armored-pants.png',
+    type: [ItemType.TROUSERS],
+  },
+  {
+    id: 5,
+    image: '/assets/icons/diamond-hilt.png',
+    type: [ItemType.Weapon1H, ItemType.Weapon2H],
+  },
+  {
+    id: 6,
+    image: '/assets/icons/templar-shield.png',
+    type: [ItemType.SHIELD],
+  },
+  {
+    id: 7,
+    image: '/assets/icons/sandal.png',
+    type: [ItemType.BOOTS],
+  },
+  {
+    id: 8,
+    image: '/assets/icons/ring.png',
+    type: [ItemType.RING],
+  },
+  {
+    id: 9,
+    image: '/assets/icons/old-lantern.png',
+    type: [ItemType.CHARM],
+  },
+];
 
 @Component({
   selector: 'app-inventory-topbar',
@@ -12,9 +59,24 @@ import { MainState } from 'src/store/main.store';
   styleUrl: './inventory-topbar.component.scss',
 })
 export class InventoryTopbarComponent {
+  public activeItemFilterType = null;
+  public itemFilterTypes = itemFilterTypes;
+  @Input() filteredItemTypes: Array<ItemType> = [];
+  @Output() filteredItemTypesChange = new EventEmitter<Array<ItemType>>();
   @Input() disableSort = false;
+  @Input() activeFilterByItemTypes = false;
   @Input() public set inventory(data: Array<any>) {
     this._inventory = this.sortInventory(data);
+  }
+
+  public applyItemFilterType(itemFilterType: { type: ItemType[] }) {
+    if (this.activeItemFilterType == itemFilterType) {
+      this.activeItemFilterType = null;
+      this.filteredItemTypesChange.emit([]);
+    } else {
+      this.activeItemFilterType = itemFilterType;
+      this.filteredItemTypesChange.emit(this.activeItemFilterType.type);
+    }
   }
 
   public get inventory() {
@@ -76,7 +138,8 @@ export class InventoryTopbarComponent {
         let dataB = b.itemData ?? b.materialData ?? b.consumableData;
         if (!data?.rarity || !dataB?.rarity) comparison = 0;
         comparison =
-          rarityOrder.indexOf(data?.rarity) - rarityOrder.indexOf(dataB?.rarity);
+          rarityOrder.indexOf(data?.rarity) -
+          rarityOrder.indexOf(dataB?.rarity);
       }
       return this.sortOrderUp ? comparison : -comparison;
     });
