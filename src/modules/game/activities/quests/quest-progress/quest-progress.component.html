@@ -4,7 +4,7 @@
     alt="Quest Image"
     class="active-quest"
   />
-  <div *ngIf="!questReady" class="progress-bar-container">
+  <div *ngIf="questTimerService.time() !== 'Ready'" class="progress-bar-container">
     <h3 urTitle class="text-third">
       {{ quest.data.name }}
     </h3>
@@ -15,17 +15,19 @@
       class="progress position-relative"
       [style.height]="getProgressBarHeight() + 'px'"
     >
-      <span class="timer position-absolute">{{ time }}</span>
+      <span class="timer position-absolute">{{
+        questTimerService.time()
+      }}</span>
       <div
         class="progress-bar progress-bar-striped progress-bar-animated shadow"
         role="progressbar"
         aria-valuemin="0"
         aria-valuemax="100"
-        [style.width]="percentage + '%'"
+        [style.width]="questTimerService.percentage() + '%'"
       ></div>
     </div>
   </div>
-  <div *ngIf="questReady">
+  <div *ngIf="questTimerService.time() === 'Ready'">
     <button
       (click)="startQuest()"
       urTitle

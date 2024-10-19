@@ -100,10 +100,20 @@
           >
             {{ notifications$ | async }}
           </div>
+          <div
+            *ngIf="questTimerService.time() as questInProgress"
+            class="notifications notification-quest-in-progress"
+          >
+            @if (questInProgress === 'Ready') {
+              ⚔️
+            } @else {
+              ⌛
+            }
+          </div>
         </div>
 
         <ul class="dropdown-menu">
-          <li class="player-info text-white pt-2">
+          <li class="player-info text-white pt-2 mb-2">
             <app-item-box
               class="rounded"
               [height]="getPlayerImageSize() * 2"
@@ -113,6 +123,15 @@
             </app-item-box>
             Level {{ player.level }}
           </li>
+          <li (click)="router.navigateByUrl('/quests')">
+            <a class="dropdown-item px-2 py-1">
+              <div class="d-flex align-items-center">
+                <div class="icon fa-sword mr-1"></div>
+                <span>{{ questTimerService.time() ?? 'Quests' }}</span>
+              </div>
+            </a>
+          </li>
+          <hr />
           <li (click)="openInbox()" class="position-relative">
             <a class="dropdown-item">
               <div>

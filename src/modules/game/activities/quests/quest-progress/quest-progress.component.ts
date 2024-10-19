@@ -1,16 +1,10 @@
-import {
-  Component,
-  EventEmitter,
-  NgZone,
-  OnDestroy,
-  Output,
-} from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { filter, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { QuestModel } from 'src/modules/core/models/quest.model';
+import { QuestTimerService } from 'src/services/quest-timer.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
@@ -21,21 +15,15 @@ import { QuestRouterModel } from '../models/quest-router.model';
   templateUrl: './quest-progress.component.html',
   styleUrl: './quest-progress.component.scss',
 })
-export class QuestProgressComponent extends TemplatePage implements OnDestroy {
+export class QuestProgressComponent extends TemplatePage {
   @Output() questStatusChange = new EventEmitter<QuestRouterModel>();
-
+  questTimerService = inject(QuestTimerService);
   quest: QuestModel;
-  questReady = false;
-  percentage: number;
-  time: string;
-  interval;
   questStarted = false;
   public prefix = environment.permaLinkImgPref;
   constructor(
     public viewportService: ViewportService,
-    private store: Store,
-    private ngZone: NgZone,
-    private title: Title
+    private store: Store
   ) {
     super();
   }
@@ -49,75 +37,15 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
       )
       .subscribe((state) => {
         this.quest = state.quests.find((quest) => quest.startedAt !== null);
-        if (this.quest) {
-          this.setQuestTimer();
-        }
       });
   }
 
   startQuest() {
     this.questStarted = true;
-    setTimeout(() => {
-      this.title.setTitle('Fight!');
-    }, 1000);
     this.questStatusChange.emit({
       data: this.quest,
       status: QuestStatusEnum.FIGHT,
     });
-  }
-
-  changeTitleRecursiveQuestIsReady(): void {
-    if (!this.questReady || this.questStarted) return;
-    this.title.setTitle('Quest Ready!');
-    setTimeout(() => {
-      this.title.setTitle('Battle Incoming!');
-      setTimeout(() => {
-        this.changeTitleRecursiveQuestIsReady();
-      }, 1000);
-    }, 1000);
-  }
-
-  setQuestTimer() {
-    this.interval = setInterval(() => {
-      if (!this.quest) {
-        clearInterval(this.interval);
-        return;
-      }
-      const startedAt = new Date(this.quest.startedAt);
-      const finishedAt = new Date(this.quest.finishedAt);
-      //finishedAt.setMinutes(finishedAt.getMinutes() - 9999);
-      const currentDate = new Date();
-
-      if (currentDate > finishedAt) {
-        clearInterval(this.interval);
-        this.ngZone.run(() => {
-          this.questReady = true;
-          this.changeTitleRecursiveQuestIsReady();
-        });
-      }
-
-      const totalTimeSpanMillis = finishedAt.getTime() - startedAt.getTime();
-      const totalTimeDifferenceMillis =
-        totalTimeSpanMillis - (currentDate.getTime() - startedAt.getTime());
-      const timeDifferenceMillis = currentDate.getTime() - startedAt.getTime();
-
-      const hours: number = Math.floor(totalTimeDifferenceMillis / 3600000);
-      const minutes: number = Math.floor(
-        (totalTimeDifferenceMillis % 3600000) / 60000
-      );
-      const seconds: number = Math.floor(
-        (totalTimeDifferenceMillis % 60000) / 1000
-      );
-
-      const formattedTime = `${String(hours).padStart(2, '0')}:${String(
-        minutes
-      ).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-      this.title.setTitle(`${this.time} - ${this.quest.data.name}`);
-      this.ngZone.run(() => {
-        this.time = formattedTime;
-        this.percentage = (timeDifferenceMillis / totalTimeSpanMillis) * 100;
-      });
-    }, 100);
   }
 
   getProgressBarHeight() {
@@ -163,10 +91,5 @@ export class QuestProgressComponent extends TemplatePage implements OnDestroy {
       default:
         return '3.25rem';
     }
-  }
-
-  ngOnDestroy(): void {
-    clearInterval(this.interval);
-    this.questReady = false;
   }
 }
