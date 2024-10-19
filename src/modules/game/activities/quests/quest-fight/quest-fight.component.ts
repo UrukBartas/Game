@@ -96,18 +96,6 @@ export class QuestFightComponent extends BaseFightComponent implements OnInit {
   }
 
   getBackground(): string {
-    switch (this.quest.data.rarity) {
-      case Rarity.COMMON:
-      default:
-        return '/assets/backgrounds/field.png';
-      case Rarity.UNCOMMON:
-        return '/assets/backgrounds/city.png';
-      case Rarity.EPIC:
-        return '/assets/backgrounds/arena.png';
-      case Rarity.LEGENDARY:
-        return '/assets/backgrounds/palace.png';
-      case Rarity.MYTHIC:
-        return '/assets/backgrounds/palace.png';
-    }
+    return this.quest.data.backgroundImage;
   }
 }

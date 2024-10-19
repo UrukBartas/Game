@@ -2,6 +2,7 @@
 @import 'node_modules/bootstrap/scss/functions';
 @import 'node_modules/bootstrap/scss/variables';
 @import 'node_modules/bootstrap/scss/mixins';
+
 .wrapper {
   height: 100%;
   width: 100%;
@@ -23,7 +24,7 @@
 
   .bg {
     background-color: $black;
-    background-image: url('../../../../../assets/backgrounds/field.png');
+    background-image: url('../../../../../assets/backgrounds/field.webp');
     background-size: cover;
     background-repeat: no-repeat;
     filter: blur(5px);
