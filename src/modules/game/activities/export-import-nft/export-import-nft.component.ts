@@ -26,6 +26,7 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Consumable } from 'src/modules/core/models/consumable.model';
 import { Item } from 'src/modules/core/models/items.model';
@@ -65,7 +66,7 @@ export class ExportImportNftComponent extends TemplatePage {
   stack = inject(StackPipe);
   ERC20ContractService = inject(ERC20ContractService);
   NFTContractService = inject(NFTContractService);
-
+  public prefix = environment.permaLinkImgPref;
   public activeNetworkId = new BehaviorSubject<number>(0);
   public activeCorrectNetwork = this.activeNetworkId.pipe(
     filter((entry) => !!entry)

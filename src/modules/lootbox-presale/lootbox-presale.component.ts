@@ -19,7 +19,8 @@ import { ethers } from 'ethers';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import * as party from 'party-js';
-import { finalize, from, takeWhile } from 'rxjs';
+import { finalize, from } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import {
   LootboxPresaleTypeEnum,
   PresaleContractService,
@@ -79,7 +80,7 @@ export class LootboxPresaleComponent implements AfterViewInit {
   toastService = inject(ToastrService);
   getRarityColor = getRarityColor;
   lootboxItemDropRateByRarity = lootboxItemDropsByRarity;
-
+  public prefix = environment.permaLinkImgPref;
   async ngAfterViewInit(): Promise<void> {
     this.threeService.initialize(
       this.threeContainer,

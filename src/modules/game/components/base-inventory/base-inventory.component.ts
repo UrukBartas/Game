@@ -10,6 +10,7 @@ export class BaseInventoryComponent {
   @Input() boxSize: number = 40;
 
   public searchTerm = '';
+  public filteredItemTypes = []
   @Input() selectedItems: any[] = [];
   @Output() selectedItemsChange = new EventEmitter<Array<any>>();
 

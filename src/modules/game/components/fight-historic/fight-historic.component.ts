@@ -1,5 +1,6 @@
 import { Component, inject, Input } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { PvPFightService } from 'src/services/pvp-fight.service';
@@ -16,7 +17,7 @@ export class FightHistoricComponent extends TemplatePage {
   currentPage: number = 0;
   pageSize: number = 10;
   playerId: string;
-
+  public prefix = environment.permaLinkImgPref;
   @Input() set player(player: PlayerModel) {
     if (player) {
       this.playerId = player.id;

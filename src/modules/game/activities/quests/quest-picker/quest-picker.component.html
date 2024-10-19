@@ -9,7 +9,7 @@
         "
         [style.background]="!!adventure ? 'transparent' : 'none'"
         [style.background-image]="
-          !adventure ? 'url(' + quest.data.image + ')' : 'none'
+          !adventure ? 'url(' + prefix + quest.data.image + ')' : 'none'
         "
         [class.active]="i === activeSlideIndex()"
       >
@@ -92,28 +92,50 @@
         </div>
       </div>
     </div>
-    <div class="button-container">
-      <button
-        urTitle
-        [disabled]="!!adventure ? !isCurrentQuestTheNextPhase() : false"
-        class="{{
-          !!adventure && !isCurrentQuestTheNextPhase()
-            ? 'button-rainbow-disabled'
-            : 'button-rainbow'
-        }}"
-        [style.fontSize]="getResponsiveButtonFontSize()"
-      >
-        <span (click)="startQuest()">
-          {{
-            !!adventure
-              ? isCurrentQuestTheNextPhase()
-                ? 'START PHASE'
-                : 'NOT AVAILABLE'
-              : 'START QUEST'
-          }}
-        </span>
-        <i (click)="questRoll()" *ngIf="!adventure" class="fa fa-rotate"></i>
-      </button>
+    <div class="button-container w-100">
+      @if (!!adventure) {
+        @if (isCurrentQuestTheNextPhase()) {
+          <button
+            urTitle
+            class="button-rainbow"
+            [style.fontSize]="getResponsiveButtonFontSize()"
+          >
+            <span (click)="startQuest()"> START PHASE </span>
+            <i
+              (click)="questRoll()"
+              *ngIf="!adventure"
+              class="fa fa-rotate"
+            ></i>
+          </button>
+        } @else if (!isCurrentQuestNonActive()) {
+          <button
+            urTitle
+            class="button-rainbow-disabled"
+            [disabled]="true"
+            [style.fontSize]="getResponsiveButtonFontSize()"
+          >
+            <span> NOT AVAILABLE </span>
+          </button>
+        } @else {
+          <button
+            class="btn btn-primary button-rainbow-disabled"
+            urText
+            (click)="unstuckPhase()"
+          >
+            Unstuck phase
+            <i class="fa fa-rotate"></i>
+          </button>
+        }
+      } @else {
+        <button
+          urTitle
+          class="button-rainbow"
+          [style.fontSize]="getResponsiveButtonFontSize()"
+        >
+          <span (click)="startQuest()"> START QUEST </span>
+          <i (click)="questRoll()" *ngIf="!adventure" class="fa fa-rotate"></i>
+        </button>
+      }
     </div>
     <a (click)="previousSlide()" class="carousel-control-prev" role="button">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>

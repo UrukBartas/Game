@@ -1,10 +1,11 @@
+import { DecimalPipe } from '@angular/common';
 import { Component, TemplateRef, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable, map } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { PlayerModel } from 'src/modules/core/models/player.model';
-import { QuestModel } from 'src/modules/core/models/quest.model';
 import { calculateXPForLevel } from 'src/modules/utils';
 import { AuthService } from 'src/services/auth.service';
 import { PlayerService } from 'src/services/player.service';
@@ -30,6 +31,7 @@ export class GameLayoutComponent {
   public getActiveRoute = () => {
     return this.routesNavigation.find((entry) => entry.path == this.router.url);
   };
+  public prefix = environment.permaLinkImgPref;
   public routesNavigation: any[] = [
     {
       path: '/inventory',
@@ -84,6 +86,7 @@ export class GameLayoutComponent {
   public store = inject(Store);
   public modalService = inject(BsModalService);
   public questTimerService = inject(QuestTimerService);
+  public decimalPipe = inject(DecimalPipe);
   public displayingFullScreenModal = false;
   public modalRef?: BsModalRef;
   public loggedWithemail = this.authService.loggedWithEmail;
@@ -134,7 +137,7 @@ export class GameLayoutComponent {
   getProgressBarData(player: PlayerModel) {
     const totalExp = calculateXPForLevel(player.level);
     return {
-      text: `${player.experience}/${totalExp}`,
+      text: `${this.decimalPipe.transform(player.experience)}/${this.decimalPipe.transform(totalExp)}`,
       percent: (player.experience / totalExp) * 100,
     };
   }

@@ -95,6 +95,7 @@
         <div tooltip class="tooltip-uruk">
           <app-generic-item-tooltip
             [item]="previewMaterial.material"
+            [souldBound]="previewMaterial.souldBound"
           ></app-generic-item-tooltip>
         </div>
       </app-item-box>
@@ -113,6 +114,7 @@
             <div tooltip class="tooltip-uruk">
               <app-generic-item-tooltip
                 [item]="material.material"
+                [souldBound]="material.souldBound"
               ></app-generic-item-tooltip>
             </div>
           </app-item-box>
@@ -168,6 +170,7 @@
           <div tooltip class="tooltip-uruk">
             <app-generic-item-tooltip
               [item]="enchant.miscellanyItemData"
+              [souldBound]="enchant.souldBound"
             ></app-generic-item-tooltip>
           </div>
         </app-item-box>
@@ -203,6 +206,7 @@
               <div tooltip class="tooltip-uruk">
                 <app-generic-item-tooltip
                   [item]="material.material"
+                  [souldBound]="material.souldBound"
                 ></app-generic-item-tooltip>
               </div>
             </app-item-box>
@@ -272,7 +276,10 @@
           preview?.price ??
           0 | compressNumber
       }}
-      <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+      <img
+        class="uruks-icon pb-1"
+        src="{{ prefix + '/assets/goldenuruks.png' }}"
+      />
     </p>
     <p *ngIf="action == 'upgrade'" class="text-white" urText>
       Current chance of <span class="text-warning">failing</span>

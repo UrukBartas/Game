@@ -15,7 +15,7 @@
           [class.selected]="form.value.image === image"
           (click)="form.patchValue({ image })"
         >
-          <img [src]="image" class="character-image" />
+          <img [src]="prefix + '/'+image" class="character-image" />
 
           <div class="check-icon" *ngIf="form.value.image === image">
             <i class="fa fa-check-circle"></i>
@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group col-12">
       <label for="characterName" class="text-third">Character Name:</label>
       <input
         type="text"
@@ -37,7 +37,7 @@
       />
     </div>
 
-    <div class="form-group">
+    <div class="form-group col-12">
       <label for="email" class="text-third">Email:</label>
       <input
         type="email"
@@ -48,10 +48,13 @@
         placeholder="Enter email"
         validInput
       />
+      <small *ngIf="!editing" class="form-text text-secondary">
+        Email used to receive in-game notifications.
+      </small>
     </div>
 
     <div class="row">
-      <div class="form-group col-12 col-md-6">
+      <div class="form-group col-12 col-md-6 pb-3">
         <label for="password" class="text-third">Password:</label>
         <input
           type="password"
@@ -73,6 +76,12 @@
           name="repeatPassword"
           placeholder="Repeat password"
         />
+      </div>
+      <div class="col-12" *ngIf="!editing">
+        <small class="form-text text-secondary">
+          Password is necessary if you want to log in with Web2 (without Web3
+          wallet).
+        </small>
       </div>
     </div>
 
@@ -96,56 +105,6 @@
         character.</span
       >
     </div>
-
-    <div class="description pt-3" *ngIf="!!editing">
-      <span urText>Settings</span>
-    </div>
-
-    <div class="col-12 col-sm-6" *ngIf="!!editing">
-      <div class="form-check form-switch">
-        <input
-          formControlName="disablePVP"
-          class="form-check-input"
-          type="checkbox"
-          role="switch"
-          id="flexSwitchCheckDefault"
-        />
-        <label class="form-check-label" for="flexSwitchCheckDefault"
-          >Disable PVP notifications</label
-        >
-      </div>
-    </div>
-
-    <div class="col-12 col-sm-6" *ngIf="!!editing">
-      <div class="form-check form-switch">
-        <input
-          formControlName="disableSound"
-          class="form-check-input"
-          type="checkbox"
-          role="switch"
-          id="flexSwitchCheckDefault"
-        />
-        <label class="form-check-label" for="flexSwitchCheckDefault"
-          >Disable sound effects</label
-        >
-      </div>
-    </div>
-
-    <div class="col-12 col-sm-6" *ngIf="!!editing">
-      <div class="form-check form-switch">
-        <input
-          formControlName="ignoreMine"
-          class="form-check-input"
-          type="checkbox"
-          role="switch"
-          id="flexSwitchCheckDefault"
-        />
-        <label class="form-check-label" for="flexSwitchCheckDefault"
-          >Disable mine notifications</label
-        >
-      </div>
-    </div>
-
     <div class="form-group py-3 action-buttons gap-2">
       <button (click)="location.back()" class="btn btn-dark btn-lg">
         Back
@@ -158,11 +117,57 @@
         Save
       </button>
     </div>
-  </div>
+    <div class="description pt-3" *ngIf="!!editing">
+      <span urText>Settings</span>
+    </div>
 
-  <div class="row justify-content-center align-items-center" *ngIf="!!editing">
     <div class="row">
-      <div class="col-12 col-sm-6">
+      <div class="col-12 col-sm-6 py-2" *ngIf="!!editing">
+        <div class="form-check form-switch">
+          <input
+            formControlName="disablePVP"
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="flexSwitchCheckDefault"
+          />
+          <label class="form-check-label" for="flexSwitchCheckDefault"
+            >Disable PVP notifications</label
+          >
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 py-2" *ngIf="!!editing">
+        <div class="form-check form-switch">
+          <input
+            formControlName="disableSound"
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="flexSwitchCheckDefault"
+          />
+          <label class="form-check-label" for="flexSwitchCheckDefault"
+            >Disable sound effects</label
+          >
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 py-2" *ngIf="!!editing">
+        <div class="form-check form-switch">
+          <input
+            formControlName="ignoreMine"
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="flexSwitchCheckDefault"
+          />
+          <label class="form-check-label" for="flexSwitchCheckDefault"
+            >Disable mine notifications</label
+          >
+        </div>
+      </div>
+
+      <div class="col-12 col-sm-6 py-2" *ngIf="!!editing">
         @if (!userHasLinkedAddress()) {
           <a
             class="btn btn-lg btn-primary save-button w-100"
@@ -181,7 +186,7 @@
           >
         }
       </div>
-      <div class="col-12 col-sm-6">
+      <div class="col-12 col-sm-6 py-2">
         <a
           type="submit"
           class="btn btn-lg btn-primary save-button w-100"
@@ -193,17 +198,6 @@
           <i class="fa-brands fa-github pl-2 text-white"></i>
         </a>
       </div>
-      <!-- <div class="col-12 col-sm-6">
-        <button
-          type="submit"
-          class="btn btn-lg btn-primary save-button w-100"
-          [disabled]="pushNotificationsService.grantedPermission"
-          (click)="pushNotificationsService.autoGetToken()"
-        >
-          Receive notifications
-          <i class="fa-solid fa-bell pl-2"></i>
-        </button>
-      </div> -->
     </div>
   </div>
 </div>

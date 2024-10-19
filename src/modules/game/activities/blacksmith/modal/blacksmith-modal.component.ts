@@ -4,6 +4,7 @@ import { Store } from '@ngxs/store';
 import { camelCase } from 'lodash';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { firstValueFrom, of, take } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { Item, Rarity } from 'src/modules/core/models/items.model';
 import { Material, MaterialData } from 'src/modules/core/models/material.model';
 import { getRarityColor } from 'src/modules/utils';
@@ -32,6 +33,8 @@ export class BlacksmithModalComponent implements OnInit {
   public getRarityColor = getRarityColor;
   public camelCase = camelCase;
   public objectKeys = Object.keys;
+
+  public prefix = environment.permaLinkImgPref;
 
   public getItemImageBasedOnRarity = (rarity: Rarity | any) => {
     switch (rarity) {

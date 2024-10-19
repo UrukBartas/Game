@@ -1,6 +1,7 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { filter, take } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { QuestTimerService } from 'src/services/quest-timer.service';
@@ -19,7 +20,7 @@ export class QuestProgressComponent extends TemplatePage {
   questTimerService = inject(QuestTimerService);
   quest: QuestModel;
   questStarted = false;
-
+  public prefix = environment.permaLinkImgPref;
   constructor(
     public viewportService: ViewportService,
     private store: Store

@@ -12,6 +12,7 @@ import { Store } from '@ngxs/store';
 import { getAccount } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, firstValueFrom, map, of, take } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { PlayerConfiguration } from 'src/modules/core/models/player.model';
 import { truncateEthereumAddress } from 'src/modules/utils';
@@ -63,7 +64,7 @@ export class EditCharacterComponent extends TemplatePage {
     'assets/free-portraits/blacksmith-f.webp',
   ];
   images$ = of(this.staticImages);
-
+  public prefix = environment.permaLinkImgPref;
   editing = false;
   form: FormGroup;
   truncateAddress = truncateEthereumAddress;

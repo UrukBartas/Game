@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 import { ItemTypeSC } from 'src/modules/game/activities/export-import-nft/enums/ItemTypesSC';
@@ -9,6 +9,7 @@ import { ItemTypeSC } from 'src/modules/game/activities/export-import-nft/enums/
   providedIn: 'root',
 })
 export class ItemService extends ApiBaseService {
+  public hoveredItem$: BehaviorSubject<Item> = new BehaviorSubject(null);
   constructor(private http: HttpClient) {
     super(http);
     this.controllerPrefix = '/item';

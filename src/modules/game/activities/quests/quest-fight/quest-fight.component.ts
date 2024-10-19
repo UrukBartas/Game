@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angula
 import { Store } from '@ngxs/store';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { take } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { BaseFightComponent } from 'src/modules/core/components/base-fight.component';
 import {
   FighterTurnModel,
@@ -28,6 +29,7 @@ export class QuestFightComponent extends BaseFightComponent implements OnInit {
     .quests.find((quest) => quest.startedAt !== null);
   fightBackgroundImage = this.getBackground();
   player: PlayerModel = this.store.selectSnapshot(MainState.getState).player;
+  public prefix = environment.permaLinkImgPref;
 
   constructor(
     store: Store,

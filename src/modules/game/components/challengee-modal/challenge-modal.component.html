@@ -2,7 +2,7 @@
   <ng-container *ngIf="!awaiting && !challengeResult">
     <div class="row d-flex flex-column align-items-center pb-4">
       <div class="challenger-container">
-        <img class="challenger-image" [src]="player.image" />
+        <img class="challenger-image" [src]="prefix + '/' + player.image" />
         <div class="icon fa-sword"></div>
       </div>
 

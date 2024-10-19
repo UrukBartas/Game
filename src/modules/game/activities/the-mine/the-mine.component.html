@@ -4,7 +4,7 @@
       Quantity is {{ uruks }}
       <img
         class="navbar-uruks-icon pb-1"
-        src="assets/goldenuruks.png"
+        src="{{ prefix + '/assets/goldenuruks.png' }}"
         style="max-width: 32px"
       />
       Golden uruks
@@ -64,7 +64,7 @@
           <div class="uruk-helper">
             <div class="left">
               <img
-                src="/assets/goldenuruks.png"
+                src="{{ prefix + '/assets/goldenuruks.png' }}"
                 alt=""
                 srcset=""
                 style="height: 100px; width: 100px"
@@ -107,28 +107,15 @@
                   }"
                 >
                   {{ selectedUruksToExport | compressNumber }}
-                  <img class="uruks-icon pb-1" src="assets/goldenuruks.png" />
+                  <img
+                    class="uruks-icon pb-1"
+                    src="{{ prefix + '/assets/goldenuruks.png' }}"
+                  />
                 </div>
               } @else {
                 Switch to the correct chain before staking
               }
             </button>
-            <div
-              class="secondary-actions d-flex align-items-center justify-content-end gap-3 text-center"
-            >
-              <span
-                class="text-third pointer d-block text-center py-2"
-                (click)="subphase = 1"
-              >
-                Pending unstakes</span
-              >
-              <span
-                class="text-third pointer d-block text-center py-2"
-                (click)="phase = 0"
-              >
-                Go back</span
-              >
-            </div>
           </div>
         </div>
 
@@ -177,13 +164,17 @@
                             {{ request?.amount ?? 0 | number }}
                             <img
                               class="uruks-icon pb-1"
-                              src="assets/goldenuruks.png"
+                              src="{{ prefix + '/assets/goldenuruks.png' }}"
                               style="width: 20px"
                             />
                           </div>
                         </td>
                         <td urSubtext>
-                          {{ request?.remainingTime | timeAgo }}
+                          @if (request.remainingTime < today) {
+                            Claimable!
+                          } @else {
+                            Claimable in {{ request?.remainingTime | timeAgo }}
+                          }
                         </td>
                       </tr>
                     </ng-container>
@@ -192,20 +183,12 @@
               </div>
             </ng-container></ng-container
           >
-          <div class="secondary-actions d-block text-center">
-            <span
-              class="text-third pointer d-block text-center py-2"
-              (click)="subphase = 0"
-            >
-              Go back</span
-            >
-          </div>
         </div>
       }
 
       <ng-template #currentTierTemplate let-activeTier="activeTier">
         <div
-          class="current-tier text-white d-flex gap-3 flex-column px-1 px-md-4"
+          class="current-tier text-white d-flex gap-3 flex-column px-1 px-md-4 uruk-card"
         >
           <div
             class="tier-image d-flex justify-content-center align-items-center"
@@ -249,50 +232,121 @@
             }}</strong>
           </div>
           @if (tier) {
-            You will earn
-            <strong class="text-third">x{{ tier.matFactor }}</strong> materials
-            per hour. Your goblin workers have a
-            <strong class="text-third">
-              {{ tier.lootboxChance * 100 | number: '1.2-2' }}%
-            </strong>
-            chance to find a treasure in the mine.
-            <br />
-            Additionally, you will receive a
-            <strong class="text-third"
-              >{{ tier.expBoost * 100 | number: '1.0-2' }}%</strong
-            >
-            experience boost and a
-            <strong class="text-third"
-              >{{ tier.uruksBoost * 100 | number: '1.0-2' }}%</strong
-            >
-            Golden Uruks boost per hour.
+            @if (isBigScreen()) {
+              You will earn
+              <strong class="text-third">x{{ tier.matFactor }}</strong>
+              materials per hour. Your goblin workers have a
+              <strong class="text-third">
+                {{ tier.lootboxChance * 100 | number: '1.2-2' }}%
+              </strong>
+              chance to find a treasure in the mine.
+              <br />
+              Additionally, you will receive a
+              <strong class="text-third"
+                >{{ tier.expBoost * 100 | number: '1.0-2' }}%</strong
+              >
+              experience boost and a
+              <strong class="text-third"
+                >{{ tier.uruksBoost * 100 | number: '1.0-2' }}%</strong
+              >
+              Golden Uruks boost per hour.
+              <br />
+              Furthermore, your quest and adventure travel time will be reduced
+              by
+              <strong class="text-third"
+                >{{ tier.travelBoost * 100 | number: '1.0-2' }}%</strong
+              >.
+            } @else {
+              Earn
+              <strong class="text-third">x{{ tier.matFactor }}</strong>
+              materials,
+              <strong class="text-third"
+                >{{ tier.lootboxChance * 100 | number: '1.2-2' }}%</strong
+              >
+              treasure chance,
+              <strong class="text-third"
+                >{{ tier.expBoost * 100 | number: '1.0-2' }}%</strong
+              >
+              XP boost, and
+              <strong class="text-third"
+                >{{ tier.uruksBoost * 100 | number: '1.0-2' }}%</strong
+              >
+              Golden Uruks boost.
+              <br />
+              Travel time reduced by
+              <strong class="text-third"
+                >{{ tier.travelBoost * 100 | number: '1.0-2' }}%</strong
+              >.
+            }
           } @else {
-            You do not have any goblin workers working for you at this moment.
-            Buy those goblins now and make them work! And earn up to
-            <strong class="text-third"
-              >x{{ getHighestTier()?.matFactor ?? 0 }}</strong
-            >
-            materials per hour. Your goblin workers have a
-            <strong class="text-third">
-              {{
-                (getHighestTier()?.lootboxChance ?? 0) * 100 | number: '1.2-2'
-              }}%
-            </strong>
-            chance to find a treasure in the mine.
-            <br />
-            You can also get a
-            <strong class="text-third"
-              >{{
-                (getHighestTier()?.expBoost ?? 0) * 100 | number: '1.0-2'
-              }}%</strong
-            >
-            experience boost and a
-            <strong class="text-third"
-              >{{
-                (getHighestTier()?.uruksBoost ?? 0) * 100 | number: '1.0-2'
-              }}%</strong
-            >
-            Golden Uruks boost per hour.
+            @if (isBigScreen()) {
+              You do not have any goblin workers working for you at this moment.
+              Buy those goblins now and make them work! You can earn up to
+              <strong class="text-third"
+                >x{{ getHighestTier()?.matFactor ?? 0 }}</strong
+              >
+              materials per hour. Your goblin workers will have a
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.lootboxChance ?? 0) * 100
+                    | number: '1.2-2'
+                }}%</strong
+              >
+              chance to find a treasure in the mine.
+              <br />
+              You can also get a
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.expBoost ?? 0) * 100 | number: '1.0-2'
+                }}%</strong
+              >
+              experience boost and a
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.uruksBoost ?? 0) * 100 | number: '1.0-2'
+                }}%</strong
+              >
+              Golden Uruks boost per hour.
+              <br />
+              And finally, reduce your quest and adventure travel time by up to
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.travelBoost ?? 0) * 100 | number: '1.0-2'
+                }}%</strong
+              >.
+            } @else {
+              No goblins are working. Buy them now for up to
+              <strong class="text-third"
+                >x{{ getHighestTier()?.matFactor ?? 0 }}</strong
+              >
+              materials,
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.lootboxChance ?? 0) * 100
+                    | number: '1.2-2'
+                }}%</strong
+              >
+              treasure chance,
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.expBoost ?? 0) * 100 | number: '1.0-2'
+                }}%</strong
+              >
+              XP boost, and
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.uruksBoost ?? 0) * 100 | number: '1.0-2'
+                }}%</strong
+              >
+              Golden Uruks boost.
+              <br />
+              Travel time reduced by
+              <strong class="text-third"
+                >{{
+                  (getHighestTier()?.travelBoost ?? 0) * 100 | number: '1.0-2'
+                }}%</strong
+              >.
+            }
           }
           <button
             type="button"
@@ -306,8 +360,24 @@
       </ng-template>
 
       <div class="px-1 px-md-5" style="height: 60px">
-        <div class="col-12 d-flex align-items-end justify-content-end">
-          <div class="remove-circle mb-5">
+        <div
+          class="col-12 d-flex align-items-end justify-content-end gap-2 my-3 mb-5"
+        >
+          <div class="remove-circle 5" *ngIf="phase == 1">
+            <i
+              (click)="phase = 0; subphase = 0"
+              urSubtitle
+              class="fa-solid fa-arrow-left text-third pointer"
+            ></i>
+          </div>
+          <div class="remove-circle">
+            <i
+              (click)="phase = 1; subphase = 1"
+              urSubtitle
+              class="fa-solid fa-clock-rotate-left text-third pointer"
+            ></i>
+          </div>
+          <div class="remove-circle">
             <i
               (click)="removeStaked()"
               *ngIf="!!(stakeInfo | async)"

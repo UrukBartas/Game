@@ -1,4 +1,3 @@
-import { Location } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -22,6 +21,7 @@ import {
   takeWhile,
   tap,
 } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { BaseFightComponent } from 'src/modules/core/components/base-fight.component';
 import {
   FighterTurnModel,
@@ -61,7 +61,7 @@ export class PvPFightComponent
   showEnemyStatus = true;
   turnTimer = 0;
   private timerSubject = new BehaviorSubject<void>(null);
-
+  public prefix = environment.permaLinkImgPref;
   constructor(
     store: Store,
     viewportService: ViewportService,

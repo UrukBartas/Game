@@ -5,6 +5,7 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
 import { camelCase } from 'lodash-es';
 import { map } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
 import {
@@ -33,7 +34,7 @@ export const avoidableStats = [
   'item_rarity_stat',
   'canBeUpgraded',
 ];
-const mapPercentLabels = {
+export const mapPercentLabels = {
   per_health: 'total health',
   per_damage: 'total damage',
   per_armor: 'total armor',
@@ -45,9 +46,58 @@ const mapPercentLabels = {
   per_accuracy: 'total accuracy',
   per_penetration: 'total penetration',
 };
+export const mapTotalPercentLabels = {
+  totalPerHealth: 'per_health',
+  totalPerDamage: 'per_damage',
+  totalPerArmor: 'per_armor',
+  totalPerSpeed: 'per_speed',
+  totalPerEnergy: 'per_energy',
+  totalPerDodge: 'per_dodge',
+  totalPerCrit: 'per_crit',
+  totalPerBlock: 'per_block',
+  totalPerAccuracy: 'per_accuracy',
+  totalPerPenetration: 'per_penetration',
+};
 const mapTypeOfWeapon = {
   Weapon1H: 'One handed',
   Weapon2H: 'Two handed',
+};
+
+export const getLoopableStatsKeys = (item: Item): Array<string[]> => {
+  if (!item) return [];
+
+  let keys = Object.keys(item).filter(
+    (entry) =>
+      !avoidableStats.find(
+        (entryInner) => entryInner.toLowerCase() == entry.toLowerCase()
+      ) &&
+      !!item[entry] &&
+      (item[entry] > 0 || !!entry.startsWith('per_'))
+  );
+
+  let nonPercentualStats = keys.filter((key) => !key.startsWith('per_')).sort();
+  const percentualStats = keys.filter((key) => key.startsWith('per_')).sort();
+
+  if (nonPercentualStats.includes('damage')) {
+    nonPercentualStats = [
+      'damage',
+      ...nonPercentualStats.filter((key) => key !== 'damage'),
+    ];
+  }
+  return [nonPercentualStats, percentualStats];
+};
+
+export const getPercentage = (key: string) => {
+  return [
+    'dodge',
+    'accuracy',
+    'block',
+    'crit',
+    'penetration',
+    ...Object.keys(mapPercentLabels),
+  ].includes(key)
+    ? '%'
+    : '';
 };
 @Component({
   selector: 'app-item-tooltip',
@@ -74,6 +124,7 @@ export class ItemTooltipComponent {
   public ceil = Math.ceil;
   public nonPorcentualStatsLength = 0;
   private store = inject(Store);
+  public prefix = environment.permaLinkImgPref;
 
   public player$ = this.store
     .select(MainState.getState)
@@ -83,29 +134,9 @@ export class ItemTooltipComponent {
     this.route?.snapshot?.url[0]?.path?.includes('view-player');
 
   public getLoopableStatsKeys(): Array<string> {
-    if (!this.item) return [];
-
-    let keys = Object.keys(this.item).filter(
-      (entry) =>
-        !avoidableStats.find(
-          (entryInner) => entryInner.toLowerCase() == entry.toLowerCase()
-        ) &&
-        !!this.item[entry] &&
-        (this.item[entry] > 0 || !!entry.startsWith('per_'))
+    const [nonPercentualStats, percentualStats] = getLoopableStatsKeys(
+      this.item
     );
-
-    let nonPercentualStats = keys
-      .filter((key) => !key.startsWith('per_'))
-      .sort();
-    const percentualStats = keys.filter((key) => key.startsWith('per_')).sort();
-
-    if (nonPercentualStats.includes('damage')) {
-      nonPercentualStats = [
-        'damage',
-        ...nonPercentualStats.filter((key) => key !== 'damage'),
-      ];
-    }
-
     this.nonPorcentualStatsLength = nonPercentualStats.length;
     return [...nonPercentualStats, ...percentualStats];
   }
@@ -126,15 +157,6 @@ export class ItemTooltipComponent {
   };
 
   public getPercentage(key: string) {
-    return [
-      'dodge',
-      'accuracy',
-      'block',
-      'crit',
-      'penetration',
-      ...Object.keys(mapPercentLabels),
-    ].includes(key)
-      ? '%'
-      : '';
+    return getPercentage(key);
   }
 }

@@ -31,6 +31,7 @@ import { TextSizeDirective } from '../core/directives/text-size.directive';
 import { TitleSizeDirective } from '../core/directives/title-size.directive';
 import { ValidInputDirective } from '../core/directives/valid-input.directive';
 import { CapitalizeFirstPipe } from '../core/pipes/capitalize-first.pipe';
+import { CompareItemPipe } from '../core/pipes/compare-item.pipe';
 import { CompressNumberPipe } from '../core/pipes/compress-number.pipe';
 import { ItemdataToItemPipe } from '../core/pipes/itemdata-to-item.pipe';
 import { OrderByPipe } from '../core/pipes/order-by.pipe';
@@ -119,6 +120,7 @@ const pipes = [
   StackPipe,
   CompressNumberPipe,
   TimeAgoPipe,
+  CompareItemPipe
 ];
 
 @NgModule({
@@ -175,6 +177,6 @@ const pipes = [
     TheMineInfoModalComponent,
   ],
   exports: [GameLayoutComponent],
-  providers: [DecimalPipe, AsyncPipe, StackPipe],
+  providers: [DecimalPipe, AsyncPipe, StackPipe,...pipes],
 })
 export class GameModule {}

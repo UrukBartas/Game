@@ -13,6 +13,8 @@ import { QuestService } from 'src/services/quest.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { SetQuests } from 'src/store/main.store';
 import { QuestRouterModel } from '../quests/models/quest-router.model';
+import { environment } from 'src/environments/environment';
+
 export enum AdventureState {
   NON_STARTED,
   STARTED,
@@ -38,7 +40,7 @@ export enum AdventureState {
             {{ selectedAdventure.name }} is completed!</span
           >
           <img
-            src="../../../../../assets/misc/opened_chest.png"
+            [src]="imagePrefix + '/assets/misc/opened_chest.png'"
             [ngStyle]="{
               height: viewportService.getResponsiveSizeChestImg()[1] + 'px',
               width: viewportService.getResponsiveSizeChestImg()[0] + 'px'
@@ -65,6 +67,7 @@ export class AdventuresRouterComponent extends TemplatePage {
   questService = inject(QuestService);
   store = inject(Store);
   viewportService = inject(ViewportService);
+  imagePrefix = environment.permaLinkImgPref;
 
   @Input() public set selectedAdventure(data: AdventureData) {
     this._selectedAdventure = cloneDeep(data);

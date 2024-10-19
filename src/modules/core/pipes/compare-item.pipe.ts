@@ -7,8 +7,14 @@ import { Item } from '../models/items.model';
 })
 export class CompareItemPipe implements PipeTransform {
   transform(baseItem: Item, compareWithItem: Item, stat: string): string {
-    const baseStat = baseItem[stat] || 0;
-    const compareStat = compareWithItem[stat] || 0;
+    let baseStat = 0;
+    if (!!baseItem && baseItem[stat]) {
+      baseStat = baseItem[stat];
+    }
+    let compareStat = 0;
+    if (!!compareWithItem && !!compareWithItem[stat]) {
+      compareStat = compareWithItem[stat];
+    }
 
     let difference = baseStat - compareStat;
 

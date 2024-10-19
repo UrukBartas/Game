@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, TemplateRef } from '@angular/core';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from 'src/environments/environment';
 import { CompressNumberPipe } from 'src/modules/core/pipes/compress-number.pipe';
 
 @Component({
@@ -15,6 +16,7 @@ export class TierizedProgressBarComponent {
   @Input() tiers: { start: number; end: number; image?: string }[] = [];
 
   @Input() tooltipTemplate: TemplateRef<any>;
+  public prefix = environment.permaLinkImgPref;
 
   // Calcula el progreso dentro de un tier específico
   getTierProgress(tier: { start: number; end: number }): number {

@@ -24,7 +24,7 @@
 
   .bg {
     background-color: $black;
-    background-image: url('../../../../../assets/backgrounds/field.webp');
+    background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/backgrounds/field.png');
     background-size: cover;
     background-repeat: no-repeat;
     filter: blur(5px);
@@ -48,7 +48,7 @@
   box-shadow: -1px 1px 19px 10px rgba(72, 255, 0, 0.56);
 
   .bg-uruk {
-    background-image: url('../../../../../assets/goldenuruks.png');
+    background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/goldenuruks.png');
     background-repeat: no-repeat;
     position: absolute;
     width: 100%;

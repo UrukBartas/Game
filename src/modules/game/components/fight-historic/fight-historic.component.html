@@ -6,7 +6,7 @@
         class="historic-element d-flex flex-row py-2 align-items-center"
       >
         <div class="player-info d-flex flex-row align-items-center gap-2">
-          <img [src]="match.player.image" class="player-img" />
+          <img [src]="prefix + '/' + match.player.image" class="player-img" />
           <span urSubtext class="player-name text-white">{{
             match.player.name
           }}</span>
@@ -15,7 +15,7 @@
           match.win ? 'Win' : 'Lose'
         }}</span>
         <div class="opponent-info d-flex flex-row align-items-center gap-2">
-          <img [src]="match.opponent.image" class="opponent-img" />
+          <img [src]="prefix + '/' +match.opponent.image" class="opponent-img" />
           <span urSubtext class="opponent-name text-white">{{
             match.opponent.name
           }}</span>

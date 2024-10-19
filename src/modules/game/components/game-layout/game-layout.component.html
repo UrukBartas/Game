@@ -1,10 +1,17 @@
 <div class="wrapper">
   <div
-    class="d-none d-sm-flex flex-column flex-shrink-0 p-3 bg-secondary sidebar sidebar-lateral {{
+    class="d-none {{
+      !!(state$ | async).player ? 'd-sm-flex' : ''
+    }} flex-column flex-shrink-0 p-3 bg-secondary sidebar sidebar-lateral {{
       isSidebarOpened() ? 'collapsed' : ''
     }}"
   >
-    <img class="logo" src="./assets/white-uruk.png" alt="" srcset="" />
+    <img
+      class="logo"
+      src="{{ prefix + '/assets/white-uruk.png' }}"
+      alt=""
+      srcset=""
+    />
 
     <ng-container
       *ngTemplateOutlet="
@@ -31,7 +38,10 @@
           <p>Total amount</p>
           <p urText>
             {{ uruks }}
-            <img class="navbar-uruks-icon pb-1" src="assets/goldenuruks.png" />
+            <img
+              class="navbar-uruks-icon pb-1"
+              src="{{ prefix + '/assets/goldenuruks.png' }}"
+            />
             Golden uruks
           </p>
         </div>
@@ -44,7 +54,10 @@
           uruks: player.uruks,
         }"
       >
-        <img class="navbar-uruks-icon pb-1" src="assets/goldenuruks.png" />
+        <img
+          class="navbar-uruks-icon pb-1"
+          src="{{ prefix + '/assets/goldenuruks.png' }}"
+        />
         <span urText class="text-white">{{
           player.uruks | compressNumber
         }}</span>
@@ -78,7 +91,7 @@
             class="rounded"
             [height]="getPlayerImageSize()"
             [width]="getPlayerImageSize()"
-            [image]="player.image"
+            [image]="'/' + player.image"
           >
           </app-item-box>
           <div
@@ -105,7 +118,7 @@
               class="rounded"
               [height]="getPlayerImageSize() * 2"
               [width]="getPlayerImageSize() * 2"
-              [image]="player.image"
+              [image]="'/' + player.image"
             >
             </app-item-box>
             Level {{ player.level }}

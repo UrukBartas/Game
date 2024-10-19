@@ -3,6 +3,7 @@ export interface Consumable {
   consumableDataId: string;
   id: number;
   playerId: string;
+  souldBound: boolean;
 }
 
 export interface ConsumableData {
@@ -14,6 +15,7 @@ export interface ConsumableData {
   premium: boolean;
   consumableType: ConsumableType;
   price?: number;
+  souldBoundByDefault: boolean;
 }
 
 export enum ConsumableType {

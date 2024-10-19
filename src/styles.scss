@@ -476,9 +476,6 @@ app-auction-house {
 }
 
 .simplified-table-body {
-  // display: flex;
-  // flex-wrap: wrap;
-  // justify-content: space-between;
   font-size: 12px;
   td {
     padding: 5px 5px;
@@ -491,4 +488,26 @@ app-balance-selector {
 
 .uruks-icon {
   max-width: 40px;
+}
+
+.uruk-card {
+  background-color: $dark;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.value {
+  color: $third;
+}
+.negative {
+  color: $red !important;
+}
+.neutral {
+  color: inherit !important;
+}
+
+.value,
+.negative,
+.neutral {
+  font-size: 12px;
 }

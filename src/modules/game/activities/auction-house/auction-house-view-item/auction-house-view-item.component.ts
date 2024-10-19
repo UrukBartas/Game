@@ -4,6 +4,7 @@ import { Store } from '@ngxs/store';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { filter, firstValueFrom, map, of } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { MarketListing } from 'src/modules/core/models/market-listing.model';
 import { getGenericItemItemData } from 'src/modules/utils';
 import { AuctionHouseService } from 'src/services/auction-house.service';
@@ -23,6 +24,7 @@ export class AuctionHouseViewItemComponent {
   public get listing() {
     return this._listing;
   }
+  public prefix = environment.permaLinkImgPref;
   public getBids$ = of([]);
   private _listing: MarketListing;
   viewportService = inject(ViewportService);

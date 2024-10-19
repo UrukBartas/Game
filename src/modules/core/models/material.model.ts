@@ -1,4 +1,4 @@
-import { Rarity } from "./items.model";
+import { Rarity } from './items.model';
 
 export interface Material {
   id: number;
@@ -6,6 +6,7 @@ export interface Material {
   quantity: number;
   materialData: MaterialData;
   materialDataId: string;
+  souldBound: boolean;
 }
 
 export interface MaterialData {
@@ -16,4 +17,5 @@ export interface MaterialData {
   description: string;
   rarity: Rarity;
   price?: number;
+  souldBoundByDefault: boolean;
 }

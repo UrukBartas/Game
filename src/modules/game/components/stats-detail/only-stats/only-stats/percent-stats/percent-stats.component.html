@@ -14,7 +14,13 @@
         *ngFor="let perStat of perStatItems"
       >
         <td class="flex justify-content-start">
-          {{ perStat.label }} %
+          <img
+            class="uruk-filter"
+            src="{{ prefix + perStat.icon }}"
+            alt=""
+            srcset=""
+          />
+          %
           <i
             class="fa-solid fa-circle-info text-third fa-sm px-1"
             [ngbTooltip]="statExplanation"
@@ -30,7 +36,29 @@
             }"
           >
             {{ player.perStats[perStat.key] | number: '1.0-2' }}%
-          </span>
+            <span
+              *ngIf="
+                !!hoveredItemStats &&
+                !!hoveredItemStats[mapTotalPercentLabels[perStat.key]]
+              "
+              class="value"
+              [ngClass]="{
+                negative:
+                  hoveredItemStats[mapTotalPercentLabels[perStat.key]].charAt(
+                    0
+                  ) == '-',
+                neutral:
+                  hoveredItemStats[mapTotalPercentLabels[perStat.key]].charAt(
+                    0
+                  ) == '0',
+              }"
+            >
+              {{
+                hoveredItemStats[mapTotalPercentLabels[perStat.key]] +
+                  getPercentage(perStat.key)
+              }}</span
+            ></span
+          >
         </td>
         <td *ngIf="!simplified">
           <span *ngIf="cappedPerStats[perStat.key]" class="max-value">

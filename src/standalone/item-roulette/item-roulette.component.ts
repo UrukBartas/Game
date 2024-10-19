@@ -8,6 +8,7 @@ import {
   inject,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
+import { environment } from 'src/environments/environment';
 import { Item } from 'src/modules/core/models/items.model';
 import { getGenericItemItemData } from 'src/modules/utils';
 import { SoundService } from 'src/services/sound.service';
@@ -36,7 +37,7 @@ export class ItemRouletteComponent {
   interval: any;
   store = inject(Store);
   sound = inject(SoundService);
-
+ public prefix = environment.permaLinkImgPref;
   @Output() spinEnded = new EventEmitter<void>();
   public spinRunning = false;
 

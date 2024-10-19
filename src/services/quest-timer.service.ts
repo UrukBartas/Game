@@ -24,7 +24,7 @@ export class QuestTimerService {
   }
 
   private checkStartedQuests(quests: QuestModel[]): void {
-    const startedQuest = quests.find((quest) => quest.startedAt);
+    const startedQuest = quests?.find((quest) => quest.startedAt);
     if (startedQuest) {
       this.startTimer(startedQuest);
     } else {

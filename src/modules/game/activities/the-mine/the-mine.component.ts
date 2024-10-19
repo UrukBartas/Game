@@ -17,6 +17,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { getRarityColor } from 'src/modules/utils';
 import { ERC20ContractService } from 'src/services/contracts/erc20-contract.service';
@@ -51,6 +52,7 @@ export class TheMineComponent extends TemplatePage {
   public tiers: Array<any> = [];
   public stakeType: 'in-game' | 'wallet' = 'wallet';
   public CONTRACT_IMAGE = 'assets/materials/15.webp';
+  public prefix = environment.permaLinkImgPref;
   store = inject(Store);
   walletService = inject(WalletService);
   spinnerService = inject(NgxSpinnerService);
@@ -95,7 +97,6 @@ export class TheMineComponent extends TemplatePage {
         this.ERC20ContractService.getStakeInfo(getAccount().address)
       ).pipe(
         catchError((err) => {
-          console.error(err);
           return err;
         }),
         map((entry: any) => {
@@ -103,7 +104,14 @@ export class TheMineComponent extends TemplatePage {
           return {
             amountStaked: Number(ethers.formatEther(amountStaked.toString())),
             timeStaked: timeStaked.toString(),
-            requests: [],
+            requests: (requests ?? []).map((entry) => {
+              const requestTime = Number(entry.requestTime.toString()) * 1000;
+              const additionalDays = 18 * 86400000; // 18 días en milisegundos TODO CONECTARLO AL SC
+              return {
+                amount: Number(ethers.formatEther(entry.amount.toString())),
+                remainingTime: new Date(requestTime + additionalDays), // Sumar 18 días
+              };
+            }),
           };
         })
       );

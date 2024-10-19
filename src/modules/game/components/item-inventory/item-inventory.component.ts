@@ -1,12 +1,14 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngxs/store';
 import { Item, ItemType } from 'src/modules/core/models/items.model';
 import { fillInventoryBasedOnPlayerSockets } from 'src/modules/utils';
 import { ContextMenuService } from 'src/services/context-menu.service';
+import { ItemService } from 'src/services/item.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { BaseInventoryComponent } from '../base-inventory/base-inventory.component';
-import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngxs/store';
 import { MainState } from 'src/store/main.store';
+import { BaseInventoryComponent } from '../base-inventory/base-inventory.component';
 
 @Component({
   selector: 'app-item-inventory',
@@ -31,6 +33,7 @@ export class ItemInventoryComponent extends BaseInventoryComponent {
   contextMenuService = inject(ContextMenuService);
   private route = inject(ActivatedRoute);
   private store = inject(Store);
+  private itemService = inject(ItemService);
   @Output() onDestroyItem = new EventEmitter<Item>();
   public itemType = ItemType;
   public isInInventory =
@@ -40,11 +43,15 @@ export class ItemInventoryComponent extends BaseInventoryComponent {
   public get filteredItems() {
     return fillInventoryBasedOnPlayerSockets(
       this.items
-        .filter((item) =>
-          item?.itemData?.name
-            .toLowerCase()
-            .includes(this.searchTerm.toLowerCase())
-        )
+        .filter((item) => {
+          return (
+            item?.itemData?.name
+              .toLowerCase()
+              .includes(this.searchTerm.toLowerCase()) &&
+            (this.filteredItemTypes.includes(item?.itemData?.itemType) ||
+              this.filteredItemTypes.length == 0)
+          );
+        })
         .sort(),
       this.sockets
     );
@@ -65,4 +72,11 @@ export class ItemInventoryComponent extends BaseInventoryComponent {
   }
 
   public filterByName() {}
+
+  constructor() {
+    super();
+    this.onHover
+      .pipe(takeUntilDestroyed())
+      .subscribe((data) => this.itemService.hoveredItem$.next(data));
+  }
 }

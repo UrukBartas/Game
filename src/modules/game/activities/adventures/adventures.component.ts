@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, firstValueFrom, map, pipe } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, interval, map } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import {
   AdventureData,
@@ -11,7 +12,6 @@ import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
 import { QuestStatusEnum } from '../quests/enums/quest-status.enum';
 import { QuestRouterModel } from '../quests/models/quest-router.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-adventures',
@@ -28,21 +28,26 @@ export class AdventuresComponent extends TemplatePage {
   public player$ = this.store
     .select(MainState.getState)
     .pipe(map((entry) => entry.player));
-  public activeWallpaper = '../../../../assets/backgrounds/adventures.png';
+  public prefix = environment.permaLinkImgPref;
+  public activeWallpaper = '/assets/backgrounds/adventures.png';
   public questStatusRouter: QuestRouterModel;
   public currentlyDisplayedLayout: 'selector' | 'details' = 'selector';
   constructor() {
     super();
     this.refreshAdventures();
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    interval(1000).subscribe((data) =>
+      console.log(this.currentlyDisplayedLayout)
+    );
+  }
 
   public selectAdventure(adventure: AdventureData) {
     this.selectedAdventure = adventure;
     this.activeWallpaper = this.selectedAdventure.image;
     this.getActiveWallpaperFromQuest();
     setTimeout(() => {
-      if (this.viewportService.screenSize == 'xs') {
+      if (!!['xs', 'md'].includes(this.viewportService.screenSize)) {
         this.currentlyDisplayedLayout = 'details';
       }
     }, 0);
@@ -121,21 +126,21 @@ export class AdventuresComponent extends TemplatePage {
   }
 
   public shouldDisplayDetails() {
-    if (this.viewportService.screenSize != 'xs') return true;
+    if (!['xs', 'md'].includes(this.viewportService.screenSize)) return true;
     return (
-      this.viewportService.screenSize == 'xs' &&
+      ['xs', 'md'].includes(this.viewportService.screenSize) &&
       this.currentlyDisplayedLayout == 'details'
     );
   }
 
-  public getViewportSize(){
+  public getViewportSize() {
     return this.viewportService.screenSize;
   }
 
   public shouldDisplaySelector() {
-    if (this.viewportService.screenSize != 'xs') return true;
+    if (!['xs', 'md'].includes(this.viewportService.screenSize)) return true;
     return (
-      this.viewportService.screenSize == 'xs' &&
+      ['xs', 'md'].includes(this.viewportService.screenSize) &&
       this.currentlyDisplayedLayout == 'selector'
     );
   }

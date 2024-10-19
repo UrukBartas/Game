@@ -21,7 +21,7 @@
             <i class="fa fa-gift px-2"></i>
           }
           @if (notification.titleImage) {
-            <img class="notification-image" [src]="notification.titleImage" />
+            <img class="notification-image" [src]="prefix+notification.titleImage" />
           }
           <div class="notification-text px-2 d-flex flex-column">
             <div class="d-flex justify-content-between">

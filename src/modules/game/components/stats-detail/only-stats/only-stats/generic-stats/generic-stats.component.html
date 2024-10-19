@@ -14,7 +14,7 @@
       </tr>
       <tr [ngClass]="{ 'col-6': simplified }" *ngFor="let stat of statItems">
         <td>
-          {{ stat.label }}
+          <img src="{{ prefix + stat.icon }}" alt="" srcset="" />
           <i
             class="fa-solid fa-circle-info text-third fa-sm px-1"
             [ngbTooltip]="statExplanation"
@@ -24,6 +24,16 @@
         <td>
           {{ player.stats[stat.key] | number: '1.0-2' }}
           {{ stat.suffix ? stat.suffix : '' }}
+          <span
+            *ngIf="!!hoveredItemStats && !!hoveredItemStats[stat.key]"
+            class="value"
+            [ngClass]="{
+              negative: hoveredItemStats[stat.key].charAt(0) == '-',
+              neutral: hoveredItemStats[stat.key].charAt(0) == '0',
+            }"
+          >
+            {{ hoveredItemStats[stat.key] + getPercentage(stat.key) }}</span
+          >
         </td>
         <td *ngIf="!simplified">
           @if (cappedStats[stat.key]) {
@@ -50,7 +60,7 @@
             ) {
               <img
                 class="navbar-uruks-icon"
-                src="assets/goldenuruks.png"
+                src="{{ prefix + '/assets/goldenuruks.png' }}"
                 style="max-width: 20px"
               /><i
                 class="fa-solid fa-circle-up text-third pointer fa-md"

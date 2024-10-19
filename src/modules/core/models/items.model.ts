@@ -28,6 +28,7 @@ export interface Item {
   slotEquipped?: ItemType;
 
   canBeUpgraded?: boolean;
+  souldBound: boolean;
 }
 
 export enum DamageType {
@@ -54,6 +55,7 @@ export interface ItemData {
   trait?: Trait | null;
   description: string;
   items: Item[];
+  souldBoundByDefault: boolean;
 }
 
 export enum ItemType {
