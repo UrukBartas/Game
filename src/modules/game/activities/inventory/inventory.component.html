@@ -189,8 +189,12 @@
     </carousel>
   </div>
   <div class="col-12 col-md-6 equipped order-0 order-sm-1">
-    <div class="description">
+    <div class="description align-items-center">
       <p urTitle>Character</p>
+      <span class="text-light" (click)="isViewingPlayer ? false : openTitleSelector()"
+        >{{ (actualPlayer$ | async).title ?? 'The untitled' }}
+        <i class="fa-solid fa-arrow-right-arrow-left" *ngIf="!isViewingPlayer"></i
+      ></span>
       <button
         (click)="router.navigateByUrl('/leaderboard')"
         class="btn btn-primary"
@@ -200,11 +204,46 @@
         <i class="fa-solid fa-arrow-left"></i> Back
       </button>
     </div>
-    <div class="position-relative d-flex justify-content-center">
-      <div class="items-equipped-bg">
+    <div
+      class="position-relative d-flex justify-content-center"
+      *ngIf="actualPlayer$ | async as player"
+    >
+      <div
+        class="expandable-container"
+        [ngClass]="{ expanded: containerExpanded }"
+      >
+        <div class="p-3" *ngIf="containerExpanded">
+          <i
+            class="fa-solid fa-circle-xmark close-option"
+            (click)="containerExpanded = false"
+          ></i>
+          <p class="text-secondary">Available silhouettes</p>
+          <div class="container-silhouettes gap-3 p-2">
+            @for (silhouette of siluettes$ | async; track silhouette) {
+              <app-item-box
+                (click)="activateSilhouette(silhouette.id)"
+                [height]="getEquippedItemBoxSize()"
+                [width]="getEquippedItemBoxSize() * 0.9"
+                [image]="silhouette.imageLocal"
+                [rarity]="silhouette.rarity"
+                [active]="player.activeSilhouette == silhouette.imageLocal"
+              ></app-item-box>
+            }
+          </div>
+        </div>
+      </div>
+      <div
+        class="items-equipped-bg"
+        [ngStyle]="{
+          'background-image':
+            'url(https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/' +
+            player.activeSilhouette +
+            ')',
+        }"
+      >
         <div class="boosts">
           <app-item-box
-            *ngFor="let boost of (actualPlayer$ | async)?.boosts ?? []"
+            *ngFor="let boost of player?.boosts ?? []"
             [height]="getEquippedItemBoxSize() / 3"
             [width]="getEquippedItemBoxSize() / 3"
             [image]="boost.boostData.imageLocal"
@@ -313,6 +352,12 @@
               </app-item-box>
             </div>
           }
+        </div>
+        <div
+          class="change-siluette" *ngIf="!isViewingPlayer"
+          (click)="containerExpanded = !containerExpanded"
+        >
+          <i class="fa-solid fa-arrow-right-arrow-left"></i>
         </div>
       </div>
 

@@ -6,6 +6,7 @@ import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PlayerModel } from 'src/modules/core/models/player.model';
+import { CompressNumberPipe } from 'src/modules/core/pipes/compress-number.pipe';
 import { calculateXPForLevel } from 'src/modules/utils';
 import { AuthService } from 'src/services/auth.service';
 import { PlayerService } from 'src/services/player.service';
@@ -87,6 +88,7 @@ export class GameLayoutComponent {
   public modalService = inject(BsModalService);
   public questTimerService = inject(QuestTimerService);
   public decimalPipe = inject(DecimalPipe);
+  public compressNumber = inject(CompressNumberPipe);
   public displayingFullScreenModal = false;
   public modalRef?: BsModalRef;
   public loggedWithemail = this.authService.loggedWithEmail;
@@ -137,7 +139,7 @@ export class GameLayoutComponent {
   getProgressBarData(player: PlayerModel) {
     const totalExp = calculateXPForLevel(player.level);
     return {
-      text: `${this.decimalPipe.transform(player.experience)}/${this.decimalPipe.transform(totalExp)}`,
+      text: `${this.compressNumber.transform(player.experience)}/${this.compressNumber.transform(totalExp)}`,
       percent: (player.experience / totalExp) * 100,
     };
   }

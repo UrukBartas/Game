@@ -18,6 +18,7 @@ export class ItemBoxComponent {
   @Input() width = 30;
   @Input() item: any;
   @Input() image: string = null;
+  @Input() text: string = null;
   @Input() active = false;
   @Input() displayTooltip = true;
   @Input() stack: any = 0;
