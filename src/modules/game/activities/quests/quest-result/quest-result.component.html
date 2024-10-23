@@ -200,7 +200,7 @@
       class="text-danger text-center pb-2 animate__animated animate__pulse animate__infinite"
       >You were ganked by the
       <strong>
-        {{ fightResult.ganked }}
+        {{ invertedMapNames[fightResult.ganked] }}
       </strong>
       during your last quest.
     </span>
@@ -210,7 +210,7 @@
       [height]="getItemBoxSize() * 2"
       [width]="getItemBoxSize() * 2"
       [image]="
-        '/assets/enemies/gankers/' + lowerCaseFn(fightResult.ganked) + '.png'
+        '/assets/enemies/gankers/' + lowerCaseFn(fightResult.ganked) + '.webp'
       "
     >
       <div tooltip class="tooltip-uruk">

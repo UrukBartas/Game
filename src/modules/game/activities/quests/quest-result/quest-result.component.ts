@@ -45,6 +45,18 @@ export class QuestResultComponent extends TemplatePage {
   getRarityColor = getRarityColor;
   public lowerCaseFn = lowerCase;
   public questResultLayout: 'DEFAULT' | 'GANKED' = 'DEFAULT';
+  public invertedMapNames = {
+    Sasquatch: 'Sasquatch',
+    Ciclop: 'Cyclops',
+    Manticora: 'Manticore',
+    Hidra: 'Hydra',
+    Cerberus: 'Cerberus',
+    Balrog: 'Balrog',
+    Leviathan: 'Leviathan',
+    Dragon: 'Dragon',
+    Kraken: 'Kraken',
+    Behemoth: 'Behemoth',
+  };
 
   constructor() {
     super();
