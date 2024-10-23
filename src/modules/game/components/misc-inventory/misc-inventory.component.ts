@@ -181,6 +181,13 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
       this.activateBoost(miscItem);
     } else if (miscellanyItemData.itemType == MiscellanyItemType.Portrait) {
       this.activatePortrait(miscItem);
+    } else if (miscItem.miscellanyItemData.itemType == 'Silhouette') {
+      this.activeSilhouette(miscItem);
+    } else if (
+      miscItem.miscellanyItemData.itemType == 'Title_Prefix' ||
+      miscItem.miscellanyItemData.itemType == 'Title_Suffix'
+    ) {
+      this.activateTitle(miscItem);
     } else if (miscellanyItemData.itemType == MiscellanyItemType.ItemSet) {
       this.openItemsSet(miscItem);
     } else if (miscellanyItemData.itemType == MiscellanyItemType.MoneyBag) {
@@ -243,6 +250,34 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   public activatePortrait(miscPortrait: MiscWithStack) {
     this.currentPortraitPhase = 0;
     this.focuserService.open(this.portraitActivator, miscPortrait);
+  }
+
+  public async activeSilhouette(miscSilhouette: MiscWithStack) {
+    await firstValueFrom(
+      this.miscelanyService.activateSilhouette(miscSilhouette.id)
+    );
+    setTimeout(() => {
+      party.confetti(document.body, {
+        count: party.variation.range(20, 40),
+      });
+    }, 500);
+    this.toast.success(
+      'Silhouette ' + miscSilhouette.miscellanyItemData.name + ' activated!'
+    );
+    this.updateInventory.emit();
+    this.store.dispatch(new RefreshPlayer());
+  }
+
+  public async activateTitle(misc: MiscWithStack) {
+    await firstValueFrom(this.miscelanyService.activateTitle(misc.id));
+    setTimeout(() => {
+      party.confetti(document.body, {
+        count: party.variation.range(20, 40),
+      });
+    }, 500);
+    this.updateInventory.emit();
+    this.store.dispatch(new RefreshPlayer());
+    this.toast.success('Title ' + misc.miscellanyItemData.name + ' activated!');
   }
 
   private getActiveBootType(

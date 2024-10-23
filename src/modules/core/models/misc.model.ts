@@ -10,6 +10,9 @@ export enum MiscellanyItemType {
   ItemSet = 'ItemSet',
   Boost = 'Boost',
   Mount = 'Mount',
+  Silhouette = 'Silhouette',
+  Title_Suffix = 'Title_Suffix',
+  Title_Prefix = 'Title_Prefix',
 }
 export enum MiscellanyItemIdentifier {
   LootboxCommon = 'LootboxCommon',

@@ -1,0 +1,50 @@
+@import '../../../../variables.scss';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
+:host ::ng-deep {
+  app-item-box {
+    width: 100% !important;
+    > div {
+      width: 100% !important;
+      align-items: center;
+      color: $third;
+    }
+  }
+}
+
+.container-list{
+  max-height: 42vh;
+  overflow: auto;
+  @include media-breakpoint-down(md) {
+    max-height: 27vh;
+  }
+}
+
+#title-generator-modal-container {
+  height: 80vh;
+  width: 85vw;
+  max-width: 1500px;
+  position: relative;
+  background-color: #1f1f1d;
+  border-radius: 10px;
+  padding: 3vmax;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .item {
+    padding: 5px;
+  }
+  .no-title-box {
+    @extend .item;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    img {
+      max-width: 64px;
+      padding-bottom: 20px;
+      display: block;
+    }
+  }
+}

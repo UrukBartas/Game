@@ -2,7 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Item } from 'src/modules/core/models/items.model';
-import { MiscellanyItemData } from 'src/modules/core/models/misc.model';
+import {
+  MiscellanyItemData,
+  MiscellanyItemIdentifier,
+} from 'src/modules/core/models/misc.model';
 import { ApiBaseService } from '../modules/core/services/api-base.service';
 
 @Injectable({
@@ -39,11 +42,33 @@ export class MiscellanyService extends ApiBaseService {
     return this.get('/active-portrait/' + portraitId);
   }
 
+  public activateSilhouette(silhouetteId: number): Observable<void> {
+    return this.get('/active-silhouette/' + silhouetteId);
+  }
+
+  public activateTitle(titleId: number): Observable<void> {
+    return this.get('/active-title/' + titleId);
+  }
+
   public activateBoost(boostId: number): Observable<void> {
     return this.get('/active-boost/' + boostId);
   }
 
   public getPremiumPortraits(): Observable<MiscellanyItemData[]> {
     return this.get('/premium-portraits');
+  }
+
+  public getSilhouettes(): Observable<MiscellanyItemData[]> {
+    return this.get('/silhouettes');
+  }
+
+  public setSilhouette(idSilouette: MiscellanyItemIdentifier) {
+    return this.get('/set-silhouette/' + idSilouette);
+  }
+  public setTitle(
+    type: 'Title_Prefix' | 'Title_Suffix',
+    id: MiscellanyItemIdentifier
+  ) {
+    return this.get('/set-title/' + type + '/' + id);
   }
 }

@@ -433,6 +433,25 @@
       Activate
     </li>
   </ul>
+  <ul
+    class="list-options"
+    *ngIf="data.miscellanyItemData.itemType == 'Silhouette'"
+  >
+    <li (click)="activeSilhouette(data); contextMenuService.hideContextMenu()">
+      Activate
+    </li>
+  </ul>
+  <ul
+    class="list-options"
+    *ngIf="
+      data.miscellanyItemData.itemType == 'Title_Prefix' ||
+      data.miscellanyItemData.itemType == 'Title_Suffix'
+    "
+  >
+    <li (click)="activateTitle(data); contextMenuService.hideContextMenu()">
+      Activate
+    </li>
+  </ul>
   <ul class="list-options" *ngIf="data.miscellanyItemData.itemType == 'Boost'">
     <li (click)="activateBoost(data); contextMenuService.hideContextMenu()">
       Activate

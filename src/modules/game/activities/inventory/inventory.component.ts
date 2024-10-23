@@ -19,8 +19,9 @@ import {
   tap,
 } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { Item, ItemType } from 'src/modules/core/models/items.model';
+import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
+import { MiscellanyItemIdentifier } from 'src/modules/core/models/misc.model';
 import { ItemSet, PlayerModel } from 'src/modules/core/models/player.model';
 import {
   getRarityBasedOnIRI,
@@ -29,11 +30,13 @@ import {
 } from 'src/modules/utils';
 import { ContextMenuService } from 'src/services/context-menu.service';
 import { ItemService } from 'src/services/item.service';
+import { MiscellanyService } from 'src/services/miscellany.service';
 import { PlayerService } from 'src/services/player.service';
 import { ShopService } from 'src/services/shop.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
+import { TitleGeneratorModalComponent } from '../../components/title-generator-modal/title-generator-modal.component';
 import { ItemSetModalComponent } from './item-set-modal/item-set-modal.component';
 import { InventoryUpdateService } from './services/inventory-update.service';
 import { MiscellanyItem } from 'src/modules/core/models/misc.model';
@@ -52,6 +55,7 @@ export class InventoryComponent extends TemplatePage {
   viewportService = inject(ViewportService);
   private route = inject(ActivatedRoute);
   public router = inject(Router);
+  public miscService = inject(MiscellanyService);
   public inventoryUpdateService = inject(InventoryUpdateService);
   toastService = inject(ToastrService);
   contextMenuService = inject(ContextMenuService);
@@ -62,6 +66,34 @@ export class InventoryComponent extends TemplatePage {
     map((entry) => entry.player.sockets)
   );
   public selectedItemSet!: ItemSet;
+  containerExpanded = false;
+
+  public async activateSilhouette(id: MiscellanyItemIdentifier) {
+    const set = await firstValueFrom(this.miscService.setSilhouette(id));
+    this.store.dispatch(new RefreshPlayer());
+  }
+
+  public openTitleSelector() {
+    this.modalService.show(TitleGeneratorModalComponent);
+  }
+
+  public siluettes$ = this.store.select(MainState.getState).pipe(
+    filter((player) => !!player),
+    switchMap(() => {
+      return this.miscService.getSilhouettes().pipe(
+        map((e) => {
+          return [
+            ...e,
+            {
+              id: -1 as any,
+              imageLocal: '/assets/siluette.png',
+              rarity: Rarity.COMMON,
+            },
+          ];
+        })
+      );
+    })
+  );
 
   //Level 4 is the default level. 80 is default socket size / 20 = 4. If it buys another it becomes 5 (100 /20)
   public currentLevel$ = this.currentSize$.pipe(map((sockets) => sockets / 20));

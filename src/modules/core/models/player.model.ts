@@ -33,7 +33,11 @@ export interface PlayerModel {
   perStats?: TotalPerStats;
   sockets: number;
   mount?: MiscellanyItem;
-
+  activeSilhouette: string;
+  title?: string;
+  titles?: MiscellanyItemData[];
+  activePrefixTitle:MiscellanyItemIdentifier;
+  activeSuffixTitle:MiscellanyItemIdentifier;
   // Base player stats
   health: number;
   damage: number;
@@ -51,7 +55,7 @@ export interface PlayerModel {
 export interface PlayerConfiguration {
   disablePVP: boolean;
   disableSound: boolean;
-  ignoreMine:boolean;
+  ignoreMine: boolean;
 }
 
 export interface PlayerStatsModel {
