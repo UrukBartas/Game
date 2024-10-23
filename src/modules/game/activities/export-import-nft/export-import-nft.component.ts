@@ -625,6 +625,7 @@ export class ExportImportNftComponent extends TemplatePage {
           flattenedArrayTypes,
           flattenedArrayQuantities
         );
+        this.spinnerService.hide();
       } else {
         const [finalIdsToImport, finalItemTypesToImport] =
           await this.getRawSelectedItems();
@@ -668,24 +669,33 @@ export class ExportImportNftComponent extends TemplatePage {
   }
 
   private async exportERC20() {
-    await firstValueFrom(
-      this.importExport.whiteListItemERC20(this.selectedUruksToExport)
-    );
-    const fees = await firstValueFrom(this.getERC20ExportFee$);
-    const tx = await this.ERC20ContractService.exportCoins(
-      [ethers.parseEther(this.selectedUruksToExport.toString())],
-      ethers.parseEther(fees)
-    );
-    const receipt = await waitForTransaction({
-      hash: tx.hash,
-    });
-    this.store.dispatch(new RefreshPlayer());
-    this.spinnerService.hide();
-    if (receipt.status !== 'success') throw new Error('Error exporting items!');
-    this.toastService.success(
-      'The coins got exported, you will receive them in your wallet soon!'
-    );
-    this.selectedUruksToExport = 0;
+    try {
+      await firstValueFrom(
+        this.importExport.whiteListItemERC20(this.selectedUruksToExport)
+      );
+      const fees = await firstValueFrom(this.getERC20ExportFee$);
+      const tx = await this.ERC20ContractService.exportCoins(
+        [ethers.parseEther(this.selectedUruksToExport.toString())],
+        ethers.parseEther(fees)
+      );
+      const receipt = await waitForTransaction({
+        hash: tx.hash,
+      });
+      this.store.dispatch(new RefreshPlayer());
+      this.spinnerService.hide();
+      if (receipt.status !== 'success')
+        throw new Error('Error exporting items!');
+      this.toastService.success(
+        'The coins got exported, you will receive them in your wallet soon!'
+      );
+      this.selectedUruksToExport = 0;
+    } catch (error: any) {
+      this.toastService.error(
+        error?.error?.message ?? error?.cause?.reason ?? error ?? undefined,
+        'Something went wrong'
+      );
+      this.spinnerService.hide();
+    }
   }
 
   private async importERC20() {
