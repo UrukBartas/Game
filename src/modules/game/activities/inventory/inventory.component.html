@@ -133,6 +133,25 @@
                 </app-misc-inventory>
               </ng-container>
             </tab>
+            <tab>
+              <ng-template tabHeading>
+                <span>🦄</span>
+              </ng-template>
+              <ng-container *ngIf="currentMountsInventory as inventoryMounts">
+                <app-misc-inventory
+                  [items]="inventoryMounts"
+                  (updateInventory)="mountsUpdated$.next(true)"
+                  (equipMount)="equipMount($event)"
+                  [sockets]="currentSize$ | async"
+                >
+                  <ng-container
+                    extraItemBoxes
+                    *ngTemplateOutlet="inventoryExpander"
+                  >
+                  </ng-container>
+                </app-misc-inventory>
+              </ng-container>
+            </tab>
           </tabset>
           <div
             class="description stats-summary"
@@ -224,6 +243,29 @@
                 [customTemplate]="expiresOn"
               ></app-generic-item-tooltip>
             </div>
+          </app-item-box>
+        </div>
+        <div class="monture">
+          <app-item-box
+            (appDoubleClick)="equipMount(null)"
+            [height]="getEquippedItemBoxSize() / 1.5"
+            [width]="getEquippedItemBoxSize() / 1.5"
+            [image]="
+              (getPlayer$ | async)?.mount?.miscellanyItemData?.imageLocal
+            "
+            [rarity]="(getPlayer$ | async)?.mount?.miscellanyItemData?.rarity"
+          >
+            @if (!!(getPlayer$ | async)?.mount) {
+              <div tooltip class="tooltip-uruk">
+                <ng-template #mountSpeed>
+                  Quest cooldown -50%
+                </ng-template>
+                <app-generic-item-tooltip
+                  [item]="(getPlayer$ | async)?.mount?.miscellanyItemData"
+                  [customTemplate]="mountSpeed"
+                ></app-generic-item-tooltip>
+              </div>
+            }
           </app-item-box>
         </div>
         <ng-container *ngIf="iriAverage$() | async as iriAverage">

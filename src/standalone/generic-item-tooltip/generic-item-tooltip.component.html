@@ -1,12 +1,21 @@
-<div class="item-tooltip-wrapper">
+<div
+  class="item-tooltip-wrapper"
+  [ngClass]="{
+    'glowing-common': rarity === rarityEnum.COMMON,
+    'glowing-uncommon': rarity === rarityEnum.UNCOMMON,
+    'glowing-epic': rarity === rarityEnum.EPIC,
+    'glowing-legendary': rarity === rarityEnum.LEGENDARY,
+    'glowing-mythic': rarity === rarityEnum.MYTHIC,
+  }"
+>
   <div class="description flex-column align-items-start">
-    <p class="h6">
+    <p class="h6" [ngStyle]="{ color: getRarityColor(rarity) }">
       {{ item.name }}
     </p>
   </div>
   <div class="d-flex flex-row pt-2">
     <div class="d-flex align-items-center pb-3">
-      <img [src]="prefix+item.imageLocal" priority />
+      <img [src]="prefix + item.imageLocal" priority />
     </div>
     <div class="px-3">
       <div class="description mx-2">

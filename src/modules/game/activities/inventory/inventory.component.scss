@@ -82,8 +82,15 @@
   .iri-summary {
     position: absolute;
     z-index: 1000;
-    bottom: 5%;
-    left: 5vw;
+    bottom: 8vmax;
+    left: 1vmax;
+  }
+
+  .monture {
+    position: absolute;
+    z-index: 100;
+    bottom: 1vmax;
+    right: 1vmax;
   }
 
   .item-presets {
@@ -93,8 +100,8 @@
     gap: 10px;
     position: absolute;
     z-index: 100;
-    bottom: 5%;
-    right: 5vw;
+    bottom: 1vmax;
+    left: 1vmax;
     .item-grid {
       position: relative;
       display: flex;

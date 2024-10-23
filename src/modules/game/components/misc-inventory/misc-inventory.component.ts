@@ -26,6 +26,7 @@ import {
   MiscellanyItem,
   MiscellanyItemIdentifier,
   MiscellanyItemIdentifierDisplay,
+  MiscellanyItemType,
 } from 'src/modules/core/models/misc.model';
 import { BoostType } from 'src/modules/core/models/player.model';
 import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
@@ -68,6 +69,7 @@ const mapItemTypesToReadable = {
 export class MiscInventoryComponent extends BaseInventoryComponent {
   @Input() selectedItem: MiscWithStack;
   @Output() updateInventory = new EventEmitter<void>();
+  @Output() equipMount = new EventEmitter<MiscellanyItem>();
   public currentPhase = 0;
   public currentPortraitPhase = 0;
   @ViewChild('lootboxOpener') lootboxOpener: TemplateRef<any>;
@@ -76,7 +78,6 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   @ViewChildren('itemRoulette') itemRoulettes: QueryList<ItemRouletteComponent>;
   @ViewChild('itemResult', { read: ElementRef }) itemResult: ElementRef;
   @ViewChild('portraitResult', { read: ElementRef }) portraitResult: ElementRef;
-
   @ViewChild('inventory', { read: ElementRef }) inventory: ElementRef;
 
   contextMenuService = inject(ContextMenuService);
@@ -118,11 +119,12 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
     return fillInventoryBasedOnPlayerSockets(
       this.stack
         .transform(this.items, 'miscellanyItemData.name')
-        .filter((item) =>
-          item?.miscellanyItemData?.name
+        .filter((item) => {
+          const player = this.store.selectSnapshot(MainState.getState).player;
+          return item?.miscellanyItemData?.name
             .toLowerCase()
-            .includes(this.searchTerm.toLowerCase())
-        )
+            .includes(this.searchTerm.toLowerCase()) && player.mount?.id !== item?.id;
+        })
         .sort(),
       this.sockets
     );
@@ -172,19 +174,22 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
     this.currentPhase = 0;
   }
 
-  public open(miscLootbox: MiscWithStack) {
-    if (miscLootbox.miscellanyItemData.itemType == 'Recipe') return;
-    if (miscLootbox.miscellanyItemData.itemType == 'Boost') {
-      this.activateBoost(miscLootbox);
-    } else if (miscLootbox.miscellanyItemData.itemType == 'Portrait') {
-      this.activatePortrait(miscLootbox);
-    } else if (miscLootbox.miscellanyItemData.itemType == 'ItemSet') {
-      this.openItemsSet(miscLootbox);
-    } else if (miscLootbox.miscellanyItemData.itemType == 'MoneyBag') {
-      this.openBag(miscLootbox);
+  public open(miscItem: MiscWithStack) {
+    const { miscellanyItemData } = miscItem;
+    if (miscellanyItemData.itemType == MiscellanyItemType.Recipe) return;
+    if (miscellanyItemData.itemType == MiscellanyItemType.Boost) {
+      this.activateBoost(miscItem);
+    } else if (miscellanyItemData.itemType == MiscellanyItemType.Portrait) {
+      this.activatePortrait(miscItem);
+    } else if (miscellanyItemData.itemType == MiscellanyItemType.ItemSet) {
+      this.openItemsSet(miscItem);
+    } else if (miscellanyItemData.itemType == MiscellanyItemType.MoneyBag) {
+      this.openBag(miscItem);
+    } else if (miscellanyItemData.itemType == MiscellanyItemType.Mount) {
+      this.equipMount.emit(miscItem);
     } else {
-      this.openingItem.set(miscLootbox);
-      this.focuserService.open(this.lootboxOpener, miscLootbox);
+      this.openingItem.set(miscItem);
+      this.focuserService.open(this.lootboxOpener, miscItem);
     }
   }
 

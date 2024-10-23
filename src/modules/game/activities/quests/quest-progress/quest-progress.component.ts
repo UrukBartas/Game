@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { filter, take } from 'rxjs';
+import { Select, Store } from '@ngxs/store';
+import { filter, Observable, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { QuestModel } from 'src/modules/core/models/quest.model';
@@ -9,6 +9,7 @@ import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { QuestRouterModel } from '../models/quest-router.model';
+import { PlayerModel } from 'src/modules/core/models/player.model';
 
 @Component({
   selector: 'app-quest-progress',
@@ -20,7 +21,9 @@ export class QuestProgressComponent extends TemplatePage {
   questTimerService = inject(QuestTimerService);
   quest: QuestModel;
   questStarted = false;
+  @Select(MainState.getPlayer) player$: Observable<PlayerModel>;
   public prefix = environment.permaLinkImgPref;
+  
   constructor(
     public viewportService: ViewportService,
     private store: Store
@@ -48,13 +51,25 @@ export class QuestProgressComponent extends TemplatePage {
     });
   }
 
+  public getEquippedItemBoxSize() {
+    if (
+      this.viewportService.screenSize == 'xs' ||
+      this.viewportService.screenSize == 'sm' ||
+      this.viewportService.screenSize == 'md'
+    ) {
+      return 70;
+    }
+    return 140;
+  }
+
   getProgressBarHeight() {
     switch (this.viewportService.screenSize) {
       case 'xxl':
       case 'xl':
       case 'lg':
-        return 30;
+        return 40;
       case 'md':
+        return 30;
       case 'xs':
       case 'sm':
       default:

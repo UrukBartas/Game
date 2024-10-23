@@ -1,8 +1,8 @@
 import { Item } from './items.model';
-import { MiscellanyItemData, MiscellanyItemIdentifier } from './misc.model';
+import { MiscellanyItem, MiscellanyItemData, MiscellanyItemIdentifier } from './misc.model';
 import { QuestModel } from './quest.model';
 import { SessionModel } from './session.model';
-export type BoostType = 'EXP' | 'URUKS';
+export type BoostType = 'EXP' | 'URUKS' | 'TRAVEL';
 export interface BoostActive {
   id: number;
   playerId: string;
@@ -32,6 +32,7 @@ export interface PlayerModel {
   stats: PlayerStatsModel;
   perStats?: TotalPerStats;
   sockets: number;
+  mount?: MiscellanyItem;
 
   // Base player stats
   health: number;

@@ -68,6 +68,10 @@ i {
   width: calc(100% - 240px);
   right: -240px;
 }
+.content-full {
+  @extend .content;
+  width: 100%;
+}
 
 .sidebar-lateral {
   height: 100%;

@@ -4,29 +4,74 @@
     alt="Quest Image"
     class="active-quest"
   />
-  <div *ngIf="questTimerService.time() !== 'Ready'" class="progress-bar-container">
+  <div class="boosts">
+    @for (boost of (player$ | async)?.boosts ?? []; track $index) {
+      <app-item-box
+        *ngIf="boost.type == 'TRAVEL'"
+        [height]="getEquippedItemBoxSize() / 2"
+        [width]="getEquippedItemBoxSize() / 2"
+        [image]="boost.boostData.imageLocal"
+        [rarity]="boost.boostData.rarity"
+      >
+        <div tooltip class="tooltip-uruk">
+          <ng-template #expiresOn>
+            @if (!!boost.expiresAt) {
+              <span>Expires on {{ boost.expiresAt | date: 'short' }}</span>
+            } @else {
+              <span>Never expires</span>
+            }
+          </ng-template>
+
+          <app-generic-item-tooltip
+            [item]="boost.boostData"
+            [customTemplate]="expiresOn"
+          ></app-generic-item-tooltip>
+        </div>
+      </app-item-box>
+    }
+  </div>
+  <div
+    *ngIf="questTimerService.time() !== 'Ready'"
+    class="progress-bar-container"
+  >
     <h3 urTitle class="text-third">
       {{ quest.data.name }}
     </h3>
-    <div class="description mb-3 px-4">
+    <div urText class="description mb-3 px-4 text-center">
       {{ quest.data.description }}
     </div>
+
     <div
       class="progress position-relative"
       [style.height]="getProgressBarHeight() + 'px'"
     >
-      <span class="timer position-absolute">{{
-        questTimerService.time()
-      }}</span>
+      <!-- Barra de tiempo reducido (Morado) -->
+      <div
+        class="reduced-progress-bar progress-bar-striped progress-bar-animated shadow z-1 d-flex align-items-center"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        [style.width]="questTimerService.reductionPercentage() + '%'"
+      >
+        <span urText class="w-100 text-center d-block">🦄</span>
+      </div>
+
+      <!-- Barra de progreso normal ajustada -->
       <div
         class="progress-bar progress-bar-striped progress-bar-animated shadow"
         role="progressbar"
         aria-valuemin="0"
         aria-valuemax="100"
         [style.width]="questTimerService.percentage() + '%'"
+        style="position: absolute"
       ></div>
+
+      <span urText class="timer position-absolute">{{
+        questTimerService.time()
+      }}</span>
     </div>
   </div>
+
   <div *ngIf="questTimerService.time() === 'Ready'">
     <button
       (click)="startQuest()"

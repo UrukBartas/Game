@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, firstValueFrom, tap } from 'rxjs';
+import { Observable, finalize, firstValueFrom, tap } from 'rxjs';
 import { Consumable } from 'src/modules/core/models/consumable.model';
 import { Item, ItemType } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
@@ -41,25 +41,19 @@ export class PlayerService extends ApiBaseService {
     return this.get('/deeds');
   }
 
-  public async equipItemFlow(
-    item: Item,
-    equipType: ItemType,
-    onEquip?: Function
-  ) {
-    try {
-      this.spinnerService.show();
-      await firstValueFrom(
-        this.itemService.equipItem(item, equipType).pipe(
-          tap(() => {
-            this.store.dispatch(new RefreshPlayer());
-            onEquip();
-          })
-        )
-      );
-      this.spinnerService.hide();
-    } catch (error) {
-      this.spinnerService.hide();
-    }
+  public async equipItemFlow(equip$: Observable<any>, onEquip?: Function) {
+    this.spinnerService.show();
+    await firstValueFrom(
+      equip$.pipe(
+        tap(() => {
+          this.store.dispatch(new RefreshPlayer());
+          onEquip();
+        }),
+        finalize(() => {
+          this.spinnerService.hide();
+        })
+      )
+    );
   }
 
   create(
@@ -129,8 +123,13 @@ export class PlayerService extends ApiBaseService {
   getItemsConsumable(): Observable<Array<Consumable>> {
     return this.get('/inventory-consumables');
   }
+
   getMiscellanyItems(): Observable<Array<MiscellanyItem>> {
     return this.get('/inventory-miscellany');
+  }
+
+  getMounts(): Observable<Array<MiscellanyItem>> {
+    return this.get('/inventory-mounts');
   }
 
   getItemsMaterial(): Observable<Array<Material>> {
@@ -191,5 +190,9 @@ export class PlayerService extends ApiBaseService {
 
   public deleteItemSet(setId: number) {
     return this.delete('/item-set/' + setId);
+  }
+
+  public equipMount(mountId: number) {
+    return this.get('/equip-mount/' + (mountId ?? 'null'));
   }
 }

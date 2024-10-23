@@ -3,6 +3,17 @@
 .active-quest-container {
   position: relative;
   height: 100%;
+
+  .boosts {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
   .active-quest {
     height: 100% !important;
     width: 100%;
@@ -31,9 +42,25 @@
     background-color: $black-transparent;
     padding: 10px;
     border-radius: 20px;
+
     .progress {
       width: 90%;
+      position: relative;
     }
+
+    .reduced-progress-bar {
+      position: absolute;
+      background-color: purple;
+      top: 0;
+      left: 0;
+      height: 100%;
+    }
+
+    .progress-bar {
+      top: 0;
+      height: 100%;
+    }
+
     .timer {
       color: $white-100;
       position: absolute;

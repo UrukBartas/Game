@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input, TemplateRef } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { ConsumableData } from 'src/modules/core/models/consumable.model';
-import { ItemData } from 'src/modules/core/models/items.model';
+import { ItemData, Rarity } from 'src/modules/core/models/items.model';
 import { MaterialData } from 'src/modules/core/models/material.model';
 import { MiscellanyItemData } from 'src/modules/core/models/misc.model';
 import { getRarityColor } from 'src/modules/utils';
@@ -24,8 +24,13 @@ export class GenericItemTooltipComponent {
   @Input() souldBound = false;
   @Input() showPrice = false;
   @Input() customTemplate: TemplateRef<any>;
+  
+  rarityEnum = Rarity;
   public prefix = environment.permaLinkImgPref;
   viewportService = inject(ViewportService);
-  public anyfy = (anything) => anything as any;
   public getRarityColor = getRarityColor;
+
+  get rarity () {
+    return this.item['rarity'];
+  }
 }

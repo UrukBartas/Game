@@ -228,4 +228,9 @@ export class MainState {
   static getState(state: MainStateModel): MainStateModel {
     return state;
   }
+
+  @Selector()
+  static getPlayer(state: MainStateModel): PlayerModel {
+    return state.player;
+  }
 }
