@@ -30,4 +30,13 @@ export class PresaleContractService extends ContractService {
   ) {
     return this.executeWriteContract('safeMint', [address, lootboxType], price);
   }
+
+  mintMultipleLootboxes(
+    quantity: number,
+    address: string,
+    lootboxType: LootboxPresaleTypeEnum,
+    price: bigint
+  ) {
+    return this.executeWriteContract('mintMultipleLootboxes', [quantity, address, lootboxType], price);
+  }
 }

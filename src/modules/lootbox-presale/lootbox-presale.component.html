@@ -17,7 +17,7 @@
                 'glowing-legendary': lootbox.rarity === rarityEnum.LEGENDARY,
                 'glowing-mythic': lootbox.rarity === rarityEnum.MYTHIC,
               }"
-              [src]="prefix+lootbox.image"
+              [src]="lootbox.image"
               class="lootbox-image"
             />
             <span
@@ -50,7 +50,7 @@
         </h2>
         <div class="image-gallery">
           <div *ngFor="let imageUrl of getImageUrls()" class="image-item">
-            <img [src]="prefix+imageUrl" alt="Lootbox Image" class="lootbox-image" />
+            <img [src]="imageUrl" alt="Lootbox Image" class="lootbox-image" />
           </div>
         </div>
         <div class="drop-list pt-4">
@@ -96,7 +96,8 @@
         </div>
       </div>
 
-      <div class="d-flex">
+      <div class="d-flex flex-column gap-2">
+        <ngx-slider [(value)]="sliderValue" [options]="sliderOptions"></ngx-slider>
         <button
           [disabled]="loading || activeLootbox.avaible <= 0"
           [ngStyle]="{ background: getRarityColor(activeLootbox.rarity) }"

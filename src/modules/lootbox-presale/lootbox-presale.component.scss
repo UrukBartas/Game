@@ -6,6 +6,12 @@
   overflow: hidden;
   height: 100vh;
 
+  ngx-slider{
+    span {
+      color: white !important;
+    }
+  }
+
   .three-container {
     position: absolute;
     top: 0;

@@ -4,31 +4,31 @@ import { LootboxPresaleModel } from '../models/lootbox-presale.model';
 export const lootboxes: LootboxPresaleModel[] = [
   {
     name: '⧫ Crate of Fortune ⧫',
-    image: 'assets/presale/common-combobox.png',
+    image: '/assets/presale/common-combobox.png',
     rarity: Rarity.COMMON,
     total: 150,
   },
   {
     name: '✦ Crate of Misteries ✦',
-    image: 'assets/presale/uncommon-combobox.png',
+    image: '/assets/presale/uncommon-combobox.png',
     rarity: Rarity.UNCOMMON,
     total: 150,
   },
   {
     name: '★ Crate of Legends ★',
-    image: 'assets/presale/epic-combobox.png',
+    image: '/assets/presale/epic-combobox.png',
     rarity: Rarity.EPIC,
     total: 150,
   },
   {
     name: '✶ Crate of Eternity ✶',
-    image: 'assets/presale/legendary-combobox.png',
+    image: '/assets/presale/legendary-combobox.png',
     rarity: Rarity.LEGENDARY,
     total: 150,
   },
   {
     name: '✹ Crate of Gods ✹',
-    image: 'assets/presale/mythic-combobox.png',
+    image: '/assets/presale/mythic-combobox.png',
     rarity: Rarity.MYTHIC,
     total: 150,
   },

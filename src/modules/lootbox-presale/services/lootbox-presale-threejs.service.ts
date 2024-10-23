@@ -1,4 +1,5 @@
 import { Injectable, ElementRef, NgZone } from '@angular/core';
+import { environment } from 'src/environments/environment';
 import * as THREE from 'three';
 
 @Injectable({
@@ -49,7 +50,7 @@ export class LootboxPresaleThreeService {
 
     // Load fog texture
     const loader = new THREE.TextureLoader();
-    loader.load('assets/presale/fog.png', (texture) => {
+    loader.load(environment.permaLinkImgPref + '/assets/presale/fog.png', (texture) => {
       // Create smoke particles using the texture
       this.createSmoke(texture, fogColor);
     });

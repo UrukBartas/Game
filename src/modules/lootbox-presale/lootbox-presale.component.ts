@@ -19,7 +19,7 @@ import { ethers } from 'ethers';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import * as party from 'party-js';
-import { finalize, from } from 'rxjs';
+import { catchError, finalize, from } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import {
   LootboxPresaleTypeEnum,
@@ -34,6 +34,7 @@ import { getRarityColor } from '../utils';
 import { lootboxItemDropsByRarity, lootboxes } from './data/lootbox.const';
 import { PresaleClaimInfoModalComponent } from './modal/presale-claim-info-modal/presale-claim-info-modal.component';
 import { LootboxPresaleThreeService } from './services/lootbox-presale-threejs.service';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 SwiperCore.use([Navigation, EffectCoverflow]);
 
@@ -41,7 +42,7 @@ SwiperCore.use([Navigation, EffectCoverflow]);
   selector: 'app-lootbox-presale',
   templateUrl: './lootbox-presale.component.html',
   styleUrls: ['./lootbox-presale.component.scss'],
-  imports: [CommonModule, SwiperModule],
+  imports: [CommonModule, SwiperModule, NgxSliderModule],
   providers: [LootboxPresaleThreeService, PresaleContractService],
   standalone: true,
   encapsulation: ViewEncapsulation.None,
@@ -68,7 +69,10 @@ export class LootboxPresaleComponent implements AfterViewInit {
   };
   itemsByRarity;
   openDetail = false;
-  lootboxes = lootboxes;
+  lootboxes = lootboxes.map((lootbox) => ({
+    ...lootbox,
+    image: environment.permaLinkImgPref + lootbox.image,
+  }));
   activeLootbox = lootboxes[1];
   loading = false;
   rarityEnum = Rarity;
@@ -80,7 +84,9 @@ export class LootboxPresaleComponent implements AfterViewInit {
   toastService = inject(ToastrService);
   getRarityColor = getRarityColor;
   lootboxItemDropRateByRarity = lootboxItemDropsByRarity;
-  public prefix = environment.permaLinkImgPref;
+  sliderOptions = { floor: 0, ceil: 0 };
+  sliderValue = 1;
+
   async ngAfterViewInit(): Promise<void> {
     this.threeService.initialize(
       this.threeContainer,
@@ -98,12 +104,20 @@ export class LootboxPresaleComponent implements AfterViewInit {
             this.presaleContractService.getBoughtLootboxesOfType(
               LootboxPresaleTypeEnum[lootbox.rarity]
             )
+          ).pipe(
+            catchError(async (error) => {
+              console.log(error);
+              return [];
+            })
           ).subscribe(async (response) => {
             const avaible =
               response.find((item) => item.poolType === 'PRESALE')?.amount ?? 0;
 
             lootbox.avaible = Number.parseInt(avaible.toString());
             lootbox.price = ethers.formatEther(response[0].toString());
+            if (lootbox.rarity === Rarity.UNCOMMON) {
+              this.sliderOptions.ceil = lootbox.avaible ?? 0;
+            }
           });
         });
       }
@@ -148,11 +162,18 @@ export class LootboxPresaleComponent implements AfterViewInit {
     }
   }
 
+  private setSliderCeil() {
+    this.sliderOptions = { floor: 1, ceil: this.activeLootbox.avaible ?? 0 };
+  }
+
   private async mintLootbox(address: string) {
-    const priceInEther = ethers.parseEther(this.activeLootbox.price);
+    const totalPrice =
+      Number.parseFloat(this.activeLootbox.price) * this.sliderValue;
+    const priceInEther = ethers.parseEther(totalPrice.toString());
 
     try {
-      const tx = await this.presaleContractService.mintLootbox(
+      const tx = await this.presaleContractService.mintMultipleLootboxes(
+        this.sliderValue,
         address,
         LootboxPresaleTypeEnum[this.activeLootbox.rarity],
         priceInEther
@@ -165,7 +186,9 @@ export class LootboxPresaleComponent implements AfterViewInit {
       )
         .pipe(finalize(() => (this.loading = false)))
         .subscribe(async () => {
-          this.activeLootbox.avaible = this.activeLootbox.avaible - 1;
+          this.activeLootbox.avaible =
+            this.activeLootbox.avaible - this.sliderValue;
+          this.setSliderCeil();
           party.confetti(this.threeContainer.nativeElement, {
             count: party.variation.range(100, 200),
           });
@@ -184,6 +207,7 @@ export class LootboxPresaleComponent implements AfterViewInit {
 
   onSlideChange(swiper: any) {
     this.activeLootbox = lootboxes[swiper.activeIndex];
+    this.setSliderCeil();
     this.threeService.changeFogColor(
       this.getRarityFogColor(this.activeLootbox.rarity)
     );
@@ -193,7 +217,7 @@ export class LootboxPresaleComponent implements AfterViewInit {
   getImageUrls(): string[] {
     const { rarity } = this.activeLootbox;
     return lootboxItemDropsByRarity[rarity].map((imageUrl) => {
-      return `/assets/${imageUrl}`;
+      return environment.permaLinkImgPref + `/assets/${imageUrl}`;
     });
   }
 

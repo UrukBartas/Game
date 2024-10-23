@@ -135,7 +135,7 @@ export class WalletService {
     this.modal.subscribeEvents((event) => {
       this.latestModalEvent.set(event.data);
     });
-
+    
     this.isWeb3Connected$.next(true);
   }
 
