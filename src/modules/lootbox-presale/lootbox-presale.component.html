@@ -64,9 +64,24 @@
         </div>
       </div>
       <div class="d-flex flex-column align-items-end gap-2">
-        <div class="price">
+        <div class="w-100 d-flex justify-content-between">
+          <p class="text-white">
+            Unit price
+          </p>
           <p class="text-white">
             {{ activeLootbox.price }}
+            <img
+              class="iota-icon"
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAOVBMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADLcPMfAAAAE3RSTlMAB9L/aJSHxU+y4EFdMBKkH/J1V7GuOAAAAVtJREFUeAF9zUGOpDAAA8AKJhAIBJr/P3YPfdiZVmvqZsmWfVWmzP5Sk/jL8llQ5mJdteZt27tfpkwlkZSt+GbN6mhabzkPjGv2W8MNWrAm55lX8YZr9aTe6Ui3JveWPMDoenI8WVqOdXK/L47kBiOpXhkGw/LU2dsoQEt2oAyoB1O6+wHeyTkdklInkFySzfB2DmsiKXvudOZ12FPnrGBJxpGLQhnT7Tyh2xIwJc1PybCslKsry6xnAm31tr9Ienne6wd4yhNwV2iLLZUkG85Icw+oOfR0Wjo16SjdSV6o90PP4WrgHLBvUl0zZw5yULL77x4a2sZQ+9o9c7/9N62O15AcWA/j3Cc/LY+a07GBcdWXD/XmxJKFcfl0pGqZ2PPy1UPPRp962RZf7JNiWbAlzScjoSWdK+m21+G31ksfyXCqszlJ8SGZkVQ83wsLPXnBmsenc4Y1hx/+AZ5YDCuuPXtEAAAAAElFTkSuQmCC"
+            />
+          </p>
+        </div>
+        <div class="w-100 d-flex align-items-center justify-content-between">
+          <p class="text-white">
+            Total price
+          </p>
+          <p class="text-white">
+            {{ totalPrice }}
             <img
               class="iota-icon"
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAOVBMVEVHcEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADLcPMfAAAAE3RSTlMAB9L/aJSHxU+y4EFdMBKkH/J1V7GuOAAAAVtJREFUeAF9zUGOpDAAA8AKJhAIBJr/P3YPfdiZVmvqZsmWfVWmzP5Sk/jL8llQ5mJdteZt27tfpkwlkZSt+GbN6mhabzkPjGv2W8MNWrAm55lX8YZr9aTe6Ui3JveWPMDoenI8WVqOdXK/L47kBiOpXhkGw/LU2dsoQEt2oAyoB1O6+wHeyTkdklInkFySzfB2DmsiKXvudOZ12FPnrGBJxpGLQhnT7Tyh2xIwJc1PybCslKsry6xnAm31tr9Ienne6wd4yhNwV2iLLZUkG85Icw+oOfR0Wjo16SjdSV6o90PP4WrgHLBvUl0zZw5yULL77x4a2sZQ+9o9c7/9N62O15AcWA/j3Cc/LY+a07GBcdWXD/XmxJKFcfl0pGqZ2PPy1UPPRp962RZf7JNiWbAlzScjoSWdK+m21+G31ksfyXCqszlJ8SGZkVQ83wsLPXnBmsenc4Y1hx/+AZ5YDCuuPXtEAAAAAElFTkSuQmCC"
@@ -97,7 +112,10 @@
       </div>
 
       <div class="d-flex flex-column gap-2">
-        <ngx-slider [(value)]="sliderValue" [options]="sliderOptions"></ngx-slider>
+        <ngx-slider
+          [(value)]="sliderValue"
+          [options]="sliderOptions"
+        ></ngx-slider>
         <button
           [disabled]="loading || activeLootbox.avaible <= 0"
           [ngStyle]="{ background: getRarityColor(activeLootbox.rarity) }"

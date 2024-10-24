@@ -87,39 +87,50 @@ export class LootboxPresaleComponent implements AfterViewInit {
   sliderOptions = { floor: 0, ceil: 0 };
   sliderValue = 1;
 
+  get totalPrice () {
+    return Number.parseFloat(this.activeLootbox.price) * this.sliderValue;
+  }
+
   async ngAfterViewInit(): Promise<void> {
     this.threeService.initialize(
       this.threeContainer,
       this.getRarityFogColor(this.activeLootbox.rarity)
     );
 
-    await this.getLootboxDataFromContract();
+    setTimeout(async () => {
+      await this.getLootboxDataFromContract();
+    }, 500);
   }
 
   private async getLootboxDataFromContract() {
-    this.walletService.isWeb3Connected$.subscribe(async (status) => {
+    this.walletService.walletConnectIsLoggedIn$.subscribe(async (status) => {
       if (status) {
         lootboxes.forEach((lootbox) => {
           from(
             this.presaleContractService.getBoughtLootboxesOfType(
               LootboxPresaleTypeEnum[lootbox.rarity]
             )
-          ).pipe(
-            catchError(async (error) => {
-              console.log(error);
-              return [];
-            })
-          ).subscribe(async (response) => {
-            const avaible =
-              response.find((item) => item.poolType === 'PRESALE')?.amount ?? 0;
+          )
+            .pipe(
+              catchError(async (error) => {
+                console.log(error);
+                return [];
+              })
+            )
+            .subscribe(async (response) => {
+              const avaible =
+                response.find((item) => item.poolType === 'PRESALE')?.amount ??
+                0;
 
-            lootbox.avaible = Number.parseInt(avaible.toString());
-            lootbox.price = ethers.formatEther(response[0].toString());
-            if (lootbox.rarity === Rarity.UNCOMMON) {
-              this.sliderOptions.ceil = lootbox.avaible ?? 0;
-            }
-          });
+              lootbox.avaible = Number.parseInt(avaible.toString());
+              lootbox.price = ethers.formatEther(response[0].toString());
+              if (lootbox.rarity === Rarity.UNCOMMON) {
+                this.sliderOptions.ceil = lootbox.avaible ?? 0;
+              }
+            });
         });
+      } else {
+        this.walletService.modal.open();
       }
     });
   }
@@ -167,8 +178,7 @@ export class LootboxPresaleComponent implements AfterViewInit {
   }
 
   private async mintLootbox(address: string) {
-    const totalPrice =
-      Number.parseFloat(this.activeLootbox.price) * this.sliderValue;
+    const totalPrice = this.totalPrice;
     const priceInEther = ethers.parseEther(totalPrice.toString());
 
     try {
@@ -196,8 +206,10 @@ export class LootboxPresaleComponent implements AfterViewInit {
             'NFT minted, you will receive it in your wallet soon!'
           );
         });
-    } catch (error) {
-      this.toastService.error('Error during minting - Transaction canceled');
+    } catch (error: any) {
+      console.log(error);
+
+      this.toastService.error(error.shortMessage ?? 'Error during minting - Transaction canceled');
     }
   }
 

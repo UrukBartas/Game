@@ -55,7 +55,6 @@ export class WalletService {
   public getValidAddress$ = this.address$.pipe(filter((entry) => !!entry));
   public walletConnectIsLoggedIn$ = this.address$.pipe(map((entry) => !!entry));
   public chains: BehaviorSubject<Array<any> | null> = new BehaviorSubject(null);
-  public isWeb3Connected$ = new BehaviorSubject(false);
   public activeNetworkId = new BehaviorSubject<number>(0);
 
   getChainById = (id: number) =>
@@ -135,8 +134,6 @@ export class WalletService {
     this.modal.subscribeEvents((event) => {
       this.latestModalEvent.set(event.data);
     });
-    
-    this.isWeb3Connected$.next(true);
   }
 
   private async controlWalletFlow(address: `0x${string}` | undefined) {
