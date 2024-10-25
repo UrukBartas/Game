@@ -10,9 +10,9 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { getAccount } from '@wagmi/core';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, firstValueFrom, map, of, take } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { firstValueFrom, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { PlayerConfiguration } from 'src/modules/core/models/player.model';
 import { truncateEthereumAddress } from 'src/modules/utils';
@@ -27,6 +27,8 @@ import {
   MainState,
   RefreshPlayer,
 } from 'src/store/main.store';
+import { CharacterSelectorComponent } from './components/character-selector/character-selector.component';
+
 export function passwordMatchingValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const password = control.get('password');
@@ -54,31 +56,22 @@ export class EditCharacterComponent extends TemplatePage {
   router = inject(Router);
   location = inject(Location);
   walletService = inject(WalletService);
-  //public pushNotificationsService = inject(PushNotificationsService);
-  staticImages = [
-    'assets/free-portraits/knight.webp',
-    'assets/free-portraits/knight-f.webp',
-    'assets/free-portraits/bartender.webp',
-    'assets/free-portraits/bartender-f.webp',
-    'assets/free-portraits/blacksmith.webp',
-    'assets/free-portraits/blacksmith-f.webp',
-  ];
-  images$ = of(this.staticImages);
-  public prefix = environment.permaLinkImgPref;
   editing = false;
   form: FormGroup;
   truncateAddress = truncateEthereumAddress;
 
-  constructor(private route: ActivatedRoute) {
+  constructor(
+    private route: ActivatedRoute,
+    private modalService: BsModalService
+  ) {
     super();
     const currentRoute = this.route.snapshot.url.join('/');
     this.editing = currentRoute.includes('edit');
-    const passwordPattern =
-      /^(?=.*[A-Z])(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
+    const passwordPattern = /^(?=.*[A-Z])(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
 
     this.form = this.formBuilder.group(
       {
-        image: ['assets/free-portraits/knight.webp', [Validators.required]],
+        image: ['assets/free-portraits/warlock.webp', [Validators.required]],
         name: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
         password: [
@@ -96,15 +89,7 @@ export class EditCharacterComponent extends TemplatePage {
     );
 
     if (this.editing) {
-      this.load();
-      this.images$ = this.miscService.getPremiumPortraits().pipe(
-        map((portraits) => {
-          return [
-            ...portraits.map((entry) => entry.imageLocal),
-            ...this.staticImages,
-          ];
-        })
-      ) as Observable<any>;
+      this.loadPlayer();
     }
   }
 
@@ -139,7 +124,21 @@ export class EditCharacterComponent extends TemplatePage {
     }
   }
 
-  private async load() {
+  public openCharacterSelector() {
+    const config: ModalOptions = {
+      initialState: {
+        accept: (image: string) => {
+          if (image) {
+            this.form.patchValue({ image });
+          }
+          modalRef.hide();
+        },
+      },
+    };
+    const modalRef = this.modalService.show(CharacterSelectorComponent, config);
+  }
+
+  private async loadPlayer() {
     const player = this.store.selectSnapshot(MainState.getState).player;
     if (player) {
       const { image, name, email, configuration } = player;

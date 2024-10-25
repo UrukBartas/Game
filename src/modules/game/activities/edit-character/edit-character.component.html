@@ -1,26 +1,16 @@
 <div class="character-edit-container pb-5">
   <div class="row">
     <div class="description">
-      <p urTitle>{{ this.editing ? 'Edit' : 'Create ' }} your character</p>
+      <p urTitle>{{ this.editing ? 'Edit' : 'Create ' }} your Profile</p>
     </div>
   </div>
   <div [formGroup]="form" class="d-flex flex-column gap-3">
-    <div class="image-picker">
-      <div class="image-thumbnails">
-        <div
-          *ngFor="let image of images$ | async"
-          class="image-container"
-          [style.height]="getImageContainerSizeByScreenSize() + 'px'"
-          [style.width]="getImageContainerSizeByScreenSize() + 'px'"
-          [class.selected]="form.value.image === image"
-          (click)="form.patchValue({ image })"
-        >
-          <img [src]="prefix + '/'+image" class="character-image" />
-
-          <div class="check-icon" *ngIf="form.value.image === image">
-            <i class="fa fa-check-circle"></i>
-          </div>
-        </div>
+    <div class="d-flex justify-content-center mb-2">
+      <div class="col-12 col-sm-6">
+        <img [src]="form.value.image" class="character-image" />
+        <button class="btn btn-lg btn-primary save-button w-100" (click)="openCharacterSelector()">
+          Choose a character 👈🏻
+        </button>
       </div>
     </div>
 
