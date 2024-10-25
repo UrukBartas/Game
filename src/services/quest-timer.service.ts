@@ -44,8 +44,11 @@ export class QuestTimerService {
     this.ngZone.runOutsideAngular(() => {
       this.subscription = interval(1000).subscribe(() => {
         const time = this.getActiveQuestTime(this.quest);
-        const reducedPercentage = this.getReductionPercentage(this.quest);
-        const adjustedPercentage = this.getActiveQuestPercentage(this.quest, reducedPercentage);
+        const reducedPercentage = this.getReductionPercentage();
+        const adjustedPercentage = this.getActiveQuestPercentage(
+          this.quest,
+          reducedPercentage
+        );
 
         this.ngZone.run(() => {
           this.time.set(time);
@@ -58,8 +61,11 @@ export class QuestTimerService {
 
   initSignals(quest: QuestModel): void {
     const time = this.getActiveQuestTime(quest);
-    const reducedPercentage = this.getReductionPercentage(quest);
-    const adjustedPercentage = this.getActiveQuestPercentage(quest, reducedPercentage);
+    const reducedPercentage = this.getReductionPercentage();
+    const adjustedPercentage = this.getActiveQuestPercentage(
+      quest,
+      reducedPercentage
+    );
     this.time.set(time);
     this.percentage.set(adjustedPercentage);
     this.reductionPercentage.set(reducedPercentage);
@@ -74,26 +80,39 @@ export class QuestTimerService {
     }
   }
 
-  private getReductionPercentage(quest: QuestModel): number {
-    const reductionFactor = 0.3; // Ejemplo: 30% reducción
-    return reductionFactor * 100; // Retorna 30% en este caso
+  private getReductionPercentage(): number {
+    const {boosts} = this.store.selectSnapshot(MainState.getPlayer);
+    let reductionFactor = 0
+
+    boosts.forEach(boost => {
+      if (boost.type === 'TRAVEL') {
+        reductionFactor += boost.boostData.value;
+      }
+    });
+
+    return reductionFactor; 
   }
 
-  private getActiveQuestPercentage(quest: QuestModel, reducedPercentage: number): number {
+  private getActiveQuestPercentage(
+    quest: QuestModel,
+    reducedPercentage: number
+  ): number {
     const startedAt = new Date(quest.startedAt);
     const finishedAt = new Date(quest.finishedAt);
     const currentDate = new Date();
-  
+
     const totalTimeSpanMillis = finishedAt.getTime() - startedAt.getTime();
     const timeElapsedMillis = currentDate.getTime() - startedAt.getTime();
-  
-    const elapsedTotalPercentage = (timeElapsedMillis / totalTimeSpanMillis) * 100;
-    const adjustedPercentage = reducedPercentage + ((elapsedTotalPercentage * (100 - reducedPercentage)) / 100);
-  
+
+    const elapsedTotalPercentage =
+      (timeElapsedMillis / totalTimeSpanMillis) * 100;
+    const adjustedPercentage =
+      reducedPercentage +
+      (elapsedTotalPercentage * (100 - reducedPercentage)) / 100;
+
     // Asegurarse de que no supere el 100%
     return Math.min(adjustedPercentage, 100);
   }
-  
 
   private getActiveQuestTime(quest: QuestModel): string | null {
     if (!quest) {

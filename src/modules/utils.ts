@@ -135,3 +135,20 @@ export const getItemTypeSCBasedOnItem = (item: any) => {
   if (!!item.miscellanyItemDataId) return ItemTypeSC.Miscellaneous;
   return ItemTypeSC.Item;
 };
+
+export const getMountTimeReductionByRarity = (rarity: Rarity) => {
+  switch (rarity) {
+    case Rarity.COMMON:
+      return 5;
+    case Rarity.UNCOMMON:
+      return 10;
+    case Rarity.EPIC:
+      return 15;
+    case Rarity.LEGENDARY:
+      return 20;
+    case Rarity.MYTHIC:
+      return 25;
+    default:
+      return 0;
+  }
+}

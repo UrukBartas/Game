@@ -210,9 +210,14 @@
   <div class="col-12 col-md-6 equipped order-0 order-sm-1">
     <div class="description align-items-center">
       <p urTitle>Character</p>
-      <span class="text-light" (click)="isViewingPlayer ? false : openTitleSelector()"
+      <span
+        class="text-light"
+        (click)="isViewingPlayer ? false : openTitleSelector()"
         >{{ (actualPlayer$ | async).title ?? 'The untitled' }}
-        <i class="fa-solid fa-arrow-right-arrow-left" *ngIf="!isViewingPlayer"></i
+        <i
+          class="fa-solid fa-arrow-right-arrow-left"
+          *ngIf="!isViewingPlayer"
+        ></i
       ></span>
       <button
         (click)="router.navigateByUrl('/leaderboard')"
@@ -297,10 +302,16 @@
             @if (!!(getPlayer$ | async)?.mount) {
               <div tooltip class="tooltip-uruk">
                 <ng-template #mountSpeed>
-                  Quest cooldown -50%
+                  <span class="text-third">
+                    Quest cooldown -{{
+                      getMountTimeReductionByRarity(
+                        (getPlayer$ | async).mount.miscellanyItemData.rarity
+                      )
+                    }}%
+                  </span>
                 </ng-template>
                 <app-generic-item-tooltip
-                  [item]="(getPlayer$ | async)?.mount?.miscellanyItemData"
+                  [item]="(getPlayer$ | async).mount.miscellanyItemData"
                   [customTemplate]="mountSpeed"
                 ></app-generic-item-tooltip>
               </div>
@@ -396,7 +407,8 @@
           }
         </div>
         <div
-          class="change-siluette" *ngIf="!isViewingPlayer"
+          class="change-siluette"
+          *ngIf="!isViewingPlayer"
           (click)="containerExpanded = !containerExpanded"
         >
           <i class="fa-solid fa-arrow-right-arrow-left"></i>

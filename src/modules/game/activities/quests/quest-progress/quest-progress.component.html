@@ -51,9 +51,15 @@
         role="progressbar"
         aria-valuemin="0"
         aria-valuemax="100"
+        [ngbTooltip]="reducedTime"
         [style.width]="questTimerService.reductionPercentage() + '%'"
       >
         <span urText class="w-100 text-center d-block">🦄</span>
+        <ng-template #reducedTime>
+          <div class="p-2">
+            Time reduced by boosts ({{questTimerService.reductionPercentage()}}%)
+          </div>
+        </ng-template>
       </div>
 
       <!-- Barra de progreso normal ajustada -->

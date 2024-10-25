@@ -127,4 +127,5 @@ export interface MiscellanyItemData {
   description: string;
   instances: MiscellanyItem[];
   souldBoundByDefault: boolean;
+  value?: any;
 }

@@ -485,10 +485,27 @@
   >
     @if (!!item) {
       <div tooltip class="tooltip-uruk">
-        <app-generic-item-tooltip
-          [item]="item.miscellanyItemData"
-          [souldBound]="item?.souldBound"
-        ></app-generic-item-tooltip>
+        @switch (item.miscellanyItemData.itemType) {
+          @case ('Mount') {
+            <ng-template #mountSpeed>
+              <span class="text-third">
+                Quest cooldown -{{
+                  getMountTimeReductionByRarity(item.miscellanyItemData.rarity)
+                }}%
+              </span>
+            </ng-template>
+            <app-generic-item-tooltip
+              [item]="item.miscellanyItemData"
+              [customTemplate]="mountSpeed"
+            ></app-generic-item-tooltip>
+          }
+          @default {
+            <app-generic-item-tooltip
+              [item]="item.miscellanyItemData"
+              [souldBound]="item?.souldBound"
+            ></app-generic-item-tooltip>
+          }
+        }
       </div>
     }
   </app-item-box>

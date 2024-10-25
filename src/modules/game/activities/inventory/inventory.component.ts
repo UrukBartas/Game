@@ -24,6 +24,7 @@ import { Material } from 'src/modules/core/models/material.model';
 import { MiscellanyItemIdentifier } from 'src/modules/core/models/misc.model';
 import { ItemSet, PlayerModel } from 'src/modules/core/models/player.model';
 import {
+  getMountTimeReductionByRarity,
   getRarityBasedOnIRI,
   getRarityColor,
   getRarityText,
@@ -119,6 +120,7 @@ export class InventoryComponent extends TemplatePage {
   public getRarityColor = getRarityColor;
   public getRarityText = getRarityText;
   public getRarityBasedOnIRI = getRarityBasedOnIRI;
+  public getMountTimeReductionByRarity = getMountTimeReductionByRarity;
 
   public getPlayer$: Observable<PlayerModel> = of(true).pipe(
     switchMap(() => {
@@ -127,9 +129,7 @@ export class InventoryComponent extends TemplatePage {
           this.route.snapshot.paramMap.get('id')
         );
       } else {
-        return this.store
-          .select(MainState.getState)
-          .pipe(map((entry) => entry.player));
+        return this.store.select(MainState.getPlayer);
       }
     })
   );
@@ -357,9 +357,12 @@ export class InventoryComponent extends TemplatePage {
   }
 
   public async equipItem(item: Item, equipType: ItemType) {
-    this.playerService.equipItemFlow(this.itemService.equipItem(item, equipType), () => {
-      this.inventoryUpdated$.next(true);
-    });
+    this.playerService.equipItemFlow(
+      this.itemService.equipItem(item, equipType),
+      () => {
+        this.inventoryUpdated$.next(true);
+      }
+    );
   }
 
   public onHoverItem(item: Item) {
@@ -367,9 +370,12 @@ export class InventoryComponent extends TemplatePage {
   }
 
   public equipMount(mount: MiscellanyItem) {
-    this.playerService.equipItemFlow(this.playerService.equipMount(mount?.id), () => {
-      this.mountsUpdated$.next(true);
-    });
+    this.playerService.equipItemFlow(
+      this.playerService.equipMount(mount?.id),
+      () => {
+        this.mountsUpdated$.next(true);
+      }
+    );
   }
 
   onDrop(event: DndDropEvent, equipType: ItemType) {

@@ -33,6 +33,7 @@ import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
 import {
   fillInventoryBasedOnPlayerSockets,
   getGenericItemItemData,
+  getMountTimeReductionByRarity,
   getRarityColor,
   getRarityText,
 } from 'src/modules/utils';
@@ -102,6 +103,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   quantityOpen = new FormControl(1);
   public getRarityColor = getRarityColor;
   public getRarityText = getRarityText;
+  public getMountTimeReductionByRarity = getMountTimeReductionByRarity;
 
   public itemType = ItemTypeSC;
   public rolls: Array<{
