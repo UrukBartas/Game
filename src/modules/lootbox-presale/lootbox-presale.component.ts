@@ -8,41 +8,52 @@ import {
   ViewEncapsulation,
   inject,
 } from '@angular/core';
-import {
-  getAccount,
-  getNetwork,
-  switchNetwork,
-  waitForTransaction,
-} from '@wagmi/core';
+import { getAccount, waitForTransaction } from '@wagmi/core';
 
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { ethers } from 'ethers';
+import { cloneDeep } from 'lodash';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import * as party from 'party-js';
-import { catchError, finalize, from } from 'rxjs';
+import { finalize, firstValueFrom, forkJoin, from, map, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import {
   LootboxPresaleTypeEnum,
   PresaleContractService,
-  SHIMMER_TESTNET_CHAINID,
 } from 'src/services/contracts/presale-contract.service';
+import { MiscellanyService } from 'src/services/miscellany.service';
 import { WalletService } from 'src/services/wallet.service';
+import { WebSocketService } from 'src/services/websocket.service';
+import { ChainSwitcherComponent } from 'src/standalone/chain-switcher/chain-switcher.component';
 import SwiperCore, { EffectCoverflow, Navigation, SwiperOptions } from 'swiper';
 import { SwiperModule } from 'swiper/angular';
+import { LootboxStatsDisplayerComponent } from '../../standalone/lootbox-stats-displayer/lootbox-stats-displayer.component';
 import { Rarity } from '../core/models/items.model';
+import {
+  MiscellanyItemData,
+  MiscellanyItemType,
+} from '../core/models/misc.model';
 import { getRarityColor } from '../utils';
-import { lootboxItemDropsByRarity, lootboxes } from './data/lootbox.const';
 import { PresaleClaimInfoModalComponent } from './modal/presale-claim-info-modal/presale-claim-info-modal.component';
 import { LootboxPresaleThreeService } from './services/lootbox-presale-threejs.service';
-import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 SwiperCore.use([Navigation, EffectCoverflow]);
-
+interface LootboxDataBlockchain {
+  blockchain: any;
+  data: MiscellanyItemData & { available: number; price: string };
+}
 @Component({
   selector: 'app-lootbox-presale',
   templateUrl: './lootbox-presale.component.html',
   styleUrls: ['./lootbox-presale.component.scss'],
-  imports: [CommonModule, SwiperModule, NgxSliderModule],
+  imports: [
+    CommonModule,
+    SwiperModule,
+    NgxSliderModule,
+    ChainSwitcherComponent,
+    LootboxStatsDisplayerComponent,
+  ],
   providers: [LootboxPresaleThreeService, PresaleContractService],
   standalone: true,
   encapsulation: ViewEncapsulation.None,
@@ -69,34 +80,74 @@ export class LootboxPresaleComponent implements AfterViewInit {
   };
   itemsByRarity;
   openDetail = false;
-  lootboxes = lootboxes.map((lootbox) => ({
-    ...lootbox,
-    image: environment.permaLinkImgPref + lootbox.image,
-  }));
-  activeLootbox = lootboxes[1];
+  activeLootbox: LootboxDataBlockchain = null;
   loading = false;
   rarityEnum = Rarity;
   private threeService = inject(LootboxPresaleThreeService);
   private presaleContractService = inject(PresaleContractService);
   private walletService = inject(WalletService);
-  private cdr = inject(ChangeDetectorRef);
+  private miscService = inject(MiscellanyService);
   private modalService = inject(BsModalService);
   toastService = inject(ToastrService);
+  cdr = inject(ChangeDetectorRef);
   getRarityColor = getRarityColor;
-  lootboxItemDropRateByRarity = lootboxItemDropsByRarity;
   sliderOptions = { floor: 0, ceil: 0 };
   sliderValue = 1;
+  looboxes$ = this.miscService.getPresaleBoxes();
+  lastLoadedLootboxes = [] as Array<LootboxDataBlockchain>;
+  public prefix = environment.permaLinkImgPref;
+  public MiscellanyItemType = MiscellanyItemType;
 
-  get totalPrice () {
-    return Number.parseFloat(this.activeLootbox.price) * this.sliderValue;
+  public boxesMap = {
+    [Rarity.COMMON]: {
+      name: '⧫ Crate of Fortune ⧫',
+      image: '/assets/presale/common-combobox.png',
+    },
+    [Rarity.UNCOMMON]: {
+      name: '✦ Crate of Misteries ✦',
+      image: '/assets/presale/uncommon-combobox.png',
+    },
+    [Rarity.EPIC]: {
+      name: '★ Crate of Legends ★',
+      image: '/assets/presale/epic-combobox.png',
+    },
+    [Rarity.LEGENDARY]: {
+      name: '✶ Crate of Eternity ✶',
+      image: '/assets/presale/legendary-combobox.png',
+    },
+    [Rarity.MYTHIC]: {
+      name: '✹ Crate of Gods ✹',
+      image: '/assets/presale/mythic-combobox.png',
+    },
+  };
+
+  get totalPrice() {
+    return Number.parseFloat(this.activeLootbox.data.price) * this.sliderValue;
+  }
+
+  constructor(private websocket: WebSocketService) {}
+
+  ngOnInit(): void {
+    this.threeService.initialize(
+      this.threeContainer,
+      this.getRarityFogColor(Rarity.UNCOMMON)
+    );
+    this.websocket.connect();
+  }
+
+  showFomoToast(message: string) {
+    this.toastService.success(`🔥 ${message} 🔥`, 'Lootbox Purchased! ⏳', {
+      timeOut: 4000,
+      positionClass: 'toast-top-right',
+      closeButton: true,
+      progressBar: true,
+      progressAnimation: 'increasing',
+      tapToDismiss: false,
+      newestOnTop: true,
+    });
   }
 
   async ngAfterViewInit(): Promise<void> {
-    this.threeService.initialize(
-      this.threeContainer,
-      this.getRarityFogColor(this.activeLootbox.rarity)
-    );
-
     setTimeout(async () => {
       await this.getLootboxDataFromContract();
     }, 500);
@@ -105,30 +156,55 @@ export class LootboxPresaleComponent implements AfterViewInit {
   private async getLootboxDataFromContract() {
     this.walletService.walletConnectIsLoggedIn$.subscribe(async (status) => {
       if (status) {
-        lootboxes.forEach((lootbox) => {
-          from(
-            this.presaleContractService.getBoughtLootboxesOfType(
-              LootboxPresaleTypeEnum[lootbox.rarity]
-            )
-          )
-            .pipe(
-              catchError(async (error) => {
-                console.log(error);
-                return [];
-              })
-            )
-            .subscribe(async (response) => {
-              const avaible =
-                response.find((item) => item.poolType === 'PRESALE')?.amount ??
-                0;
-
-              lootbox.avaible = Number.parseInt(avaible.toString());
-              lootbox.price = ethers.formatEther(response[0].toString());
-              if (lootbox.rarity === Rarity.UNCOMMON) {
-                this.sliderOptions.ceil = lootbox.avaible ?? 0;
-              }
-            });
+        const address = await firstValueFrom(
+          this.walletService.getValidAddress$
+        );
+        this.websocket.socket.on('nftPurchaseNotification', (data: any) => {
+          if (data.buyer != address) this.showFomoToast(data.message);
         });
+        const res = await firstValueFrom(
+          this.looboxes$.pipe(
+            switchMap((lootboxes: Array<MiscellanyItemData>) => {
+              return forkJoin(
+                lootboxes.map((lootbox) =>
+                  from(
+                    this.presaleContractService.getBoughtLootboxesOfType(
+                      LootboxPresaleTypeEnum[lootbox.rarity]
+                    )
+                  ).pipe(
+                    map((smartContractPresaleBox) => {
+                      const available =
+                        smartContractPresaleBox.find(
+                          (item) => item.poolType === 'PRESALE'
+                        )?.amount ?? 0;
+
+                      const price = ethers.formatEther(
+                        smartContractPresaleBox[0].toString()
+                      );
+
+                      const lootboxResult = {
+                        data: {
+                          ...lootbox,
+                          available: Number.parseInt(available.toString(), 10),
+                          price: price,
+                        } as MiscellanyItemData,
+                        blockchain: smartContractPresaleBox as any,
+                      } as LootboxDataBlockchain;
+                      console.log(lootboxResult);
+                      if (lootbox.rarity === Rarity.UNCOMMON) {
+                        this.activeLootbox = lootboxResult;
+                        this.setSliderCeil();
+                      }
+
+                      return lootboxResult;
+                    })
+                  )
+                )
+              );
+            })
+          )
+        );
+        this.lastLoadedLootboxes = res as any;
       } else {
         this.walletService.modal.open();
       }
@@ -151,41 +227,39 @@ export class LootboxPresaleComponent implements AfterViewInit {
   }
 
   private async preMintCheck(address: string) {
-    const checkNetwork = await this.checkNetworkIsCorrect();
-
-    if (address && checkNetwork) {
+    if (this.walletService.activeNetworkId.getValue() != 0 && address) {
       this.mintLootbox(address);
-    }
-  }
-
-  private async checkNetworkIsCorrect(): Promise<boolean> {
-    const network = getNetwork();
-    if (network.chain?.id !== SHIMMER_TESTNET_CHAINID) {
-      try {
-        await switchNetwork({ chainId: SHIMMER_TESTNET_CHAINID });
-        return true;
-      } catch (error) {
-        this.toastService.error('Failed to switch network');
-        return false;
-      }
     } else {
-      return true;
+      const ref = this.modalService.show(ChainSwitcherComponent, {
+        initialState: {
+          height: 200,
+          width: 200,
+        },
+      });
+      ref.content.networkChanged.subscribe(() => {
+        ref.hide();
+        setTimeout(() => {
+          this.preMintCheck(address);
+        }, 300);
+      });
     }
   }
 
   private setSliderCeil() {
-    this.sliderOptions = { floor: 1, ceil: this.activeLootbox.avaible ?? 0 };
+    this.sliderOptions = {
+      floor: 1,
+      ceil: this.activeLootbox.data.available ?? 0,
+    };
   }
 
   private async mintLootbox(address: string) {
     const totalPrice = this.totalPrice;
     const priceInEther = ethers.parseEther(totalPrice.toString());
-
     try {
       const tx = await this.presaleContractService.mintMultipleLootboxes(
         this.sliderValue,
         address,
-        LootboxPresaleTypeEnum[this.activeLootbox.rarity],
+        LootboxPresaleTypeEnum[this.activeLootbox.data.rarity],
         priceInEther
       );
       this.loading = true;
@@ -196,8 +270,8 @@ export class LootboxPresaleComponent implements AfterViewInit {
       )
         .pipe(finalize(() => (this.loading = false)))
         .subscribe(async () => {
-          this.activeLootbox.avaible =
-            this.activeLootbox.avaible - this.sliderValue;
+          this.activeLootbox.data.available =
+            this.activeLootbox.data.available - this.sliderValue;
           this.setSliderCeil();
           party.confetti(this.threeContainer.nativeElement, {
             count: party.variation.range(100, 200),
@@ -205,11 +279,17 @@ export class LootboxPresaleComponent implements AfterViewInit {
           this.toastService.success(
             'NFT minted, you will receive it in your wallet soon!'
           );
+          this.openClaimInfo();
+          this.websocket.socket.emit('nftPurchased', {
+            buyer: address,
+            lootbox: this.activeLootbox.data.rarity,
+          });
         });
     } catch (error: any) {
       console.log(error);
-
-      this.toastService.error(error.shortMessage ?? 'Error during minting - Transaction canceled');
+      this.toastService.error(
+        error.shortMessage ?? 'Error during minting - Transaction canceled'
+      );
     }
   }
 
@@ -218,19 +298,16 @@ export class LootboxPresaleComponent implements AfterViewInit {
   }
 
   onSlideChange(swiper: any) {
-    this.activeLootbox = lootboxes[swiper.activeIndex];
-    this.setSliderCeil();
-    this.threeService.changeFogColor(
-      this.getRarityFogColor(this.activeLootbox.rarity)
-    );
-    this.cdr.detectChanges();
-  }
-
-  getImageUrls(): string[] {
-    const { rarity } = this.activeLootbox;
-    return lootboxItemDropsByRarity[rarity].map((imageUrl) => {
-      return environment.permaLinkImgPref + `/assets/${imageUrl}`;
-    });
+    if (this.lastLoadedLootboxes && this.lastLoadedLootboxes.length > 0) {
+      this.activeLootbox = cloneDeep(
+        this.lastLoadedLootboxes[swiper.activeIndex]
+      );
+      this.setSliderCeil();
+      this.threeService.changeFogColor(
+        this.getRarityFogColor(this.activeLootbox.data.rarity)
+      );
+      this.cdr.detectChanges();
+    }
   }
 
   private getRarityFogColor(rarity: Rarity): number {
@@ -249,9 +326,9 @@ export class LootboxPresaleComponent implements AfterViewInit {
     }
   }
 
-  getAvaibleColor(total: number, avaible: number): string {
-    if (avaible / total > 0.5) return 'white';
-    if (avaible / total > 0.3) return 'yellow';
+  getAvaibleColor(total: number, available: number): string {
+    if (available / total > 0.5) return 'white';
+    if (available / total > 0.3) return 'yellow';
     return 'orange';
   }
 }

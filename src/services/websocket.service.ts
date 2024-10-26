@@ -27,13 +27,15 @@ export class WebSocketService {
   private soundService = inject(SoundService);
 
   connect(): void {
-    const token = this.store.selectSnapshot(MainState.getState).session.token;
+    const token = this.store.selectSnapshot(MainState.getState)?.session?.token;
 
     this.socket = io(environment.apiUrl, {
       transports: ['websocket'],
-      auth: {
-        token,
-      },
+      auth: token
+        ? {
+            token,
+          }
+        : undefined,
     });
 
     this.socket.on('onlinePlayers', (data) => {

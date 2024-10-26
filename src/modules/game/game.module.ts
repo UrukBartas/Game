@@ -22,7 +22,9 @@ import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.c
 import { SpinnerComponent } from 'src/standalone/spinner/spinner.component';
 import { TierizedProgressBarComponent } from 'src/standalone/tierized-progress-bar/tierized-progress-bar.component';
 import { ChainSwitcherComponent } from '../../standalone/chain-switcher/chain-switcher.component';
+import { ChanceDisplayerComponent } from "../../standalone/chance-displayer/chance-displayer.component";
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
+import { LootboxStatsDisplayerComponent } from "../../standalone/lootbox-stats-displayer/lootbox-stats-displayer.component";
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
 import { DoubleClickDirective } from '../core/directives/double-click.directive';
 import { SubtextSizeDirective } from '../core/directives/subtext-size.directive';
@@ -77,8 +79,8 @@ import { GenericStatsComponent } from './components/stats-detail/only-stats/only
 import { OnlyStatsComponent } from './components/stats-detail/only-stats/only-stats/only-stats.component';
 import { PercentStatsComponent } from './components/stats-detail/only-stats/only-stats/percent-stats/percent-stats.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
-import { GameRoutingModule } from './game-routing.module';
 import { TitleGeneratorModalComponent } from './components/title-generator-modal/title-generator-modal.component';
+import { GameRoutingModule } from './game-routing.module';
 
 const directives = [
   ValidInputDirective,
@@ -177,7 +179,9 @@ const pipes = [
     BalanceSelectorComponent,
     ChainSwitcherComponent,
     TheMineInfoModalComponent,
-  ],
+    ChanceDisplayerComponent,
+    LootboxStatsDisplayerComponent
+],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe, StackPipe,...pipes],
 })

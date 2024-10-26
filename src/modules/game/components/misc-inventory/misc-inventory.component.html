@@ -5,107 +5,19 @@
   let-image="image"
   let-type="type"
 >
-  <div class="wrapper-chance-displayer">
-    <app-item-box
-      class="{{ rarity }} chance-displayer"
-      [height]="getPossibleDropsSize()"
-      [width]="getPossibleDropsSize()"
-      [rarity]="rarity"
-      [image]="image"
-    >
-      <div tooltip class="tooltip-uruk p-2">
-        <p class="mb-0" [ngStyle]="{ color: getRarityColor(rarity) }">
-          {{
-            (chance * 100).toFixed(2) +
-              '% of getting a ' +
-              camelCase(rarity) +
-              ' ' +
-              type
-          }}
-        </p>
-      </div>
-    </app-item-box>
-    <span class="text-light">{{ (chance * 100).toFixed(2) + ' %' }}</span>
-  </div>
+  <app-chance-displayer
+    [rarity]="rarity"
+    [chance]="chance"
+    [image]="image"
+    [type]="type"
+  ></app-chance-displayer>
 </ng-template>
 
 <ng-template #statsLootbox>
-  <div class="stats-info-lootbox my-4 p-2">
-    @if (openingItem().miscellanyItemData.itemType == 'ComboLootbox') {
-      <ng-container
-        *ngIf="
-          parsePossibilitiesComboBox(
-            lootboxPossibilities$() | async
-          ) as possibilitiesComboBox
-        "
-      >
-        <ng-container
-          *ngTemplateOutlet="
-            chanceDisplayer;
-            context: {
-              rarity: 'EPIC',
-              chance: possibilitiesComboBox.Portraits.toFixed(2),
-              image: pathPortrait,
-              type: 'portrait',
-            }
-          "
-        ></ng-container>
-
-        <ng-container
-          *ngTemplateOutlet="
-            chanceDisplayer;
-            context: {
-              rarity: 'EPIC',
-              chance: possibilitiesComboBox.Materials.toFixed(2),
-              image: pathMaterial,
-              type: 'material',
-            }
-          "
-        ></ng-container>
-
-        <ng-container *ngFor="let item of possibilitiesComboBox.Others">
-          <ng-container
-            *ngTemplateOutlet="
-              chanceDisplayer;
-              context: {
-                rarity: item.rarity,
-                chance: item.value,
-                image: item.image,
-                type: item.type,
-              }
-            "
-          ></ng-container>
-        </ng-container>
-
-        <p
-          class="mb-0 bonus-items text-third w-100"
-          *ngIf="possibilitiesComboBox.Bonus > 0"
-        >
-          + {{ possibilitiesComboBox.Bonus }} bonus items guaranteed.
-        </p>
-      </ng-container>
-    } @else {
-      <ng-container
-        *ngFor="
-          let distribution of parsePossibilities(
-            lootboxPossibilities$() | async
-          )
-        "
-      >
-        <ng-container
-          *ngTemplateOutlet="
-            chanceDisplayer;
-            context: {
-              type: 'item',
-              rarity: distribution.rarity,
-              chance: distribution.value,
-              image: distribution.image,
-            }
-          "
-        ></ng-container>
-      </ng-container>
-    }
-  </div>
+  <app-lootbox-stats-displayer
+    [openingType]="openingItem().miscellanyItemData.itemType"
+    [openingRarity]="openingItem().miscellanyItemData.rarity"
+  ></app-lootbox-stats-displayer>
 </ng-template>
 
 <ng-template #portraitActivator let-item="data">

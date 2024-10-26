@@ -1,0 +1,52 @@
+<div class="stats-info-lootbox my-4 p-2">
+  @if (_openingType() == 'ComboLootbox') {
+    <ng-container *ngIf="!!possibilitiesComboBox">
+      <app-chance-displayer
+        [rarity]="rarityEnum.EPIC"
+        [chance]="possibilitiesComboBox.Portraits.toFixed(2)"
+        [image]="pathPortrait"
+        [type]="'portrait'"
+        [height]="itemHeight"
+        [width]="itemWidth"
+      ></app-chance-displayer>
+
+      <app-chance-displayer
+        [rarity]="rarityEnum.EPIC"
+        [chance]="possibilitiesComboBox.Materials.toFixed(2)"
+        [image]="pathMaterial"
+        [type]="'material'"
+        [height]="itemHeight"
+        [width]="itemWidth"
+      ></app-chance-displayer>
+
+      <ng-container *ngFor="let item of possibilitiesComboBox.Others">
+        <app-chance-displayer
+          [rarity]="item.rarity"
+          [chance]="item.value"
+          [image]="item.image"
+          [type]="item.type"
+          [height]="itemHeight"
+          [width]="itemWidth"
+        ></app-chance-displayer>
+      </ng-container>
+
+      <p
+        class="mb-0 bonus-items text-third w-100 text-center"
+        *ngIf="possibilitiesComboBox.Bonus > 0"
+      >
+        + {{ possibilitiesComboBox.Bonus }} bonus items guaranteed.
+      </p>
+    </ng-container>
+  } @else {
+    <ng-container *ngFor="let distribution of possibilitiesNormal">
+      <app-chance-displayer
+        [rarity]="distribution.rarity"
+        [chance]="distribution.value"
+        [image]="distribution.image"
+        [type]="'item'"
+        [height]="itemHeight"
+        [width]="itemWidth"
+      ></app-chance-displayer>
+    </ng-container>
+  }
+</div>

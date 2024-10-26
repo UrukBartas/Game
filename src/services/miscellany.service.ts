@@ -17,6 +17,10 @@ export class MiscellanyService extends ApiBaseService {
     this.controllerPrefix = '/miscellany';
   }
 
+  public getPresaleBoxes() {
+    return this.get('/presale-boxes');
+  }
+
   public openLootbox(
     lootboxId: number,
     amount = 1

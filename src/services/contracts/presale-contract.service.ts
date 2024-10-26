@@ -9,14 +9,12 @@ export enum LootboxPresaleTypeEnum {
   MYTHIC = 4,
 }
 
-export const SHIMMER_TESTNET_CHAINID = 1073;
-
 @Injectable({
   providedIn: 'root',
 })
 export class PresaleContractService extends ContractService {
   constructor() {
-    super(ContractTypes.PRESALE, SHIMMER_TESTNET_CHAINID);
+    super(ContractTypes.PRESALE);
   }
 
   getBoughtLootboxesOfType(lootboxType: LootboxPresaleTypeEnum) {
@@ -37,6 +35,10 @@ export class PresaleContractService extends ContractService {
     lootboxType: LootboxPresaleTypeEnum,
     price: bigint
   ) {
-    return this.executeWriteContract('mintMultipleLootboxes', [quantity, address, lootboxType], price);
+    return this.executeWriteContract(
+      'mintMultipleLootboxes',
+      [quantity, address, lootboxType],
+      price
+    );
   }
 }

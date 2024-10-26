@@ -1,0 +1,22 @@
+<div class="wrapper-chance-displayer">
+  <app-item-box
+    class="{{ rarity }} chance-displayer"
+    [height]="height > 0 ? height : getPossibleDropsSize()"
+    [width]="width > 0 ? width : getPossibleDropsSize()"
+    [rarity]="rarity"
+    [image]="image"
+  >
+    <div tooltip class="tooltip-uruk p-2">
+      <p class="mb-0" [ngStyle]="{ color: getRarityColor(rarity) }">
+        {{
+          (+chance * 100).toFixed(2) +
+            '% of getting a ' +
+            camelCase(rarity) +
+            ' ' +
+            type
+        }}
+      </p>
+    </div>
+  </app-item-box>
+  <span class="text-light">{{ (+chance * 100).toFixed(2) + ' %' }}</span>
+</div>

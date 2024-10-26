@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import {
   getAccount,
@@ -10,19 +10,20 @@ import {
   watchNetwork,
 } from '@wagmi/core';
 import { ethers } from 'ethers';
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import {
   BehaviorSubject,
-  EMPTY,
-  Observable,
   catchError,
+  EMPTY,
   filter,
   firstValueFrom,
   forkJoin,
   from,
   interval,
   map,
+  Observable,
   startWith,
   switchMap,
 } from 'rxjs';
@@ -66,11 +67,13 @@ export class ExportImportNftComponent extends TemplatePage {
   stack = inject(StackPipe);
   ERC20ContractService = inject(ERC20ContractService);
   NFTContractService = inject(NFTContractService);
+  activatedRoute = inject(ActivatedRoute);
   public prefix = environment.permaLinkImgPref;
   public activeNetworkId = new BehaviorSubject<number>(0);
   public activeCorrectNetwork = this.activeNetworkId.pipe(
     filter((entry) => !!entry)
   );
+  @ViewChild('staticTabs', { static: false }) staticTabs?: TabsetComponent;
 
   public get allSelectedItems() {
     return [
@@ -321,6 +324,24 @@ export class ExportImportNftComponent extends TemplatePage {
         }
       });
     });
+  }
+
+  async ngAfterViewInit() {
+    const queryParams = await firstValueFrom(this.activatedRoute.queryParams);
+    const { navigateToTab, importMode, exporObjectType } = queryParams;
+    if (navigateToTab) {
+      setTimeout(() => {
+        if (this.staticTabs?.tabs[Number(navigateToTab)]) {
+          this.staticTabs.tabs[Number(navigateToTab)].active = true;
+        }
+      }, 0);
+    }
+    if (importMode === 'true') {
+      this.exportTypeActive = 'import';
+    }
+    if (!!exporObjectType) {
+      this.exportingObjectTypeActive = exporObjectType;
+    }
   }
 
   public isAllowedNetwork(chainId: number) {

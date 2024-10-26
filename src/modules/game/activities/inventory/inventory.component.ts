@@ -21,7 +21,10 @@ import {
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
-import { MiscellanyItemIdentifier } from 'src/modules/core/models/misc.model';
+import {
+  MiscellanyItem,
+  MiscellanyItemIdentifier,
+} from 'src/modules/core/models/misc.model';
 import { ItemSet, PlayerModel } from 'src/modules/core/models/player.model';
 import {
   getRarityBasedOnIRI,
@@ -34,12 +37,12 @@ import { MiscellanyService } from 'src/services/miscellany.service';
 import { PlayerService } from 'src/services/player.service';
 import { ShopService } from 'src/services/shop.service';
 import { ViewportService } from 'src/services/viewport.service';
+import { WalletService } from 'src/services/wallet.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
 import { TitleGeneratorModalComponent } from '../../components/title-generator-modal/title-generator-modal.component';
 import { ItemSetModalComponent } from './item-set-modal/item-set-modal.component';
 import { InventoryUpdateService } from './services/inventory-update.service';
-import { MiscellanyItem } from 'src/modules/core/models/misc.model';
 
 @Component({
   selector: 'app-inventory',
@@ -59,6 +62,7 @@ export class InventoryComponent extends TemplatePage {
   public inventoryUpdateService = inject(InventoryUpdateService);
   toastService = inject(ToastrService);
   contextMenuService = inject(ContextMenuService);
+  walletService = inject(WalletService);
   public activeSlideIndex = 0;
   public maxLevel = 10;
   public currentSize$ = this.store.select(MainState.getState).pipe(
@@ -215,7 +219,36 @@ export class InventoryComponent extends TemplatePage {
     this.inventoryUpdateService.updateAllInventory$
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.loadInventories());
+
+    this.walletService.getValidAddress$
+      .pipe(takeUntilDestroyed())
+      .subscribe((address) => {
+        if (localStorage.getItem(address)) {
+          const { presale } = JSON.parse(localStorage.getItem(address));
+          if (presale && presale.timestamp) {
+            const currentTime = Date.now();
+            const tenMinutesInMs = 10 * 60 * 1000;
+
+            if (currentTime - presale.timestamp > tenMinutesInMs) {
+              localStorage.removeItem(address);
+              console.log(
+                'Local storage eliminado debido a expiración de tiempo'
+              );
+            } else {
+              this.router.navigate(['export-import'], {
+                queryParams: {
+                  navigateToTab: 3,
+                  importMode: true,
+                  exporObjectType: 'nft',
+                },
+              });
+            }
+          }
+        }
+      });
   }
+
+  ngAfterViewInit(): void {}
 
   private setupInventories() {
     this.inventoryUpdated$.pipe(takeUntilDestroyed()).subscribe(async () => {
@@ -357,9 +390,12 @@ export class InventoryComponent extends TemplatePage {
   }
 
   public async equipItem(item: Item, equipType: ItemType) {
-    this.playerService.equipItemFlow(this.itemService.equipItem(item, equipType), () => {
-      this.inventoryUpdated$.next(true);
-    });
+    this.playerService.equipItemFlow(
+      this.itemService.equipItem(item, equipType),
+      () => {
+        this.inventoryUpdated$.next(true);
+      }
+    );
   }
 
   public onHoverItem(item: Item) {
@@ -367,9 +403,12 @@ export class InventoryComponent extends TemplatePage {
   }
 
   public equipMount(mount: MiscellanyItem) {
-    this.playerService.equipItemFlow(this.playerService.equipMount(mount?.id), () => {
-      this.mountsUpdated$.next(true);
-    });
+    this.playerService.equipItemFlow(
+      this.playerService.equipMount(mount?.id),
+      () => {
+        this.mountsUpdated$.next(true);
+      }
+    );
   }
 
   onDrop(event: DndDropEvent, equipType: ItemType) {
