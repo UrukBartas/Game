@@ -23,10 +23,11 @@
             />
             <span
               [ngStyle]="{ color: getRarityColor(lootbox.data.rarity) }"
-              class="lootbox-name pb-4"
+              class="lootbox-name pb-2"
               >{{ boxesMap[lootbox.data.rarity].name }}</span
             >
-            <div class="lootbox-availability pb-4">
+
+            <div class="lootbox-availability">
               <span
                 *ngIf="lootbox.data.available > 0"
                 [ngStyle]="{
@@ -45,16 +46,16 @@
                 Sold Out!
               </span>
             </div>
-            <div class="d-flex pt-4">
+            <div class="d-flex py-3">
               <button
                 *ngIf="!openDetail && activeLootbox.data.available > 0"
                 (click)="openDetail = !openDetail"
                 [ngStyle]="{
                   background: getRarityColor(activeLootbox.data.rarity),
                 }"
-                class="btn btn-lg text-white w-100 mint-button animate__animated animate__bounce animate__infinite animate__slower"
+                class="btn btn-lg text-white w-100 mint-button animate__animated animate__pulse animate__infinite animate__slower"
               >
-                Open me!
+                Mint now!
               </button>
               <button
                 *ngIf="!openDetail && activeLootbox.data.available === 0"

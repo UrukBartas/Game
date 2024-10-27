@@ -13,7 +13,7 @@
             '% of getting a ' +
             camelCase(rarity) +
             ' ' +
-            type
+            (!!mapType[type] ? mapType[type] : camelCase(type))
         }}
       </p>
     </div>

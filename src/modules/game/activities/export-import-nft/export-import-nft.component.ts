@@ -44,6 +44,7 @@ import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ItemTypeSC } from './enums/ItemTypesSC';
+import { PresaleContractService } from 'src/services/contracts/presale-contract.service';
 
 @Component({
   selector: 'app-export-import-nft',
@@ -67,6 +68,7 @@ export class ExportImportNftComponent extends TemplatePage {
   stack = inject(StackPipe);
   ERC20ContractService = inject(ERC20ContractService);
   NFTContractService = inject(NFTContractService);
+  PRESALEContractService = inject(PresaleContractService);
   activatedRoute = inject(ActivatedRoute);
   public prefix = environment.permaLinkImgPref;
   public activeNetworkId = new BehaviorSubject<number>(0);
@@ -444,7 +446,10 @@ export class ExportImportNftComponent extends TemplatePage {
   }
 
   public async addAssetToWallet() {
-    const [finalIdsToImport] = await this.getRawSelectedItems();
+    const distribution = await this.getRawSelectedItems();
+    const nftImports = distribution['NFT'];
+    const presaleImports = distribution['PRESALE'];
+    const finalIdsToImport = [...nftImports.ids, ...presaleImports.ids];
     this.toastService.info(
       `Discovering ${finalIdsToImport.length} NFTs in wallet, can take a while...`
     );
@@ -593,8 +598,16 @@ export class ExportImportNftComponent extends TemplatePage {
 
   private async getRawSelectedItems() {
     const allNFTItems = await firstValueFrom(this.currentInventoryOfNfts$);
-    const finalIdsToImport = [];
-    const finalItemTypesToImport = [];
+    const origins = {
+      NFT: {
+        ids: [],
+        itemTypes: [],
+      },
+      PRESALE: {
+        ids: [],
+        itemTypes: [],
+      },
+    };
     this.allSelectedItems.forEach((selectedItem) => {
       if (
         selectedItem['itemType'] == ItemTypeSC.Potion ||
@@ -611,17 +624,19 @@ export class ExportImportNftComponent extends TemplatePage {
         });
 
         foundNftsByType.forEach((entry) => {
-          if (!finalIdsToImport.includes(entry.tokenId)) {
-            finalIdsToImport.push(entry.tokenId);
-            finalItemTypesToImport.push(entry.itemType);
+          if (!origins[entry.sc_origin].ids.includes(entry.tokenId)) {
+            origins[entry.sc_origin].ids.push(entry.tokenId);
+            origins[entry.sc_origin].itemTypes.push(entry.itemType);
           }
         });
       } else {
-        finalIdsToImport.push(selectedItem['tokenId']);
-        finalItemTypesToImport.push(selectedItem['itemType']);
+        origins[selectedItem['sc_origin']].ids.push(selectedItem['tokenId']);
+        origins[selectedItem['sc_origin']].itemTypes.push(
+          selectedItem['itemType']
+        );
       }
     });
-    return [finalIdsToImport, finalItemTypesToImport];
+    return origins;
   }
 
   public async triggerActionForNFT() {
@@ -648,12 +663,23 @@ export class ExportImportNftComponent extends TemplatePage {
         );
         this.spinnerService.hide();
       } else {
-        const [finalIdsToImport, finalItemTypesToImport] =
-          await this.getRawSelectedItems();
-        await this.NFTContractService.importNftToItem([
-          finalIdsToImport,
-          finalItemTypesToImport,
-        ]);
+        const distribution = await this.getRawSelectedItems();
+        const nftImports = distribution['NFT'];
+        const presaleImports = distribution['PRESALE'];
+
+        if (nftImports.ids.length > 0) {
+          await this.NFTContractService.importNftToItem([
+            nftImports.ids,
+            nftImports.itemTypes,
+          ]);
+        }
+
+        if (presaleImports.ids.length > 0) {
+          await this.PRESALEContractService.importNftToGame([
+            presaleImports.ids,
+          ]);
+        }
+
         this.spinnerService.hide();
         this.sendThemToTheAbyssAndBurnThemLikeJs();
         this.toastService.success(

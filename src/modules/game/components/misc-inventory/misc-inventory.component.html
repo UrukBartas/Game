@@ -398,6 +398,7 @@
     @if (!!item) {
       <div tooltip class="tooltip-uruk">
         <app-generic-item-tooltip
+          [extraData]="item.extraData"
           [item]="item.miscellanyItemData"
           [souldBound]="item?.souldBound"
         ></app-generic-item-tooltip>

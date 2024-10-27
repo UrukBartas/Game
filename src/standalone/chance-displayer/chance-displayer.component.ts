@@ -5,6 +5,10 @@ import { Rarity } from 'src/modules/core/models/items.model';
 import { getRarityColor } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
 import { ItemBoxComponent } from '../item-box/item-box.component';
+import {
+  MiscellanyItemIdentifier,
+  MiscellanyItemType,
+} from 'src/modules/core/models/misc.model';
 
 @Component({
   selector: 'app-chance-displayer',
@@ -20,6 +24,15 @@ export class ChanceDisplayerComponent {
   @Input() type: string;
   @Input() height = -1;
   @Input() width = -1;
+
+  public mapType = {
+    [MiscellanyItemType.ComboLootbox]: 'Presale lootbox',
+    [MiscellanyItemType.Boost]: 'Boost',
+    [MiscellanyItemType.ItemSet]: 'Item full set',
+    [MiscellanyItemType.MoneyBag]: 'Money bag',
+    [MiscellanyItemType.Title_Suffix]: 'Title suffix',
+    [MiscellanyItemType.Title_Prefix]: 'Title prefix',
+  };
 
   viewportService = inject(ViewportService);
   public getRarityColor = getRarityColor;

@@ -9,7 +9,10 @@ import {
 import { cloneDeep } from 'lodash';
 import { firstValueFrom } from 'rxjs';
 import { ItemType, Rarity } from 'src/modules/core/models/items.model';
-import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
+import {
+  MiscellanyItemIdentifier,
+  MiscellanyItemType,
+} from 'src/modules/core/models/misc.model';
 import { StatsService } from 'src/services/stats.service';
 import { ChanceDisplayerComponent } from '../chance-displayer/chance-displayer.component';
 
@@ -30,13 +33,11 @@ export class LootboxStatsDisplayerComponent {
 
   // @Input() properties with Signals
   @Input() public set openingType(data: MiscellanyItemType) {
-    console.log('change openingType');
     this._openingType.set(data); // Set the signal valueç
     this.updatePossibilities();
   }
 
   @Input() public set openingRarity(data: Rarity) {
-    console.log('change openingRarity');
     this._openingRarity.set(data); // Set the signal value
     this.updatePossibilities();
   }
@@ -67,6 +68,11 @@ export class LootboxStatsDisplayerComponent {
   public rarityEnum = Rarity;
   public pathPortrait = 'assets/premium-portraits/5.webp';
   public pathMaterial = 'assets/materials/38.webp';
+  public mapTypeImage = {
+    [MiscellanyItemType.Portrait]: this.pathPortrait,
+    ['MATERIAL']: this.pathMaterial,
+    [MiscellanyItemType.MoneyBag]: 'assets/misc/bags/medium_bag_money.png',
+  };
   stats = inject(StatsService);
   public parsePossibilitiesComboBox(possibilities: any, rarity: Rarity) {
     if (!possibilities) return null;
@@ -75,7 +81,7 @@ export class LootboxStatsDisplayerComponent {
       Portraits: 0,
       Materials: 0,
       Others: [] as any[],
-      Bonus: possibilities[rarity]?.bonusDrop?.length ?? 0,
+      Bonus: possibilities[rarity]?.bonusDrop ?? [],
     };
 
     Object.keys(drops).forEach((key) => {
@@ -100,7 +106,6 @@ export class LootboxStatsDisplayerComponent {
     });
 
     result.Others.sort((a, b) => b.value - a.value);
-    console.warn(result);
     return cloneDeep(result);
   }
 

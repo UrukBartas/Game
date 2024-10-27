@@ -125,7 +125,9 @@ export class LootboxPresaleComponent implements AfterViewInit {
     return Number.parseFloat(this.activeLootbox.data.price) * this.sliderValue;
   }
 
-  constructor(private websocket: WebSocketService) {}
+  constructor(private websocket: WebSocketService) {
+    this.presaleContractService.autoConnectToValidChain();
+  }
 
   ngOnInit(): void {
     this.threeService.initialize(
@@ -190,7 +192,6 @@ export class LootboxPresaleComponent implements AfterViewInit {
                         } as MiscellanyItemData,
                         blockchain: smartContractPresaleBox as any,
                       } as LootboxDataBlockchain;
-                      console.log(lootboxResult);
                       if (lootbox.rarity === Rarity.UNCOMMON) {
                         this.activeLootbox = lootboxResult;
                         this.setSliderCeil();

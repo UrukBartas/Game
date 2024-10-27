@@ -1,5 +1,26 @@
+import { get } from 'lodash';
 import { Rarity } from './core/models/items.model';
 import { ItemTypeSC } from './game/activities/export-import-nft/enums/ItemTypesSC';
+export const EXTRA_DATA_CONSTS = {
+  PRESALE: {
+    collection: 'presale',
+  },
+};
+
+export const EXTRA_DATA_MAP = {
+  'PRESALE.collection': 'Founders edition presale.',
+};
+
+export const getTranslationMapExtraData = (extraDataObject) => {
+  const entries = Object.keys(EXTRA_DATA_MAP);
+
+  for (let i = 0; i < entries.length; i++) {
+    const key = entries[i];
+    const found = get(extraDataObject, key); // Esto busca `extraDataObject['PRESALE']['collection']`
+    if (found) return EXTRA_DATA_MAP[key];
+  }
+  return null;
+};
 
 function blendColors(color: string, percent: number): string {
   const f = parseInt(color.slice(1), 16);

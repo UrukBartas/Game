@@ -219,36 +219,31 @@ export class InventoryComponent extends TemplatePage {
     this.inventoryUpdateService.updateAllInventory$
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.loadInventories());
-
-    this.walletService.getValidAddress$
-      .pipe(takeUntilDestroyed())
-      .subscribe((address) => {
-        if (localStorage.getItem(address)) {
-          const { presale } = JSON.parse(localStorage.getItem(address));
-          if (presale && presale.timestamp) {
-            const currentTime = Date.now();
-            const tenMinutesInMs = 10 * 60 * 1000;
-
-            if (currentTime - presale.timestamp > tenMinutesInMs) {
-              localStorage.removeItem(address);
-              console.log(
-                'Local storage eliminado debido a expiración de tiempo'
-              );
-            } else {
-              this.router.navigate(['export-import'], {
-                queryParams: {
-                  navigateToTab: 3,
-                  importMode: true,
-                  exporObjectType: 'nft',
-                },
-              });
-            }
-          }
-        }
-      });
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    this.walletService.getValidAddress$.subscribe((address) => {
+      if (localStorage.getItem(address)) {
+        const { presale } = JSON.parse(localStorage.getItem(address));
+        if (presale && presale.timestamp) {
+          const currentTime = Date.now();
+          const tenMinutesInMs = 10 * 60 * 1000;
+          if (currentTime - presale.timestamp > tenMinutesInMs) {
+            localStorage.removeItem(address);
+          } else {
+            this.router.navigate(['export-import'], {
+              queryParams: {
+                navigateToTab: 3,
+                importMode: true,
+                exporObjectType: 'nft',
+              },
+            });
+            localStorage.removeItem(address);
+          }
+        }
+      }
+    });
+  }
 
   private setupInventories() {
     this.inventoryUpdated$.pipe(takeUntilDestroyed()).subscribe(async () => {

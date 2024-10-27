@@ -21,12 +21,8 @@ export class PresaleContractService extends ContractService {
     return this.executeReadContract<any[]>('lootboxes', [lootboxType]);
   }
 
-  mintLootbox(
-    address: string,
-    lootboxType: LootboxPresaleTypeEnum,
-    price: bigint
-  ) {
-    return this.executeWriteContract('safeMint', [address, lootboxType], price);
+  importNftToGame(args: any[]) {
+    return this.executeWriteContract('importNftToGame', args);
   }
 
   mintMultipleLootboxes(
