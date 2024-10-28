@@ -84,3 +84,7 @@ export enum Trait {
   INFERNAL = 'INFERNAL',
   CORROSION = 'CORROSION',
 }
+
+export enum ItemEdition {
+  PRESALE = 'PRESALE',
+}

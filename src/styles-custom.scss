@@ -236,3 +236,24 @@
     animation-delay: $i * 0.25s !important;
   }
 }
+
+.button-warlock {
+  background-color: $warlock-primary;
+  border-color: $warlock-secondary;
+}
+.button-rogue {
+  background-color: $rogue-primary;
+  border-color: $rogue-secondary;
+}
+.button-warrior {
+  background-color: $warrior-primary;
+  border-color: $warrior-secondary;
+}
+.button-mage {
+  background-color: $mage-primary;
+  border-color: $mage-secondary;
+}
+
+.text-shadow {
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}

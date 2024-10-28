@@ -79,7 +79,8 @@ import { PercentStatsComponent } from './components/stats-detail/only-stats/only
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { GameRoutingModule } from './game-routing.module';
 import { TitleGeneratorModalComponent } from './components/title-generator-modal/title-generator-modal.component';
-import { CharacterSelectorComponent } from './activities/edit-character/components/character-selector/character-selector.component';
+import { ClassSelectorComponent } from './activities/edit-character/components/character-selector/character-selector.component';
+import { SwiperModule } from 'swiper/angular';
 
 const directives = [
   ValidInputDirective,
@@ -147,7 +148,7 @@ const pipes = [
     TheMineComponent,
     StakeRemoveRequestModalComponent,
     TitleGeneratorModalComponent,
-    CharacterSelectorComponent
+    ClassSelectorComponent
   ],
   imports: [
     ...directives,
@@ -179,6 +180,7 @@ const pipes = [
     BalanceSelectorComponent,
     ChainSwitcherComponent,
     TheMineInfoModalComponent,
+    SwiperModule
   ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe, StackPipe,...pipes],

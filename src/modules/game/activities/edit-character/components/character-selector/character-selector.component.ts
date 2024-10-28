@@ -1,38 +1,91 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { environment } from 'src/environments/environment';
+import { PlayerClass } from 'src/modules/core/models/player.model';
+import { MiscellanyService } from 'src/services/miscellany.service';
+import SwiperCore, {
+  EffectCoverflow,
+  Navigation,
+  Pagination,
+  SwiperOptions,
+} from 'swiper';
+import { baseSkins, classData } from './const/class-data.const';
+import { MiscellanyItemData } from 'src/modules/core/models/misc.model';
+import { getRarityColor } from 'src/modules/utils';
+
+SwiperCore.use([EffectCoverflow, Navigation, Pagination]);
 
 @Component({
   selector: 'app-character-selector',
   templateUrl: './character-selector.component.html',
   styleUrl: './character-selector.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
-export class CharacterSelectorComponent {
+export class ClassSelectorComponent implements OnInit {
   modalRef = inject(BsModalRef);
-  characters = [
-    {
-      img: 'assets/free-portraits/warlock.webp',
-      name: 'Orgok Bloody-Eyes (Warlock)',
-      description:
-        `Once a fierce and loyal warrior of his tribe, Thragor made a fateful pact with a dark entity in exchange for the power to save his people from destruction. Now, bound to the will of a malevolent demon lord, he wields chaotic fire magic with terrifying force. Though his people view him as a savior, Thragor wrestles daily with the growing corruption of his soul, knowing that one day, the price of his power will come due.`
+  imagePrefix = environment.permaLinkImgPref;
+  classes = classData;
+  selectedClass: PlayerClass = classData[0].clazz;
+  PlayerClass = PlayerClass;
+  pickingSkin = false;
+  skins: MiscellanyItemData[] = baseSkins;
+  selectedSkin: MiscellanyItemData;
+  showSelectSkin = true;
+  swiperConfig: SwiperOptions = {
+    slidesPerView: 1,
+    initialSlide: 0,
+    spaceBetween: 10,
+    navigation: true,
+    effect: 'coverflow',
+    coverflowEffect: {
+      rotate: 100,
+      stretch: 1,
+      depth: 100,
+      modifier: 1,
+      slideShadows: false,
     },
-    {
-      img: 'assets/free-portraits/rogue.webp',
-      name: 'Nyx (Rogue)',
-      description:
-        `Nyx was once an unwilling child prisoner of a dark cult that exploited orphans, forcing them to worship an ancient evil. Trained in stealth and manipulation to serve the cult's sinister purposes, she ultimately rebelled and escaped their clutches. Now haunted by the memories of those left behind, Nyx works as a rogue-for-hire, using her skills to unravel the cult's hidden operations from the shadows. She walks a thin line between justice and vengeance, determined to destroy the evil that still seeks to reclaim her.`,
+    keyboard: {
+      enabled: true,
     },
-    {
-      img: 'assets/free-portraits/warrior.webp',
-      name: 'Tulkas Battlehorn (Warrior)',
-      description:
-        `Tulkas hails from the mountain kingdom of Karak Grim, where the dwarves live and die by the blade. A seasoned warrior, Tulkas has seen countless battles, wielding his massive warhammer, "Stonebreaker," with unyielding strength. Known for his stubborn loyalty and fierce protectiveness of his kin, he fights not only for glory but to reclaim the lost relics of his ancestors, which were plundered by ancient foes long ago.`,
-    },
-    {
-      img: 'assets/free-portraits/mage.webp',
-      name: 'Elaris Starweeper (Mage)',
-      description:
-        `Elaris is a scholar of the arcane, born into an ancient lineage of elves who have long guarded the secrets of elemental magic. With his silver hair and piercing violet eyes, Elaris commands the forces of fire, water, and wind with ease. His quest is to unravel a mysterious prophecy that foretells the return of a cataclysmic event that once nearly wiped out the elven race. Driven by knowledge and a deep sense of duty, he ventures far from his homeland, seeking wisdom to prevent the disaster from coming to pass again.`
-    },
-  ];
-  selectedCharacter: string = this.modalRef.content.data.image;
+  };
+  private miscellanyService = inject(MiscellanyService);
+  public getRarityColor = getRarityColor;
+
+  pickClass: (selectedClass) => void;
+
+  ngOnInit(): void {
+    this.miscellanyService.getAllPortraits().subscribe((skins) => {
+      if (skins) {
+        this.skins.push(...skins);
+      }
+    });
+  }
+
+  onSlideChange(event) {
+    this.selectedClass = classData[event.activeIndex].clazz;
+    this.selectedSkin = this.getClassSkins()[0];
+  }
+
+  getClassSkins() {
+    return this.skins.filter(
+      (skin) => skin.extraData.clazz === this.selectedClass
+    );
+  }
+
+  selectSkin(skin: MiscellanyItemData) {
+    this.selectedSkin = skin;
+    const selectedClassIndex = this.classes.findIndex(
+      (clazz) => clazz.clazz === this.selectedClass
+    );
+    this.classes[selectedClassIndex].img = skin.imageLocal;
+  }
+
+  saveSkin() {
+    this.pickingSkin = false;
+  }
+
+  openSkinSelector() {
+    this.pickingSkin = true;
+    this.selectedSkin = this.getClassSkins()[0];
+  }
 }

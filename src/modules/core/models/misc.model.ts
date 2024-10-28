@@ -1,4 +1,4 @@
-import { Rarity } from './items.model';
+import { ItemEdition, Rarity } from './items.model';
 import { PlayerModel } from './player.model';
 
 export enum MiscellanyItemType {
@@ -34,25 +34,25 @@ export enum MiscellanyItemIdentifier {
   MoneyBag500 = 'MoneyBag500',
   MoneyBag1000 = 'MoneyBag1000',
   RecipeEnchant = 'RecipeEnchant',
-  Portrait_Orc_Warrior = 'Portrait_Orc_Warrior',
-  Portrait_Orc_Female_Warrior = 'Portrait_Orc_Female_Warrior',
-  Portrait_Orc_Range = 'Portrait_Orc_Range',
-  Portrait_Orc_Female_Range = 'Portrait_Orc_Female_Range',
-  Portrait_Orc_Sorcerer = 'Portrait_Orc_Sorcerer',
-  Portrait_Orc_Female_Sorcerer = 'Portrait_Orc_Female_Sorcerer',
-  Portrait_Undead_Rogue = 'Portrait_Undead_Rogue',
-  Portrait_Undead_Female_Rogue = 'Portrait_Undead_Female_Rogue',
-  Portrait_Undead_Wizard = 'Portrait_Undead_Wizard',
-  Portrait_Undead_Female_Wizard = 'Portrait_Undead_Female_Wizard',
-  Portrait_Undead_Famelic = 'Portrait_Undead_Famelic',
-  Portrait_Undaed_Female_Famelic = 'Portrait_Undaed_Female_Famelic',
-  Portrait_Viking_Warrior = 'Portrait_Viking_Warrior',
-  Portrait_Viking_Female_Warrior = 'Portrait_Viking_Female_Warrior',
-  Portrait_Viking_Range = 'Portrait_Viking_Range',
-  Portrait_Viking_Female_Range = 'Portrait_Viking_Female_Range',
-  Portrait_Viking_Heavy = 'Portrait_Viking_Heavy',
-  Portrait_Viking_Female_Heavy = 'Portrait_Viking_Female_Heavy',
+
+  PortraitMageBase = 'Portrait_Mage_Base',
+  PortraitWarlockBase = 'Portrait_Warlock_Base',
+  PortraitRogueBase = 'Portrait_Rogue_Base',
+  PortraitWarriorBase = 'Portrait_Warrior_Base',
+  PortraitMagePresale = 'Portrait_Mage_Presale',
+  PortraitWarlockPresale = 'Portrait_Warlock_Presale',
+  PortraitRoguePresale = 'Portrait_Rogue_Presale',
+  PortraitWarriorPresale = 'Portrait_Warrior_Presale',
+  PortraitMageUnleashed = 'Portrait_Mage_Unleashed',
+  PortraitWarlockUnleashed = 'Portrait_Warlock_Unleashed',
+  PortraitRogueUnleashed = 'Portrait_Rogue_Unleashed',
+  PortraitWarriorUnleashed = 'Portrait_Warrior_Unleashed',
+  PortraitMageWest = 'Portrait_Mage_West',
+  PortraitWarlockWest = 'Portrait_Warlock_West',
+  PortraitRogueWest = 'Portrait_Rogue_West',
+  PortraitWarriorWest = 'Portrait_Warrior_West',
 }
+
 
 export const MiscellanyItemIdentifierDisplay: Record<
   MiscellanyItemIdentifier,
@@ -77,33 +77,27 @@ export const MiscellanyItemIdentifierDisplay: Record<
   [MiscellanyItemIdentifier.MoneyBag500]: 'Money Bag (500)',
   [MiscellanyItemIdentifier.MoneyBag1000]: 'Money Bag (1000)',
   [MiscellanyItemIdentifier.RecipeEnchant]: 'Enchant Recipe',
-  [MiscellanyItemIdentifier.Portrait_Orc_Warrior]: 'Orc Warrior Portrait',
-  [MiscellanyItemIdentifier.Portrait_Orc_Female_Warrior]:
-    'Orc Female Warrior Portrait',
-  [MiscellanyItemIdentifier.Portrait_Orc_Range]: 'Orc Range Portrait',
-  [MiscellanyItemIdentifier.Portrait_Orc_Female_Range]:
-    'Orc Female Range Portrait',
-  [MiscellanyItemIdentifier.Portrait_Orc_Sorcerer]: 'Orc Sorcerer Portrait',
-  [MiscellanyItemIdentifier.Portrait_Orc_Female_Sorcerer]:
-    'Orc Female Sorcerer Portrait',
-  [MiscellanyItemIdentifier.Portrait_Undead_Rogue]: 'Undead Rogue Portrait',
-  [MiscellanyItemIdentifier.Portrait_Undead_Female_Rogue]:
-    'Undead Female Rogue Portrait',
-  [MiscellanyItemIdentifier.Portrait_Undead_Wizard]: 'Undead Wizard Portrait',
-  [MiscellanyItemIdentifier.Portrait_Undead_Female_Wizard]:
-    'Undead Female Wizard Portrait',
-  [MiscellanyItemIdentifier.Portrait_Undead_Famelic]: 'Undead Famelic Portrait',
-  [MiscellanyItemIdentifier.Portrait_Undaed_Female_Famelic]:
-    'Undead Female Famelic Portrait',
-  [MiscellanyItemIdentifier.Portrait_Viking_Warrior]: 'Viking Warrior Portrait',
-  [MiscellanyItemIdentifier.Portrait_Viking_Female_Warrior]:
-    'Viking Female Warrior Portrait',
-  [MiscellanyItemIdentifier.Portrait_Viking_Range]: 'Viking Range Portrait',
-  [MiscellanyItemIdentifier.Portrait_Viking_Female_Range]:
-    'Viking Female Range Portrait',
-  [MiscellanyItemIdentifier.Portrait_Viking_Heavy]: 'Viking Heavy Portrait',
-  [MiscellanyItemIdentifier.Portrait_Viking_Female_Heavy]:
-    'Viking Female Heavy Portrait',
+
+  // New Portrait Identifiers
+  [MiscellanyItemIdentifier.PortraitMageBase]: 'Elaris',
+  [MiscellanyItemIdentifier.PortraitWarlockBase]: 'Orgok',
+  [MiscellanyItemIdentifier.PortraitRogueBase]: 'Nyx',
+  [MiscellanyItemIdentifier.PortraitWarriorBase]: 'Tulkas',
+
+  [MiscellanyItemIdentifier.PortraitMagePresale]: 'Spooky Elaris',
+  [MiscellanyItemIdentifier.PortraitWarlockPresale]: 'Spooky Orgok',
+  [MiscellanyItemIdentifier.PortraitRoguePresale]: 'Spooky Nyx',
+  [MiscellanyItemIdentifier.PortraitWarriorPresale]: 'Spooky Tulkas',
+  
+  [MiscellanyItemIdentifier.PortraitMageUnleashed]: 'Elaris Unleashed',
+  [MiscellanyItemIdentifier.PortraitWarlockUnleashed]: 'Orgok Unleashed',
+  [MiscellanyItemIdentifier.PortraitRogueUnleashed]: 'Nyx Unleashed',
+  [MiscellanyItemIdentifier.PortraitWarriorUnleashed]: 'Tulkas Unleashed',
+  
+  [MiscellanyItemIdentifier.PortraitMageWest]: 'Elaris West',
+  [MiscellanyItemIdentifier.PortraitWarlockWest]: 'Orgok West',
+  [MiscellanyItemIdentifier.PortraitRogueWest]: 'Nyx West',
+  [MiscellanyItemIdentifier.PortraitWarriorWest]: 'Tulkas West',
 };
 
 // Interfaces
@@ -128,4 +122,5 @@ export interface MiscellanyItemData {
   instances: MiscellanyItem[];
   souldBoundByDefault: boolean;
   value?: any;
+  extraData?: any | null; // JSON type, can be anything
 }

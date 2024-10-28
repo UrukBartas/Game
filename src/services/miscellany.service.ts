@@ -58,6 +58,10 @@ export class MiscellanyService extends ApiBaseService {
     return this.get('/premium-portraits');
   }
 
+  public getAllPortraits(): Observable<MiscellanyItemData[]> {
+    return this.get('/all-portraits');
+  }
+
   public getSilhouettes(): Observable<MiscellanyItemData[]> {
     return this.get('/silhouettes');
   }

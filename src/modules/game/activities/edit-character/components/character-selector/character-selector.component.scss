@@ -1,0 +1,115 @@
+@import '../../../../../../variables.scss';
+@import '../../../../../../styles-custom.scss';
+
+#character-selector {
+  width: 90vw;
+  max-height: 90vh;
+  position: relative;
+  overflow: auto;
+  cursor: grab;
+
+  .skin-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 2vmax;
+    .skins-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+      .skin-image {
+        max-width: 10vmax;
+        border-radius: 3px;
+        &.selected {
+          border: 2px solid $white-100;
+          box-shadow: 0px 0px 10px $white-100;
+        }
+      }
+    }
+    .skin-text {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+  }
+
+  .swiper-slide {
+    padding: 15px;
+  }
+
+  .text-warlock {
+    color: $warlock-primary;
+  }
+
+  .text-rogue {
+    color: $rogue-primary;
+  }
+
+  .text-warrior {
+    color: $warrior-primary;
+  }
+
+  .text-mage {
+    color: $mage-primary;
+  }
+
+  .character-slide {
+    background-color: $black-400;
+    color: $white-100;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+
+    .character-class-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+
+      .class-icon {
+        width: 40px;
+        height: 40px;
+        margin-left: 10px;
+        margin-bottom: 12px;
+      }
+    }
+  }
+
+  .class-image {
+    max-width: 100%;
+    border-radius: 8px;
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    color: #ffffff70;
+  }
+
+  .class-details {
+    padding: 15px;
+    text-align: left;
+
+    .class-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .class-description {
+      font-size: 1rem;
+      line-height: 1.4;
+      max-height: 30vh;
+      overflow: auto;
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 576px) {
+    .class-details {
+      text-align: center;
+    }
+  }
+}

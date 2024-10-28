@@ -1,6 +1,104 @@
-<div class="row">
-    <div class="col-md-6 col-12">
-        <img [src]="selectedCharacter" class="character-image" />
-    </div>
-    <div class="col-md-6 col-12"></div>
+<div id="character-selector">
+  <swiper [config]="swiperConfig" (slideChange)="onSlideChange($event)">
+    <ng-template swiperSlide *ngFor="let classItem of classes">
+      <div class="character-slide">
+        <div class="row align-items-center">
+          <div class="col-12 col-sm-6 text-center">
+            <img
+              [src]="imagePrefix + classItem.img"
+              [alt]="classItem.name"
+              class="img-fluid class-image"
+            />
+          </div>
+          <div class="col-12 col-sm-6">
+            @if (!pickingSkin) {
+              <div class="class-details">
+                <h3 class="class-name">
+                  {{ classItem.name }}
+                </h3>
+                <div class="character-class-container">
+                  <h4 class="text-white">Class:</h4>
+                  <img
+                    class="class-icon"
+                    [src]="
+                      imagePrefix +
+                      '/assets/free-portraits/icons/' +
+                      classItem.clazz.toLowerCase() +
+                      '.webp'
+                    "
+                  />
+                  <h4 class="text-white">
+                    {{ classItem.clazz | capitalizeFirst }}
+                  </h4>
+                </div>
+                <p class="class-description">{{ classItem.description }}</p>
+                <h4
+                  *ngIf="showSelectSkin"
+                  urText
+                  class="class-description text-center"
+                  (click)="openSkinSelector()"
+                >
+                  + Select a skin
+                </h4>
+                <button
+                  class="btn btn-lg btn-primary save-button w-100 text-shadow"
+                  [ngClass]="{
+                    'button-warlock': classItem.clazz == PlayerClass.WARLOCK,
+                    'button-rogue': classItem.clazz == PlayerClass.ROGUE,
+                    'button-warrior': classItem.clazz == PlayerClass.WARRIOR,
+                    'button-mage': classItem.clazz == PlayerClass.MAGE,
+                  }"
+                  (click)="pickClass(classItem)"
+                >
+                  Pick this class
+                </button>
+              </div>
+            } @else {
+              <div class="skin-details">
+                <div class="skins-container d-flex">
+                  @for (skin of getClassSkins(); track $index) {
+                    <img
+                      [ngClass]="{
+                        selected: selectedSkin.id === skin.id,
+                      }"
+                      (click)="selectSkin(skin)"
+                      [src]="imagePrefix + skin.imageLocal"
+                      class="skin-image"
+                    />
+                  }
+                </div>
+                <div class="skin-text" *ngIf="!!selectedSkin">
+                  <span urTitle class="text-white">
+                    {{ selectedSkin.name }}
+                  </span>
+                  <span urText class="text-white" style="min-height: 12vh">
+                    {{ selectedSkin.description }}
+                  </span>
+                  <span
+                    *ngIf="selectedSkin.extraData.edition"
+                    urText
+                    class="text-white d-flex gap-2"
+                  >
+                    Edition:
+                    <div
+                      [ngStyle]="{ color: getRarityColor(selectedSkin.rarity) }"
+                    >
+                      {{ selectedSkin.extraData.edition }}
+                    </div>
+                  </span>
+                </div>
+                <button
+                  [disabled]="!selectedSkin"
+                  class="btn btn-lg btn-primary save-button w-100 text-shadow"
+                  (click)="saveSkin()"
+                >
+                  Pick this skin
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </swiper>
 </div>

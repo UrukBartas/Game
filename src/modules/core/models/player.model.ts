@@ -2,18 +2,9 @@ import { Item } from './items.model';
 import { MiscellanyItem, MiscellanyItemData, MiscellanyItemIdentifier } from './misc.model';
 import { QuestModel } from './quest.model';
 import { SessionModel } from './session.model';
+
 export type BoostType = 'EXP' | 'URUKS' | 'TRAVEL';
-export interface BoostActive {
-  id: number;
-  playerId: string;
-  player: PlayerModel;
-  boostId: MiscellanyItemIdentifier;
-  boostData: MiscellanyItemData;
-  activatedAt: Date;
-  expiresAt: Date;
-  active: boolean;
-  type: BoostType;
-}
+
 export interface PlayerModel {
   id: string;
   email: string;
@@ -21,6 +12,7 @@ export interface PlayerModel {
   updatedAt: string;
   name: string;
   image: string;
+  clazz: PlayerClass;
   level: number;
   experience: number;
   items: Array<Item>;
@@ -94,6 +86,13 @@ export enum DeedId {
   HERALD_OF_COMPANIONS = 'HERALD_OF_COMPANIONS',
 }
 
+export enum PlayerClass {
+  WARLOCK = 'WARLOCK',
+  MAGE = 'MAGE',
+  ROGUE = 'ROGUE',
+  WARRIOR = 'WARRIOR',
+}
+
 export interface DeedData {
   id: DeedId; // Usamos el enum DeedId como el id
   name: string; // Nombre del deed
@@ -115,4 +114,16 @@ export interface ItemSet {
   id: number;
   name: string;
   items: Item[]; // Aquí va una lista de items, según cómo los tengas definidos
+}
+
+export interface BoostActive {
+  id: number;
+  playerId: string;
+  player: PlayerModel;
+  boostId: MiscellanyItemIdentifier;
+  boostData: MiscellanyItemData;
+  activatedAt: Date;
+  expiresAt: Date;
+  active: boolean;
+  type: BoostType;
 }

@@ -14,7 +14,10 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { PlayerConfiguration } from 'src/modules/core/models/player.model';
+import {
+  PlayerClass,
+  PlayerConfiguration,
+} from 'src/modules/core/models/player.model';
 import { truncateEthereumAddress } from 'src/modules/utils';
 import { AuthService } from 'src/services/auth.service';
 import { MiscellanyService } from 'src/services/miscellany.service';
@@ -27,7 +30,8 @@ import {
   MainState,
   RefreshPlayer,
 } from 'src/store/main.store';
-import { CharacterSelectorComponent } from './components/character-selector/character-selector.component';
+import { ClassSelectorComponent } from './components/character-selector/character-selector.component';
+import { environment } from 'src/environments/environment';
 
 export function passwordMatchingValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
@@ -59,6 +63,8 @@ export class EditCharacterComponent extends TemplatePage {
   editing = false;
   form: FormGroup;
   truncateAddress = truncateEthereumAddress;
+  imagePrefix = environment.permaLinkImgPref;
+  PlayerClass = PlayerClass;
 
   constructor(
     private route: ActivatedRoute,
@@ -71,7 +77,8 @@ export class EditCharacterComponent extends TemplatePage {
 
     this.form = this.formBuilder.group(
       {
-        image: ['assets/free-portraits/warlock.webp', [Validators.required]],
+        image: ['/assets/free-portraits/warlock.webp', [Validators.required]],
+        clazz: [PlayerClass.WARLOCK, [Validators.required]],
         name: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
         password: [
@@ -92,6 +99,20 @@ export class EditCharacterComponent extends TemplatePage {
       this.loadPlayer();
     }
   }
+
+  public getClassBackground(className: PlayerClass) {
+    switch (className) {
+      case PlayerClass.WARLOCK:
+        return '/assets/free-portraits/backgrounds/warlock.webp';
+      case PlayerClass.MAGE:
+        return '/assets/free-portraits/backgrounds/mage.webp';
+      case PlayerClass.ROGUE:
+        return '/assets/free-portraits/backgrounds/rogue.webp';
+      case PlayerClass.WARRIOR:
+        return '/assets/free-portraits/backgrounds/warrior.webp';
+    }
+  }
+
 
   public userHasLinkedAddress() {
     const player = this.store.selectSnapshot(MainState.getState).player;
@@ -127,23 +148,28 @@ export class EditCharacterComponent extends TemplatePage {
   public openCharacterSelector() {
     const config: ModalOptions = {
       initialState: {
-        accept: (image: string) => {
-          if (image) {
-            this.form.patchValue({ image });
+        pickClass: (selectedClass) => {
+          if (selectedClass) {
+            this.form.patchValue({
+              image: selectedClass.img,
+              clazz: selectedClass.clazz,
+            });
           }
           modalRef.hide();
         },
+        showSelectSkin: this.editing,
       },
     };
-    const modalRef = this.modalService.show(CharacterSelectorComponent, config);
+    const modalRef = this.modalService.show(ClassSelectorComponent, config);
   }
 
   private async loadPlayer() {
     const player = this.store.selectSnapshot(MainState.getState).player;
     if (player) {
-      const { image, name, email, configuration } = player;
+      const { image, clazz, name, email, configuration } = player;
       this.form.patchValue({
         image,
+        clazz,
         name,
         email,
         disablePVP: configuration?.disablePVP,
@@ -184,6 +210,7 @@ export class EditCharacterComponent extends TemplatePage {
     const {
       email,
       name,
+      clazz,
       image,
       password,
       disablePVP,
@@ -198,14 +225,14 @@ export class EditCharacterComponent extends TemplatePage {
 
     if (this.authService.nativePlatform) {
       this.playerService
-        .createByEmail(email, name, image, password, configuration)
+        .createByEmail(email, name, clazz, image, password, configuration)
         .pipe(take(1))
         .subscribe(() => {
           this.store.dispatch(new LoginPlayer({ email, password }));
         });
     } else {
       this.playerService
-        .create(email, name, image, password, configuration)
+        .create(email, name, clazz, image, password, configuration)
         .pipe(take(1))
         .subscribe(() => {
           this.store.dispatch(new LoginPlayer());
@@ -217,6 +244,7 @@ export class EditCharacterComponent extends TemplatePage {
     const {
       email,
       name,
+      clazz,
       image,
       password,
       disablePVP,
@@ -230,7 +258,7 @@ export class EditCharacterComponent extends TemplatePage {
     };
 
     this.playerService
-      .update(email, name, image, password, configuration)
+      .update(email, name, clazz, image, password, configuration)
       .pipe(take(1))
       .subscribe(() => {
         this.toastService.success('Settings updated');
