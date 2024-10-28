@@ -287,7 +287,6 @@ export class LootboxPresaleComponent implements AfterViewInit {
           });
         });
     } catch (error: any) {
-      console.log(error);
       this.toastService.error(
         error.shortMessage ?? 'Error during minting - Transaction canceled'
       );
