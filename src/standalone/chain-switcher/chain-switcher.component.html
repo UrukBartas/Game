@@ -4,8 +4,8 @@
     track compatibleChain.id
   ) {
     <app-item-box
-      [height]="50"
-      [width]="50"
+      [height]="height"
+      [width]="width"
       [active]="walletService.activeNetworkId.getValue() == compatibleChain.id"
       (click)="changeNetwork(compatibleChain.id)"
       [image]="compatibleChain.img"

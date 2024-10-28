@@ -2,16 +2,6 @@
 @import 'node_modules/bootstrap/scss/variables';
 @import 'node_modules/bootstrap/scss/mixins';
 
-
-
-.wrapper-chance-displayer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 5px;
-}
-
 .misc-inventory {
   display: flex;
   flex-wrap: wrap;
@@ -32,17 +22,6 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-}
-
-.stats-info-lootbox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  flex-direction: row;
-  overflow: auto;
-  max-width: 100vw;
-  flex-wrap: wrap;
 }
 
 .wrapper-lootbox {

@@ -9,9 +9,8 @@ import {
   TemplateRef,
   ViewChild,
   ViewChildren,
-  computed,
   inject,
-  signal,
+  signal
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
@@ -93,11 +92,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   itemService = inject(ItemService);
   openingItem = signal<MiscellanyItem>(null);
   modalService = inject(BsModalService);
-  lootboxPossibilities$ = computed(() => {
-    return this.stats.lootboxPossibilities(
-      this.openingItem().miscellanyItemData.itemType
-    );
-  });
+
   mapItemTypesToReadable = mapItemTypesToReadable;
   public camelCase = camelCase;
   quantityOpen = new FormControl(1);
@@ -123,9 +118,12 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
         .transform(this.items, 'miscellanyItemData.name')
         .filter((item) => {
           const player = this.store.selectSnapshot(MainState.getState).player;
-          return item?.miscellanyItemData?.name
-            .toLowerCase()
-            .includes(this.searchTerm.toLowerCase()) && player.mount?.id !== item?.id;
+          return (
+            item?.miscellanyItemData?.name
+              .toLowerCase()
+              .includes(this.searchTerm.toLowerCase()) &&
+            player.mount?.id !== item?.id
+          );
         })
         .sort(),
       this.sockets
@@ -387,94 +385,6 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
     return Object.entries(distributions[rarity]);
   }
 
-  @Memoize()
-  public parsePossibilities(itemPossibilities: any) {
-    const rarity = this.openingItem().miscellanyItemData.rarity;
-    if (!rarity || !itemPossibilities) return null;
-    return Object.keys(itemPossibilities[rarity])
-      .map((key) => {
-        return {
-          rarity: key as Rarity,
-          value: itemPossibilities[rarity][key] as number,
-          image: this.getImageBasedOnType('ITEM', key as Rarity),
-        };
-      })
-      .filter((entry) => entry.value > 0);
-  }
-
-  public getImageBasedOnType(
-    itemType: 'ITEM' | 'MoneyBag' | 'ItemSet',
-    rarity: Rarity,
-    key?: string
-  ): string {
-    let path = '';
-    let possibleItems = Object.keys(ItemType).map((itemType) =>
-      itemType.toLowerCase()
-    );
-
-    if (itemType == 'ITEM') {
-      const randomIndex = Math.floor(Math.random() * possibleItems.length);
-      let randomItem = possibleItems[randomIndex];
-      if (randomItem.toLowerCase().includes('weapon')) {
-        randomItem = 'weapon';
-      }
-      path = `assets/items/${randomItem}/${rarity.toLowerCase()}/1.webp`;
-    } else if (itemType == 'MoneyBag') {
-      const mapMoneyBags = {
-        MoneyBag500: 'medium_bag_money.png',
-        MoneyBag1000: 'big_bag_money.png',
-        MoneyBag100: 'small_bag.png',
-      };
-      path = `assets/misc/bags/${mapMoneyBags[key]}`;
-    } else if (itemType == 'ItemSet') {
-      const mapItemSets = {
-        CommonItemPackage: 'coommon_package_box.webp',
-        UncommonItemPackage: 'uncommon_package_box.webp',
-        EpicItemPackage: 'epic_package_box.webp',
-        LegendaryItemPackage: 'legendary_package_box.webp',
-        MythicItemPackage: 'mythic_package_box.webp',
-      };
-      path = `assets/misc/packages/${mapItemSets[key]}`;
-    }
-
-    return path;
-  }
-  @Memoize()
-  public parsePossibilitiesComboBox(possibilities: any) {
-    if (!possibilities) return null;
-    const rarity = this.openingItem().miscellanyItemData.rarity;
-    const drops = possibilities[rarity].drop;
-    const result = {
-      Portraits: 0,
-      Materials: 0,
-      Others: [] as any[],
-      Bonus: possibilities[rarity]?.bonusDrop?.length ?? 0,
-    };
-
-    Object.keys(drops).forEach((key) => {
-      const item = drops[key];
-      if (item.type === 'Portrait') {
-        result.Portraits += item.chance;
-      } else if (item.type === 'MATERIAL') {
-        result.Materials += item.chance;
-      } else {
-        result.Others.push({
-          key: key,
-          rarity: item.rarity,
-          value: item.chance,
-          type: item.type,
-          image: this.getImageBasedOnType(
-            item.type,
-            item.rarity as Rarity,
-            key
-          ),
-        });
-      }
-    });
-
-    result.Others.sort((a, b) => b.value - a.value);
-    return result;
-  }
   @Memoize()
   public getGenericItemItemData(item: any) {
     return getGenericItemItemData(item);

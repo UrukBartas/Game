@@ -63,6 +63,8 @@ const mapTypeOfWeapon = {
   Weapon2H: 'Two handed',
 };
 
+
+
 export const getLoopableStatsKeys = (item: Item): Array<string[]> => {
   if (!item) return [];
 
