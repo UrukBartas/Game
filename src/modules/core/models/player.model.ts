@@ -30,6 +30,7 @@ export interface PlayerModel {
   titles?: MiscellanyItemData[];
   activePrefixTitle:MiscellanyItemIdentifier;
   activeSuffixTitle:MiscellanyItemIdentifier;
+  unlockedPortraitsIds: string[];
   // Base player stats
   health: number;
   damage: number;

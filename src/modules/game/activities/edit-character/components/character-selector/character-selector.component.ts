@@ -1,8 +1,12 @@
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Store } from '@ngxs/store';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { environment } from 'src/environments/environment';
+import { MiscellanyItemData } from 'src/modules/core/models/misc.model';
 import { PlayerClass } from 'src/modules/core/models/player.model';
+import { getRarityColor } from 'src/modules/utils';
 import { MiscellanyService } from 'src/services/miscellany.service';
+import { MainState, SetSkins } from 'src/store/main.store';
 import SwiperCore, {
   EffectCoverflow,
   Navigation,
@@ -10,8 +14,6 @@ import SwiperCore, {
   SwiperOptions,
 } from 'swiper';
 import { baseSkins, classData } from './const/class-data.const';
-import { MiscellanyItemData } from 'src/modules/core/models/misc.model';
-import { getRarityColor } from 'src/modules/utils';
 
 SwiperCore.use([EffectCoverflow, Navigation, Pagination]);
 
@@ -22,15 +24,7 @@ SwiperCore.use([EffectCoverflow, Navigation, Pagination]);
   encapsulation: ViewEncapsulation.None,
 })
 export class ClassSelectorComponent implements OnInit {
-  modalRef = inject(BsModalRef);
-  imagePrefix = environment.permaLinkImgPref;
-  classes = classData;
-  selectedClass: PlayerClass = classData[0].clazz;
-  PlayerClass = PlayerClass;
-  pickingSkin = false;
-  skins: MiscellanyItemData[] = baseSkins;
-  selectedSkin: MiscellanyItemData;
-  showSelectSkin = true;
+
   swiperConfig: SwiperOptions = {
     slidesPerView: 1,
     initialSlide: 0,
@@ -48,32 +42,74 @@ export class ClassSelectorComponent implements OnInit {
       enabled: true,
     },
   };
+
+  modalRef = inject(BsModalRef);
+  store = inject(Store);
+  imagePrefix = environment.permaLinkImgPref;
+  classes = [ ...classData ];
+  selectedClass: PlayerClass = classData[0].clazz;
+  skins: MiscellanyItemData[] = [ ...baseSkins ];
+
+  showSelectSkin = true;
+  pickingSkin = false;
+  ownedSkins: string[] = [];
+
+  _selectedSkin: string;
+  get selectedSkin(): MiscellanyItemData {
+    if (!this._selectedSkin) {
+      return null;
+    }
+    return this.skins.find((skin) => skin.imageLocal === this._selectedSkin);
+  }
+ 
   private miscellanyService = inject(MiscellanyService);
   public getRarityColor = getRarityColor;
 
   pickClass: (selectedClass) => void;
 
+  isSkinOwned(skin: MiscellanyItemData) {
+    return this.ownedSkins.includes(skin.id) || skin.extraData.free;
+  }
+
   ngOnInit(): void {
-    this.miscellanyService.getAllPortraits().subscribe((skins) => {
-      if (skins) {
-        this.skins.push(...skins);
-      }
-    });
+    this.loadSkins();
+
+    if (this.selectedSkin) {
+      const selectedClassIndex = this.classes.findIndex(
+        (clazz) => clazz.clazz === this.selectedSkin.extraData.clazz
+      );
+      this.swiperConfig.initialSlide = selectedClassIndex;
+    }
+  }
+
+  private loadSkins() {
+    const skins = this.store.selectSnapshot(MainState.getSkins);
+
+    if (!skins) {
+      this.miscellanyService.getAllPortraits().subscribe((skins) => {
+        if (skins) {
+          this.store.dispatch(new SetSkins(skins));
+          this.skins.push(...skins);
+        }
+      });
+    } else {
+      this.skins.push(...skins);
+    }
   }
 
   onSlideChange(event) {
     this.selectedClass = classData[event.activeIndex].clazz;
-    this.selectedSkin = this.getClassSkins()[0];
+    this._selectedSkin = this.getClassSkins()[0].imageLocal;
   }
 
   getClassSkins() {
-    return this.skins.filter(
+    return this.skins?.filter(
       (skin) => skin.extraData.clazz === this.selectedClass
     );
   }
 
   selectSkin(skin: MiscellanyItemData) {
-    this.selectedSkin = skin;
+    this._selectedSkin = skin.imageLocal;
     const selectedClassIndex = this.classes.findIndex(
       (clazz) => clazz.clazz === this.selectedClass
     );
@@ -86,6 +122,6 @@ export class ClassSelectorComponent implements OnInit {
 
   openSkinSelector() {
     this.pickingSkin = true;
-    this.selectedSkin = this.getClassSkins()[0];
   }
+
 }

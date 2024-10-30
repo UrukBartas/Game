@@ -79,8 +79,20 @@ export class EditCharacterComponent extends TemplatePage {
       {
         image: ['/assets/free-portraits/warlock.webp', [Validators.required]],
         clazz: [PlayerClass.WARLOCK, [Validators.required]],
-        name: ['', [Validators.required]],
-        email: ['', [Validators.required, Validators.email]],
+        name: [
+          '',
+          this.editing
+            ? []
+            : [
+                Validators.required,
+                Validators.maxLength(20),
+                Validators.minLength(3),
+              ],
+        ],
+        email: [
+          '',
+          [Validators.required, Validators.email, Validators.maxLength(100)],
+        ],
         password: [
           '',
           this.editing
@@ -112,7 +124,6 @@ export class EditCharacterComponent extends TemplatePage {
         return '/assets/free-portraits/backgrounds/warrior.webp';
     }
   }
-
 
   public userHasLinkedAddress() {
     const player = this.store.selectSnapshot(MainState.getState).player;
@@ -146,6 +157,7 @@ export class EditCharacterComponent extends TemplatePage {
   }
 
   public openCharacterSelector() {
+    const player = this.store.selectSnapshot(MainState.getPlayer);
     const config: ModalOptions = {
       initialState: {
         pickClass: (selectedClass) => {
@@ -154,10 +166,21 @@ export class EditCharacterComponent extends TemplatePage {
               image: selectedClass.img,
               clazz: selectedClass.clazz,
             });
+            if (this.editing) {
+              this.playerService
+                .updateClass(selectedClass.clazz, selectedClass.img)
+                .pipe(take(1))
+                .subscribe((player) => {
+                  this.store.dispatch(new RefreshPlayer());
+                });
+            }
           }
           modalRef.hide();
         },
+        selectedClass: player?.clazz,
+        _selectedSkin: player?.image,
         showSelectSkin: this.editing,
+        ownedSkins: player?.unlockedPortraitsIds
       },
     };
     const modalRef = this.modalService.show(ClassSelectorComponent, config);
@@ -241,16 +264,8 @@ export class EditCharacterComponent extends TemplatePage {
   }
 
   edit() {
-    const {
-      email,
-      name,
-      clazz,
-      image,
-      password,
-      disablePVP,
-      disableSound,
-      ignoreMine,
-    } = this.form.value;
+    const { email, password, disablePVP, disableSound, ignoreMine } =
+      this.form.value;
     const configuration: PlayerConfiguration = {
       disablePVP,
       disableSound,
@@ -258,7 +273,7 @@ export class EditCharacterComponent extends TemplatePage {
     };
 
     this.playerService
-      .update(email, name, clazz, image, password, configuration)
+      .update(email, password, configuration)
       .pipe(take(1))
       .subscribe(() => {
         this.toastService.success('Settings updated');

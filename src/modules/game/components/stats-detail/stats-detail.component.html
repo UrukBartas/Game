@@ -7,6 +7,7 @@
           <div class="player-info">
             <div class="d-flex justify-content-center player-avatar">
               <app-item-box
+                (click)="openSkinSelector()"
                 [height]="getPlayerImageSize()"
                 [width]="getPlayerImageSize()"
                 [image]="player.image"

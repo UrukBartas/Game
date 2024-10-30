@@ -94,19 +94,20 @@ export class PlayerService extends ApiBaseService {
 
   update(
     email: string,
-    name: string,
-    clazz: PlayerClass,
-    image: string,
     password: string,
     configuration: PlayerConfiguration
   ): Observable<PlayerModel> {
     return this.post('/update', {
       email,
-      name,
-      clazz,
-      image,
       password,
       configuration,
+    });
+  }
+
+  updateClass(clazz: PlayerClass, image: string) {
+    return this.post('/update-class', {
+      clazz,
+      image,
     });
   }
 

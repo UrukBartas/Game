@@ -357,6 +357,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   public closePortrait() {
     this.focuserService.close();
     this.currentPortraitPhase = 0;
+    this.store.dispatch(new RefreshPlayer());
     this.updateInventory.emit();
   }
 

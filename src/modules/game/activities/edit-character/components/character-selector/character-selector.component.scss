@@ -27,6 +27,9 @@
           border: 2px solid $white-100;
           box-shadow: 0px 0px 10px $white-100;
         }
+        &.disabled {
+          filter: grayscale(100%);
+        }
       }
     }
     .skin-text {

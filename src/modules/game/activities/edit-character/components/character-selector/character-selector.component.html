@@ -43,10 +43,10 @@
                 <button
                   class="btn btn-lg btn-primary save-button w-100 text-shadow"
                   [ngClass]="{
-                    'button-warlock': classItem.clazz == PlayerClass.WARLOCK,
-                    'button-rogue': classItem.clazz == PlayerClass.ROGUE,
-                    'button-warrior': classItem.clazz == PlayerClass.WARRIOR,
-                    'button-mage': classItem.clazz == PlayerClass.MAGE,
+                    'button-warlock': classItem.clazz == 'WARLOCK',
+                    'button-rogue': classItem.clazz == 'ROGUE',
+                    'button-warrior': classItem.clazz == 'WARRIOR',
+                    'button-mage': classItem.clazz == 'MAGE',
                   }"
                   (click)="pickClass(classItem)"
                 >
@@ -60,6 +60,7 @@
                     <img
                       [ngClass]="{
                         selected: selectedSkin.id === skin.id,
+                        disabled: !isSkinOwned(skin)
                       }"
                       (click)="selectSkin(skin)"
                       [src]="imagePrefix + skin.imageLocal"
@@ -71,11 +72,11 @@
                   <span urTitle class="text-white">
                     {{ selectedSkin.name }}
                   </span>
-                  <span urText class="text-white" style="min-height: 12vh">
+                  <span class="text-white" style="min-height: 14vh">
                     {{ selectedSkin.description }}
                   </span>
                   <span
-                    *ngIf="selectedSkin.extraData.edition"
+                    [style.visibility]="selectedSkin.extraData.edition ? 'visible' : 'hidden'"
                     urText
                     class="text-white d-flex gap-2"
                   >
@@ -88,11 +89,11 @@
                   </span>
                 </div>
                 <button
-                  [disabled]="!selectedSkin"
+                  [disabled]="!selectedSkin || !isSkinOwned(selectedSkin)"
                   class="btn btn-lg btn-primary save-button w-100 text-shadow"
                   (click)="saveSkin()"
                 >
-                  Pick this skin
+                  {{ isSkinOwned(selectedSkin) ? 'Pick this skin' : '🛇 Not owned' }} 
                 </button>
               </div>
             }

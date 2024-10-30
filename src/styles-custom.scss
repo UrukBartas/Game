@@ -240,18 +240,30 @@
 .button-warlock {
   background-color: $warlock-primary;
   border-color: $warlock-secondary;
+  &:hover {
+    background-color: $warlock-secondary;
+  }
 }
 .button-rogue {
   background-color: $rogue-primary;
   border-color: $rogue-secondary;
+  &:hover {
+    background-color: $rogue-secondary;
+  }
 }
 .button-warrior {
   background-color: $warrior-primary;
   border-color: $warrior-secondary;
+  &:hover {
+    background-color: $warrior-secondary;
+  }
 }
 .button-mage {
   background-color: $mage-primary;
   border-color: $mage-secondary;
+  &:hover {
+    background-color: $mage-secondary;
+  }
 }
 
 .text-shadow {

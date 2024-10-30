@@ -52,7 +52,7 @@ export const baseSkins: MiscellanyItemData[] = [
     description: `The old basic Orgok`,
     souldBoundByDefault: false,
     instances: [],
-    extraData: { clazz: PlayerClass.WARLOCK },
+    extraData: { clazz: PlayerClass.WARLOCK, free: true },
   },
   {
     id: MiscellanyItemIdentifier.PortraitMageBase,
@@ -64,7 +64,7 @@ export const baseSkins: MiscellanyItemData[] = [
     description: `The classic and wise Elaris, in his simplest form.`,
     souldBoundByDefault: false,
     instances: [],
-    extraData: { clazz: PlayerClass.MAGE },
+    extraData: { clazz: PlayerClass.MAGE, free: true },
   },
   {
     id: MiscellanyItemIdentifier.PortraitRogueBase,
@@ -76,7 +76,7 @@ export const baseSkins: MiscellanyItemData[] = [
     description: `The sneaky and agile Nyx, as unassuming as ever.`,
     souldBoundByDefault: false,
     instances: [],
-    extraData: { clazz: PlayerClass.ROGUE },
+    extraData: { clazz: PlayerClass.ROGUE, free: true },
   },
   {
     id: MiscellanyItemIdentifier.PortraitWarriorBase,
@@ -88,6 +88,6 @@ export const baseSkins: MiscellanyItemData[] = [
     description: `The sturdy and determined Tulkas, in his basic glory.`,
     souldBoundByDefault: false,
     instances: [],
-    extraData: { clazz: PlayerClass.WARRIOR },
+    extraData: { clazz: PlayerClass.WARRIOR, free: true },
   },
 ];
