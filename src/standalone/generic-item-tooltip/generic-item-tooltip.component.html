@@ -42,5 +42,10 @@
     <p *ngIf="souldBound">
       <span urText class="text-light">This item is soul bound.</span>
     </p>
+    <p *ngIf="extraData && !!hasExtraData()">
+      <span urText class="text-light">{{
+        getTranslationMapExtraData(extraData)
+      }}</span>
+    </p>
   </div>
 </div>

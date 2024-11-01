@@ -1,9 +1,9 @@
 import {
   Directive,
   ElementRef,
-  Renderer2,
-  OnInit,
   OnDestroy,
+  OnInit,
+  Renderer2,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ViewportService } from 'src/services/viewport.service';
@@ -51,6 +51,6 @@ export class TitleSizeDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.screenSizeChanges$.unsubscribe();
+    if (this.screenSizeChanges$) this.screenSizeChanges$.unsubscribe();
   }
 }

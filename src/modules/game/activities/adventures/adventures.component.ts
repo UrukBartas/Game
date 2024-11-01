@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, firstValueFrom, interval, map } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import {
@@ -36,11 +36,7 @@ export class AdventuresComponent extends TemplatePage {
     super();
     this.refreshAdventures();
   }
-  ngOnInit(): void {
-    interval(1000).subscribe((data) =>
-      console.log(this.currentlyDisplayedLayout)
-    );
-  }
+  ngOnInit(): void {}
 
   public selectAdventure(adventure: AdventureData) {
     this.selectedAdventure = adventure;

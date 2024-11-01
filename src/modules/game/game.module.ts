@@ -21,8 +21,11 @@ import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulett
 import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
 import { SpinnerComponent } from 'src/standalone/spinner/spinner.component';
 import { TierizedProgressBarComponent } from 'src/standalone/tierized-progress-bar/tierized-progress-bar.component';
+import { SwiperModule } from 'swiper/angular';
 import { ChainSwitcherComponent } from '../../standalone/chain-switcher/chain-switcher.component';
+import { ChanceDisplayerComponent } from "../../standalone/chance-displayer/chance-displayer.component";
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
+import { LootboxStatsDisplayerComponent } from "../../standalone/lootbox-stats-displayer/lootbox-stats-displayer.component";
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
 import { DoubleClickDirective } from '../core/directives/double-click.directive';
 import { SubtextSizeDirective } from '../core/directives/subtext-size.directive';
@@ -45,6 +48,7 @@ import { AuctionHouseComponent } from './activities/auction-house/auction-house.
 import { BlacksmithComponent } from './activities/blacksmith/blacksmith.component';
 import { BlacksmithModalComponent } from './activities/blacksmith/modal/blacksmith-modal.component';
 import { RegisterReferralComponent } from './activities/campaigns/register-referral/register-referral.component';
+import { ClassSelectorComponent } from './activities/edit-character/components/character-selector/character-selector.component';
 import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
 import { ExportImportNftComponent } from './activities/export-import-nft/export-import-nft.component';
 import { InventoryComponent } from './activities/inventory/inventory.component';
@@ -77,10 +81,8 @@ import { GenericStatsComponent } from './components/stats-detail/only-stats/only
 import { OnlyStatsComponent } from './components/stats-detail/only-stats/only-stats/only-stats.component';
 import { PercentStatsComponent } from './components/stats-detail/only-stats/only-stats/percent-stats/percent-stats.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
-import { GameRoutingModule } from './game-routing.module';
 import { TitleGeneratorModalComponent } from './components/title-generator-modal/title-generator-modal.component';
-import { ClassSelectorComponent } from './activities/edit-character/components/character-selector/character-selector.component';
-import { SwiperModule } from 'swiper/angular';
+import { GameRoutingModule } from './game-routing.module';
 
 const directives = [
   ValidInputDirective,
@@ -180,8 +182,10 @@ const pipes = [
     BalanceSelectorComponent,
     ChainSwitcherComponent,
     TheMineInfoModalComponent,
-    SwiperModule
-  ],
+    SwiperModule,
+    ChanceDisplayerComponent,
+    LootboxStatsDisplayerComponent
+],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe, StackPipe,...pipes],
 })

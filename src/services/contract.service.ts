@@ -3,13 +3,14 @@ import { Store } from '@ngxs/store';
 import {
   getNetwork,
   readContract,
+  switchNetwork,
   waitForTransaction,
   writeContract,
 } from '@wagmi/core';
 
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { delay, filter, firstValueFrom, switchMap } from 'rxjs';
+import { delay, filter, firstValueFrom, map, switchMap, tap } from 'rxjs';
 import { RefreshPlayer } from 'src/store/main.store';
 import { WalletService } from './wallet.service';
 
@@ -53,66 +54,47 @@ export class ContractService {
         mesasge ?? 'Transaction completed successfully!'
       );
       this.store.dispatch(new RefreshPlayer());
-    } catch (error:any) {
-      this.toastService.error('Eror during transaction - Transaction canceled', error?.shortMessage ?? '');
+    } catch (error: any) {
+      this.toastService.error(
+        'Eror during transaction - Transaction canceled',
+        error?.shortMessage ?? ''
+      );
     }
     this.spinnerService.hide();
   }
 
-  public executeReadContractOnUrukNFT(functionName: string, args: Array<any>) {
-    return readContract({
-      address: this.wallet.getChainById(getNetwork().chain.id)?.NFT,
-      abi: this.wallet.getChainById(getNetwork().chain.id)?.NFT_ABI,
-      functionName,
-      args,
-    });
-  }
-
-  protected executeReadContract<T>(
+  protected async executeReadContract<T>(
     functionName: string,
     args: Array<any>
   ): Promise<T> {
     if (!this.wallet.allowChainConnected()) {
-      return firstValueFrom(
-        this.wallet.activeNetworkId.pipe(
-          filter((e) => this.wallet.allowChainConnected(e)),
-          delay(100),
-          switchMap(() => {
-            const { address, abi } = this.getContractDetails();
-            return readContract({
-              address,
-              abi,
-              functionName,
-              args,
-            }) as Promise<T>;
-          })
-        )
-      );
+      await this.autoConnectToValidChain();
+      const res = await this.executeReadContract<T>(functionName, args);
+      return res;
     } else {
       const { address, abi } = this.getContractDetails();
       return readContract({ address, abi, functionName, args }) as Promise<T>;
     }
   }
 
-  protected executeWriteContract(
+  protected async executeWriteContract(
     functionName: string,
     args: Array<any>,
     value?: any
   ) {
     if (!this.wallet.allowChainConnected()) {
-      return firstValueFrom(
-        this.wallet.activeNetworkId.pipe(
-          filter((e) => this.wallet.allowChainConnected(e)),
-          delay(100),
-          switchMap(() => {
-            const { address, abi } = this.getContractDetails();
-            return writeContract({ address, abi, functionName, args, value });
-          })
-        )
-      );
+      await this.autoConnectToValidChain();
+      return this.executeWriteContract(functionName, args, value);
     } else {
       const { address, abi } = this.getContractDetails();
       return writeContract({ address, abi, functionName, args, value });
     }
+  }
+
+  public async autoConnectToValidChain() {
+    const validChains = await firstValueFrom(
+      this.wallet.chains.pipe(filter((e) => e.length > 0))
+    );
+    await switchNetwork({ chainId: validChains[0].id });
   }
 }

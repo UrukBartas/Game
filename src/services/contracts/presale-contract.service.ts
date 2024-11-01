@@ -9,26 +9,20 @@ export enum LootboxPresaleTypeEnum {
   MYTHIC = 4,
 }
 
-export const SHIMMER_TESTNET_CHAINID = 1073;
-
 @Injectable({
   providedIn: 'root',
 })
 export class PresaleContractService extends ContractService {
   constructor() {
-    super(ContractTypes.PRESALE, SHIMMER_TESTNET_CHAINID);
+    super(ContractTypes.PRESALE);
   }
 
   getBoughtLootboxesOfType(lootboxType: LootboxPresaleTypeEnum) {
     return this.executeReadContract<any[]>('lootboxes', [lootboxType]);
   }
 
-  mintLootbox(
-    address: string,
-    lootboxType: LootboxPresaleTypeEnum,
-    price: bigint
-  ) {
-    return this.executeWriteContract('safeMint', [address, lootboxType], price);
+  importNftToGame(args: any[]) {
+    return this.executeWriteContract('importNftToGame', args);
   }
 
   mintMultipleLootboxes(
@@ -37,6 +31,10 @@ export class PresaleContractService extends ContractService {
     lootboxType: LootboxPresaleTypeEnum,
     price: bigint
   ) {
-    return this.executeWriteContract('mintMultipleLootboxes', [quantity, address, lootboxType], price);
+    return this.executeWriteContract(
+      'mintMultipleLootboxes',
+      [quantity, address, lootboxType],
+      price
+    );
   }
 }

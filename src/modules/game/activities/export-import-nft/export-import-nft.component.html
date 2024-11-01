@@ -367,7 +367,7 @@
                 class="display-fee"
                 *ngIf="getActiveNetworkImg() as activeNetwork"
               >
-                <img src="{{ prefix+activeNetwork }}" />
+                <img src="{{ prefix + activeNetwork }}" />
                 <span>{{
                   calculateFeesBasedOnSelectedItems(
                     getNFTExportFee$ | async,
@@ -411,7 +411,7 @@
                 class="display-fee"
                 *ngIf="getActiveNetworkImg() as activeNetwork"
               >
-                <img src="{{ prefix+activeNetwork }}" />
+                <img src="{{ prefix + activeNetwork }}" />
                 <span>{{ getERC20ExportFee$ | async | number }}</span>
               </div>
             }
@@ -459,7 +459,7 @@
     let-misc$="miscellanyToLoad$"
   >
     <div class="inventory pb-4">
-      <tabset>
+      <tabset #staticTabs>
         <tab id="tab1">
           <ng-template tabHeading>
             <span>⚔️</span>
@@ -474,7 +474,7 @@
           >
           </app-item-inventory>
         </tab>
-        <tab>
+        <tab id="tab2">
           <ng-template tabHeading>
             <span>🧱</span>
           </ng-template>
@@ -487,7 +487,7 @@
           >
           </app-materials-inventory>
         </tab>
-        <tab>
+        <tab id="tab3">
           <ng-template tabHeading>
             <span>⚗️</span>
           </ng-template>
@@ -502,7 +502,7 @@
             </app-consumables-inventory>
           </ng-container>
         </tab>
-        <tab>
+        <tab id="tab4">
           <ng-template tabHeading>
             <span>📜</span>
           </ng-template>
