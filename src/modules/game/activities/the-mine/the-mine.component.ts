@@ -113,7 +113,8 @@ export class TheMineComponent extends TemplatePage {
               };
             }),
           };
-        })
+        }),
+        tap((res) => console.log(res))
       );
     })
   );
@@ -203,8 +204,11 @@ export class TheMineComponent extends TemplatePage {
 
   getActiveTier(amount: number) {
     return (
-      this.tiers.find((tier) => amount >= tier.start && amount < tier.end) ||
-      null
+      this.tiers.find(
+        (tier) =>
+          (amount >= tier.start && amount < tier.end) ||
+          (amount >= tier.start && !tier.end)
+      ) || null
     );
   }
 

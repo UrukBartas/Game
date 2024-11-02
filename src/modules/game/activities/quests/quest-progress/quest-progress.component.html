@@ -47,6 +47,7 @@
     >
       <!-- Barra de tiempo reducido (Morado) -->
       <div
+        *ngIf="questTimerService.reductionPercentage() > 0"
         class="reduced-progress-bar progress-bar-striped progress-bar-animated shadow z-1 d-flex align-items-center"
         role="progressbar"
         aria-valuemin="0"
@@ -57,7 +58,9 @@
         <span urText class="w-100 text-center d-block">🦄</span>
         <ng-template #reducedTime>
           <div class="p-2">
-            Time reduced by boosts ({{questTimerService.reductionPercentage()}}%)
+            Time reduced by boosts ({{
+              questTimerService.reductionPercentage()
+            }}%)
           </div>
         </ng-template>
       </div>

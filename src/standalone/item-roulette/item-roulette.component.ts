@@ -32,7 +32,7 @@ export class ItemRouletteComponent {
   @Input() items: any[] = [];
   displayedItems: any[] = [];
   @Input() resultItem: Item;
-  @Input() duplicateItemsSize = 20;
+  @Input() duplicateItemsSize = 5;
   translateX: number = 0;
   interval: any;
   store = inject(Store);

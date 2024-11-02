@@ -7,6 +7,7 @@ import { disconnect } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom, take } from 'rxjs';
 import { FightModel } from 'src/modules/core/models/fight.model';
+import { MiscellanyItemData } from 'src/modules/core/models/misc.model';
 import { NotificationModel } from 'src/modules/core/models/notifications.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { QuestModel } from 'src/modules/core/models/quest.model';
@@ -56,6 +57,11 @@ export class SetQuests {
   constructor(public payload: QuestModel[]) {}
 }
 
+export class SetSkins {
+  static readonly type = '[Skins] Set';
+  constructor(public payload: MiscellanyItemData[]) {}
+}
+
 export class StartFight {
   static readonly type = '[Fight] Start';
   constructor(public payload: FightModel) {}
@@ -73,6 +79,7 @@ export class MainStateModel {
   public quests: QuestModel[] | null;
   public fight: FightModel | null;
   public notifications: NotificationModel[] | null;
+  public skins: MiscellanyItemData[] | null;
 }
 const defaultState = {
   address: '',
@@ -81,6 +88,7 @@ const defaultState = {
   quests: null,
   fight: null,
   notifications: null,
+  skins: null,
 };
 @State<MainStateModel>({
   name: 'main',
@@ -124,6 +132,16 @@ export class MainState {
   ) {
     patchState({
       quests: payload,
+    });
+  }
+
+  @Action(SetSkins)
+  setSkins(
+    { patchState }: StateContext<MainStateModel>,
+    { payload }: SetSkins
+  ) {
+    patchState({
+      skins: payload,
     });
   }
 
@@ -232,5 +250,10 @@ export class MainState {
   @Selector()
   static getPlayer(state: MainStateModel): PlayerModel {
     return state.player;
+  }
+
+  @Selector()
+  static getSkins(state: MainStateModel): MiscellanyItemData[] {
+    return state.skins;
   }
 }

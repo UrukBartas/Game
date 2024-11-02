@@ -60,7 +60,11 @@ const itemFilterTypes = [
 })
 export class InventoryTopbarComponent {
   public activeItemFilterType = null;
-  public itemFilterTypes = itemFilterTypes;
+  @Input() itemFilterTypes: {
+    id: number;
+    image: string;
+    type: any[];
+  }[] = itemFilterTypes;
   @Input() filteredItemTypes: Array<ItemType> = [];
   @Output() filteredItemTypesChange = new EventEmitter<Array<ItemType>>();
   @Input() disableSort = false;

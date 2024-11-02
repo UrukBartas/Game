@@ -7,6 +7,7 @@
           <div class="player-info">
             <div class="d-flex justify-content-center player-avatar">
               <app-item-box
+                (click)="openSkinSelector()"
                 [height]="getPlayerImageSize()"
                 [width]="getPlayerImageSize()"
                 [image]="player.image"
@@ -16,7 +17,7 @@
               </div>
             </div>
             <ul class="list-stats">
-              <li urSubtext class="d-flex justify-content-between gap-2">
+              <li  class="d-flex justify-content-between gap-2">
                 <label class="text-third">Arena rank:</label>
                 <span
                   [ngStyle]="{
@@ -26,7 +27,7 @@
                   {{ getPvpTier(player.pvpIndex).title }}</span
                 >
               </li>
-              <li urSubtext class="d-flex justify-content-between gap-2">
+              <li  class="d-flex justify-content-between gap-2">
                 <label class="text-third">Questing rank:</label>
                 <span
                   [ngStyle]="{
@@ -38,19 +39,19 @@
                   {{ getQuestTier(player.finishedQuestsCount).title }}</span
                 >
               </li>
-              <li urSubtext class="d-flex justify-content-between gap-2">
+              <li  class="d-flex justify-content-between gap-2">
                 <label class="text-third">Level:</label>
                 {{ player.level }}
               </li>
-              <li urSubtext class="d-flex justify-content-between gap-2">
+              <li  class="d-flex justify-content-between gap-2">
                 <label class="text-third">Quests completed:</label>
                 {{ player.finishedQuestsCount }}
               </li>
-              <li urSubtext class="d-flex justify-content-between gap-2">
+              <li  class="d-flex justify-content-between gap-2">
                 <label class="text-third">Arena points:</label>
                 {{ player.mmr }}
               </li>
-              <li urSubtext class="d-flex justify-content-between gap-2">
+              <li  class="d-flex justify-content-between gap-2">
                 <label class="text-third">Member since:</label>
                 {{ player.createdAt | date }}
               </li>

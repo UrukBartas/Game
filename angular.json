@@ -68,7 +68,8 @@
               "node_modules/ngx-toastr/toastr.css",
               "node_modules/animate.css/animate.min.css",
               "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
-              "node_modules/aos/dist/aos.css"
+              "node_modules/aos/dist/aos.css",
+              "node_modules/swiper/swiper-bundle.min.css"
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",

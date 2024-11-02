@@ -10,11 +10,16 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { getAccount } from '@wagmi/core';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, firstValueFrom, map, of, take } from 'rxjs';
+import { firstValueFrom, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { PlayerConfiguration } from 'src/modules/core/models/player.model';
+import {
+  PlayerClass,
+  PlayerConfiguration,
+  PlayerModel,
+} from 'src/modules/core/models/player.model';
 import { truncateEthereumAddress } from 'src/modules/utils';
 import { AuthService } from 'src/services/auth.service';
 import { MiscellanyService } from 'src/services/miscellany.service';
@@ -27,6 +32,8 @@ import {
   MainState,
   RefreshPlayer,
 } from 'src/store/main.store';
+import { ClassSelectorComponent } from './components/character-selector/character-selector.component';
+
 export function passwordMatchingValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const password = control.get('password');
@@ -54,33 +61,39 @@ export class EditCharacterComponent extends TemplatePage {
   router = inject(Router);
   location = inject(Location);
   walletService = inject(WalletService);
-  //public pushNotificationsService = inject(PushNotificationsService);
-  staticImages = [
-    'assets/free-portraits/knight.webp',
-    'assets/free-portraits/knight-f.webp',
-    'assets/free-portraits/bartender.webp',
-    'assets/free-portraits/bartender-f.webp',
-    'assets/free-portraits/blacksmith.webp',
-    'assets/free-portraits/blacksmith-f.webp',
-  ];
-  images$ = of(this.staticImages);
-  public prefix = environment.permaLinkImgPref;
   editing = false;
   form: FormGroup;
   truncateAddress = truncateEthereumAddress;
+  imagePrefix = environment.permaLinkImgPref;
+  PlayerClass = PlayerClass;
 
-  constructor(private route: ActivatedRoute) {
+  constructor(
+    private route: ActivatedRoute,
+    private modalService: BsModalService
+  ) {
     super();
     const currentRoute = this.route.snapshot.url.join('/');
     this.editing = currentRoute.includes('edit');
-    const passwordPattern =
-      /^(?=.*[A-Z])(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
+    const passwordPattern = /^(?=.*[A-Z])(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
 
     this.form = this.formBuilder.group(
       {
-        image: ['assets/free-portraits/knight.webp', [Validators.required]],
-        name: ['', [Validators.required]],
-        email: ['', [Validators.required, Validators.email]],
+        image: ['/assets/free-portraits/warlock.webp', [Validators.required]],
+        clazz: [PlayerClass.WARLOCK, [Validators.required]],
+        name: [
+          '',
+          this.editing
+            ? []
+            : [
+                Validators.required,
+                Validators.maxLength(20),
+                Validators.minLength(3),
+              ],
+        ],
+        email: [
+          '',
+          [Validators.required, Validators.email, Validators.maxLength(100)],
+        ],
         password: [
           '',
           this.editing
@@ -96,15 +109,20 @@ export class EditCharacterComponent extends TemplatePage {
     );
 
     if (this.editing) {
-      this.load();
-      this.images$ = this.miscService.getPremiumPortraits().pipe(
-        map((portraits) => {
-          return [
-            ...portraits.map((entry) => entry.imageLocal),
-            ...this.staticImages,
-          ];
-        })
-      ) as Observable<any>;
+      this.loadPlayer();
+    }
+  }
+
+  public getClassBackground(className: PlayerClass) {
+    switch (className) {
+      case PlayerClass.WARLOCK:
+        return '/assets/free-portraits/backgrounds/warlock.webp';
+      case PlayerClass.MAGE:
+        return '/assets/free-portraits/backgrounds/mage.webp';
+      case PlayerClass.ROGUE:
+        return '/assets/free-portraits/backgrounds/rogue.webp';
+      case PlayerClass.WARRIOR:
+        return '/assets/free-portraits/backgrounds/warrior.webp';
     }
   }
 
@@ -139,12 +157,45 @@ export class EditCharacterComponent extends TemplatePage {
     }
   }
 
-  private async load() {
+  public openCharacterSelector() {
+    const player = this.store.selectSnapshot(
+      MainState.getPlayer
+    ) as PlayerModel;
+    const config: ModalOptions = {
+      initialState: {
+        pickClass: (selectedClass, selectedSkin) => {
+          if (selectedClass) {
+            this.form.patchValue({
+              image: selectedClass.img,
+              clazz: selectedClass.clazz,
+            });
+            if (this.editing) {
+              this.playerService
+                .updateClass(selectedClass.clazz, selectedSkin.id)
+                .pipe(take(1))
+                .subscribe((player) => {
+                  this.store.dispatch(new RefreshPlayer());
+                });
+            }
+          }
+          modalRef.hide();
+        },
+        selectedClass: player?.clazz,
+        _selectedSkin: player?.activeSkin,
+        showSelectSkin: this.editing,
+        ownedSkins: player?.unlockedPortraitsIds,
+      },
+    };
+    const modalRef = this.modalService.show(ClassSelectorComponent, config);
+  }
+
+  private async loadPlayer() {
     const player = this.store.selectSnapshot(MainState.getState).player;
     if (player) {
-      const { image, name, email, configuration } = player;
+      const { image, clazz, name, email, configuration } = player;
       this.form.patchValue({
         image,
+        clazz,
         name,
         email,
         disablePVP: configuration?.disablePVP,
@@ -185,6 +236,7 @@ export class EditCharacterComponent extends TemplatePage {
     const {
       email,
       name,
+      clazz,
       image,
       password,
       disablePVP,
@@ -199,14 +251,14 @@ export class EditCharacterComponent extends TemplatePage {
 
     if (this.authService.nativePlatform) {
       this.playerService
-        .createByEmail(email, name, image, password, configuration)
+        .createByEmail(email, name, clazz, image, password, configuration)
         .pipe(take(1))
         .subscribe(() => {
           this.store.dispatch(new LoginPlayer({ email, password }));
         });
     } else {
       this.playerService
-        .create(email, name, image, password, configuration)
+        .create(email, name, clazz, image, password, configuration)
         .pipe(take(1))
         .subscribe(() => {
           this.store.dispatch(new LoginPlayer());
@@ -215,15 +267,8 @@ export class EditCharacterComponent extends TemplatePage {
   }
 
   edit() {
-    const {
-      email,
-      name,
-      image,
-      password,
-      disablePVP,
-      disableSound,
-      ignoreMine,
-    } = this.form.value;
+    const { email, password, disablePVP, disableSound, ignoreMine } =
+      this.form.value;
     const configuration: PlayerConfiguration = {
       disablePVP,
       disableSound,
@@ -231,7 +276,7 @@ export class EditCharacterComponent extends TemplatePage {
     };
 
     this.playerService
-      .update(email, name, image, password, configuration)
+      .update(email, password, configuration)
       .pipe(take(1))
       .subscribe(() => {
         this.toastService.success('Settings updated');

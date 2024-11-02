@@ -1,11 +1,15 @@
 import { Component, Input, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { PlayerModel } from 'src/modules/core/models/player.model';
-import { StatsService } from 'src/services/stats.service';
-import { ViewportService } from 'src/services/viewport.service';
-import { pvpTiers } from '../../activities/leadeboard/const/pvp-tiers';
 import { getRarityColor } from 'src/modules/utils';
+import { PlayerService } from 'src/services/player.service';
+import { ViewportService } from 'src/services/viewport.service';
+import { MainState, RefreshPlayer } from 'src/store/main.store';
+import { ClassSelectorComponent } from '../../activities/edit-character/components/character-selector/character-selector.component';
+import { pvpTiers } from '../../activities/leadeboard/const/pvp-tiers';
 import { questTiers } from '../../activities/leadeboard/const/quest-tiers';
 
 @Component({
@@ -19,6 +23,8 @@ export class StatsDetailComponent extends TemplatePage {
   @Input() isViewingAnotherPlayer = false;
 
   private viewportService = inject(ViewportService);
+  private modalService = inject(BsModalService);
+  private playerService = inject(PlayerService);
   getRarityColor = getRarityColor;
 
   public getPlayerImageSize() {
@@ -46,5 +52,32 @@ export class StatsDetailComponent extends TemplatePage {
     }
 
     return questTiers[0];
+  }
+
+  public openSkinSelector() {
+    const { clazz, image, unlockedPortraitsIds, activeSkin } =
+      this.store.selectSnapshot(MainState.getPlayer);
+    const config: ModalOptions = {
+      initialState: {
+        pickClass: (selectedClass, selectedSkin) => {
+          if (selectedClass) {
+            const { clazz, img } = selectedClass;
+            this.playerService
+              .updateClass(clazz, selectedSkin.id)
+              .pipe(take(1))
+              .subscribe((player) => {
+                this.store.dispatch(new RefreshPlayer());
+              });
+          }
+          modalRef.hide();
+        },
+        showSelectSkin: true,
+        pickingSkin: true,
+        selectedClass: clazz,
+        _selectedSkin: activeSkin,
+        ownedSkins: unlockedPortraitsIds,
+      },
+    };
+    const modalRef = this.modalService.show(ClassSelectorComponent, config);
   }
 }

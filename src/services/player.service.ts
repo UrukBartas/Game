@@ -2,11 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, finalize, firstValueFrom, tap } from 'rxjs';
 import { Consumable } from 'src/modules/core/models/consumable.model';
-import { Item, ItemType } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
-import { MiscellanyItem } from 'src/modules/core/models/misc.model';
+import {
+  MiscellanyItem,
+  MiscellanyItemIdentifier,
+} from 'src/modules/core/models/misc.model';
 import {
   ItemSet,
+  PlayerClass,
   PlayerConfiguration,
   PlayerModel,
 } from 'src/modules/core/models/player.model';
@@ -59,6 +62,7 @@ export class PlayerService extends ApiBaseService {
   create(
     email: string,
     name: string,
+    clazz: PlayerClass,
     image: string,
     password: string,
     configuration: PlayerConfiguration
@@ -66,6 +70,7 @@ export class PlayerService extends ApiBaseService {
     return this.post('/create', {
       email,
       name,
+      clazz,
       image,
       password,
       configuration,
@@ -75,6 +80,7 @@ export class PlayerService extends ApiBaseService {
   createByEmail(
     email: string,
     name: string,
+    clazz: PlayerClass,
     image: string,
     password: string,
     configuration: PlayerConfiguration
@@ -82,6 +88,7 @@ export class PlayerService extends ApiBaseService {
     return this.post('/create-by-email', {
       email,
       name,
+      clazz,
       image,
       password,
       configuration,
@@ -90,17 +97,20 @@ export class PlayerService extends ApiBaseService {
 
   update(
     email: string,
-    name: string,
-    image: string,
     password: string,
     configuration: PlayerConfiguration
   ): Observable<PlayerModel> {
     return this.post('/update', {
       email,
-      name,
-      image,
       password,
       configuration,
+    });
+  }
+
+  updateClass(clazz: PlayerClass, skin: MiscellanyItemIdentifier) {
+    return this.post('/update-class', {
+      clazz,
+      skin,
     });
   }
 
@@ -126,10 +136,6 @@ export class PlayerService extends ApiBaseService {
 
   getMiscellanyItems(): Observable<Array<MiscellanyItem>> {
     return this.get('/inventory-miscellany');
-  }
-
-  getMounts(): Observable<Array<MiscellanyItem>> {
-    return this.get('/inventory-mounts');
   }
 
   getItemsMaterial(): Observable<Array<Material>> {
@@ -193,6 +199,6 @@ export class PlayerService extends ApiBaseService {
   }
 
   public equipMount(mountId: number) {
-    return this.get('/equip-mount/' + (mountId ?? 'null'));
+    return this.get('/equip-mount/' + mountId);
   }
 }

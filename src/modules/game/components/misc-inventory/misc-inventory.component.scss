@@ -26,6 +26,9 @@
 
 .wrapper-lootbox {
   position: relative;
+  top: -20px;
+  display: flex;
+  gap: 5px;
   i {
     position: absolute;
     cursor: pointer;
