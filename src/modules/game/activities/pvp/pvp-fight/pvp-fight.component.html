@@ -19,11 +19,12 @@
         class="col-12 col-sm-6 fighter-container player-container animate__animated animate__backInLeft"
       >
         <img
-          [src]="prefix + '/'+player.image"
+          [src]="prefix + '/' + player.image"
           [ngbTooltip]="playerStats"
           [tooltipContext]="{
             player: playerBaseStats,
             playerName: player.name,
+            isPlayer: true,
           }"
           class="player-image shadow"
           [style.animation]="playerAnimation"
@@ -45,9 +46,16 @@
           class="text-white animate__animated animate__fadeInUp position-absolute z-2"
           >-{{ getTurn().enemyTurn.damage }}</span
         >
-        <span urText class="text-white"
+        <span
+          urText
+          [ngStyle]="{
+            color: getRarityColor(getRarityBasedOnIRI(IRI)),
+          }"
           >{{ player.name }} (level {{ player.level }})</span
         >
+        <span urSubtext class="text-light">{{
+          player?.title ?? 'The untitled'
+        }}</span>
         <div
           class="progress shadow"
           [style.height]="getHealthBarHeight() + 'px'"
@@ -135,19 +143,33 @@
         >
         <div class="enemy-image-container">
           <img
-            [src]="prefix + '/'+ enemy.image"
+            [src]="prefix + '/' + enemy.image"
             [ngbTooltip]="playerStats"
             [tooltipContext]="{
               player: fight.baseStats.enemy,
               playerName: enemy.name,
             }"
-            class="enemy-image shadow"
+            class="enemy-image"
+            [ngClass]="{
+              'glowing-common': IRI_RARITY_ENEMY === rarityEnum.COMMON,
+              'glowing-uncommon': IRI_RARITY_ENEMY === rarityEnum.UNCOMMON,
+              'glowing-epic': IRI_RARITY_ENEMY === rarityEnum.EPIC,
+              'glowing-legendary': IRI_RARITY_ENEMY === rarityEnum.LEGENDARY,
+              'glowing-mythic': IRI_RARITY_ENEMY === rarityEnum.MYTHIC,
+            }"
             [style.animation]="enemyAnimation"
           />
         </div>
-        <span urText class="text-white"
+        <span
+          urText
+          [ngStyle]="{
+            color: getRarityColor(getRarityBasedOnIRI(IRI_ENEMY)),
+          }"
           >{{ enemy.name }} (level {{ enemy.level }})</span
         >
+        <span urSubtext class="text-light">{{
+          enemy?.title ?? 'The untitled'
+        }}</span>
         <div
           class="progress shadow"
           [style.height]="getHealthBarHeight() + 'px'"
@@ -313,7 +335,12 @@
   </div>
 </ng-template>
 
-<ng-template #playerStats let-player="player" let-playerName="playerName">
+<ng-template
+  #playerStats
+  let-player="player"
+  let-isPlayer="isPlayer"
+  let-playerName="playerName"
+>
   <ul class="px-3 py-2 m-0">
     <li urText class="d-flex justify-content-between gap-2 pb-2">
       <label class="text-secondary">{{ playerName }}</label>
@@ -357,6 +384,16 @@
     <li urText class="d-flex justify-content-between gap-2">
       <label class="text-third">Accuracy:</label>
       {{ player.accuracy | number: '1.0-2' }}%
+    </li>
+    <li
+      urText
+      class="d-flex justify-content-between gap-2"
+      [ngStyle]="{
+        color: getRarityColor(getRarityBasedOnIRI(isPlayer ? IRI : IRI_ENEMY)),
+      }"
+    >
+      <label class="text-third">IRI:</label>
+      {{ (isPlayer ? IRI : IRI_ENEMY) | number: '1.0-2' }}
     </li>
   </ul>
 </ng-template>

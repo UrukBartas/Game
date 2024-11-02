@@ -17,11 +17,12 @@
     <div class="row position-relative h-100">
       <div class="col-12 col-sm-6 fighter-container player-container">
         <img
-          [src]="prefix + '/'+player.image"
+          [src]="prefix + '/' + player.image"
           [ngbTooltip]="playerStats"
           [tooltipContext]="{
             player: fight.baseStats.player,
             playerName: player.name,
+            isPlayer: true,
           }"
           class="player-image shadow"
           [style.animation]="playerAnimation"
@@ -47,9 +48,16 @@
           class="text-white animate__animated animate__fadeInUp position-absolute z-2"
           >-{{ fight.turns[fight.turns.length - 1].enemyTurn.damage }}</span
         >
-        <span urText class="text-white"
+        <span
+          urText
+          [ngStyle]="{
+            color: getRarityColor(getRarityBasedOnIRI(IRI)),
+          }"
           >{{ player.name }} (level {{ player.level }})</span
         >
+        <span urSubtext class="text-light">{{
+          player?.title ?? 'The untitled'
+        }}</span>
         <div
           class="progress shadow"
           [style.height]="getHealthBarHeight() + 'px'"
@@ -138,6 +146,7 @@
         <span urText class="text-white"
           >{{ quest.data.enemy }} (level {{ quest.level }})</span
         >
+        <span urSubtext class="text-light">{{ '???????' }}</span>
         <div
           class="progress shadow"
           [style.height]="getHealthBarHeight() + 'px'"
@@ -277,7 +286,12 @@
   </div>
 </ng-template>
 
-<ng-template #playerStats let-player="player" let-playerName="playerName">
+<ng-template
+  #playerStats
+  let-player="player"
+  let-playerName="playerName"
+  let-isPlayer="isPlayer"
+>
   <ul class="px-3 py-2 m-0">
     <li urText class="d-flex justify-content-between gap-2 pb-2">
       <label class="text-secondary">{{ playerName }}</label>
@@ -321,6 +335,17 @@
     <li urText class="d-flex justify-content-between gap-2">
       <label class="text-third">Accuracy:</label>
       {{ player.accuracy | number: '1.0-2' }}%
+    </li>
+    <li
+      urText
+      class="d-flex justify-content-between gap-2"
+      *ngIf="!!isPlayer"
+      [ngStyle]="{
+        color: getRarityColor(getRarityBasedOnIRI(IRI)),
+      }"
+    >
+      <label class="text-third">IRI:</label>
+      {{ IRI | number: '1.0-2' }}
     </li>
   </ul>
 </ng-template>

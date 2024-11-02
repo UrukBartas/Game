@@ -1,5 +1,6 @@
 import { get } from 'lodash';
 import { Rarity } from './core/models/items.model';
+import { PlayerModel } from './core/models/player.model';
 import { ItemTypeSC } from './game/activities/export-import-nft/enums/ItemTypesSC';
 export const EXTRA_DATA_CONSTS = {
   PRESALE: {
@@ -60,6 +61,16 @@ export function getRarityColor(rarity: Rarity, percent = 0): string {
   })();
 
   return blendColors(baseColor, percent);
+}
+
+export function getIRIFromCurrentPlayer(player: PlayerModel) {
+  if (!player?.items || player.items.length == 0) return 0;
+  const equippedItems = (player?.items ?? []).filter((item) => item.equipped);
+  let totalIRI = 0;
+  equippedItems.forEach(
+    (equippedItem) => (totalIRI = totalIRI + equippedItem.item_rarity_stat)
+  );
+  return totalIRI / equippedItems.length;
 }
 
 export function getRarityBasedOnIRI(iri: number) {
@@ -172,4 +183,4 @@ export const getMountTimeReductionByRarity = (rarity: Rarity) => {
     default:
       return 0;
   }
-}
+};

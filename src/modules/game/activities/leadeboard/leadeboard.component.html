@@ -55,8 +55,24 @@
     >
       <div class="list-leaderboard-item-left">
         <div class="rank">
+          <div
+            class="connected-dot"
+            [ngbTooltip]="tooltipTemplate"
+            [tooltipContext]="{
+              text: getPlayerState(player.id) | capitalizeFirst,
+            }"
+          >
+            <div
+              class="dot"
+              [ngClass]="{
+                online: getPlayerState(player.id) === playerStates.ONLINE,
+                offline: getPlayerState(player.id) === playerStates.OFFLINE,
+                fighting: getPlayerState(player.id) === playerStates.FIGHTING,
+              }"
+            ></div>
+          </div>
           <img
-            [src]="prefix+'/'+player.image"
+            [src]="prefix + '/' + player.image"
             class="list-leaderboard-item-left-image-ranking"
           />
 
@@ -64,7 +80,7 @@
             @if (!formGroup.value.userOrWallet) {
               @if (index >= 0 && index <= 2 && activePage() == 0) {
                 <img
-                  [src]="prefix+'/'+getImgBasedOnRanking(index)"
+                  [src]="prefix + '/' + getImgBasedOnRanking(index)"
                   class="list-leaderboard-item-left-image-ranking"
                 />
               } @else {
@@ -80,12 +96,6 @@
 
         <div class="list-leaderboard-item-left-container">
           <div class="list-leaderboard-item-name-container">
-            <a
-              class="pr-2 d-none d-md-flex"
-              [ngbTooltip]="player.id"
-              [routerLink]="['/view-player', player.id]"
-              >{{ truncateAddress(player.id) }}</a
-            >
             <span>{{ player.name }}</span>
             <span
               *ngIf="leaderboardType === leaderboardTypes.PVE"
@@ -152,22 +162,7 @@
         >
           <div class="icon fa-sword"></div>
         </div>
-        <div
-          class="connected-dot"
-          [ngbTooltip]="tooltipTemplate"
-          [tooltipContext]="{
-            text: getPlayerState(player.id) | capitalizeFirst,
-          }"
-        >
-          <div
-            class="dot"
-            [ngClass]="{
-              online: getPlayerState(player.id) === playerStates.ONLINE,
-              offline: getPlayerState(player.id) === playerStates.OFFLINE,
-              fighting: getPlayerState(player.id) === playerStates.FIGHTING,
-            }"
-          ></div>
-        </div>
+
         <i
           class="bi bi-eye-fill pointer view-player mx-2"
           [routerLink]="['/view-player', player.id]"

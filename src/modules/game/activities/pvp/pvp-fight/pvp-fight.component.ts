@@ -29,8 +29,14 @@ import {
   FightResultModel,
   TurnActionEnum,
 } from 'src/modules/core/models/fight.model';
+import { Rarity } from 'src/modules/core/models/items.model';
 import { FighterStats } from 'src/modules/core/models/player-stats.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
+import {
+  getIRIFromCurrentPlayer,
+  getRarityBasedOnIRI,
+  getRarityColor,
+} from 'src/modules/utils';
 import { PvPFightService } from 'src/services/pvp-fight.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { WebSocketService } from 'src/services/websocket.service';
@@ -62,6 +68,13 @@ export class PvPFightComponent
   turnTimer = 0;
   private timerSubject = new BehaviorSubject<void>(null);
   public prefix = environment.permaLinkImgPref;
+  public IRI = 0;
+  public IRI_ENEMY = 0;
+  public IRI_RARITY: Rarity = Rarity.COMMON;
+  public IRI_RARITY_ENEMY: Rarity = Rarity.COMMON;
+  public rarityEnum = Rarity;
+  public getRarityColor = getRarityColor;
+  public getRarityBasedOnIRI = getRarityBasedOnIRI;
   constructor(
     store: Store,
     viewportService: ViewportService,
@@ -101,6 +114,11 @@ export class PvPFightComponent
           this.isOpponent = currentPlayer.id === playersData.enemy.id;
           this.player = !this.isOpponent ? player : enemy;
           this.enemy = this.isOpponent ? player : enemy;
+          this.IRI = getIRIFromCurrentPlayer(this.player);
+          this.IRI_ENEMY = getIRIFromCurrentPlayer(this.enemy);
+          this.IRI_RARITY = getRarityBasedOnIRI(this.IRI);
+          this.IRI_RARITY_ENEMY = getRarityBasedOnIRI(this.IRI_ENEMY);
+
           this.playerBaseStats = !this.isOpponent
             ? baseStats.player
             : baseStats.enemy;

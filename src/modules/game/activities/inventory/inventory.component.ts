@@ -27,6 +27,7 @@ import {
 } from 'src/modules/core/models/misc.model';
 import { ItemSet, PlayerModel } from 'src/modules/core/models/player.model';
 import {
+  getIRIFromCurrentPlayer,
   getMountTimeReductionByRarity,
   getRarityBasedOnIRI,
   getRarityColor,
@@ -163,16 +164,7 @@ export class InventoryComponent extends TemplatePage {
   public iriAverage$ = () => {
     return this.actualPlayer$.pipe(
       filter((player) => !!player),
-      map((player) => player.items),
-      map((items: Array<Item>) => {
-        const equippedItems = items.filter((item) => item.equipped);
-        let totalIRI = 0;
-        equippedItems.forEach(
-          (equippedItem) =>
-            (totalIRI = totalIRI + equippedItem.item_rarity_stat)
-        );
-        return totalIRI / equippedItems.length;
-      })
+      map((player) => getIRIFromCurrentPlayer(player))
     );
   };
 

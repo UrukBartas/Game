@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { take } from 'rxjs';
@@ -12,6 +17,11 @@ import {
 import { Rarity } from 'src/modules/core/models/items.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { QuestModel } from 'src/modules/core/models/quest.model';
+import {
+  getIRIFromCurrentPlayer,
+  getRarityBasedOnIRI,
+  getRarityColor,
+} from 'src/modules/utils';
 import { FightService } from 'src/services/fight.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, StartFight } from 'src/store/main.store';
@@ -30,6 +40,11 @@ export class QuestFightComponent extends BaseFightComponent implements OnInit {
   fightBackgroundImage = this.getBackground();
   player: PlayerModel = this.store.selectSnapshot(MainState.getState).player;
   public prefix = environment.permaLinkImgPref;
+  public IRI = 0;
+  public IRI_RARITY: Rarity = Rarity.COMMON;
+  public rarityEnum = Rarity;
+  public getRarityColor = getRarityColor;
+  public getRarityBasedOnIRI = getRarityBasedOnIRI;
 
   constructor(
     store: Store,
@@ -54,6 +69,8 @@ export class QuestFightComponent extends BaseFightComponent implements OnInit {
           this.questStatusChange.emit({ status: QuestStatusEnum.PICKING });
         },
       });
+    this.IRI = getIRIFromCurrentPlayer(this.player);
+    this.IRI_RARITY = getRarityBasedOnIRI(this.IRI);
   }
 
   submitAction(action: TurnActionEnum, consumableId?: number): void {
