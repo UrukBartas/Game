@@ -55,23 +55,27 @@ export class StatsDetailComponent extends TemplatePage {
   }
 
   public openSkinSelector() {
-    const { clazz, image, unlockedPortraitsIds } = this.store.selectSnapshot(MainState.getPlayer);
+    const { clazz, image, unlockedPortraitsIds, activeSkin } =
+      this.store.selectSnapshot(MainState.getPlayer);
     const config: ModalOptions = {
       initialState: {
-        pickClass: (selectedClass) => {
+        pickClass: (selectedClass, selectedSkin) => {
           if (selectedClass) {
             const { clazz, img } = selectedClass;
-            this.playerService.updateClass(clazz, img).pipe(take(1)).subscribe((player) => {
-              this.store.dispatch(new RefreshPlayer());
-            });
+            this.playerService
+              .updateClass(clazz, selectedSkin.id)
+              .pipe(take(1))
+              .subscribe((player) => {
+                this.store.dispatch(new RefreshPlayer());
+              });
           }
           modalRef.hide();
         },
         showSelectSkin: true,
         pickingSkin: true,
         selectedClass: clazz,
-        _selectedSkin: image,
-        ownedSkins: unlockedPortraitsIds
+        _selectedSkin: activeSkin,
+        ownedSkins: unlockedPortraitsIds,
       },
     };
     const modalRef = this.modalService.show(ClassSelectorComponent, config);

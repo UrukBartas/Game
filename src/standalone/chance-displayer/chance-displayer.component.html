@@ -5,6 +5,7 @@
     [width]="width > 0 ? width : getPossibleDropsSize()"
     [rarity]="rarity"
     [image]="image"
+    [stack]="stack > 1 ? stack : undefined"
   >
     <div tooltip class="tooltip-uruk p-2">
       <p class="mb-0" [ngStyle]="{ color: getRarityColor(rarity) }">

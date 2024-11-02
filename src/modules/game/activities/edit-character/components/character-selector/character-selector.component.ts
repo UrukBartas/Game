@@ -1,12 +1,18 @@
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { Store } from '@ngxs/store';
+import { cloneDeep } from 'lodash';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { MiscellanyItemData } from 'src/modules/core/models/misc.model';
+import {
+  MiscellanyItemData,
+  MiscellanyItemIdentifier,
+} from 'src/modules/core/models/misc.model';
 import { PlayerClass } from 'src/modules/core/models/player.model';
 import { getRarityColor } from 'src/modules/utils';
 import { MiscellanyService } from 'src/services/miscellany.service';
-import { MainState, SetSkins } from 'src/store/main.store';
+import { PlayerService } from 'src/services/player.service';
+import { MainState, RefreshPlayer, SetSkins } from 'src/store/main.store';
 import SwiperCore, {
   EffectCoverflow,
   Navigation,
@@ -24,7 +30,6 @@ SwiperCore.use([EffectCoverflow, Navigation, Pagination]);
   encapsulation: ViewEncapsulation.None,
 })
 export class ClassSelectorComponent implements OnInit {
-
   swiperConfig: SwiperOptions = {
     slidesPerView: 1,
     initialSlide: 0,
@@ -46,9 +51,9 @@ export class ClassSelectorComponent implements OnInit {
   modalRef = inject(BsModalRef);
   store = inject(Store);
   imagePrefix = environment.permaLinkImgPref;
-  classes = [ ...classData ];
-  selectedClass: PlayerClass = classData[0].clazz;
-  skins: MiscellanyItemData[] = [ ...baseSkins ];
+  classes = [];
+  selectedClass!: PlayerClass;
+  skins: MiscellanyItemData[] = [];
 
   showSelectSkin = true;
   pickingSkin = false;
@@ -59,13 +64,20 @@ export class ClassSelectorComponent implements OnInit {
     if (!this._selectedSkin) {
       return null;
     }
-    return this.skins.find((skin) => skin.imageLocal === this._selectedSkin);
+    return this.skins.find((skin) => skin.id === this._selectedSkin);
   }
- 
+
   private miscellanyService = inject(MiscellanyService);
+  private playerService = inject(PlayerService);
   public getRarityColor = getRarityColor;
 
-  pickClass: (selectedClass) => void;
+  constructor() {
+    this.classes = cloneDeep(classData);
+    this.selectedClass = classData[0].clazz;
+    this.skins = cloneDeep(baseSkins);
+  }
+
+  pickClass: (selectedClass, selectedSkin) => void;
 
   isSkinOwned(skin: MiscellanyItemData) {
     return this.ownedSkins.includes(skin.id) || skin.extraData.free;
@@ -78,6 +90,7 @@ export class ClassSelectorComponent implements OnInit {
       const selectedClassIndex = this.classes.findIndex(
         (clazz) => clazz.clazz === this.selectedSkin.extraData.clazz
       );
+      this.selectSkin(this.selectedSkin);
       this.swiperConfig.initialSlide = selectedClassIndex;
     }
   }
@@ -99,7 +112,7 @@ export class ClassSelectorComponent implements OnInit {
 
   onSlideChange(event) {
     this.selectedClass = classData[event.activeIndex].clazz;
-    this._selectedSkin = this.getClassSkins()[0].imageLocal;
+    this._selectedSkin = this.getClassSkins()[0].id;
   }
 
   getClassSkins() {
@@ -109,19 +122,22 @@ export class ClassSelectorComponent implements OnInit {
   }
 
   selectSkin(skin: MiscellanyItemData) {
-    this._selectedSkin = skin.imageLocal;
+    this._selectedSkin = skin.id;
     const selectedClassIndex = this.classes.findIndex(
       (clazz) => clazz.clazz === this.selectedClass
     );
     this.classes[selectedClassIndex].img = skin.imageLocal;
   }
 
-  saveSkin() {
+  async saveSkin(idSkin: MiscellanyItemIdentifier) {
     this.pickingSkin = false;
+    await firstValueFrom(
+      this.playerService.updateClass(this.selectedClass, idSkin)
+    );
+    this.store.dispatch(new RefreshPlayer());
   }
 
   openSkinSelector() {
     this.pickingSkin = true;
   }
-
 }

@@ -5,7 +5,7 @@
         [rarity]="rarityEnum.EPIC"
         [chance]="possibilitiesComboBox.Portraits.toFixed(2)"
         [image]="pathPortrait"
-        [type]="mapTypeImage['Portrait']"
+        [type]="'Portrait'"
         [height]="itemHeight"
         [width]="itemWidth"
       ></app-chance-displayer>
@@ -14,7 +14,34 @@
         [rarity]="rarityEnum.EPIC"
         [chance]="possibilitiesComboBox.Materials.toFixed(2)"
         [image]="pathMaterial"
-        [type]="mapTypeImage['MATERIAL']"
+        [type]="'Material'"
+        [height]="itemHeight"
+        [width]="itemWidth"
+      ></app-chance-displayer>
+
+      <app-chance-displayer
+        [rarity]="rarityEnum.EPIC"
+        [chance]="possibilitiesComboBox.Mount.toFixed(2)"
+        [image]="pathMounts"
+        [type]="'Mount'"
+        [height]="itemHeight"
+        [width]="itemWidth"
+      ></app-chance-displayer>
+
+      <app-chance-displayer
+        [rarity]="rarityEnum.UNCOMMON"
+        [chance]="possibilitiesComboBox.Title_Prefix.toFixed(2)"
+        [image]="pathPrefix"
+        [type]="'Title Prefix'"
+        [height]="itemHeight"
+        [width]="itemWidth"
+      ></app-chance-displayer>
+
+      <app-chance-displayer
+        [rarity]="rarityEnum.UNCOMMON"
+        [chance]="possibilitiesComboBox.Title_Suffix.toFixed(2)"
+        [image]="pathSuffix"
+        [type]="'Title Suffix'"
         [height]="itemHeight"
         [width]="itemWidth"
       ></app-chance-displayer>
@@ -40,6 +67,7 @@
         <app-chance-displayer
           [rarity]="rarityEnum.EPIC"
           [chance]="1"
+          [stack]="item.amount ?? 1"
           [image]="mapTypeImage[item.type]"
           [type]="item.type"
           [height]="itemHeight / 1.5"

@@ -120,15 +120,20 @@
       }
     }
   }
+
+  .title-selector,
   .change-siluette {
-    position: absolute;
-    top: 10px;
-    left: 20px;
     color: lightgrey;
     cursor: pointer;
     &:hover {
       color: white;
     }
+  }
+
+  .change-siluette {
+    position: absolute;
+    top: 10px;
+    left: 20px;
   }
   .expandable-container {
     max-height: 0;

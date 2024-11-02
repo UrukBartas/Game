@@ -48,7 +48,7 @@
                     'button-warrior': classItem.clazz == 'WARRIOR',
                     'button-mage': classItem.clazz == 'MAGE',
                   }"
-                  (click)="pickClass(classItem)"
+                  (click)="pickClass(classItem, selectedSkin)"
                 >
                   Pick this class
                 </button>
@@ -60,7 +60,7 @@
                     <img
                       [ngClass]="{
                         selected: selectedSkin.id === skin.id,
-                        disabled: !isSkinOwned(skin)
+                        disabled: !isSkinOwned(skin),
                       }"
                       (click)="selectSkin(skin)"
                       [src]="imagePrefix + skin.imageLocal"
@@ -76,7 +76,9 @@
                     {{ selectedSkin.description }}
                   </span>
                   <span
-                    [style.visibility]="selectedSkin.extraData.edition ? 'visible' : 'hidden'"
+                    [style.visibility]="
+                      selectedSkin.extraData.edition ? 'visible' : 'hidden'
+                    "
                     urText
                     class="text-white d-flex gap-2"
                   >
@@ -91,9 +93,11 @@
                 <button
                   [disabled]="!selectedSkin || !isSkinOwned(selectedSkin)"
                   class="btn btn-lg btn-primary save-button w-100 text-shadow"
-                  (click)="saveSkin()"
+                  (click)="saveSkin(selectedSkin.id)"
                 >
-                  {{ isSkinOwned(selectedSkin) ? 'Pick this skin' : '🛇 Not owned' }} 
+                  {{
+                    isSkinOwned(selectedSkin) ? 'Pick this skin' : '🛇 Not owned'
+                  }}
                 </button>
               </div>
             }

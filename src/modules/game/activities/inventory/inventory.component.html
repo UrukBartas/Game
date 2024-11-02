@@ -118,30 +118,12 @@
               <ng-container *ngIf="currentMiscInventory as inventoryMisc">
                 <app-misc-inventory
                   [items]="inventoryMisc"
+                  (equipMount)="equipMount($event)"
                   (updateInventory)="
                     miscUpdated$.next(true);
                     inventoryUpdated$.next(true);
                     materialUpdated$.next(true)
                   "
-                  [sockets]="currentSize$ | async"
-                >
-                  <ng-container
-                    extraItemBoxes
-                    *ngTemplateOutlet="inventoryExpander"
-                  >
-                  </ng-container>
-                </app-misc-inventory>
-              </ng-container>
-            </tab>
-            <tab>
-              <ng-template tabHeading>
-                <span>🦄</span>
-              </ng-template>
-              <ng-container *ngIf="currentMountsInventory as inventoryMounts">
-                <app-misc-inventory
-                  [items]="inventoryMounts"
-                  (updateInventory)="mountsUpdated$.next(true)"
-                  (equipMount)="equipMount($event)"
                   [sockets]="currentSize$ | async"
                 >
                   <ng-container
@@ -211,7 +193,7 @@
     <div class="description align-items-center">
       <p urTitle>Character</p>
       <span
-        class="text-light"
+        class="title-selector"
         (click)="isViewingPlayer ? false : openTitleSelector()"
         >{{ (actualPlayer$ | async).title ?? 'The untitled' }}
         <i
@@ -294,10 +276,8 @@
             (appDoubleClick)="equipMount(null)"
             [height]="getEquippedItemBoxSize() / 1.5"
             [width]="getEquippedItemBoxSize() / 1.5"
-            [image]="
-              (getPlayer$ | async)?.mount?.miscellanyItemData?.imageLocal
-            "
-            [rarity]="(getPlayer$ | async)?.mount?.miscellanyItemData?.rarity"
+            [image]="(getPlayer$ | async)?.mount?.imageLocal"
+            [rarity]="(getPlayer$ | async)?.mount?.rarity"
           >
             @if (!!(getPlayer$ | async)?.mount) {
               <div tooltip class="tooltip-uruk">
@@ -305,13 +285,13 @@
                   <span class="text-third">
                     Quest cooldown -{{
                       getMountTimeReductionByRarity(
-                        (getPlayer$ | async).mount.miscellanyItemData.rarity
+                        (getPlayer$ | async).mount.rarity
                       )
                     }}%
                   </span>
                 </ng-template>
                 <app-generic-item-tooltip
-                  [item]="(getPlayer$ | async).mount.miscellanyItemData"
+                  [item]="(getPlayer$ | async).mount"
                   [customTemplate]="mountSpeed"
                 ></app-generic-item-tooltip>
               </div>

@@ -1,5 +1,8 @@
 import { Item } from './items.model';
-import { MiscellanyItem, MiscellanyItemData, MiscellanyItemIdentifier } from './misc.model';
+import {
+  MiscellanyItemData,
+  MiscellanyItemIdentifier
+} from './misc.model';
 import { QuestModel } from './quest.model';
 import { SessionModel } from './session.model';
 
@@ -24,12 +27,13 @@ export interface PlayerModel {
   stats: PlayerStatsModel;
   perStats?: TotalPerStats;
   sockets: number;
-  mount?: MiscellanyItem;
+  mount?: MiscellanyItemData;
   activeSilhouette: string;
   title?: string;
   titles?: MiscellanyItemData[];
-  activePrefixTitle:MiscellanyItemIdentifier;
-  activeSuffixTitle:MiscellanyItemIdentifier;
+  activePrefixTitle: MiscellanyItemIdentifier;
+  activeSuffixTitle: MiscellanyItemIdentifier;
+  activeSkin: MiscellanyItemIdentifier;
   unlockedPortraitsIds: string[];
   // Base player stats
   health: number;

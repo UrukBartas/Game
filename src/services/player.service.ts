@@ -3,7 +3,10 @@ import { Injectable } from '@angular/core';
 import { Observable, finalize, firstValueFrom, tap } from 'rxjs';
 import { Consumable } from 'src/modules/core/models/consumable.model';
 import { Material } from 'src/modules/core/models/material.model';
-import { MiscellanyItem } from 'src/modules/core/models/misc.model';
+import {
+  MiscellanyItem,
+  MiscellanyItemIdentifier,
+} from 'src/modules/core/models/misc.model';
 import {
   ItemSet,
   PlayerClass,
@@ -104,10 +107,10 @@ export class PlayerService extends ApiBaseService {
     });
   }
 
-  updateClass(clazz: PlayerClass, image: string) {
+  updateClass(clazz: PlayerClass, skin: MiscellanyItemIdentifier) {
     return this.post('/update-class', {
       clazz,
-      image,
+      skin,
     });
   }
 
@@ -133,10 +136,6 @@ export class PlayerService extends ApiBaseService {
 
   getMiscellanyItems(): Observable<Array<MiscellanyItem>> {
     return this.get('/inventory-miscellany');
-  }
-
-  getMounts(): Observable<Array<MiscellanyItem>> {
-    return this.get('/inventory-mounts');
   }
 
   getItemsMaterial(): Observable<Array<Material>> {
@@ -200,6 +199,6 @@ export class PlayerService extends ApiBaseService {
   }
 
   public equipMount(mountId: number) {
-    return this.get('/equip-mount/' + (mountId ?? 'null'));
+    return this.get('/equip-mount/' + mountId);
   }
 }

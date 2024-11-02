@@ -13,10 +13,12 @@ import { getAccount } from '@wagmi/core';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom, take } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import {
   PlayerClass,
   PlayerConfiguration,
+  PlayerModel,
 } from 'src/modules/core/models/player.model';
 import { truncateEthereumAddress } from 'src/modules/utils';
 import { AuthService } from 'src/services/auth.service';
@@ -31,7 +33,6 @@ import {
   RefreshPlayer,
 } from 'src/store/main.store';
 import { ClassSelectorComponent } from './components/character-selector/character-selector.component';
-import { environment } from 'src/environments/environment';
 
 export function passwordMatchingValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
@@ -157,10 +158,12 @@ export class EditCharacterComponent extends TemplatePage {
   }
 
   public openCharacterSelector() {
-    const player = this.store.selectSnapshot(MainState.getPlayer);
+    const player = this.store.selectSnapshot(
+      MainState.getPlayer
+    ) as PlayerModel;
     const config: ModalOptions = {
       initialState: {
-        pickClass: (selectedClass) => {
+        pickClass: (selectedClass, selectedSkin) => {
           if (selectedClass) {
             this.form.patchValue({
               image: selectedClass.img,
@@ -168,7 +171,7 @@ export class EditCharacterComponent extends TemplatePage {
             });
             if (this.editing) {
               this.playerService
-                .updateClass(selectedClass.clazz, selectedClass.img)
+                .updateClass(selectedClass.clazz, selectedSkin.id)
                 .pipe(take(1))
                 .subscribe((player) => {
                   this.store.dispatch(new RefreshPlayer());
@@ -178,9 +181,9 @@ export class EditCharacterComponent extends TemplatePage {
           modalRef.hide();
         },
         selectedClass: player?.clazz,
-        _selectedSkin: player?.image,
+        _selectedSkin: player?.activeSkin,
         showSelectSkin: this.editing,
-        ownedSkins: player?.unlockedPortraitsIds
+        ownedSkins: player?.unlockedPortraitsIds,
       },
     };
     const modalRef = this.modalService.show(ClassSelectorComponent, config);

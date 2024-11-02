@@ -9,10 +9,8 @@ import {
 import { cloneDeep } from 'lodash';
 import { firstValueFrom } from 'rxjs';
 import { ItemType, Rarity } from 'src/modules/core/models/items.model';
-import {
-  MiscellanyItemIdentifier,
-  MiscellanyItemType,
-} from 'src/modules/core/models/misc.model';
+import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
+import { MiscellanyService } from 'src/services/miscellany.service';
 import { StatsService } from 'src/services/stats.service';
 import { ChanceDisplayerComponent } from '../chance-displayer/chance-displayer.component';
 
@@ -68,11 +66,37 @@ export class LootboxStatsDisplayerComponent {
   public rarityEnum = Rarity;
   public pathPortrait = 'assets/premium-portraits/5.webp';
   public pathMaterial = 'assets/materials/38.webp';
-  public mapTypeImage = {
-    [MiscellanyItemType.Portrait]: this.pathPortrait,
-    ['MATERIAL']: this.pathMaterial,
-    [MiscellanyItemType.MoneyBag]: 'assets/misc/bags/medium_bag_money.png',
-  };
+  public pathMounts = 'assets/mounts/1.webp';
+  public pathPrefix = 'assets/misc/titles/title_preffix.png';
+  public pathSuffix = 'assets/misc/titles/title_suffix.png';
+  public pathSilhouette = 'assets/misc/siluettes/knight.jpg';
+  public mapTypeImage = {};
+
+  constructor(private miscService: MiscellanyService) {
+    const materials = this.miscService.poolMaterials;
+    const randomIndex = Math.floor(Math.random() * materials.length);
+    const randomMat = materials[randomIndex];
+    this.pathMaterial = randomMat.imageLocal;
+
+    const portraits = this.miscService.poolPortraits;
+    const randomPortraitIndex = Math.floor(Math.random() * portraits.length);
+    const randomPortrait = portraits[randomPortraitIndex];
+    this.pathPortrait = randomPortrait.imageLocal;
+    this.pathMounts = `assets/mounts/${Math.floor(Math.random() * 20) + 1}.webp`;
+
+    this.mapTypeImage = {
+      [MiscellanyItemType.Portrait]: this.pathPortrait,
+      ['MATERIAL']: this.pathMaterial,
+      ['MOUNT']: this.pathMounts,
+      [MiscellanyItemType.Title_Prefix]: this.pathPrefix,
+      [MiscellanyItemType.Title_Suffix]: this.pathSuffix,
+      [MiscellanyItemType.MoneyBag]: 'assets/misc/bags/medium_bag_money.png',
+      [MiscellanyItemType.Boost + '_EXP']: 'assets/misc/boosts/exp_boost.png',
+      [MiscellanyItemType.Boost + '_URUKS']:
+        'assets/misc/boosts/coin_boost.png',
+      [MiscellanyItemType.Silhouette]: this.pathSilhouette,
+    };
+  }
   stats = inject(StatsService);
   public parsePossibilitiesComboBox(possibilities: any, rarity: Rarity) {
     if (!possibilities) return null;
@@ -80,16 +104,26 @@ export class LootboxStatsDisplayerComponent {
     const result = {
       Portraits: 0,
       Materials: 0,
+      Mount: 0,
       Others: [] as any[],
+      Title_Prefix: 0,
+      Title_Suffix: 0,
       Bonus: possibilities[rarity]?.bonusDrop ?? [],
     };
 
     Object.keys(drops).forEach((key) => {
       const item = drops[key];
+      console.log(item.type);
       if (item.type === 'Portrait') {
         result.Portraits += item.chance;
       } else if (item.type === 'MATERIAL') {
         result.Materials += item.chance;
+      } else if (item.type === 'Mount') {
+        result.Mount += item.chance;
+      } else if (item.type == 'Title_Prefix') {
+        result.Title_Prefix += item.chance;
+      } else if (item.type == 'Title_Suffix') {
+        result.Title_Suffix += item.chance;
       } else {
         result.Others.push({
           key: key,

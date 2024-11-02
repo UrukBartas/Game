@@ -10,7 +10,7 @@ import {
   ViewChild,
   ViewChildren,
   inject,
-  signal
+  signal,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
@@ -23,6 +23,7 @@ import { firstValueFrom, map } from 'rxjs';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import {
   MiscellanyItem,
+  MiscellanyItemData,
   MiscellanyItemIdentifier,
   MiscellanyItemIdentifierDisplay,
   MiscellanyItemType,
@@ -108,8 +109,49 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   }> = null;
 
   public resultItemSet: Array<Item> = [];
-  public pathPortrait = 'assets/premium-portraits/5.webp';
-  public pathMaterial = 'assets/materials/38.webp';
+
+  public miscItemFilterTypes = [
+    {
+      id: 1,
+      image: '/assets/icons/boosts.png',
+      type: [MiscellanyItemType.Boost],
+    },
+    {
+      id: 2,
+      image: '/assets/icons/boxes.png',
+      type: [
+        MiscellanyItemType.ComboLootbox,
+        MiscellanyItemType.Lootbox,
+        MiscellanyItemType.ItemSet,
+        MiscellanyItemType.MoneyBag,
+      ],
+    },
+    {
+      id: 3,
+      image: '/assets/icons/mounts.png',
+      type: [MiscellanyItemType.Mount],
+    },
+    {
+      id: 4,
+      image: '/assets/icons/portraits.png',
+      type: [MiscellanyItemType.Portrait],
+    },
+    {
+      id: 5,
+      image: '/assets/icons/scrolls.png',
+      type: [MiscellanyItemType.Recipe],
+    },
+    {
+      id: 6,
+      image: '/assets/icons/siluette.png',
+      type: [MiscellanyItemType.Silhouette],
+    },
+    {
+      id: 7,
+      image: '/assets/icons/titles.png',
+      type: [MiscellanyItemType.Title_Prefix, MiscellanyItemType.Title_Suffix],
+    },
+  ];
 
   rarity = Rarity;
   public get filteredItems() {
@@ -117,12 +159,14 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
       this.stack
         .transform(this.items, 'miscellanyItemData.name')
         .filter((item) => {
-          const player = this.store.selectSnapshot(MainState.getState).player;
           return (
-            item?.miscellanyItemData?.name
+            (item?.miscellanyItemData?.name
               .toLowerCase()
               .includes(this.searchTerm.toLowerCase()) &&
-            player.mount?.id !== item?.id
+              this.filteredItemTypes.includes(
+                (item?.miscellanyItemData as MiscellanyItemData).itemType
+              )) ||
+            this.filteredItemTypes.length == 0
           );
         })
         .sort(),

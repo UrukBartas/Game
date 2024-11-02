@@ -106,13 +106,11 @@ export class InventoryComponent extends TemplatePage {
   public inventoryUpdated$ = new Subject();
   public materialUpdated$ = new Subject();
   public miscUpdated$ = new Subject();
-  public mountsUpdated$ = new Subject();
   public consumablesUpdated$ = new Subject();
   public currentInventory: Array<Item> = [];
   public currentMaterials: Array<Material> = [];
   public currentConsumableInventory = [];
   public currentMiscInventory = [];
-  public currentMountsInventory = [];
 
   public activeDragAndDropItemType: ItemType = null;
   public itemTypePublic = ItemType;
@@ -266,11 +264,6 @@ export class InventoryComponent extends TemplatePage {
         this.playerService.getMiscellanyItems()
       );
     });
-    this.mountsUpdated$.pipe(takeUntilDestroyed()).subscribe(async () => {
-      this.currentMountsInventory = await firstValueFrom(
-        this.playerService.getMounts()
-      );
-    });
     this.loadInventories();
   }
 
@@ -279,7 +272,6 @@ export class InventoryComponent extends TemplatePage {
     this.consumablesUpdated$.next(true);
     this.materialUpdated$.next(true);
     this.miscUpdated$.next(true);
-    this.mountsUpdated$.next(true);
   }
 
   public getEquippedItemBoxSize() {
@@ -401,7 +393,7 @@ export class InventoryComponent extends TemplatePage {
     this.playerService.equipItemFlow(
       this.playerService.equipMount(mount?.id),
       () => {
-        this.mountsUpdated$.next(true);
+        this.miscUpdated$.next(true);
       }
     );
   }
