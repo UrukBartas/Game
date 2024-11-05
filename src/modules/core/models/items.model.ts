@@ -56,6 +56,7 @@ export interface ItemData {
   description: string;
   items: Item[];
   souldBoundByDefault: boolean;
+  extraData?: any;
 }
 
 export enum ItemType {
