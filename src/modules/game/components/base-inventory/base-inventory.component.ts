@@ -8,6 +8,7 @@ export class BaseInventoryComponent {
   @Input() sockets = 0;
   @Input() multipleSelection = false;
   @Input() boxSize: number = 40;
+  @Input() actionable = true;
 
   public searchTerm = '';
   public filteredItemTypes = []

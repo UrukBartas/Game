@@ -13,6 +13,7 @@ import { getAccount, waitForTransaction } from '@wagmi/core';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { ethers } from 'ethers';
 import { cloneDeep } from 'lodash';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import * as party from 'party-js';
@@ -53,6 +54,7 @@ interface LootboxDataBlockchain {
     NgxSliderModule,
     ChainSwitcherComponent,
     LootboxStatsDisplayerComponent,
+    AccordionModule,
   ],
   providers: [LootboxPresaleThreeService, PresaleContractService],
   standalone: true,
@@ -87,7 +89,7 @@ export class LootboxPresaleComponent implements AfterViewInit {
   private presaleContractService = inject(PresaleContractService);
   private walletService = inject(WalletService);
   private miscService = inject(MiscellanyService);
-  private modalService = inject(BsModalService);
+  public modalService = inject(BsModalService);
   toastService = inject(ToastrService);
   cdr = inject(ChangeDetectorRef);
   getRarityColor = getRarityColor;
@@ -135,6 +137,16 @@ export class LootboxPresaleComponent implements AfterViewInit {
       this.getRarityFogColor(Rarity.UNCOMMON)
     );
     this.websocket.connect();
+  }
+
+  openFAQModal(faqTemplate: any): void {
+    this.modalService.show(faqTemplate);
+  }
+
+  public showPolicy(template: any) {
+    this.modalService.show(template, {
+      class: 'policy-dialog',
+    });
   }
 
   showFomoToast(message: string) {

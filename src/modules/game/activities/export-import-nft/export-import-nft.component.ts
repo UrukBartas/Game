@@ -37,6 +37,7 @@ import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
 import { getItemTypeSCBasedOnItem } from 'src/modules/utils';
 import { ERC20ContractService } from 'src/services/contracts/erc20-contract.service';
 import { NFTContractService } from 'src/services/contracts/nft-contract.service';
+import { PresaleContractService } from 'src/services/contracts/presale-contract.service';
 import { ExportImportService } from 'src/services/export-import.service';
 import { ItemService } from 'src/services/item.service';
 import { PlayerService } from 'src/services/player.service';
@@ -44,7 +45,6 @@ import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ItemTypeSC } from './enums/ItemTypesSC';
-import { PresaleContractService } from 'src/services/contracts/presale-contract.service';
 
 @Component({
   selector: 'app-export-import-nft',
@@ -52,7 +52,8 @@ import { PresaleContractService } from 'src/services/contracts/presale-contract.
   styleUrl: './export-import-nft.component.scss',
 })
 export class ExportImportNftComponent extends TemplatePage {
-  public exportTypeActive: 'export' | 'import' = 'export';
+  //true export false import
+  public exportTypeActive: boolean = true;
   public exportingObjectTypeActive: 'nft' | 'coins' = 'nft';
 
   public selectedUruksToExport = 0;
@@ -231,7 +232,9 @@ export class ExportImportNftComponent extends TemplatePage {
 
   private filterAndMapNfts(itemType: ItemTypeSC) {
     return map((nfts: Array<any>) => {
-      let filtered = nfts.filter((nft) => nft.itemType === itemType);
+      let filtered = nfts.filter(
+        (nft) => nft.itemType === itemType && !!nft.dbItem
+      );
       return filtered.map((filteredEntry) => {
         let entry = { ...filteredEntry, ...filteredEntry.dbItem };
         if (itemType == ItemTypeSC.Material)
@@ -339,7 +342,7 @@ export class ExportImportNftComponent extends TemplatePage {
       }, 0);
     }
     if (importMode === 'true') {
-      this.exportTypeActive = 'import';
+      this.exportTypeActive = false;
     }
     if (!!exporObjectType) {
       this.exportingObjectTypeActive = exporObjectType;
@@ -367,9 +370,6 @@ export class ExportImportNftComponent extends TemplatePage {
   }
 
   public changeType(event: any) {
-    event.target.checked
-      ? (this.exportTypeActive = 'export')
-      : (this.exportTypeActive = 'import');
     this.sendThemToTheAbyssAndBurnThemLikeJs();
     this.selectedUruksToExport = 0;
   }
@@ -406,9 +406,7 @@ export class ExportImportNftComponent extends TemplatePage {
         [
           nftsUploaded.map((entry) => entry.id),
           nftsUploaded.map((entry) => entry.type),
-          nftsUploaded.map(
-            (entry) => `https://gateway.lighthouse.storage/ipfs/${entry.cid}`
-          ),
+          nftsUploaded.map((entry) => `ipfs://${entry.cid}`),
           nftsUploaded.map((entry) => entry.quantity),
         ],
         ethers.parseEther(
@@ -615,12 +613,16 @@ export class ExportImportNftComponent extends TemplatePage {
       ) {
         const foundNftsByType = allNFTItems.filter((nft) => {
           const sameType = nft.itemType == selectedItem['itemType'];
-          const sameSubtype =
-            nft?.dbItem?.miscellanyItemDataId ==
-              selectedItem['dbItem']?.miscellanyItemDataId ||
-            nft?.dbItem?.consumableDataId ==
-              selectedItem['dbItem']?.consumableDataId;
-          return sameType && sameSubtype;
+          const mapItemSubType = {
+            [ItemTypeSC.Potion]:
+              nft?.dbItem?.consumableDataId ==
+              selectedItem['dbItem']?.consumableDataId,
+            [ItemTypeSC.Miscellaneous]:
+              nft?.dbItem?.miscellanyItemDataId ==
+              selectedItem['dbItem']?.miscellanyItemDataId,
+          };
+
+          return sameType && mapItemSubType[selectedItem['itemType']];
         });
 
         foundNftsByType.forEach((entry) => {
@@ -642,7 +644,7 @@ export class ExportImportNftComponent extends TemplatePage {
   public async triggerActionForNFT() {
     this.spinnerService.show();
     try {
-      if (this.exportTypeActive == 'export') {
+      if (!!this.exportTypeActive) {
         const [
           flattenedArrayIds,
           flattenedArrayTypes,
@@ -698,7 +700,7 @@ export class ExportImportNftComponent extends TemplatePage {
   public async triggerActionForERC20() {
     this.spinnerService.show();
     try {
-      if (this.exportTypeActive == 'export') {
+      if (!!this.exportTypeActive) {
         this.exportERC20();
       } else {
         this.importERC20();

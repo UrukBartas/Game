@@ -513,3 +513,12 @@ app-balance-selector {
 .neutral {
   font-size: 12px;
 }
+
+.policy-dialog {
+  height: 90%;
+  .modal-content {
+    width: 100%;
+    max-width: 90%;
+    height: 100%;
+  }
+}

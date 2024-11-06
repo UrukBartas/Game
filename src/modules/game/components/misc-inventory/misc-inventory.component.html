@@ -277,7 +277,9 @@
               #result
               [height]="100"
               [width]="100"
-              [stack]="bonusDrop['stack'] ?? bonusDrop?.quantity | compressNumber"
+              [stack]="
+                bonusDrop['stack'] ?? bonusDrop?.quantity | compressNumber
+              "
               [image]="getGenericItemItemData(bonusDrop)?.imageLocal"
             >
               <div tooltip class="tooltip-uruk" *ngIf="!!bonusDrop">
@@ -392,9 +394,11 @@
   <app-item-box
     *ngFor="let item of filteredItems"
     (contextmenu)="
-      contextMenuService.onContextMenu($event, contextOptions, item)
+      actionable
+        ? contextMenuService.onContextMenu($event, contextOptions, item)
+        : false
     "
-    (appDoubleClick)="open(item)"
+    (appDoubleClick)="actionable ? open(item) : false"
     [active]="isMultipleSelected(item)"
     (click)="addToSelectedItems(item)"
     [height]="40"
