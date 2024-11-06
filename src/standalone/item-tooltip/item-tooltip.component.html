@@ -77,9 +77,9 @@
             [ngStyle]="{ width: '20px' }"
             src="{{
               prefix +
-                '/assets/dmgtypes/64_nobg/' +
+                '/assets/dmgtypes/' +
                 item.itemData.damageType.toLowerCase() +
-                '.png'
+                '.webp'
             }}"
           />
           {{ camelToe(item.itemData.damageType) }} -
@@ -161,6 +161,9 @@
     "
   >
     {{ item.itemData.description }}
+  </p>
+  <p class="mb-0 text-white edition" *ngIf="item.itemData?.extraData?.edition">
+    EDITION: ⭐{{ item.itemData?.extraData?.edition }}
   </p>
   <div class="d-flex align-items-center justify-content-start">
     <p *ngIf="item.price" class="h6 mb-0 mt-3 d-flex align-items-center gap-1">

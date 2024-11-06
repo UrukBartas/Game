@@ -240,7 +240,7 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
                   .premiumRoll()
                   .pipe(take(1))
                   .subscribe(() => {
-                    this.triggerDialog("Good luck, let's roll!", 1000);
+                    this.triggerDialog("Good luck, let's roll! 🍀", 1000);
                     this.store.dispatch(new RefreshPlayer());
                     setTimeout(() => {
                       this.loadItems();
