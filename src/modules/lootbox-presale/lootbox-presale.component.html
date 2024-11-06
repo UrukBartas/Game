@@ -1,3 +1,82 @@
+<ng-template #usePolicy>
+  <div class="p-3 text-light">
+    Terms and Conditions of Use for the "Uruk Bartas" NFT Presale Last Updated:
+    05/11/2024 Please read these terms and conditions carefully before
+    participating in the "Uruk Bartas" NFT presale. By purchasing or interacting
+    with our NFTs, you acknowledge that you have read, understood, and agreed to
+    the following terms. 1. No Financial Advice The NFTs offered by "Uruk
+    Bartas" are collectible digital items and should not be considered as
+    financial investments. We do not offer financial advice or make any promises
+    regarding the future value of these digital assets. We encourage consulting
+    a financial advisor before engaging in any transactions or investments
+    related to NFTs or digital assets. 2. Risk of Loss Participation in the NFT
+    presale entails certain risks, including but not limited to partial or total
+    financial loss. We assume no responsibility for any financial loss you may
+    experience as a result of purchasing, selling, or trading our NFTs. Digital
+    assets are subject to price volatility, which may result in substantial
+    losses. 3. No Warranty NFTs are provided "as is" without any kind of
+    warranty, express or implied. We do not guarantee that our service or
+    platform will be error-free, secure, or uninterrupted. We are not liable for
+    any technical issues or failures that may affect the availability or value
+    of the NFTs. 4. Risk of Addiction and Responsible Conduct Participation in
+    activities involving the purchase, sale, and collection of NFTs can lead to
+    addictive behavior. We urge all users to participate responsibly and to
+    monitor their digital consumption habits. If you feel that your
+    participation in this activity is negatively affecting your mental health,
+    well-being, or finances, we recommend seeking professional help. 5.
+    Limitation of Liability To the maximum extent permitted by law, "Uruk
+    Bartas" and its affiliates, directors, employees, and agents shall not be
+    liable for any indirect, incidental, special, consequential, or punitive
+    damages, including but not limited to loss of profits, data, use, or other
+    intangible losses resulting from: Your access to or inability to access the
+    NFT presale. Any conduct or content of third parties in relation to the
+    NFTs. Any content obtained from the platform or our services. 6.
+    Jurisdiction and Governing Law These terms and conditions are governed by
+    and shall be construed in accordance with the laws of Spain. Any disputes
+    arising from or related to these terms shall be exclusively resolved in the
+    courts of Spain. 7. Modifications We reserve the right to modify these terms
+    at any time. Changes will be effective once posted. It is the user’s
+    responsibility to review these terms periodically. By participating in the
+    "Uruk Bartas" NFT presale, you agree to release "Uruk Bartas" and its
+    affiliates from any claims, liabilities, or losses arising from your
+    participation in this activity.
+  </div>
+</ng-template>
+
+<ng-template #faqTemplate>
+  <div class="modal-body">
+    <accordion>
+      <accordion-group heading="What do I need to open my lootbox?">
+        <p>
+          You need to mint the lootbox and then import it into the game to open
+          it. For convenience, once a lootbox is minted, the user has an option
+          to be redirected automatically.
+        </p>
+      </accordion-group>
+      <accordion-group
+        heading="Do I need to be registered to open the lootbox?"
+      >
+        <p>
+          Yes, you need to have a character created in Uruk Bartas to open the
+          lootbox and receive rewards!
+        </p>
+      </accordion-group>
+      <accordion-group heading="What can I do with the lootbox?">
+        <p>
+          You can open it to obtain rewards, or you can trade it freely with
+          other players.
+        </p>
+      </accordion-group>
+      <accordion-group heading="What is the duration of the NFT presale?">
+        <p>
+          We estimate it will last around 1 week, time we will use to prepare
+          our game for the mainnet launch.
+        </p>
+      </accordion-group>
+    </accordion>
+  </div>
+</ng-template>
+
 <div #threeContainer class="three-container"></div>
 <div id="presale-container" class="row">
   <div
@@ -74,6 +153,19 @@
   <div *ngIf="openDetail" class="col-md-5 col-12 lootbox-details">
     <div class="details">
       <div class="drops">
+        <button
+          class="btn faq-button mt-2"
+          (click)="openFAQModal(faqTemplate)"
+          style="
+            font-size: 0.8rem;
+            color: #888;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+          "
+        >
+          FAQ
+        </button>
         <h2
           class="text-center"
           [ngStyle]="{ color: getRarityColor(activeLootbox.data.rarity) }"
@@ -151,6 +243,15 @@
           ></span>
           Mint now
         </button>
+        <span class="policy text-secondary text-center"
+          >By minting this NFT, I accept the
+          <a
+            class="text-secondary"
+            href=""
+            (click)="$event.preventDefault(); showPolicy(usePolicy)"
+            >Terms and Conditions of Use</a
+          >.
+        </span>
       </div>
     </div>
   </div>

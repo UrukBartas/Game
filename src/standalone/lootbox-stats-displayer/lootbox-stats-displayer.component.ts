@@ -7,6 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { cloneDeep } from 'lodash';
+import { NgPipesModule } from 'ngx-pipes';
 import { firstValueFrom } from 'rxjs';
 import { ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
@@ -17,7 +18,12 @@ import { ChanceDisplayerComponent } from '../chance-displayer/chance-displayer.c
 @Component({
   selector: 'app-lootbox-stats-displayer',
   standalone: true,
-  imports: [CommonModule, ChanceDisplayerComponent, ChanceDisplayerComponent],
+  imports: [
+    CommonModule,
+    ChanceDisplayerComponent,
+    ChanceDisplayerComponent,
+    NgPipesModule,
+  ],
   templateUrl: './lootbox-stats-displayer.component.html',
   styleUrl: './lootbox-stats-displayer.component.scss',
 })
@@ -97,6 +103,7 @@ export class LootboxStatsDisplayerComponent {
       [MiscellanyItemType.Silhouette]: this.pathSilhouette,
     };
   }
+  public lootboxMergedItems = [];
   stats = inject(StatsService);
   public parsePossibilitiesComboBox(possibilities: any, rarity: Rarity) {
     if (!possibilities) return null;
@@ -113,7 +120,6 @@ export class LootboxStatsDisplayerComponent {
 
     Object.keys(drops).forEach((key) => {
       const item = drops[key];
-      console.log(item.type);
       if (item.type === 'Portrait') {
         result.Portraits += item.chance;
       } else if (item.type === 'MATERIAL') {
@@ -138,8 +144,49 @@ export class LootboxStatsDisplayerComponent {
         });
       }
     });
-
-    result.Others.sort((a, b) => b.value - a.value);
+    this.lootboxMergedItems = [
+      {
+        rarity: Rarity.EPIC,
+        value: result.Portraits,
+        image: this.pathPortrait,
+        type: 'Portrait',
+        height: this.itemHeight,
+        width: this.itemWidth,
+      },
+      {
+        rarity: Rarity.EPIC,
+        value: result.Materials,
+        image: this.pathMaterial,
+        type: 'Material',
+        height: this.itemHeight,
+        width: this.itemWidth,
+      },
+      {
+        rarity: Rarity.EPIC,
+        value: result.Mount,
+        image: this.pathMounts,
+        type: 'Mount',
+        height: this.itemHeight,
+        width: this.itemWidth,
+      },
+      {
+        rarity: Rarity.UNCOMMON,
+        value: result.Title_Prefix,
+        image: this.pathPrefix,
+        type: 'Title Prefix',
+        height: this.itemHeight,
+        width: this.itemWidth,
+      },
+      {
+        rarity: Rarity.UNCOMMON,
+        value: result.Title_Suffix,
+        image: this.pathSuffix,
+        type: 'Title Suffix',
+        height: this.itemHeight,
+        width: this.itemWidth,
+      },
+      ...result.Others,
+    ];
     return cloneDeep(result);
   }
 

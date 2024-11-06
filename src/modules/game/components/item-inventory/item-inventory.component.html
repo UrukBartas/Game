@@ -34,13 +34,17 @@
       }
     </ng-template>
     <app-item-box
-      (contextmenu)="contextMenuService.onContextMenu($event, contextOptions)"
+      (contextmenu)="
+        actionable
+          ? contextMenuService.onContextMenu($event, contextOptions)
+          : false
+      "
       (click)="addToSelectedItems(item)"
       (mouseover)="onHover.emit(item)"
       (mouseout)="onHover.emit(null)"
-      (dndStart)="onDragStart.emit({ event: $event, data: item })"
-      (dndEnd)="onDragEnd.emit($event)"
-      (appDoubleClick)="onDoubleClick.emit(item)"
+      (dndStart)="actionable ? onDragStart.emit({ event: $event, data: item }) : false"
+      (dndEnd)="actionable ? onDragEnd.emit($event) : false"
+      (appDoubleClick)="actionable ? onDoubleClick.emit(item) : false"
       [dndDraggable]="item"
       [dndEffectAllowed]="'all'"
       [dndDisableIf]="!item || disableDND"
