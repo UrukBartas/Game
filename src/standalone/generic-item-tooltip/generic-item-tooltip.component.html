@@ -28,6 +28,17 @@
       <ng-container *ngTemplateOutlet="customTemplate"></ng-container>
     </div>
   </div>
+  <p *ngIf="souldBound">
+    <span urText class="text-light">This item is soul bound.</span>
+  </p>
+  <ng-container *ngIf="getExtraData() as extraData">
+    <p
+      class="mb-0 text-white edition"
+      *ngIf="!!extraData && !!extraData.edition && extraData.edition.length > 0"
+    >
+      ⭐{{ extraData?.edition }}
+    </p>
+  </ng-container>
   <div class="d-flex justify-content-start flex-column align-items-start">
     <p
       *ngIf="item.price && showPrice"
@@ -38,14 +49,6 @@
         src="{{ prefix + '/assets/goldenuruks.png' }}"
       />
       <span urText class="text-white">{{ item.price | number: '1.0-2' }}</span>
-    </p>
-    <p *ngIf="souldBound">
-      <span urText class="text-light">This item is soul bound.</span>
-    </p>
-    <p *ngIf="extraData && !!hasExtraData()">
-      <span urText class="text-light">{{
-        getTranslationMapExtraData(extraData)
-      }}</span>
     </p>
   </div>
 </div>

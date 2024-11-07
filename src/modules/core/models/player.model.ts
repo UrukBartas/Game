@@ -1,8 +1,5 @@
 import { Item } from './items.model';
-import {
-  MiscellanyItemData,
-  MiscellanyItemIdentifier
-} from './misc.model';
+import { MiscellanyItemData, MiscellanyItemIdentifier } from './misc.model';
 import { QuestModel } from './quest.model';
 import { SessionModel } from './session.model';
 
@@ -131,4 +128,5 @@ export interface BoostActive {
   expiresAt: Date;
   active: boolean;
   type: BoostType;
+  mineBoost?: boolean;
 }

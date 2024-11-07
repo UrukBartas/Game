@@ -29,6 +29,7 @@ export interface Item {
 
   canBeUpgraded?: boolean;
   souldBound: boolean;
+  extraData?: any;
 }
 
 export enum DamageType {

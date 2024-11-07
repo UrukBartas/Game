@@ -1,8 +1,8 @@
 import { Component, Input, inject } from '@angular/core';
 import { Consumable } from 'src/modules/core/models/consumable.model';
+import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
 import { fillInventoryBasedOnPlayerSockets } from 'src/modules/utils';
 import { BaseInventoryComponent } from '../base-inventory/base-inventory.component';
-import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
 export interface ConsumableWithStack extends Consumable {
   stack?: number;
 }
@@ -17,8 +17,9 @@ export class ConsumablesInventoryComponent extends BaseInventoryComponent {
 
   public get filteredItems() {
     return fillInventoryBasedOnPlayerSockets(
-      this.stack
-        .transform(this.items, 'consumableData.name')
+      // this.stack
+      //   .transform(this.items, 'consumableData.name')
+      this.items
         .filter((item) =>
           item?.consumableData?.name
             .toLowerCase()

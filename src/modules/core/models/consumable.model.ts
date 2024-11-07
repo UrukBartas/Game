@@ -16,6 +16,7 @@ export interface ConsumableData {
   consumableType: ConsumableType;
   price?: number;
   souldBoundByDefault: boolean;
+  extraData?:any;
 }
 
 export enum ConsumableType {

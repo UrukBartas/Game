@@ -63,8 +63,6 @@ const mapTypeOfWeapon = {
   Weapon2H: 'Two handed',
 };
 
-
-
 export const getLoopableStatsKeys = (item: Item): Array<string[]> => {
   if (!item) return [];
 
@@ -110,10 +108,12 @@ export const getPercentage = (key: string) => {
 })
 export class ItemTooltipComponent {
   @Input() item: Item;
-
+  @Input() extraData: any = null;
   @Input() compareWith: Item;
   @Input() isBeingCompared = false;
-
+  public getExtraData() {
+    return this.item.extraData || this.extraData;
+  }
   public getRarityColor = getRarityColor;
   public getRarityText = getRarityText;
   public getRarityBasedOnIRI = getRarityBasedOnIRI;

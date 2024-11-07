@@ -156,8 +156,9 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   rarity = Rarity;
   public get filteredItems() {
     return fillInventoryBasedOnPlayerSockets(
-      this.stack
-        .transform(this.items, 'miscellanyItemData.name')
+      // this.stack
+      //   .transform(this.items, 'miscellanyItemData.name')
+      this.items
         .filter((item) => {
           return (
             (item?.miscellanyItemData?.name
@@ -358,7 +359,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
         miscBoost.miscellanyItemDataId
       );
       const overridingABost = !!currentPlayer.boosts.find(
-        (e) => e.type == activatingBoostType
+        (e) => e.type == activatingBoostType && !e.mineBoost
       );
       if (overridingABost) {
         const result = await this.confirmOverride();

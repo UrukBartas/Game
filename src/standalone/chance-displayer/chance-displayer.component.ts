@@ -18,7 +18,7 @@ import { ItemBoxComponent } from '../item-box/item-box.component';
 })
 export class ChanceDisplayerComponent {
   @Input() rarity: Rarity;
-  @Input() chance: number | string;
+  @Input() chance: number | string = -1;
   @Input() image: string;
   @Input() type: string;
   @Input() height = -1;

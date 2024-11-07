@@ -7,7 +7,7 @@
     [image]="image"
     [stack]="stack > 1 ? stack : undefined"
   >
-    <div tooltip class="tooltip-uruk p-2">
+    <div tooltip class="tooltip-uruk p-2" *ngIf="chance != -1">
       <p class="mb-0" [ngStyle]="{ color: getRarityColor(rarity) }">
         {{
           (+chance * 100).toFixed(2) +
@@ -19,5 +19,7 @@
       </p>
     </div>
   </app-item-box>
-  <span class="text-light">{{ (+chance * 100).toFixed(2) + ' %' }}</span>
+  <span class="text-light" *ngIf="chance != -1">{{
+    (+chance * 100).toFixed(2) + ' %'
+  }}</span>
 </div>

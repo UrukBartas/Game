@@ -18,4 +18,5 @@ export interface MaterialData {
   rarity: Rarity;
   price?: number;
   souldBoundByDefault: boolean;
+  extraData?: any;
 }

@@ -51,7 +51,7 @@
           </div> -->
         </div>
         <div class="description justify-content-center">
-          <p urSubtitle>#2 Export type</p>
+          <p urSubtitle>#2 {{ exportTypeActive ? 'Export' : 'Import' }} type</p>
         </div>
 
         <app-item-box
@@ -256,9 +256,7 @@
 
       <div
         class="all-pending-exports w-100"
-        *ngIf="
-          exportTypeActive  && exportingObjectTypeActive == 'nft'
-        "
+        *ngIf="exportTypeActive && exportingObjectTypeActive == 'nft'"
       >
         <div
           class="container-pending-exports"

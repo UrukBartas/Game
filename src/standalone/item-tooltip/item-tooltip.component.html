@@ -162,8 +162,8 @@
   >
     {{ item.itemData.description }}
   </p>
-  <p class="mb-0 text-white edition" *ngIf="item.itemData?.extraData?.edition">
-    EDITION: ⭐{{ item.itemData?.extraData?.edition }}
+  <p class="mb-0 text-white edition" *ngIf="getExtraData() as extraData">
+    ⭐{{ extraData?.edition }}
   </p>
   <div class="d-flex align-items-center justify-content-start">
     <p *ngIf="item.price" class="h6 mb-0 mt-3 d-flex align-items-center gap-1">

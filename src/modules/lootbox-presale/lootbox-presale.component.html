@@ -153,6 +153,12 @@
   <div *ngIf="openDetail" class="col-md-5 col-12 lootbox-details">
     <div class="details">
       <div class="drops">
+        <h2
+          class="text-center"
+          [ngStyle]="{ color: getRarityColor(activeLootbox.data.rarity) }"
+        >
+          Possible Drops
+        </h2>
         <button
           class="btn faq-button mt-2"
           (click)="openFAQModal(faqTemplate)"
@@ -162,16 +168,11 @@
             background: transparent;
             border: none;
             cursor: pointer;
+            width: 100%;
           "
         >
           FAQ
         </button>
-        <h2
-          class="text-center"
-          [ngStyle]="{ color: getRarityColor(activeLootbox.data.rarity) }"
-        >
-          Possible Drops
-        </h2>
         <app-lootbox-stats-displayer
           [itemHeight]="50"
           [itemWidth]="50"

@@ -20,17 +20,18 @@
       >
         + {{ possibilitiesComboBox.Bonus.length }} bonus items guaranteed.
       </p>
-      <ng-container *ngFor="let item of possibilitiesComboBox.Bonus">
-        <app-chance-displayer
-          [rarity]="rarityEnum.EPIC"
-          [chance]="1"
-          [stack]="item.amount ?? 1"
-          [image]="mapTypeImage[item.type]"
-          [type]="item.type"
-          [height]="itemHeight / 1.5"
-          [width]="itemWidth / 1.5"
-        ></app-chance-displayer>
-      </ng-container>
+      <div class="horizontal-list gap-2" style="overflow-y: hidden">
+        <ng-container *ngFor="let item of possibilitiesComboBox.Bonus">
+          <app-chance-displayer
+            [rarity]="rarityEnum.EPIC"
+            [stack]="item.amount ?? 1"
+            [image]="mapTypeImage[item.type]"
+            [type]="item.type"
+            [height]="itemHeight / 1.5"
+            [width]="itemWidth / 1.5"
+          ></app-chance-displayer>
+        </ng-container>
+      </div>
     </ng-container>
   } @else {
     <ng-container *ngFor="let distribution of possibilitiesNormal">

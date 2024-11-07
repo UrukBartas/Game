@@ -280,18 +280,21 @@
             [rarity]="(getPlayer$ | async)?.mount?.rarity"
           >
             @if (!!(getPlayer$ | async)?.mount) {
-              <div tooltip class="tooltip-uruk">
+              <div
+                tooltip
+                class="tooltip-uruk"
+                *ngIf="(getPlayer$ | async)?.mount as mount"
+              >
                 <ng-template #mountSpeed>
                   <span class="text-third">
                     Quest cooldown -{{
-                      getMountTimeReductionByRarity(
-                        (getPlayer$ | async).mount.rarity
-                      )
+                      getMountTimeReductionByRarity(mount.rarity)
                     }}%
                   </span>
                 </ng-template>
                 <app-generic-item-tooltip
-                  [item]="(getPlayer$ | async).mount"
+                  [extraData]="mount.extraData"
+                  [item]="mount"
                   [customTemplate]="mountSpeed"
                 ></app-generic-item-tooltip>
               </div>

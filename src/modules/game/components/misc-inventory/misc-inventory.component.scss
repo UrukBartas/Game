@@ -2,6 +2,14 @@
 @import 'node_modules/bootstrap/scss/variables';
 @import 'node_modules/bootstrap/scss/mixins';
 
+.list-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-height: 14rem;
+  overflow: auto;
+}
+
 .misc-inventory {
   display: flex;
   flex-wrap: wrap;
@@ -33,7 +41,7 @@
     position: absolute;
     cursor: pointer;
     top: -30px;
-    right: -25px;
+    right: 0px;
     font-size: 25px;
   }
 }

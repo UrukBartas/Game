@@ -522,3 +522,9 @@ app-balance-selector {
     height: 100%;
   }
 }
+
+.horizontal-list{
+  display: flex;
+  overflow: auto;
+  gap: 10px;
+}
