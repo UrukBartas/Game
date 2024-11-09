@@ -17,7 +17,10 @@ const routes: Routes = [
   },
   {
     path: 'presale',
-    loadComponent: () => import('../modules/lootbox-presale/soon-presale/soon-presale.component').then((m) => m.SoonPresaleComponent),
+    loadComponent: () =>
+      import('../modules/lootbox-presale/lootbox-presale.component').then(
+        (m) => m.LootboxPresaleComponent
+      ),
   },
   {
     path: 'external',
