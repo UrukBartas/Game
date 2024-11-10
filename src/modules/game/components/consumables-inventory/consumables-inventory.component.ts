@@ -17,14 +17,13 @@ export class ConsumablesInventoryComponent extends BaseInventoryComponent {
 
   public get filteredItems() {
     return fillInventoryBasedOnPlayerSockets(
-      // this.stack
-      //   .transform(this.items, 'consumableData.name')
       this.items
-        .filter((item) =>
-          item?.consumableData?.name
+        .filter((item) => {
+          if (!item) return false;
+          return item?.consumableData?.name
             .toLowerCase()
-            .includes(this.searchTerm.toLowerCase())
-        )
+            .includes(this.searchTerm.toLowerCase());
+        })
         .sort(),
       this.sockets
     );

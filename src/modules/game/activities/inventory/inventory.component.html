@@ -100,7 +100,7 @@
                 *ngIf="currentConsumableInventory as inventoryConsumables"
               >
                 <app-consumables-inventory
-                  [items]="inventoryConsumables"
+                  [items]="inventoryConsumables | stack: 'consumableData.name'"
                   [sockets]="currentSize$ | async"
                 >
                   <ng-container
@@ -117,7 +117,7 @@
               </ng-template>
               <ng-container *ngIf="currentMiscInventory as inventoryMisc">
                 <app-misc-inventory
-                  [items]="inventoryMisc"
+                  [items]="inventoryMisc | stack: 'miscellanyItemData.name'"
                   (equipMount)="equipMount($event)"
                   (updateInventory)="
                     miscUpdated$.next(true);

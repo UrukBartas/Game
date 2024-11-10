@@ -156,18 +156,17 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   rarity = Rarity;
   public get filteredItems() {
     return fillInventoryBasedOnPlayerSockets(
-      // this.stack
-      //   .transform(this.items, 'miscellanyItemData.name')
       this.items
         .filter((item) => {
+          if (!item) return false;
+          const subTabFilterApplied =
+            this.filteredItemTypes.includes(
+              (item?.miscellanyItemData as MiscellanyItemData).itemType
+            ) || this.filteredItemTypes.length == 0;
           return (
-            (item?.miscellanyItemData?.name
+            item?.miscellanyItemData?.name
               .toLowerCase()
-              .includes(this.searchTerm.toLowerCase()) &&
-              this.filteredItemTypes.includes(
-                (item?.miscellanyItemData as MiscellanyItemData).itemType
-              )) ||
-            this.filteredItemTypes.length == 0
+              .includes(this.searchTerm.toLowerCase()) && subTabFilterApplied
           );
         })
         .sort(),

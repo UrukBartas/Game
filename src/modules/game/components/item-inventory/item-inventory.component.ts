@@ -44,12 +44,14 @@ export class ItemInventoryComponent extends BaseInventoryComponent {
     return fillInventoryBasedOnPlayerSockets(
       this.items
         .filter((item) => {
+          if (!item) return false;
+          const subTabFilterApplied =
+            this.filteredItemTypes.includes(item?.itemData?.itemType) ||
+            this.filteredItemTypes.length == 0;
           return (
             item?.itemData?.name
               .toLowerCase()
-              .includes(this.searchTerm.toLowerCase()) &&
-            (this.filteredItemTypes.includes(item?.itemData?.itemType) ||
-              this.filteredItemTypes.length == 0)
+              .includes(this.searchTerm.toLowerCase()) && subTabFilterApplied
           );
         })
         .sort(),
