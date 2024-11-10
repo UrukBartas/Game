@@ -1,5 +1,7 @@
 @import '../../../../../variables.scss';
-
+@import 'node_modules/bootstrap/scss/mixins';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
 .active-quest-container {
   position: relative;
   height: 100%;
@@ -24,6 +26,10 @@
   .button-rainbow {
     position: absolute;
     bottom: 0;
+    @include media-breakpoint-down(sm) {
+      bottom: 6rem;
+    }
+
     transform: translate(-50%, -50%);
     padding: 0.6em 2em;
     left: 50%;
