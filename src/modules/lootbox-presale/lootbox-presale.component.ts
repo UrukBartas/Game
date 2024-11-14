@@ -178,6 +178,12 @@ export class LootboxPresaleComponent implements AfterViewInit {
         });
         const res = await firstValueFrom(
           this.looboxes$.pipe(
+            map((lootboxes: Array<MiscellanyItemData>) => {
+              const rarityOrder = ['COMMON', 'UNCOMMON', 'EPIC', 'LEGENDARY', 'MYTHIC'];
+              return lootboxes.sort(
+                (a, b) => rarityOrder.indexOf(a.rarity) - rarityOrder.indexOf(b.rarity)
+              );
+            }),
             switchMap((lootboxes: Array<MiscellanyItemData>) => {
               return forkJoin(
                 lootboxes.map((lootbox) =>
