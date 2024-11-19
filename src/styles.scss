@@ -523,8 +523,16 @@ app-balance-selector {
   }
 }
 
-.horizontal-list{
+.horizontal-list {
   display: flex;
   overflow: auto;
   gap: 10px;
+}
+
+.hoverable-text {
+  color: lightgrey !important;
+  cursor: pointer;
+  &:hover {
+    color: white !important;
+  }
 }

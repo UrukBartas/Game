@@ -45,6 +45,7 @@ export function passwordMatchingValidator(): ValidatorFn {
     return null;
   };
 }
+export const passwordPattern = /^(?=.*[A-Z])(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
 @Component({
   selector: 'app-edit-character',
   templateUrl: './edit-character.component.html',
@@ -74,7 +75,6 @@ export class EditCharacterComponent extends TemplatePage {
     super();
     const currentRoute = this.route.snapshot.url.join('/');
     this.editing = currentRoute.includes('edit');
-    const passwordPattern = /^(?=.*[A-Z])(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
 
     this.form = this.formBuilder.group(
       {
@@ -248,8 +248,8 @@ export class EditCharacterComponent extends TemplatePage {
       disableSound,
       ignoreMine,
     };
-
-    if (this.authService.nativePlatform) {
+    const token = this.store.selectSnapshot(MainState.getState)?.session?.token;
+    if (this.authService.nativePlatform || !token) {
       this.playerService
         .createByEmail(email, name, clazz, image, password, configuration)
         .pipe(take(1))

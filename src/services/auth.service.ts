@@ -40,4 +40,12 @@ export class AuthService extends ApiBaseService {
   ): Observable<boolean> {
     return this.post('/check-signature', { sign, address, nonce });
   }
+
+  requestPasswordReset(email: string): Observable<any> {
+    return this.post('/request-password-reset', { email });
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<any> {
+    return this.post('/reset-password', { token, newPassword });
+  }
 }

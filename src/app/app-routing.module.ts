@@ -11,6 +11,14 @@ const routes: Routes = [
     title: 'Login',
   },
   {
+    path: 'reset-password',
+    component: ConnectComponent,
+    title: 'Reset password',
+    data: {
+      resetPassword: true,
+    },
+  },
+  {
     path: '',
     loadChildren: (): Promise<Type<GameModule>> =>
       import('../modules/game/game.module').then((m) => m.GameModule),

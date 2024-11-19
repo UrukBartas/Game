@@ -160,11 +160,14 @@ export class MainState {
     let player = null;
 
     if (!!payload?.email) {
-      const isValid = await firstValueFrom(
-        this.authService.loginPlayer(payload.email, payload.password)
-      );
-      if (!isValid) {
-        this.toastService.error("Credentials don't match, try again!");
+      try {
+        await firstValueFrom(
+          this.authService.loginPlayer(payload.email, payload.password)
+        );
+      } catch (error: any) {
+        this.toastService.error(
+          error?.message?.message ?? 'An error happened while doing your login'
+        );
         return;
       }
     }

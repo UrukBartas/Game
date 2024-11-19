@@ -3,6 +3,13 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+
+  .email-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
   button {
     background-color: #be781c !important;
     border-color: #844c0d !important;
@@ -40,4 +47,23 @@
   width: 100%;
   height: 100%;
   z-index: -1;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #cccccc47;
+  margin: 0 10px;
+  width: 40px;
+}
+
+.divider span {
+  font-size: 14px;
 }

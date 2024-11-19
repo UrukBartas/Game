@@ -193,7 +193,7 @@
     <div class="description align-items-center">
       <p urTitle>Character</p>
       <span
-        class="title-selector"
+        class="title-selector hoverable-text"
         (click)="isViewingPlayer ? false : openTitleSelector()"
         >{{ (actualPlayer$ | async).title ?? 'The untitled' }}
         <i
@@ -390,7 +390,7 @@
           }
         </div>
         <div
-          class="change-siluette"
+          class="change-siluette hoverable-text"
           *ngIf="!isViewingPlayer"
           (click)="containerExpanded = !containerExpanded"
         >

@@ -16,43 +16,135 @@
       <i class="fa-solid fa-torii-gate pl-2"></i>
     </button>
   } @else {
-    @if (doingLogin) {
-      <ng-container *ngTemplateOutlet="login"></ng-container>
-    } @else {
-      <div class="connect-wrapper gap-3 align-items-center">
-        <img class="logo" src="{{ prefix + '/assets/login/title-2.png' }}" />
-        <button
-          type="submit"
-          class="btn btn-lg btn-primary save-button"
-          (click)="
-            this.authService.nativePlatform
-              ? this.router.navigateByUrl('/create')
-              : walletService.modal.open()
-          "
-        >
-          Enter the realms
-          <i class="fa-solid fa-torii-gate pl-2"></i>
-        </button>
-        <p
-          urText
-          class="text-white text-center pointer"
-          (click)="doingLogin = true"
-        >
-          Login with email
-        </p>
-      </div>
-    }
+    <div class="connect-wrapper gap-3 align-items-center">
+      <img class="logo" src="{{ prefix + '/assets/login/title-2.png' }}" />
+
+      @if (isRecoveringPassword) {
+        <ng-container *ngTemplateOutlet="newPassword"></ng-container>
+      } @else {
+        @if (doingLoginWithWeb2) {
+          @if (recoveringPassword) {
+            <ng-container *ngTemplateOutlet="recoverPassword"></ng-container>
+          } @else {
+            <ng-container *ngTemplateOutlet="login"></ng-container>
+          }
+        } @else {
+          <button
+            type="submit"
+            class="btn btn-lg btn-primary save-button"
+            (click)="
+              this.authService.nativePlatform
+                ? this.router.navigateByUrl('/create')
+                : walletService.modal.open()
+            "
+          >
+            Enter the realms
+            <i class="fa-solid fa-torii-gate pl-2"></i>
+          </button>
+          <div class="divider">
+            <span class="text-light">OR</span>
+          </div>
+          <p
+            urText
+            class="text-white text-center pointer"
+            (click)="doingLoginWithWeb2 = true"
+          >
+            Login with email
+          </p>
+        }
+      }
+    </div>
   }
-  <!-- <button
-    (click)="router.navigateByUrl('/presale')"
-    class="btn text-white shadow access-presale animate__animated animate__tada animate__infinite animate__slower"
-  >
-    Presale 🥳👉🏻
-  </button> -->
 </div>
 
+<ng-template #newPassword>
+  <div class="gap-3 px-3 email-container">
+    <div class="form-group">
+      <label for="password" class="text-third">Password:</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        [formControl]="newPasswordFormControl"
+        name="password"
+        placeholder="Enter password"
+      />
+      <div
+        *ngIf="
+          newPasswordFormControl.errors?.['pattern'] &&
+          newPasswordFormControl.touched
+        "
+      >
+        <span class="error text-danger"
+          >The password must be at least 8 characters long and include an
+          uppercase letter, a lowercase letter, a number, and a special
+          character.</span
+        >
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      [disabled]="newPasswordFormControl.invalid"
+      class="btn btn-lg btn-secondary save-button"
+      (click)="saveNewPassword()"
+    >
+      Save new password
+      <i class="fa-solid fa-torii-gate pl-2"></i>
+    </button>
+    <button
+      type="submit"
+      class="btn btn-lg btn-dark save-button"
+      (click)="
+        recoveringPassword = false;
+        doingLoginWithWeb2 = false;
+        isRecoveringPassword = false
+      "
+    >
+      Back
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #recoverPassword>
+  <div
+    [formGroup]="recoverPasswordFormGroup"
+    class="gap-3 px-3 email-container"
+  >
+    <div class="form-group">
+      <label for="characterName" class="text-third">Email</label>
+      <input
+        type="text"
+        class="form-control"
+        id="characterName"
+        formControlName="email"
+        name="characterName"
+        placeholder="Enter email"
+        validInput
+      />
+    </div>
+
+    <button
+      type="submit"
+      [disabled]="recoverPasswordFormGroup.invalid"
+      class="btn btn-lg btn-secondary save-button"
+      (click)="sendLinkRecoverPassword()"
+    >
+      Send link
+      <i class="fa-solid fa-torii-gate pl-2"></i>
+    </button>
+    <button
+      type="submit"
+      class="btn btn-lg btn-dark save-button"
+      (click)="recoveringPassword = false"
+    >
+      Back
+    </button>
+  </div>
+</ng-template>
+
 <ng-template #login>
-  <div [formGroup]="formGroup" class="connect-wrapper gap-3 px-3">
+  <div [formGroup]="formGroup" class="gap-3 px-3 email-container">
     <div class="form-group">
       <label for="characterName" class="text-third">Email</label>
       <input
@@ -77,6 +169,12 @@
         placeholder="Enter password"
       />
     </div>
+    <div class="d-flex justify-content-between gap-2" style="flex-wrap: wrap">
+      <span class="hoverable-text" routerLink="/create">Create an account</span>
+      <span class="hoverable-text" (click)="recoveringPassword = true"
+        >Forgot your password?</span
+      >
+    </div>
     <button
       type="submit"
       [disabled]="formGroup.invalid"
@@ -89,7 +187,7 @@
     <button
       type="submit"
       class="btn btn-lg btn-dark save-button"
-      (click)="doingLogin = false"
+      (click)="doingLoginWithWeb2 = false"
     >
       Back
     </button>
