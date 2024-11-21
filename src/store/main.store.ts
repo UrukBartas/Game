@@ -5,13 +5,14 @@ import { Device } from '@capacitor/device';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { disconnect } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
-import { firstValueFrom, take } from 'rxjs';
+import { debounceTime, firstValueFrom, take } from 'rxjs';
 import { FightModel } from 'src/modules/core/models/fight.model';
 import { MiscellanyItemData } from 'src/modules/core/models/misc.model';
 import { NotificationModel } from 'src/modules/core/models/notifications.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { SessionModel } from 'src/modules/core/models/session.model';
+import { StorePersistenceService } from 'src/modules/core/services/store-persistance.service';
 import { AuthService } from 'src/services/auth.service';
 import { NotificationsService } from 'src/services/notifications.service';
 import { PlayerService } from 'src/services/player.service';
@@ -90,6 +91,14 @@ const defaultState = {
   notifications: null,
   skins: null,
 };
+
+const IS_DEFAULT_OR_EMPTY_STATE = (state: any) => {
+  return (
+    !state ||
+    Object.keys(state).length == 0 ||
+    JSON.stringify(state['main']) == JSON.stringify(defaultState)
+  );
+};
 @State<MainStateModel>({
   name: 'main',
   defaults: defaultState,
@@ -104,6 +113,7 @@ export class MainState {
   websocket = inject(WebSocketService);
   authService = inject(AuthService);
   notificationsService = inject(NotificationsService);
+  storePersistanceService = inject(StorePersistenceService);
 
   @Action(ConnectWallet)
   connectWallet(
@@ -258,5 +268,23 @@ export class MainState {
   @Selector()
   static getSkins(state: MainStateModel): MiscellanyItemData[] {
     return state.skins;
+  }
+
+  private loadedState = false;
+
+  constructor() {
+    this.store
+      .select((x) => x)
+      .pipe(debounceTime(300))
+      .subscribe(async (state) => {
+        if (IS_DEFAULT_OR_EMPTY_STATE(state) && !this.loadedState) {
+          const stateLoaded = await this.storePersistanceService.loadState();
+          this.store.reset(stateLoaded);
+          this.loadedState = true;
+          this.store.dispatch(new LoginPlayer());
+        } else {
+          await this.storePersistanceService.saveState(state);
+        }
+      });
   }
 }

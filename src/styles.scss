@@ -536,3 +536,12 @@ app-balance-selector {
     color: white !important;
   }
 }
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  li {
+    padding: 5px;
+    list-style: none;
+  }
+}

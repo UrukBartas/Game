@@ -9,6 +9,7 @@ import {
 import { Store } from '@ngxs/store';
 import { getAccount } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from 'src/services/auth.service';
 import { WalletService } from 'src/services/wallet.service';
 import { WebSocketService } from 'src/services/websocket.service';
@@ -29,7 +30,7 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean | UrlTree> {
-    const storeState = this.store.selectSnapshot(MainState.getState);
+    const storeState = await firstValueFrom(this.store.select(MainState.getState));
     const isPlayerLogged = !!storeState?.player;
     const sessionExpiresAt = storeState?.session?.expiresAt;
     const sessionExpired = sessionExpiresAt

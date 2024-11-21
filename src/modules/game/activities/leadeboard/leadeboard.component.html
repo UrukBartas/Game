@@ -95,8 +95,11 @@
         </div>
 
         <div class="list-leaderboard-item-left-container">
-          <div class="list-leaderboard-item-name-container">
-            <span>{{ player.name }}</span>
+          <div class="list-leaderboard-item-name-container align-items-center">
+            <app-name-player
+              [player]="player"
+              [disabledTrigger]="true"
+            ></app-name-player>
             <span
               *ngIf="leaderboardType === leaderboardTypes.PVE"
               [ngStyle]="{

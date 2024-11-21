@@ -1,0 +1,25 @@
+@import 'node_modules/bootstrap/scss/mixins';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
+.verified-name {
+  align-items: center;
+  flex-direction: row !important;
+  justify-content: center;
+  width: 100%;
+  label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  img {
+    max-width: 30px;
+    @include media-breakpoint-down(sm) {
+      max-width: 20px;
+    }
+  }
+}
+
+.contrast-zero {
+  filter: contrast(0);
+}

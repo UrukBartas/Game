@@ -83,6 +83,7 @@ import { PercentStatsComponent } from './components/stats-detail/only-stats/only
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { TitleGeneratorModalComponent } from './components/title-generator-modal/title-generator-modal.component';
 import { GameRoutingModule } from './game-routing.module';
+import { NamePlayerComponent } from './components/name-player/name-player.component';
 
 const directives = [
   ValidInputDirective,
@@ -150,7 +151,8 @@ const pipes = [
     TheMineComponent,
     StakeRemoveRequestModalComponent,
     TitleGeneratorModalComponent,
-    ClassSelectorComponent
+    ClassSelectorComponent,
+    NamePlayerComponent
   ],
   imports: [
     ...directives,

@@ -1,6 +1,7 @@
 import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Preferences } from '@capacitor/preferences';
 import { Store } from '@ngxs/store';
 import { groupBy } from 'lodash-es';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -212,14 +213,15 @@ export class InventoryComponent extends TemplatePage {
   }
 
   ngAfterViewInit(): void {
-    this.walletService.getValidAddress$.subscribe((address) => {
-      if (localStorage.getItem(address)) {
-        const { presale } = JSON.parse(localStorage.getItem(address));
+    this.walletService.getValidAddress$.subscribe(async (address) => {
+      const prefsWithAddress = await Preferences.get({ key: address });
+      if (prefsWithAddress && prefsWithAddress.value) {
+        const { presale } = JSON.parse(prefsWithAddress.value);
         if (presale && presale.timestamp) {
           const currentTime = Date.now();
           const tenMinutesInMs = 10 * 60 * 1000;
           if (currentTime - presale.timestamp > tenMinutesInMs) {
-            localStorage.removeItem(address);
+            await Preferences.remove({ key: address });
           } else {
             this.router.navigate(['export-import'], {
               queryParams: {
@@ -228,7 +230,7 @@ export class InventoryComponent extends TemplatePage {
                 exporObjectType: 'nft',
               },
             });
-            localStorage.removeItem(address);
+            await Preferences.remove({ key: address });
           }
         }
       }
@@ -310,7 +312,8 @@ export class InventoryComponent extends TemplatePage {
       config = {
         initialState: {
           title: 'Create new item preset',
-          description: `This action will save your current item equipped set. Do you want to proceed?`,
+          description: `This action will save your current item equipped set.
+          Do you want to proceed?`,
           accept: async (name: string) => {
             try {
               const newPreset = await firstValueFrom(

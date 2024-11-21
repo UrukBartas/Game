@@ -48,4 +48,12 @@ export class AuthService extends ApiBaseService {
   resetPassword(token: string, newPassword: string): Observable<any> {
     return this.post('/reset-password', { token, newPassword });
   }
+
+  verifyEmail(token: string): Observable<any> {
+    return this.post('/verify-email', { token });
+  }
+
+  requestEmailVerification() {
+    return this.post('/request-verification', {});
+  }
 }

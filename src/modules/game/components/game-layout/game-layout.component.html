@@ -222,23 +222,6 @@
 
 <ng-template #menu>
   <ul class="list-group flex-grow-1">
-    <div class="d-flex justify-content-center w-100">
-      <button
-        (click)="
-          router.navigateByUrl('/presale'); modalRef ? modalRef.hide() : true
-        "
-        class="btn text-white btn-primary shadow access-presale animate__animated animate__tada animate__infinite animate__slower"
-      >
-        @if (
-          !isSidebarOpened() ||
-          viewportService.screenSize == 'xs' ||
-          viewportService.screenSize == 'sm'
-        ) {
-          Presale
-        }
-        🥳👉🏻
-      </button>
-    </div>
     @for (route of routesNavigation; track route.path) {
       @if (route.path) {
         <li
