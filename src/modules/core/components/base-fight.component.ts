@@ -167,7 +167,7 @@ export abstract class BaseFightComponent extends TemplatePage {
         setTimeout(() => {
           this.afterVictory(result);
         }, 1500);
-      });
+      }, 100);
     });
     this.cdr.detectChanges();
   }
@@ -182,7 +182,7 @@ export abstract class BaseFightComponent extends TemplatePage {
         setTimeout(() => {
           this.afterDefeat(result);
         }, 1500);
-      });
+      }, 100);
     });
     this.cdr.detectChanges();
   }

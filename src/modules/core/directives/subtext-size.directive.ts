@@ -41,11 +41,11 @@ export class SubtextSizeDirective implements OnInit, OnDestroy {
       case 'lg':
         return '1.2rem';
       case 'md':
-        return '1rem';
+        return '0.9rem';
       case 'xs':
       case 'sm':
       default:
-        return '0.8rem';
+        return '0.7rem';
     }
   }
 
