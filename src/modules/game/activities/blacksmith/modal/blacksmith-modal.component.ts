@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { camelCase } from 'lodash';
+import { camelCase } from 'lodash-es';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { firstValueFrom, of, take } from 'rxjs';
 import { environment } from 'src/environments/environment';

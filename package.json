@@ -73,7 +73,6 @@
     "@capacitor/assets": "^3.0.4",
     "@capacitor/cli": "latest",
     "@types/jasmine": "~3.10.0",
-    "@types/lodash": "^4.17.0",
     "@types/node": "^20.10.6",
     "dotenv-webpack": "^8.0.1",
     "jasmine-core": "~4.0.0",

@@ -8,7 +8,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { debounceTime, tap } from 'rxjs';
