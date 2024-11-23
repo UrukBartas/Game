@@ -6,7 +6,7 @@ import {
   Input,
   signal,
 } from '@angular/core';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { NgPipesModule } from 'ngx-pipes';
 import { firstValueFrom } from 'rxjs';
 import { ItemType, Rarity } from 'src/modules/core/models/items.model';

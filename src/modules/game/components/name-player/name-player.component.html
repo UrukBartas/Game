@@ -1,0 +1,27 @@
+<ng-template #tooltipVerified>
+  <div class="p-2">
+    {{
+      player.emailVerified
+        ? 'Your email is verified. Congratulations on earning the badge!'
+        : 'Your email is not verified. Click to start the verification process.'
+    }}
+  </div>
+</ng-template>
+
+<div class="description stat verified-name gap-2">
+  <label urText class="text-center">{{ player.name }}</label>
+  <img
+    class="uruks-icon pb-1 hoverable-text"
+    [ngClass]="{ 'contrast-zero': !player.emailVerified }"
+    (click)="clickedIcon()"
+    src="{{
+      prefix +
+        (player.emailVerified
+          ? '/assets/misc/verify.png'
+          : '/assets/misc/non_verified.png')
+    }}"
+    [ngbTooltip]="disabledTrigger ? undefined : tooltipVerified"
+    container="body"
+    tooltipClass="custom-tooltip"
+  />
+</div>

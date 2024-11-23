@@ -48,7 +48,9 @@
             <span>⚗️</span>
           </ng-template>
           <app-consumables-inventory
-            [items]="currentConsumableInventory$ | async"
+            [items]="
+              currentConsumableInventory$ | async | stack: 'consumableData.name'
+            "
             [sockets]="currentSize$ | async"
             [(selectedItems)]="selectedConsumables"
             [multipleSelection]="false"
@@ -63,7 +65,9 @@
             <span>📜</span>
           </ng-template>
           <app-misc-inventory
-            [items]="currentMiscInventory$ | async"
+            [items]="
+              currentMiscInventory$ | async | stack: 'miscellanyItemData.name'
+            "
             [sockets]="currentSize$ | async"
             [(selectedItems)]="selectedtableMisc"
             [multipleSelection]="false"
@@ -97,6 +101,28 @@
           }
         </div>
       </app-item-box>
+
+      <div
+        class="col-12"
+        *ngIf="getItemType(getSelectedItem()) != marketItemType.ITEM"
+      >
+        <div
+          class="quantity"
+          *ngIf="!!getSelectedItem()?.stack && getSelectedItem().stack > 1"
+        >
+          <p class="mb-0 bonus-items text-third w-100" urText>
+            Stack of X{{ quantity.value }} items.
+          </p>
+          <input
+            type="range"
+            class="form-range"
+            step="1"
+            min="1"
+            [max]="getSelectedItem().stack ?? 1"
+            [formControl]="quantity"
+          />
+        </div>
+      </div>
       <div class="col-12">
         <div class="form-group mb-2">
           <label for="characterName" class="text-third">Price</label>
@@ -110,27 +136,9 @@
             validInput
           />
         </div>
-        <span style="font-size: 0.8rem;" class="fst-italic text-light"
+        <span style="font-size: 0.8rem" class="fst-italic text-light"
           >*There is a 5% fee for every sale</span
         >
-      </div>
-      <div
-        class="col-12"
-        *ngIf="getItemType(getSelectedItem()) == marketItemType.MATERIAL"
-      >
-        <div class="form-group">
-          <label for="quantity" class="text-third">Quantity</label>
-          <input
-            type="number"
-            class="form-control"
-            id="quantity"
-            max="{{ getSelectedItem()?.quantity ?? 1 }}"
-            [formControl]="quantity"
-            name="quantity"
-            placeholder="Quantity"
-            validInput
-          />
-        </div>
       </div>
     </div>
   </div>

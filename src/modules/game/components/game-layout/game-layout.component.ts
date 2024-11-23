@@ -35,6 +35,11 @@ export class GameLayoutComponent {
   public prefix = environment.permaLinkImgPref;
   public routesNavigation: any[] = [
     {
+      path: '/presale',
+      displayText: 'Black market',
+      icon: 'fa fa-skull-crossbones',
+    },
+    {
       path: '/inventory',
       displayText: 'Character',
       icon: 'fa fa-shield-halved',

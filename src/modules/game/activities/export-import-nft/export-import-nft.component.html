@@ -493,7 +493,7 @@
 
           <ng-container *ngIf="consumables$ | async as inventoryConsumables">
             <app-consumables-inventory
-              [items]="inventoryConsumables"
+              [items]="inventoryConsumables | stack: 'consumableData.name'"
               [sockets]="currentSize$ | async"
               [(selectedItems)]="selectedMultipleConsumables"
               [multipleSelection]="true"
@@ -509,7 +509,7 @@
           <ng-container *ngIf="misc$ | async as inventoryMisc">
             <app-misc-inventory
               [actionable]="false"
-              [items]="inventoryMisc"
+              [items]="inventoryMisc | stack: 'miscellanyItemData.name'"
               [sockets]="currentSize$ | async"
               [(selectedItems)]="selectedMultipleMiscellany"
               [multipleSelection]="true"

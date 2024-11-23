@@ -7,7 +7,7 @@ import {
   inject,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'lodash-es';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { MarkdownComponent, provideMarkdown } from 'ngx-markdown';
 import { take } from 'rxjs';

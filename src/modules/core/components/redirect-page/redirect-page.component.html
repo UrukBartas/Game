@@ -1,0 +1,3 @@
+<div *ngIf="loading">{{ loadingMessage }}</div>
+<div *ngIf="!loading && success">{{ successMessage }}</div>
+<div *ngIf="!loading && !success">{{ failureMessage }}</div>
