@@ -81,6 +81,7 @@ export class MainStateModel {
   public fight: FightModel | null;
   public notifications: NotificationModel[] | null;
   public skins: MiscellanyItemData[] | null;
+  public web3: boolean | null;
 }
 const defaultState = {
   address: '',
@@ -90,6 +91,7 @@ const defaultState = {
   fight: null,
   notifications: null,
   skins: null,
+  web3: false,
 };
 
 export const IS_DEFAULT_OR_EMPTY_STATE = (state: any) => {
@@ -123,6 +125,7 @@ export class MainState {
   ) {
     patchState({
       address: payload,
+      web3: true,
     });
   }
 
@@ -278,7 +281,10 @@ export class MainState {
       .select((x) => x)
       .pipe(debounceTime(300))
       .subscribe(async (state) => {
-        const stateNotLoaded = (!!state && IS_DEFAULT_OR_EMPTY_STATE(state['main'])) && !this.loadedState;
+        const stateNotLoaded =
+          !!state &&
+          IS_DEFAULT_OR_EMPTY_STATE(state['main']) &&
+          !this.loadedState;
 
         if (stateNotLoaded) {
           const stateLoaded = await this.storePersistanceService.loadState();

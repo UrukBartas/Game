@@ -6,7 +6,7 @@ import { get } from 'lodash-es';
   standalone: true,
 })
 export class StackPipe implements PipeTransform {
-  transform(value: Array<any>, propertyNameToStackBy: string): Array<any> {
+  transform(value: any, propertyNameToStackBy: string): Array<any> {
     if (!value) return [];
     if (value.every((entry) => !entry)) return value;
     const res = value.reduce((prev, next) => {
