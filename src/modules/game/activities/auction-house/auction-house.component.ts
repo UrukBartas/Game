@@ -48,6 +48,19 @@ export class AuctionHouseComponent {
   public sortOrderUp = false;
   public sortType: 'price' | 'recent' = 'recent';
   public prefix = environment.permaLinkImgPref;
+  marketSubtypes = [
+    { label: 'Lootbox', subtype: MiscellanyItemType.Lootbox },
+    { label: 'Recipe', subtype: MiscellanyItemType.Recipe },
+    { label: 'Combo Lootbox', subtype: MiscellanyItemType.ComboLootbox },
+    { label: 'Portrait', subtype: MiscellanyItemType.Portrait },
+    { label: 'Money Bag', subtype: MiscellanyItemType.MoneyBag },
+    { label: 'Item Set', subtype: MiscellanyItemType.ItemSet },
+    { label: 'Boost', subtype: MiscellanyItemType.Boost },
+    { label: 'Mount', subtype: MiscellanyItemType.Mount },
+    { label: 'Silhouette', subtype: MiscellanyItemType.Silhouette },
+    { label: 'Title Suffix', subtype: MiscellanyItemType.Title_Suffix },
+    { label: 'Title Prefix', subtype: MiscellanyItemType.Title_Prefix },
+  ];
   private marketListingFitlerEffect = effect(() => {
     this.lastMarketListingFilter = this.marketListingFilter();
   });
@@ -195,7 +208,7 @@ export class AuctionHouseComponent {
     this.modalService.show(template, { class: 'filters-modal' });
   }
 
-  public closeModal(){
-    this.modalService.hide()
+  public closeModal() {
+    this.modalService.hide();
   }
 }
