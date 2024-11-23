@@ -26,7 +26,7 @@ export class NamePlayerComponent {
       initialState: {
         title: 'Start Email Verification',
         description:
-          'You are about to begin the email verification process. Please check your inbox and click on the verification link to complete the process. Once verified, you will earn the Verified Badge!',
+          `You are about to begin the verification process for the email: ${this.player.email}.\n\n Please check your inbox and click on the verification link to complete the process. Once verified, you will earn the Verified Badge!`,
         accept: async () => {
           try {
             firstValueFrom(this.authService.requestEmailVerification()).then(

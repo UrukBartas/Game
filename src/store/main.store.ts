@@ -92,13 +92,14 @@ const defaultState = {
   skins: null,
 };
 
-const IS_DEFAULT_OR_EMPTY_STATE = (state: any) => {
+export const IS_DEFAULT_OR_EMPTY_STATE = (state: any) => {
   return (
     !state ||
     Object.keys(state).length == 0 ||
-    JSON.stringify(state['main']) == JSON.stringify(defaultState)
+    JSON.stringify(state) == JSON.stringify(defaultState)
   );
 };
+
 @State<MainStateModel>({
   name: 'main',
   defaults: defaultState,
@@ -277,11 +278,17 @@ export class MainState {
       .select((x) => x)
       .pipe(debounceTime(300))
       .subscribe(async (state) => {
-        if (IS_DEFAULT_OR_EMPTY_STATE(state) && !this.loadedState) {
+        const stateNotLoaded = (!!state && IS_DEFAULT_OR_EMPTY_STATE(state['main'])) && !this.loadedState;
+
+        if (stateNotLoaded) {
           const stateLoaded = await this.storePersistanceService.loadState();
-          this.store.reset(stateLoaded);
-          this.loadedState = true;
-          this.store.dispatch(new LoginPlayer());
+
+          if (stateLoaded) {
+            this.store.reset(stateLoaded);
+            this.loadedState = true;
+          } else {
+            await this.storePersistanceService.saveState(state);
+          }
         } else {
           await this.storePersistanceService.saveState(state);
         }

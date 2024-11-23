@@ -248,8 +248,7 @@ export class EditCharacterComponent extends TemplatePage {
       disableSound,
       ignoreMine,
     };
-    const token = this.store.selectSnapshot(MainState.getState)?.session?.token;
-    if (this.authService.nativePlatform || !token) {
+    if (this.authService.nativePlatform && !this.hasWalletConnected()) {
       this.playerService
         .createByEmail(email, name, clazz, image, password, configuration)
         .pipe(take(1))
