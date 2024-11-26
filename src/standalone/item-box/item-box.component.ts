@@ -5,6 +5,7 @@ import { memoize } from 'lodash-decorators';
 import { environment } from 'src/environments/environment';
 import { Rarity } from 'src/modules/core/models/items.model';
 import { getRarityColor } from 'src/modules/utils';
+
 @Component({
   selector: 'app-item-box',
   standalone: true,
@@ -32,6 +33,7 @@ export class ItemBoxComponent {
   getRarityColor = getRarityColor;
   rarityEnum = Rarity;
   public prefix = environment.permaLinkImgPref;
+  
   @memoize()
   public addPrefix(image: string) {
     const startsWithAbsolute = image.charAt(0) == '/';
