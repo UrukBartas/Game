@@ -13,7 +13,7 @@ import { getRarityColor, truncateEthereumAddress } from 'src/modules/utils';
 import { PlayerService } from 'src/services/player.service';
 import { WebSocketService } from 'src/services/websocket.service';
 import { MainState } from 'src/store/main.store';
-import { ChallengeModalComponent } from '../../components/challengee-modal/challenge-modal.component';
+import { ChallengeModalComponent } from '../../components/challenge-modal/challenge-modal.component';
 import { pvpTiers } from './const/pvp-tiers';
 import { questTiers } from './const/quest-tiers';
 import { LeaderboardType } from './enum/leaderboard-type.enum';
@@ -178,11 +178,7 @@ export class LeadeboardComponent extends TemplatePage {
     this.activePage.set(this.activePage() - 1);
   }
 
-  autoChallengePlayer(player: PlayerModel) {}
-
   challengePlayer(player: PlayerModel) {
-    if (player.configuration?.disablePVP) return;
-
     const { id, name, level, image } = this.store.selectSnapshot(
       MainState.getState
     ).player;
@@ -191,6 +187,8 @@ export class LeadeboardComponent extends TemplatePage {
       initialState: {
         player,
         challenger: true,
+        opponentConnected: this.getPlayerState(player.id) === PlayerStateEnum.ONLINE,
+        acceptAuto: () => console.log('hey'),
         accept: () => {
           modal.content.awaiting = true;
           race(

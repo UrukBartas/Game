@@ -54,9 +54,9 @@
           }"
           >{{ player.name }} (level {{ player.level }})</span
         >
-        <span urSubtext style="margin-top: -1vh" class="text-light">{{
-          player?.title ?? 'The untitled'
-        }}</span>
+        <span urSubtext style="margin-top: -1vh" class="text-light">
+          {{ player?.title ?? 'The untitled' }}
+        </span>
         <div
           class="progress shadow"
           [style.height]="getHealthBarHeight() + 'px'"

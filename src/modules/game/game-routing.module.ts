@@ -9,7 +9,7 @@ import { ExportImportNftComponent } from './activities/export-import-nft/export-
 import { InventoryComponent } from './activities/inventory/inventory.component';
 import { LeadeboardComponent } from './activities/leadeboard/leadeboard.component';
 import { MissionsComponent } from './activities/missions/missions.component';
-import { PvPResultComponent } from './activities/pvp/pv-presult/pvp-result.component';
+import { PvPResultComponent } from './activities/pvp/pvp-result/pvp-result.component';
 import { PvPFightComponent } from './activities/pvp/pvp-fight/pvp-fight.component';
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
 import { ShopComponent } from './activities/shop/shop.component';

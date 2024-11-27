@@ -55,7 +55,7 @@ import { InventoryComponent } from './activities/inventory/inventory.component';
 import { ItemSetModalComponent } from './activities/inventory/item-set-modal/item-set-modal.component';
 import { LeadeboardComponent } from './activities/leadeboard/leadeboard.component';
 import { MissionsComponent } from './activities/missions/missions.component';
-import { PvPResultComponent } from './activities/pvp/pv-presult/pvp-result.component';
+import { PvPResultComponent } from './activities/pvp/pvp-result/pvp-result.component';
 import { PvPFightComponent } from './activities/pvp/pvp-fight/pvp-fight.component';
 import { QuestFightComponent } from './activities/quests/quest-fight/quest-fight.component';
 import { QuestPickerComponent } from './activities/quests/quest-picker/quest-picker.component';
@@ -68,7 +68,7 @@ import { StakeRemoveRequestModalComponent } from './activities/the-mine/stake-re
 import { TheMineInfoModalComponent } from './activities/the-mine/the-mine-help/the-mine-info-modal.component';
 import { TheMineComponent } from './activities/the-mine/the-mine.component';
 import { BaseInventoryComponent } from './components/base-inventory/base-inventory.component';
-import { ChallengeModalComponent } from './components/challengee-modal/challenge-modal.component';
+import { ChallengeModalComponent } from './components/challenge-modal/challenge-modal.component';
 import { ConsumableModalComponent } from './components/consumable-modal/consumable-modal.component';
 import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
 import { FightHistoricComponent } from './components/fight-historic/fight-historic.component';

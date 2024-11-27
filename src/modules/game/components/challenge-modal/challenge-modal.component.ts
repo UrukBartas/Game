@@ -14,7 +14,9 @@ export class ChallengeModalComponent {
   challenger = false;
   challengeResult = false;
   challengeAccepted = false;
+  opponentConnected = false;
   accept: () => void;
+  acceptAuto: () => void;
   cancel: () => void;
   modalRef = inject(BsModalRef);
   public prefix = environment.permaLinkImgPref;
