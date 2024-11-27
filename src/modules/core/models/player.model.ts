@@ -11,6 +11,7 @@ export interface PlayerModel {
   createdAt: string;
   updatedAt: string;
   name: string;
+  emailVerified: boolean;
   image: string;
   clazz: PlayerClass;
   level: number;

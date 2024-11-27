@@ -2,6 +2,7 @@ import { Component, Input, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { take } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { getRarityColor } from 'src/modules/utils';
@@ -26,7 +27,7 @@ export class StatsDetailComponent extends TemplatePage {
   private modalService = inject(BsModalService);
   private playerService = inject(PlayerService);
   getRarityColor = getRarityColor;
-
+  public prefix = environment.permaLinkImgPref;
   public getPlayerImageSize() {
     if (
       this.viewportService.screenSize === 'xs' ||

@@ -306,94 +306,22 @@
                 All
               </li>
               <li
+                *ngFor="let subtype of marketSubtypes"
                 [ngClass]="{
                   'activated-list-item':
                     lastMarketListingFilter?.typeListing ==
                       marketItemType.MISCELLANY &&
-                    lastMarketListingFilter?.miscSubttype ==
-                      miscItemType.Lootbox,
+                    lastMarketListingFilter?.miscSubttype == subtype.subtype,
                 }"
                 (click)="
                   applyItemFilterType(
                     marketItemType.MISCELLANY,
                     null,
-                    miscItemType.Lootbox
+                    subtype.subtype
                   )
                 "
               >
-                Lootbox
-              </li>
-              <li
-                [ngClass]="{
-                  'activated-list-item':
-                    lastMarketListingFilter?.typeListing ==
-                      marketItemType.MISCELLANY &&
-                    lastMarketListingFilter?.miscSubttype ==
-                      miscItemType.Recipe,
-                }"
-                (click)="
-                  applyItemFilterType(
-                    marketItemType.MISCELLANY,
-                    null,
-                    miscItemType.Recipe
-                  )
-                "
-              >
-                Recipe
-              </li>
-              <li
-                [ngClass]="{
-                  'activated-list-item':
-                    lastMarketListingFilter?.typeListing ==
-                      marketItemType.MISCELLANY &&
-                    lastMarketListingFilter?.miscSubttype ==
-                      miscItemType.Portrait,
-                }"
-                (click)="
-                  applyItemFilterType(
-                    marketItemType.MISCELLANY,
-                    null,
-                    miscItemType.Portrait
-                  )
-                "
-              >
-                Portrait
-              </li>
-              <li
-                [ngClass]="{
-                  'activated-list-item':
-                    lastMarketListingFilter?.typeListing ==
-                      marketItemType.MISCELLANY &&
-                    lastMarketListingFilter?.miscSubttype ==
-                      miscItemType.MoneyBag,
-                }"
-                (click)="
-                  applyItemFilterType(
-                    marketItemType.MISCELLANY,
-                    null,
-                    miscItemType.MoneyBag
-                  )
-                "
-              >
-                Money Bag
-              </li>
-              <li
-                [ngClass]="{
-                  'activated-list-item':
-                    lastMarketListingFilter?.typeListing ==
-                      marketItemType.MISCELLANY &&
-                    lastMarketListingFilter?.miscSubttype ==
-                      miscItemType.ItemSet,
-                }"
-                (click)="
-                  applyItemFilterType(
-                    marketItemType.MISCELLANY,
-                    null,
-                    miscItemType.ItemSet
-                  )
-                "
-              >
-                Item Set
+                {{ subtype.label }}
               </li>
             </ul>
           </accordion-group>

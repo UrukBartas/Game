@@ -113,8 +113,7 @@ export class TheMineComponent extends TemplatePage {
               };
             }),
           };
-        }),
-        tap((res) => console.log(res))
+        })
       );
     })
   );

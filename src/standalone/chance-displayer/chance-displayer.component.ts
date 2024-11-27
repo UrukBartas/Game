@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
-import { camelCase } from 'lodash';
+import { camelCase } from 'lodash-es';
 import { Rarity } from 'src/modules/core/models/items.model';
 import {
   MiscellanyItemType

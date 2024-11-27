@@ -1,9 +1,12 @@
 import { NgModule, Type } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { RedirectPageComponent } from 'src/modules/core/components/redirect-page/redirect-page.component';
 import { RegisterReferralComponent } from 'src/modules/game/activities/campaigns/register-referral/register-referral.component';
 import { ConnectComponent } from 'src/modules/game/activities/connect/connect.component';
 import { GameModule } from 'src/modules/game/game.module';
-
+export enum RedirectPageTypes {
+  EMAIL,
+}
 const routes: Routes = [
   {
     path: '',
@@ -16,6 +19,17 @@ const routes: Routes = [
     title: 'Reset password',
     data: {
       resetPassword: true,
+    },
+  },
+  {
+    path: 'verify-email',
+    component: RedirectPageComponent,
+    title: 'Verify email',
+    data: {
+      type: RedirectPageTypes.EMAIL,
+      successMessage: 'Your email has been successfully verified! 🎉',
+      failureMessage: 'Failed to verify your email. Please try again later.',
+      loadingMessage: 'Verifying your email...',
     },
   },
   {

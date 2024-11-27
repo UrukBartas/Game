@@ -12,7 +12,7 @@ import { getAccount, waitForTransaction } from '@wagmi/core';
 
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { ethers } from 'ethers';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';

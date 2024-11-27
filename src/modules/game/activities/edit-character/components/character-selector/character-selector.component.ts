@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';

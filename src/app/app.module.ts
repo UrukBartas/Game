@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
-import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { NgxsModule } from '@ngxs/store';
 import { ToastrModule } from 'ngx-toastr';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
@@ -21,9 +20,15 @@ import { ConnectComponent } from 'src/modules/game/activities/connect/connect.co
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ThreePortalService } from 'src/modules/game/activities/connect/service/three-portal.service';
 import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
+import { RedirectPageComponent } from 'src/modules/core/components/redirect-page/redirect-page.component';
 
 @NgModule({
-  declarations: [AppComponent, TemplatePage, ConnectComponent],
+  declarations: [
+    AppComponent,
+    TemplatePage,
+    ConnectComponent,
+    RedirectPageComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -33,9 +38,6 @@ import { StackPipe } from 'src/modules/core/pipes/stack.pipe';
     TabsModule.forRoot(),
     NgxsModule.forRoot([MainState]),
     NgxsReduxDevtoolsPluginModule.forRoot(),
-    NgxsStoragePluginModule.forRoot({
-      key: ['main'],
-    }),
     ToastrModule.forRoot(),
     NgxSpinnerModule,
     ModalModule.forRoot(),

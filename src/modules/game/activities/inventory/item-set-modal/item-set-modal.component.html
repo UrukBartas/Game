@@ -3,17 +3,21 @@
     <p class="text-third" urTitle>{{ title }}</p>
   </div>
   <div class="row">
-    <p class="text-white" urText [innerHTML]="description"></p>
+    <p class="text-white mb-1" urText [innerHTML]="description"></p>
+    <span class="text-light mb-2"
+      >You can always override it or delete by opening the contextual menu
+      (Right click or hold touch on mobile)</span
+    >
     <div class="col-12">
       <div class="form-group mb-2">
-        <label for="name" class="text-third">Item preset name</label>
+        <label for="name" class="text-third">Nane</label>
         <input
           type="text"
           class="form-control"
           id="text"
           [formControl]="name"
           name="text"
-          placeholder="Input name"
+          placeholder="Item preset name"
           validInput
         />
       </div>
