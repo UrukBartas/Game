@@ -106,14 +106,17 @@
     border-radius: 10px;
     display: flex;
     justify-content: space-between;
+
     &:hover {
       background-color: $third;
       transition: 0.5s all;
     }
+
     &-left {
       display: flex;
       gap: 20px;
     }
+    
     &-right {
       display: flex;
       align-items: center;
@@ -147,20 +150,13 @@
           height: 30px;
           background: white;
         }
-
-        &.disabled {
-          background-color: rgb(100, 100, 100);
-          box-shadow: none;
-          cursor: not-allowed;
-          .icon {
-            background: grey;
-          }
-        }
       }
     }
+
     a {
       color: $secondary;
     }
+
     &-left-image-ranking {
       width: 64px;
       height: 64px;
@@ -170,15 +166,18 @@
       background-color: $primary;
       border-radius: 50%;
     }
+
     &-left-container {
       display: flex;
       flex-direction: column;
       justify-content: space-around;
     }
+    
     &-name-container {
       display: flex;
       gap: 5px;
     }
+
     &-badge {
       border: 1px solid $secondary;
       padding: 0px 10px;
