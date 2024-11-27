@@ -148,18 +148,6 @@
       </div>
       <div class="list-leaderboard-item-right">
         <div
-          *ngIf="player.id !== actualAddress"
-          class="duel-btn auto-duel-btn"
-          [ngbTooltip]="tooltipTemplate"
-          [tooltipContext]="{
-            text: 'Autobattle',
-          }"
-          (click)="autoChallengePlayer(player)"
-        >
-          <div class="icon fa-sword"></div>
-        </div>
-
-        <div
           *ngIf="
             getPlayerState(player.id) === playerStates.ONLINE &&
             player.id !== actualAddress

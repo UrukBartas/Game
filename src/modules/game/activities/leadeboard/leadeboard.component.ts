@@ -178,8 +178,6 @@ export class LeadeboardComponent extends TemplatePage {
     this.activePage.set(this.activePage() - 1);
   }
 
-  autoChallengePlayer(player: PlayerModel) {}
-
   challengePlayer(player: PlayerModel) {
     if (player.configuration?.disablePVP) return;
 
