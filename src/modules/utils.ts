@@ -1,3 +1,4 @@
+import { AnimateSettingsModel } from './core/models/animate-callback.model';
 import { Rarity } from './core/models/items.model';
 import { PlayerModel } from './core/models/player.model';
 import { ItemTypeSC } from './game/activities/export-import-nft/enums/ItemTypesSC';
@@ -98,25 +99,6 @@ export function calculateXPForLevel(level: number): number {
   return Math.round(baseXP * Math.pow(multiplier, level - 1));
 }
 
-export function animateElement(element, animation, callback?) {
-  new Promise((resolve, reject) => {
-    const animationName = `animate__${animation}`;
-    const node = document.querySelector(element);
-
-    if (node) {
-      node.classList.add(`animate__animated`, animationName);
-
-      const handleAnimationEnd = (event) => {
-        event.stopPropagation();
-        node.classList.remove(`animate__animated`, animationName);
-        resolve(callback?.());
-      };
-
-      node.addEventListener('animationend', handleAnimationEnd, { once: true });
-    }
-  });
-}
-
 export function truncateEthereumAddress(
   address: string,
   length: number = 6
@@ -163,3 +145,69 @@ export const getMountTimeReductionByRarity = (rarity: Rarity) => {
       return 0;
   }
 };
+
+export function animateElement(
+  element: string,
+  animation: string,
+  settings?: AnimateSettingsModel
+) {
+  const { startingDelay, callback, callbackTimeout, callbackSafeTimeout } =
+    settings || {};
+
+  setTimeout(() => {
+    const animationName = `animate__${animation}`;
+    const node = document.querySelector<HTMLElement>(element);
+
+    if (!node) {
+      console.warn(`Element '${element}' not found.`);
+      callback?.();
+      return;
+    }
+
+    let animationCompleted = false;
+
+    node.classList.add(`animate__animated`, animationName);
+
+    // Handle animationend event
+    const animationEndPromise = new Promise<void>((resolve) => {
+      const handleAnimationEnd = (event: AnimationEvent) => {
+        if (event.target === node) {
+          animationCompleted = true;
+          node.classList.remove(`animate__animated`, animationName);
+          node.removeEventListener('animationend', handleAnimationEnd);
+          resolve();
+        }
+      };
+
+      node.addEventListener('animationend', handleAnimationEnd, { once: true });
+    });
+
+    // Fallback timeout promise in case animationend does not trigger
+    const timeoutPromise = new Promise<void>((resolve) => {
+      if (callbackSafeTimeout !== undefined) {
+        setTimeout(() => {
+          if (!animationCompleted) {
+            node.classList.remove(`animate__animated`, animationName);
+            resolve();
+          }
+        }, callbackSafeTimeout);
+      }
+    });
+
+    Promise.race([animationEndPromise, timeoutPromise])
+      .then(() => {
+        if (callback) {
+          if (callbackTimeout !== undefined) {
+            setTimeout(() => {
+              callback();
+            }, callbackTimeout);
+          } else {
+            callback();
+          }
+        }
+      })
+      .catch((error) => {
+        console.error('Error during animation:', error);
+      });
+  }, startingDelay ?? 0);
+}
