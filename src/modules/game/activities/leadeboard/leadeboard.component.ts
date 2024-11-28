@@ -18,6 +18,7 @@ import { pvpTiers } from './const/pvp-tiers';
 import { questTiers } from './const/quest-tiers';
 import { LeaderboardType } from './enum/leaderboard-type.enum';
 import { PlayerStateEnum } from './enum/player-state.enum';
+import { PvPFightService } from 'src/services/pvp-fight.service';
 
 @Component({
   selector: 'app-leadeboard',
@@ -80,6 +81,7 @@ export class LeadeboardComponent extends TemplatePage {
   public websocket = inject(WebSocketService);
   public store = inject(Store);
   public modalService = inject(BsModalService);
+  public pvpService = inject(PvPFightService);
   private router = inject(Router);
   public onlinePlayers: { address: string; state: PlayerStateEnum }[] = [];
   public getPlayerState = (playerId: string) => {
@@ -178,43 +180,67 @@ export class LeadeboardComponent extends TemplatePage {
     this.activePage.set(this.activePage() - 1);
   }
 
-  challengePlayer(player: PlayerModel) {
-    const { id, name, level, image } = this.store.selectSnapshot(
-      MainState.getState
-    ).player;
+  challengePlayer(opponent: PlayerModel) {
+    const { id, name, level, image, mmr } = this.store.selectSnapshot(
+      MainState.getPlayer
+    );
 
     const config: ModalOptions = {
       initialState: {
-        player,
+        opponent: opponent,
         challenger: true,
-        opponentConnected: this.getPlayerState(player.id) === PlayerStateEnum.ONLINE,
-        acceptAuto: () => console.log('hey'),
-        accept: () => {
-          modal.content.awaiting = true;
-          race(
-            this.websocket.acceptChallenge$,
-            this.websocket.declineChallenge$
-          )
-            .pipe(first(), take(1))
-            .subscribe((accept: boolean) => {
-              modal.content.awaiting = false;
-              modal.content.challengeResult = true;
-              modal.content.challengeAccepted = accept;
-
-              if (accept) {
-                setTimeout(() => {
-                  this.router.navigateByUrl('/arena');
-                  modal.hide();
-                }, 2000);
-              }
-            });
-          this.websocket.sendChallenge({ id, name, level, image }, player.id);
-        },
+        playerHasHigherMMR: mmr > opponent.mmr,
+        opponentConnected:
+          this.getPlayerState(opponent.id) === PlayerStateEnum.ONLINE,
+        acceptAuto: () => this.acceptAutoPVP(modal, opponent.id),
+        accept: () => this.acceptPVP(modal, opponent.id),
       },
     };
     const modal = this.modalService.show(ChallengeModalComponent, config);
     modal.onHidden.pipe(take(1)).subscribe(() => {
-      this.websocket.cancelSentChallenge({ id, name, level, image }, player.id);
+      this.websocket.cancelSentChallenge(
+        { id, name, level, image },
+        opponent.id
+      );
     });
+  }
+
+  private acceptAutoPVP(modal, opponentAddress: string) {
+    modal.content.awaiting = true;
+    this.pvpService
+      .createAutoFight(opponentAddress)
+      .pipe(take(1))
+      .subscribe(() => {
+        modal.content.awaiting = false;
+        modal.content.challengeResult = true;
+        modal.content.challengeAccepted = true;
+
+        setTimeout(() => {
+          this.router.navigateByUrl('/arena/auto');
+          modal.hide();
+        }, 2000);
+      });
+  }
+
+  private acceptPVP(modal, opponentId: string) {
+    const { id, name, level, image } = this.store.selectSnapshot(
+      MainState.getPlayer
+    );
+    modal.content.awaiting = true;
+    race(this.websocket.acceptChallenge$, this.websocket.declineChallenge$)
+      .pipe(first(), take(1))
+      .subscribe((accept: boolean) => {
+        modal.content.awaiting = false;
+        modal.content.challengeResult = true;
+        modal.content.challengeAccepted = accept;
+
+        if (accept) {
+          setTimeout(() => {
+            this.router.navigateByUrl('/arena/pvp');
+            modal.hide();
+          }, 2000);
+        }
+      });
+    this.websocket.sendChallenge({ id, name, level, image }, opponentId);
   }
 }

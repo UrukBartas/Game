@@ -47,7 +47,7 @@ export class WebSocketService {
       const config: ModalOptions = {
         id: challenger.id,
         initialState: {
-          player: challenger,
+          opponent: challenger,
           challenger: false,
           accept: () => {
             this.acceptChallenge(challenger.id, modal);
@@ -98,7 +98,7 @@ export class WebSocketService {
   acceptChallenge(challengerAddress: string, modalRef: BsModalRef): void {
     this.socket.emit('acceptChallenge', { challengerAddress });
     setTimeout(() => {
-      this.router.navigateByUrl('/arena');
+      this.router.navigateByUrl('/arena/pvp');
       modalRef.hide();
     }, 2000);
   }

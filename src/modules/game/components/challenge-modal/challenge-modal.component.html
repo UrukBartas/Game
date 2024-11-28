@@ -7,14 +7,14 @@
     ></i>
     <div class="row d-flex flex-column align-items-center pb-4">
       <div class="challenger-container">
-        <img class="challenger-image" [src]="prefix + '/' + player.image" />
+        <img class="challenger-image" [src]="prefix + '/' + opponent.image" />
         <div class="icon fa-sword"></div>
       </div>
 
       <span urTitle class="text-secondary w-fit z-1 pt-2"
-        >{{ player.name }}
+        >{{ opponent.name }}
       </span>
-      <span urText class="text-white w-fit">Level {{ player.level }}</span>
+      <span urText class="text-white w-fit">Level {{ opponent.level }}</span>
     </div>
     <div class="row">
       <p class="text-white" urText>
@@ -23,7 +23,7 @@
             ? 'You are about to challenge'
             : 'You have been challenged by'
         }}
-        {{ player.name }}
+        {{ opponent.name }}
       </p>
       <p class="text-white" urText>
         {{ challenger ? 'Do you want to proceed?' : 'Do you accept the duel?' }}
@@ -41,15 +41,19 @@
     <ng-container *ngIf="challenger">
       <div class="d-flex w-full justify-content-end gap-2">
         <button
+          [disabled]="playerHasHigherMMR || autobattleTimeout"
+          [class.disabled]="playerHasHigherMMR || autobattleTimeout"
           class="duel-btn auto-duel-btn btn btn-secondary"
           (click)="acceptAuto()"
         >
           <i class="fa-solid fa-robot px-2"></i
-          ><span class="d-none d-md-block">Autobattle</span>
+          ><span class="d-none d-md-block">{{
+            getAutobattleButtonText()
+          }}</span>
         </button>
         <button
-          [disabled]="!opponentConnected"
-          [class.disabled]="!opponentConnected"
+          [disabled]="!opponentConnected || opponent.configuration?.disablePVP"
+          [class.disabled]="!opponentConnected || opponent.configuration?.disablePVP"
           class="duel-btn btn btn-secondary"
           (click)="accept()"
         >
@@ -67,12 +71,12 @@
   <ng-container *ngIf="awaiting">
     <div class="d-flex align-items-center gap-3">
       <app-spinner></app-spinner>
-      <p urText class="text-white m-0">Waiting for player confirmation...</p>
+      <p urText class="text-white m-0">Waiting for opponent confirmation...</p>
     </div>
   </ng-container>
   <ng-container *ngIf="challengeResult">
     <ng-container *ngIf="!challengeAccepted">
-      <p urText class="text-white">Player declined the duel.</p>
+      <p urText class="text-white">Opponent declined the duel.</p>
       <div class="d-flex w-100 justify-content-end pt-3">
         <button class="btn btn-secondary" (click)="modalRef.hide()">
           Accept
@@ -85,7 +89,7 @@
         <p urText class="text-white m-0">
           {{
             challenger
-              ? 'Player accepted the duel. Joining the fight...'
+              ? 'Opponent accepted the duel. Joining the fight...'
               : 'Joining the fight...'
           }}
         </p>
@@ -100,8 +104,8 @@
       <h5 urSubtitle class="text-white p-2">Autobattle 🤖</h5>
       <p urText class="text-white">
         Autobattle gives you the opportunity to fight an opponent that has more
-        arena points than you every hour. The battle will be automatic, with no
-        opponent input required.
+        arena points (AP) than you every hour. The battle will be automatic,
+        with no opponent input required.
       </p>
     </div>
     <div class="p-2">
