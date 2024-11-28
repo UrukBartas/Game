@@ -409,7 +409,13 @@
                 *ngIf="getActiveNetworkImg() as activeNetwork"
               >
                 <img src="{{ prefix + activeNetwork }}" />
-                <span>{{ getERC20ExportFee$ | async | number }}</span>
+                <span *ngIf="getERC20ExportFee$ | async as erc20Fee">{{
+                  math.floor(
+                    selectedUruksToExport > 1000
+                      ? selectedUruksToExport / 1000 + 1
+                      : 1
+                  ) * erc20Fee
+                }}</span>
               </div>
             }
           </div>
