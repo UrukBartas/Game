@@ -33,6 +33,7 @@ export interface MineTier {
   end: number;
   matFactor: number;
   lootboxChance: number;
+  uruksAllowed:number;
 }
 @Component({
   selector: 'app-the-mine',
