@@ -117,6 +117,9 @@ app-item-box {
   left: 50%;
   top: 50%;
   margin: 0 !important;
+  height: 100%;
+  display: block;
+  overflow-y: auto;
   li {
     background-color: $secondary !important;
     color: $white-100 !important;

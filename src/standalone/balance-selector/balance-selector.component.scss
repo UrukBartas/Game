@@ -4,8 +4,24 @@
   justify-content: center;
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
 }
-.fit-content {
-  width: fit-content;
-  height: fit-content;
+
+.form-input {
+  width: 12rem;
+  padding: 5px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.inputs {
+  display: flex;
 }
