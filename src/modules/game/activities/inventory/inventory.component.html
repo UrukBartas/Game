@@ -26,166 +26,176 @@
       class="remove-arrow-sliders"
     >
       <slide>
-        <div class="description desc-mover">
-          <p urTitle>Inventory</p>
-          <div class="mover">
-            <i
-              class="bi bi-caret-left-fill disabled-icon"
-              (click)="activeSlideIndex = 0"
-            ></i>
-            <i
-              class="bi bi-caret-right-fill"
-              (click)="activeSlideIndex = activeSlideIndex + 1"
-            ></i>
+        <ng-container *ngIf="activeSlideIndex === 0">
+          <div class="description desc-mover">
+            <p urTitle>Inventory</p>
+            <div class="mover">
+              <i
+                class="bi bi-caret-left-fill disabled-icon"
+                (click)="activeSlideIndex = 0"
+              ></i>
+              <i
+                class="bi bi-caret-right-fill"
+                (click)="activeSlideIndex = activeSlideIndex + 1"
+              ></i>
+            </div>
           </div>
-        </div>
-        <div class="inventory">
-          <tabset>
-            <tab id="tab1">
-              <ng-template tabHeading>
-                <span>⚔️</span>
-              </ng-template>
-              <ng-container *ngIf="!!currentInventory">
-                <app-item-inventory
-                  [items]="currentInventory"
+          <div class="inventory">
+            <tabset>
+              <tab id="tab1">
+                <ng-template tabHeading>
+                  <span>⚔️</span>
+                </ng-template>
+                <ng-container *ngIf="!!currentInventory">
+                  <app-item-inventory
+                    [items]="currentInventory"
+                    [sockets]="currentSize$ | async"
+                    [equippedItemOfType]="
+                      !!hoveredItem
+                        ? (this.getItem$(
+                            [hoveredItem.itemData.itemType],
+                            hoveredItem.itemData.itemType
+                          ) | async)
+                        : null
+                    "
+                    [showContextualMenu]="true"
+                    [disableDND]="false"
+                    (onDragStart)="onDragStart($event.event, $event.data)"
+                    (onDragEnd)="onDragEnd($event)"
+                    (onHover)="onHoverItem($event)"
+                    (onDoubleClick)="
+                      !!$event
+                        ? equipItem($event, $event.itemData.itemType)
+                        : false
+                    "
+                    (onDestroyItem)="destroyItem($event)"
+                    (equipSpecificSlot)="
+                      equipItem($event.item, $event.itemType)
+                    "
+                  >
+                    <ng-container
+                      extraItemBoxes
+                      *ngTemplateOutlet="inventoryExpander"
+                    >
+                    </ng-container>
+                  </app-item-inventory>
+                </ng-container>
+              </tab>
+              <tab>
+                <ng-template tabHeading>
+                  <span>🧱</span>
+                </ng-template>
+                <app-materials-inventory
+                  [items]="currentMaterials"
                   [sockets]="currentSize$ | async"
-                  [equippedItemOfType]="
-                    !!hoveredItem
-                      ? (this.getItem$(
-                          [hoveredItem.itemData.itemType],
-                          hoveredItem.itemData.itemType
-                        ) | async)
-                      : null
-                  "
-                  [showContextualMenu]="true"
-                  [disableDND]="false"
-                  (onDragStart)="onDragStart($event.event, $event.data)"
-                  (onDragEnd)="onDragEnd($event)"
-                  (onHover)="onHoverItem($event)"
-                  (onDoubleClick)="
-                    !!$event
-                      ? equipItem($event, $event.itemData.itemType)
-                      : false
-                  "
-                  (onDestroyItem)="destroyItem($event)"
-                  (equipSpecificSlot)="equipItem($event.item, $event.itemType)"
                 >
                   <ng-container
                     extraItemBoxes
                     *ngTemplateOutlet="inventoryExpander"
                   >
-                  </ng-container>
-                </app-item-inventory>
-              </ng-container>
-            </tab>
-            <tab>
-              <ng-template tabHeading>
-                <span>🧱</span>
-              </ng-template>
-              <app-materials-inventory
-                [items]="currentMaterials"
-                [sockets]="currentSize$ | async"
-              >
+                  </ng-container> </app-materials-inventory
+              ></tab>
+              <tab>
+                <ng-template tabHeading>
+                  <span>⚗️</span>
+                </ng-template>
                 <ng-container
-                  extraItemBoxes
-                  *ngTemplateOutlet="inventoryExpander"
+                  *ngIf="currentConsumableInventory as inventoryConsumables"
                 >
-                </ng-container> </app-materials-inventory
-            ></tab>
-            <tab>
-              <ng-template tabHeading>
-                <span>⚗️</span>
-              </ng-template>
-              <ng-container
-                *ngIf="currentConsumableInventory as inventoryConsumables"
-              >
-                <app-consumables-inventory
-                  [items]="inventoryConsumables | stack: 'consumableData.name'"
-                  [sockets]="currentSize$ | async"
-                >
-                  <ng-container
-                    extraItemBoxes
-                    *ngTemplateOutlet="inventoryExpander"
+                  <app-consumables-inventory
+                    [items]="
+                      inventoryConsumables | stack: 'consumableData.name'
+                    "
+                    [sockets]="currentSize$ | async"
                   >
-                  </ng-container>
-                </app-consumables-inventory>
-              </ng-container>
-            </tab>
-            <tab>
-              <ng-template tabHeading>
-                <span>📜</span>
-              </ng-template>
-              <ng-container *ngIf="currentMiscInventory as inventoryMisc">
-                <app-misc-inventory
-                  [items]="inventoryMisc | stack: 'miscellanyItemData.name'"
-                  (equipMount)="equipMount($event)"
-                  (updateInventory)="
-                    miscUpdated$.next(true);
-                    inventoryUpdated$.next(true);
-                    materialUpdated$.next(true)
-                  "
-                  [sockets]="currentSize$ | async"
-                >
-                  <ng-container
-                    extraItemBoxes
-                    *ngTemplateOutlet="inventoryExpander"
+                    <ng-container
+                      extraItemBoxes
+                      *ngTemplateOutlet="inventoryExpander"
+                    >
+                    </ng-container>
+                  </app-consumables-inventory>
+                </ng-container>
+              </tab>
+              <tab>
+                <ng-template tabHeading>
+                  <span>📜</span>
+                </ng-template>
+                <ng-container *ngIf="currentMiscInventory as inventoryMisc">
+                  <app-misc-inventory
+                    [items]="inventoryMisc | stack: 'miscellanyItemData.name'"
+                    (equipMount)="equipMount($event)"
+                    (updateInventory)="
+                      miscUpdated$.next(true);
+                      inventoryUpdated$.next(true);
+                      materialUpdated$.next(true)
+                    "
+                    [sockets]="currentSize$ | async"
                   >
-                  </ng-container>
-                </app-misc-inventory>
-              </ng-container>
-            </tab>
-          </tabset>
-          <div
-            class="description stats-summary"
-            style="margin-top: -30px"
-            *ngIf="['lg', 'xl', 'xxl'].includes(viewportService.screenSize)"
-          >
-            <p class="mb-0" urText>Stats summary</p>
-            <app-only-stats
-              [player]="actualPlayer$ | async"
-              [simplified]="true"
-            ></app-only-stats>
+                    <ng-container
+                      extraItemBoxes
+                      *ngTemplateOutlet="inventoryExpander"
+                    >
+                    </ng-container>
+                  </app-misc-inventory>
+                </ng-container>
+              </tab>
+            </tabset>
+            <div
+              class="description stats-summary"
+              style="margin-top: -30px"
+              *ngIf="['lg', 'xl', 'xxl'].includes(viewportService.screenSize)"
+            >
+              <p class="mb-0" urText>Stats summary</p>
+              <app-only-stats
+                [player]="actualPlayer$ | async"
+                [simplified]="true"
+              ></app-only-stats>
+            </div>
           </div>
-        </div>
+        </ng-container>
       </slide>
       <slide>
-        <div class="description desc-mover">
-          <p urTitle>Details</p>
-          <div class="mover">
-            <i
-              class="bi bi-caret-left-fill"
-              [ngClass]="{ 'disabled-icon': isViewingPlayer }"
-              (click)="
-                isViewingPlayer
-                  ? null
-                  : (activeSlideIndex = activeSlideIndex - 1)
-              "
-            ></i>
-            <i
-              class="bi bi-caret-right-fill"
-              (click)="activeSlideIndex = activeSlideIndex + 1"
-            ></i>
+        <ng-container *ngIf="activeSlideIndex === 1">
+          <div class="description desc-mover">
+            <p urTitle>Details</p>
+            <div class="mover">
+              <i
+                class="bi bi-caret-left-fill"
+                [ngClass]="{ 'disabled-icon': isViewingPlayer }"
+                (click)="
+                  isViewingPlayer
+                    ? null
+                    : (activeSlideIndex = activeSlideIndex - 1)
+                "
+              ></i>
+              <i
+                class="bi bi-caret-right-fill"
+                (click)="activeSlideIndex = activeSlideIndex + 1"
+              ></i>
+            </div>
           </div>
-        </div>
-        <app-stats-detail
-          [player]="actualPlayer$ | async"
-          [isViewingAnotherPlayer]="isViewingPlayer"
-        ></app-stats-detail>
+          <app-stats-detail
+            [player]="actualPlayer$ | async"
+            [isViewingAnotherPlayer]="isViewingPlayer"
+          ></app-stats-detail>
+        </ng-container>
       </slide>
       <slide>
-        <div class="description desc-mover">
-          <p urTitle>Arena Matches</p>
-          <div class="mover">
-            <i
-              class="bi bi-caret-left-fill"
-              (click)="activeSlideIndex = activeSlideIndex - 1"
-            ></i>
-            <i class="bi bi-caret-right-fill disabled-icon"></i>
+        <ng-container *ngIf="activeSlideIndex === 2">
+          <div class="description desc-mover">
+            <p urTitle>Arena Matches</p>
+            <div class="mover">
+              <i
+                class="bi bi-caret-left-fill"
+                (click)="activeSlideIndex = activeSlideIndex - 1"
+              ></i>
+              <i class="bi bi-caret-right-fill disabled-icon"></i>
+            </div>
           </div>
-        </div>
-        <app-fight-historic
-          [player]="actualPlayer$ | async"
-        ></app-fight-historic>
+          <app-fight-historic
+            [player]="actualPlayer$ | async"
+          ></app-fight-historic>
+        </ng-container>
       </slide>
     </carousel>
   </div>
