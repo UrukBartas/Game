@@ -38,7 +38,7 @@ export class GameLayoutComponent {
     {
       path: '/presale',
       displayText: 'Black market',
-      icon: 'fa fa-skull-crossbones',
+      icon: 'text-rainbow fa fa-skull-crossbones',
     },
     {
       path: '/inventory',
