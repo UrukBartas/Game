@@ -44,7 +44,7 @@ export class InboxModalComponent implements OnInit {
   notificationService = inject(NotificationsService);
   viewportService = inject(ViewportService);
   inventoryUpdateService = inject(InventoryUpdateService);
-  state = this.store.select(MainState.getState);
+  notifications$ = this.store.select(MainState.getNotifications);
   playerId: string;
   openedNotification: NotificationModel;
   attachments: { data; quantity: number }[];
@@ -58,8 +58,8 @@ export class InboxModalComponent implements OnInit {
     this.notificationService
       .getNotifications()
       .pipe(take(1))
-      .subscribe((notifications) =>
-        this.store.dispatch(new SetNotifications(notifications))
+      .subscribe((response) =>
+        this.store.dispatch(new SetNotifications(response))
       );
   }
 
@@ -111,5 +111,25 @@ export class InboxModalComponent implements OnInit {
       default:
         return 40;
     }
+  }
+
+  prevPage() {
+    const notifications = this.store.selectSnapshot(MainState.getNotifications);
+    this.notificationService
+      .getNotifications(notifications.currentPage - 1)
+      .pipe(take(1))
+      .subscribe((response) =>
+        this.store.dispatch(new SetNotifications(response))
+      );
+  }
+
+  nextPage() {
+    const notifications = this.store.selectSnapshot(MainState.getNotifications);
+    this.notificationService
+      .getNotifications(notifications.currentPage + 1)
+      .pipe(take(1))
+      .subscribe((response) =>
+        this.store.dispatch(new SetNotifications(response))
+      );
   }
 }

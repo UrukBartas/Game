@@ -15,7 +15,10 @@
           match.win ? 'Win' : 'Lose'
         }}</span>
         <div class="opponent-info d-flex flex-row align-items-center gap-2">
-          <img [src]="prefix + '/' +match.opponent.image" class="opponent-img" />
+          <img
+            [src]="prefix + '/' + match.opponent.image"
+            class="opponent-img"
+          />
           <span urSubtext class="opponent-name text-white">{{
             match.opponent.name
           }}</span>
@@ -26,6 +29,13 @@
         <span urSubtext class="total-change text-white">{{
           match.playerMMR + match.mmrChange
         }}</span>
+        <i
+          class="fa-solid px-2 text-white"
+          [ngClass]="{
+            'fa-robot': match.auto,
+            'fa-sword': !match.auto,
+          }"
+        ></i>
       </div>
       <div class="pagination-controls">
         <button (click)="prevPage()" [disabled]="currentPage === 0">

@@ -112,4 +112,34 @@
       overflow: hidden;
     }
   }
+
+  .pagination-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+
+    button {
+      background-color: #444;
+      border: none;
+      color: white;
+      padding: 2px 15px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      transition-duration: 0.4s;
+      cursor: pointer;
+      border-radius: 5px;
+
+      &:hover {
+        background-color: #555;
+      }
+
+      &:disabled {
+        background-color: #666;
+        cursor: not-allowed;
+      }
+    }
+  }
 }

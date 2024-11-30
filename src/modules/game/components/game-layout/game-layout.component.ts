@@ -20,6 +20,7 @@ import {
 } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component';
 import { InboxModalComponent } from '../inbox-modal/inbox-modal.component';
+import { NotificationResponseModel } from 'src/modules/core/models/notifications.model';
 
 @Component({
   selector: 'app-game-layout',
@@ -97,16 +98,8 @@ export class GameLayoutComponent {
   public displayingFullScreenModal = false;
   public modalRef?: BsModalRef;
   public loggedWithemail = this.authService.loggedWithEmail;
-  public notifications$: Observable<number> = this.store
-    .select(MainState.getState)
-    .pipe(
-      map(
-        ({ player, notifications }) =>
-          notifications?.filter(
-            (notification) => !notification.opened.includes(player.id)
-          ).length ?? 0
-      )
-    );
+  public notifications$: Observable<NotificationResponseModel> = this.store.select(MainState.getNotifications)
+
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);

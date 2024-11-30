@@ -95,10 +95,10 @@
           >
           </app-item-box>
           <div
-            *ngIf="(notifications$ | async) > 0"
+            *ngIf="(notifications$ | async)?.newNotificationsCount > 0"
             class="notifications notifications-player"
           >
-            {{ notifications$ | async }}
+            {{ (notifications$ | async)?.newNotificationsCount }}
           </div>
           <div
             *ngIf="questTimerService.time() as questInProgress"
@@ -126,7 +126,7 @@
           <li (click)="router.navigateByUrl('/quests')">
             <a class="dropdown-item px-2 py-1">
               <div class="d-flex align-items-center">
-                <div class="icon fa-sword mr-1"></div>
+                <div class="fa-sword mr-1"></div>
                 <span>{{ questTimerService.time() ?? 'Quests' }}</span>
               </div>
             </a>
@@ -139,10 +139,10 @@
                 <span>Inbox</span>
               </div>
               <div
-                *ngIf="(notifications$ | async) > 0"
+                *ngIf="(notifications$ | async)?.newNotificationsCount > 0"
                 class="notifications notifications-link"
               >
-                {{ notifications$ | async }}
+                {{ (notifications$ | async)?.newNotificationsCount }}
               </div>
             </a>
           </li>

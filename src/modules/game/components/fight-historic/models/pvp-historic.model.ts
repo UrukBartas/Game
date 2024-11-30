@@ -9,4 +9,5 @@ export interface PVPHistoricModel {
   playerMMR: number;
   mmrChange: number;
   win: boolean;
+  auto: boolean;
 }
