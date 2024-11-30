@@ -44,6 +44,7 @@ export class AutoPvpFightComponent
   public rarityEnum = Rarity;
   public getRarityColor = getRarityColor;
   public getRarityBasedOnIRI = getRarityBasedOnIRI;
+  public playersData;
 
   constructor(
     store: Store,
@@ -63,6 +64,7 @@ export class AutoPvpFightComponent
       .subscribe({
         next: (fight) => {
           this.fight = fight;
+          this.playersData = fight.playersData;
         },
         error: () => {
           this.router.navigateByUrl('/leaderboard');

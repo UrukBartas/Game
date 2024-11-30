@@ -135,25 +135,22 @@
           >-{{ fight.turns[fight.turns.length - 1].playerTurn.damage }}</span
         >
         <img
-          [src]="prefix + fight.playersData.enemy.image"
+          [src]="prefix + playersData.enemy.image"
           [ngbTooltip]="playerStats"
           [tooltipContext]="{
             player: fight.baseStats.enemy,
-            playerName: fight.playersData.enemy.name,
+            playerName: playersData.enemy.name,
           }"
           class="enemy-image shadow"
           [style.animation]="enemyAnimation"
         />
         <span urText style="margin-bottom: -1vh" class="text-white"
-          >{{ fight.playersData.enemy.name }} (level
-          {{ fight.playersData.enemy.level }})</span
+          >{{ playersData.enemy.name }} (level
+          {{ playersData.enemy.level }})</span
         >
-        <span
-          urSubtext
-          class="text-light"
-          style="visibility: hidden; margin: -1vh"
-          >???????</span
-        >
+        <span urSubtext style="margin: -1vh" class="text-light">{{
+          player?.title ?? 'The untitled'
+        }}</span>
         <div
           class="progress shadow"
           [style.height]="getHealthBarHeight() + 'px'"
