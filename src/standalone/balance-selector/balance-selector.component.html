@@ -11,62 +11,12 @@
     </div>
   </div>
 
-  <div class="container-range">
-    <!-- Slider -->
-    <input
-      type="range"
-      class="form-range"
-      step="0.01"
-      min="0"
-      [max]="
-        type == 'in-game' ? (player$ | async).uruks : (erc20Balance$ | async)
-      "
-      [(ngModel)]="selectedUruks"
-      (ngModelChange)="selectedUruksChange.emit(selectedUruks)"
-    />
-
-    <div class="actions gap-2">
-
-      <div class="inputs gap-2">
-        <!-- Input -->
-        <input
-          type="number"
-          class="form-input form-control"
-          [min]="0"
-          [max]="
-            type == 'in-game'
-              ? (player$ | async).uruks
-              : (erc20Balance$ | async)
-          "
-          step="0.01"
-          [(ngModel)]="selectedUruks"
-          (input)="selectedUruksChange.emit(selectedUruks)"
-        />
-
-        <!-- Buttons -->
-        <button
-          type="button"
-          class="btn btn-secondary fit-content"
-          (click)="assignValueToSelectedUruks(0.5)"
-        >
-          HALF
-        </button>
-        <button
-          type="button"
-          class="btn btn-secondary fit-content"
-          (click)="assignValueToSelectedUruks(1)"
-        >
-          ALL
-        </button>
-      </div>
-      <div class="info">
-        <p
-          class="text-light text-center mb-0"
-          *ngIf="selectedUruks > 0 && !hideSummary"
-        >
-          {{ selectedUruks + ' Golden Uruks selected' }}
-        </p>
-      </div>
-    </div>
-  </div>
+  <app-min-max-combo-selector
+    [max]="
+      type == 'in-game' ? (player$ | async).uruks : (erc20Balance$ | async)
+    "
+    [(value)]="selectedUruks"
+    [summary]="' Golden Uruks selected'"
+    (valueChange)="selectedUruksChange.emit(selectedUruks)"
+  ></app-min-max-combo-selector>
 </div>

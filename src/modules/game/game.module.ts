@@ -8,6 +8,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { DndModule } from 'ngx-drag-drop';
+import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { TimeAgoPipe } from 'src/app/time-ago.pipe';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
@@ -23,9 +24,9 @@ import { SpinnerComponent } from 'src/standalone/spinner/spinner.component';
 import { TierizedProgressBarComponent } from 'src/standalone/tierized-progress-bar/tierized-progress-bar.component';
 import { SwiperModule } from 'swiper/angular';
 import { ChainSwitcherComponent } from '../../standalone/chain-switcher/chain-switcher.component';
-import { ChanceDisplayerComponent } from "../../standalone/chance-displayer/chance-displayer.component";
+import { ChanceDisplayerComponent } from '../../standalone/chance-displayer/chance-displayer.component';
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
-import { LootboxStatsDisplayerComponent } from "../../standalone/lootbox-stats-displayer/lootbox-stats-displayer.component";
+import { LootboxStatsDisplayerComponent } from '../../standalone/lootbox-stats-displayer/lootbox-stats-displayer.component';
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
 import { DoubleClickDirective } from '../core/directives/double-click.directive';
 import { SubtextSizeDirective } from '../core/directives/subtext-size.directive';
@@ -77,14 +78,13 @@ import { InventoryTopbarComponent } from './components/inventory-topbar/inventor
 import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
 import { MaterialsInventoryComponent } from './components/materials-inventory/materials-inventory.component';
 import { MiscInventoryComponent } from './components/misc-inventory/misc-inventory.component';
+import { NamePlayerComponent } from './components/name-player/name-player.component';
 import { GenericStatsComponent } from './components/stats-detail/only-stats/only-stats/generic-stats/generic-stats.component';
 import { OnlyStatsComponent } from './components/stats-detail/only-stats/only-stats/only-stats.component';
 import { PercentStatsComponent } from './components/stats-detail/only-stats/only-stats/percent-stats/percent-stats.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { TitleGeneratorModalComponent } from './components/title-generator-modal/title-generator-modal.component';
 import { GameRoutingModule } from './game-routing.module';
-import { NamePlayerComponent } from './components/name-player/name-player.component';
-
 const directives = [
   ValidInputDirective,
   TextSizeDirective,
@@ -126,7 +126,7 @@ const pipes = [
   StackPipe,
   CompressNumberPipe,
   TimeAgoPipe,
-  CompareItemPipe
+  CompareItemPipe,
 ];
 
 @NgModule({
@@ -152,7 +152,7 @@ const pipes = [
     StakeRemoveRequestModalComponent,
     TitleGeneratorModalComponent,
     ClassSelectorComponent,
-    NamePlayerComponent
+    NamePlayerComponent,
   ],
   imports: [
     ...directives,
@@ -186,9 +186,10 @@ const pipes = [
     TheMineInfoModalComponent,
     SwiperModule,
     ChanceDisplayerComponent,
-    LootboxStatsDisplayerComponent
-],
+    LootboxStatsDisplayerComponent,
+    NgxEchartsModule,
+  ],
   exports: [GameLayoutComponent],
-  providers: [DecimalPipe, AsyncPipe, StackPipe,...pipes],
+  providers: [DecimalPipe, AsyncPipe, StackPipe, ...pipes],
 })
 export class GameModule {}

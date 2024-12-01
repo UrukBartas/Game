@@ -43,6 +43,19 @@ export class AuctionHouseService extends ApiBaseService {
     this.controllerPrefix = '/marketplace';
   }
 
+  public getHistoricalTrades$(idListing: number) {
+    return this.get('/historical-trades/' + idListing) as Observable<
+      Array<MarketListing>
+    >;
+  }
+
+  public getPriceSeries$(idListing: number) {
+    return this.get('/historical-price-series/' + idListing) as Observable<{
+      avg: number;
+      series: [];
+    }>;
+  }
+
   public getMarketListings(payload: MarketListingPayload) {
     return this.post('/market-listings', payload) as Observable<{
       data: Array<MarketListing>;
