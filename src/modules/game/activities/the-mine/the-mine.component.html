@@ -11,11 +11,149 @@
     </p>
   </div>
 </ng-template>
+<ng-template
+  #tooltipTier
+  let-tier="tier"
+  let-showAction="showAction"
+  let-usedAs="usedAs"
+>
+  <div class="p-2">
+    <div>
+      <strong class="text-third">{{
+        tier?.name ?? 'Awaiting contract with goblins'
+      }}</strong>
+    </div>
+    <div *ngIf="tier?.description && !usedAs" class="text-light mt-1">
+      {{ tier.description }}
+    </div>
+    @if (tier) {
+      <ul class="list-unstyled mt-2">
+        <li>
+          <strong class="text-third">x{{ tier.matFactor }}</strong>
+          materials per hour
+        </li>
+        <li>
+          <strong class="text-third"
+            >{{ tier.lootboxChance * 100 | number: '1.2-2' }}%</strong
+          >
+          chance to find a treasure
+        </li>
+        <li>
+          <strong class="text-third"
+            >{{ tier.expBoost * 100 | number: '1.0-2' }}%</strong
+          >
+          experience boost
+        </li>
+        <li>
+          <strong class="text-third"
+            >{{ tier.uruksBoost * 100 | number: '1.0-2' }}%</strong
+          >
+          Golden Uruks boost per hour
+        </li>
+        <li>
+          <strong class="text-third"
+            >{{ tier.travelBoost * 100 | number: '1.0-2' }}%</strong
+          >
+          travel time reduction
+        </li>
+        <li *ngIf="tier.allStatsBoost > 0">
+          <strong class="text-third"
+            >{{ tier.allStatsBoost * 100 | number: '1.0-2' }}%</strong
+          >
+          all stats boost
+        </li>
+        <li>
+          Export up to
+          <strong class="text-third">{{
+            tier.uruksAllowed | number: '1.0-2'
+          }}</strong>
+          Golden Uruks per day
+        </li>
+        <li *ngIf="tier.id === 'BLAST_FURNACE'" class="mt-2 text-light">
+          For every
+          <strong [ngStyle]="{ color: getRarityColor(RarityEnum.MYTHIC) }"
+            >2000</strong
+          >
+          additional Uruks staked in the mine, gain an extra
+          <strong [ngStyle]="{ color: getRarityColor(RarityEnum.MYTHIC) }"
+            >0.5%</strong
+          >
+          boost to all stats!
+        </li>
+      </ul>
+      <p class="mt-2 text-light d-none d-sm-block">
+        Upgrade your tier to increase your rewards and export limits!
+      </p>
+    } @else {
+      <p class="text-light d-none d-sm-block">
+        You do not have any goblin workers assigned. Hire them now to start
+        earning rewards:
+      </p>
+      <ul class="list-unstyled mt-2">
+        <li>
+          Earn up to
+          <strong class="text-third"
+            >x{{ getHighestTier()?.matFactor ?? 0 }}</strong
+          >
+          materials per hour
+        </li>
+        <li>
+          <strong class="text-third"
+            >{{
+              (getHighestTier()?.lootboxChance ?? 0) * 100 | number: '1.2-2'
+            }}%</strong
+          >
+          chance to find a treasure
+        </li>
+        <li>
+          <strong class="text-third"
+            >{{
+              (getHighestTier()?.expBoost ?? 0) * 100 | number: '1.0-2'
+            }}%</strong
+          >
+          experience boost
+        </li>
+        <li>
+          <strong class="text-third"
+            >{{
+              (getHighestTier()?.uruksBoost ?? 0) * 100 | number: '1.0-2'
+            }}%</strong
+          >
+          Golden Uruks boost per hour
+        </li>
+        <li>
+          Reduce travel time by
+          <strong class="text-third"
+            >{{
+              (getHighestTier()?.travelBoost ?? 0) * 100 | number: '1.0-2'
+            }}%</strong
+          >
+        </li>
+        <li>
+          Export up to
+          <strong class="text-third">{{
+            getHighestTier()?.uruksAllowed | number: '1.0-2'
+          }}</strong>
+          Golden Uruks per day
+        </li>
+      </ul>
+    }
+    <button
+      type="button"
+      *ngIf="showAction"
+      (click)="phase = 1"
+      class="btn btn-secondary btn-lg btn-block w-100 btn-pending d-flex align-items-center justify-content-center gap-2 mt-3"
+    >
+      Get workforce now!
+    </button>
+  </div>
+</ng-template>
+
 <div class="h-100" id="themine">
   <div class="themine-bg"></div>
 
-  <div class="row separate p-1 p-md-4">
-    <div class="row mb-3 d-flex align-items-center justify-content-center">
+  <div class="row separate p-1 p-md-4 gap-3">
+    <div class="row d-flex align-items-center justify-content-center">
       <div class="next-mining-gains gap-2">
         <i class="fa-solid fa-hourglass-start rotating-icon"></i>
         @if (!isBigScreen()) {
@@ -25,14 +163,16 @@
         }
       </div>
     </div>
-    <div class="flex-row">
+    <div class="flex-row justify-content-center">
       <div
         class="col-12 d-flex justify-content-center align-items-center text-center"
         *ngIf="phase == 0"
       >
         <ng-container
           *ngIf="
-            getActiveTier((stakeInfo | async)?.amountStaked ?? 0) as activeTier;
+            getActiveTier(
+              (totalMultichainWorkforce$ | async) ?? 0
+            ) as activeTier;
             else elseTemplate
           "
         >
@@ -58,129 +198,153 @@
       </div>
       @if (phase == 1) {
         <div
-          *ngIf="subphase == 0"
-          class="amount-selector d-flex flex-column justify-content-center align-items-center px-1 px-md-5 gap-2 col-12"
+          class="amount-selector uruk-card d-flex flex-column justify-content-center align-items-center p-2 px-md-5 gap-3"
         >
-          <div class="uruk-helper">
-            <div class="left">
-              <img
-                src="{{ prefix + '/assets/goldenuruks.png' }}"
-                alt=""
-                srcset=""
-                style="height: 100px; width: 100px"
-              />
-            </div>
-            <div class="right">
-              <span urSubtext class="text-third">
-                Do you need some help?👀
-              </span>
-              <span class="text-light pointer" (click)="displayHelpMine()"
-                >Check this out!</span
-              >
-            </div>
-          </div>
-
-          <app-chain-switcher></app-chain-switcher>
-          <app-balance-selector
-            [type]="stakeType"
-            [player$]="player$"
-            [erc20Balance$]="erc20Balance$"
-            [(selectedUruks)]="selectedUruksToExport"
-          ></app-balance-selector>
-
-          <div class="row w-100 actions-add">
-            <button
-              type="button"
-              (click)="giveUruksToWorkers()"
-              [disabled]="!walletService.allowChainConnected()"
-              class="btn btn-secondary btn-lg btn-block w-100 btn-pending d-flex align-items-center justify-content-center gap-2 col"
-            >
-              @if (walletService.allowChainConnected()) {
-                Stake
-                <div
-                  class="price text-white text-center"
-                  urTitle
-                  [ngbTooltip]="uruks"
-                  [tooltipContext]="{
-                    uruks: selectedUruksToExport,
-                  }"
-                >
-                  {{ selectedUruksToExport | compressNumber }}
-                  <img
-                    class="uruks-icon pb-1"
-                    src="{{ prefix + '/assets/goldenuruks.png' }}"
-                  />
-                </div>
-              } @else {
-                Switch to the correct chain before staking
-              }
-            </button>
-          </div>
-        </div>
-
-        <div *ngIf="subphase == 1" class="unstakes px-1 px-md-5 col-12">
-          <ng-container *ngIf="stakeInfo | async as stakeInfoVar">
-            <span class="w-100 text-third d-block"> Ongoing unstakes</span>
-            <span
-              class="w-100 text-light d-block"
-              *ngIf="stakeInfoVar.requests.length == 0"
-              >You are not unstaking anything right now.</span
-            >
-            <ng-container>
-              <div
-                class="table-responsive stat-table"
-                style="max-height: 240px; overflow: auto; min-width: 100%"
-              >
-                <table class="table table-dark">
-                  <tbody>
-                    <ng-container>
-                      <tr
-                        *ngFor="
-                          let request of stakeInfoVar.requests;
-                          let i = index
-                        "
-                        class="d-flex align-items-center"
-                      >
-                        <td>
-                          <button
-                            type="button"
-                            class="btn btn-secondary"
-                            [disabled]="request?.remainingTime > today"
-                            (click)="claimTokens(i)"
-                          >
-                            Claim
-                          </button>
-                        </td>
-
-                        <td urSubtext>
-                          <div
-                            class="price text-white text-center"
-                            [ngbTooltip]="uruks"
-                            [tooltipContext]="{
-                              uruks: request?.amount ?? 0,
-                            }"
-                          >
-                            {{ request?.amount ?? 0 | number }}
-                            <img
-                              class="uruks-icon pb-1"
-                              src="{{ prefix + '/assets/goldenuruks.png' }}"
-                              style="width: 20px"
-                            />
-                          </div>
-                        </td>
-                        <td urSubtext>
-                          @if (request.remainingTime < today) {
-                            Claimable!
-                          } @else {
-                            Claimable in {{ request?.remainingTime | timeAgo }}
-                          }
-                        </td>
-                      </tr>
-                    </ng-container>
-                  </tbody>
-                </table>
+          <div
+            class="w-100 px-2 d-flex align-items-center justify-content-end gap-2"
+          >
+            <div class="actions d-flex gap-2">
+              <div class="remove-circle 5" *ngIf="phase == 1">
+                <i
+                  (click)="phase = 0; subphase = 0"
+                  urSubtitle
+                  class="fa-solid fa-arrow-left text-third pointer"
+                ></i>
               </div>
-            </ng-container></ng-container
+              <div class="remove-circle">
+                <i
+                  (click)="phase = 1; subphase = 1"
+                  urSubtitle
+                  class="fa-solid fa-clock-rotate-left text-third pointer"
+                ></i>
+              </div>
+              <div class="remove-circle">
+                <i
+                  (click)="removeStaked()"
+                  *ngIf="!!(stakeInfo | async)"
+                  urSubtitle
+                  class="fa-solid fa-circle-minus text-third pointer"
+                ></i>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="subphase == 1" class="unstakes px-1 px-md-5 col-12">
+            <ng-container *ngIf="stakeInfo | async as stakeInfoVar">
+              <span class="w-100 text-third d-block"> Ongoing unstakes</span>
+              <span
+                class="w-100 text-light d-block"
+                *ngIf="stakeInfoVar.requests.length == 0"
+                >You are not unstaking anything right now.</span
+              >
+              <ng-container>
+                <div
+                  class="table-responsive stat-table"
+                  style="max-height: 240px; overflow: auto; min-width: 100%"
+                >
+                  <table class="table table-dark">
+                    <tbody>
+                      <ng-container>
+                        <tr
+                          *ngFor="
+                            let request of stakeInfoVar.requests;
+                            let i = index
+                          "
+                          class="d-flex align-items-center"
+                        >
+                          <td>
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              [disabled]="request?.remainingTime > today"
+                              (click)="claimTokens(i)"
+                            >
+                              Claim
+                            </button>
+                          </td>
+
+                          <td urSubtext>
+                            <div
+                              class="price text-white text-center"
+                              [ngbTooltip]="uruks"
+                              [tooltipContext]="{
+                                uruks: request?.amount ?? 0,
+                              }"
+                            >
+                              {{ request?.amount ?? 0 | number }}
+                              <img
+                                class="uruks-icon pb-1"
+                                src="{{ prefix + '/assets/goldenuruks.png' }}"
+                                style="width: 20px"
+                              />
+                            </div>
+                          </td>
+                          <td urSubtext>
+                            @if (request.remainingTime < today) {
+                              Claimable!
+                            } @else {
+                              Claimable in
+                              {{ request?.remainingTime | timeAgo }}
+                            }
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </ng-container></ng-container
+            >
+          </div>
+          <ng-container *ngIf="subphase == 0">
+            <app-chain-switcher></app-chain-switcher>
+            <app-balance-selector
+              [type]="stakeType"
+              [player$]="player$"
+              [erc20Balance$]="erc20Balance$"
+              [(selectedUruks)]="selectedUruksToExport"
+            ></app-balance-selector>
+
+            <div class="row w-100 actions-add">
+              <button
+                type="button"
+                (click)="giveUruksToWorkers()"
+                [disabled]="!walletService.allowChainConnected()"
+                class="btn btn-secondary btn-lg btn-block w-100 btn-pending d-flex align-items-center justify-content-center gap-2 col"
+              >
+                @if (walletService.allowChainConnected()) {
+                  Stake
+                  <div
+                    class="price text-white text-center"
+                    urTitle
+                    [ngbTooltip]="uruks"
+                    [tooltipContext]="{
+                      uruks: selectedUruksToExport,
+                    }"
+                  >
+                    {{ selectedUruksToExport | compressNumber }}
+                    <img
+                      class="uruks-icon pb-1"
+                      src="{{ prefix + '/assets/goldenuruks.png' }}"
+                    />
+                  </div>
+                } @else {
+                  Switch to the correct chain before staking
+                }
+              </button>
+            </div>
+            <div class="uruk-helper w-100 d-flex justify-content-center">
+              <div class="right">
+                <span urSubtext class="text-light">
+                  Do you need some help?👀
+                </span>
+                <span
+                  urSubtext
+                  class="text-light pointer hoverable-text"
+                  (click)="displayHelpMine()"
+                  >Check this out!</span
+                >
+              </div>
+            </div></ng-container
           >
         </div>
       }
@@ -190,8 +354,29 @@
           class="current-tier text-white d-flex gap-3 flex-column px-1 px-md-4 uruk-card"
         >
           <div
-            class="tier-image d-flex justify-content-center align-items-center"
+            class="tier-image d-flex justify-content-center align-items-center flex-column"
           >
+            <ng-container
+              *ngIf="totalMultichainWorkforce$ | async as totalWorkforce"
+            >
+              <span class="py-2" *ngIf="totalWorkforce && totalWorkforce > 0"
+                >Total workforce: {{ totalWorkforce ?? 0 }}
+                <img
+                  class="navbar-uruks-icon pb-1"
+                  src="{{ prefix + '/assets/goldenuruks.png' }}"
+                  style="max-width: 32px"
+                />
+                <span
+                  *ngIf="
+                    (stakeInfo | async)?.amountStaked ?? 0 as amountStakedChain
+                  "
+                  class="text-light"
+                >
+                  ({{ amountStakedChain ?? 0 }} current chain)</span
+                >
+              </span></ng-container
+            >
+
             <app-item-box
               [height]="getCurrentTierImageSize()"
               [width]="getCurrentTierImageSize()"
@@ -204,6 +389,7 @@
                   tooltipTier;
                   context: {
                     tier: activeTier,
+                    usedAs: true,
                   }
                 "
               ></ng-container>
@@ -223,153 +409,16 @@
     </div>
 
     <div class="col-12">
-      <ng-template #tooltipTier let-tier="tier" let-showAction="showAction">
-        <div class="p-2">
-          <div>
-            <strong class="text-third">{{
-              tier?.name ?? 'Awaiting contract with goblins'
-            }}</strong>
-          </div>
-          @if (tier) {
-            <ul class="list-unstyled mt-2">
-              <li>
-                <strong class="text-third">x{{ tier.matFactor }}</strong>
-                materials per hour
-              </li>
-              <li>
-                <strong class="text-third"
-                  >{{ tier.lootboxChance * 100 | number: '1.2-2' }}%</strong
-                >
-                chance to find a treasure
-              </li>
-              <li>
-                <strong class="text-third"
-                  >{{ tier.expBoost * 100 | number: '1.0-2' }}%</strong
-                >
-                experience boost
-              </li>
-              <li>
-                <strong class="text-third"
-                  >{{ tier.uruksBoost * 100 | number: '1.0-2' }}%</strong
-                >
-                Golden Uruks boost per hour
-              </li>
-              <li>
-                <strong class="text-third"
-                  >{{ tier.travelBoost * 100 | number: '1.0-2' }}%</strong
-                >
-                travel time reduction
-              </li>
-              <li>
-                Export up to
-                <strong class="text-third">{{
-                  tier.uruksAllowed | number: '1.0-2'
-                }}</strong>
-                Golden Uruks per day
-              </li>
-            </ul>
-            <p class="mt-2 text-light">
-              Upgrade your tier to increase your rewards and export limits!
-            </p>
-          } @else {
-            <p class="text-light">
-              You do not have any goblin workers assigned. Hire them now to
-              start earning rewards:
-            </p>
-            <ul class="list-unstyled mt-2">
-              <li>
-                Earn up to
-                <strong class="text-third"
-                  >x{{ getHighestTier()?.matFactor ?? 0 }}</strong
-                >
-                materials per hour
-              </li>
-              <li>
-                <strong class="text-third"
-                  >{{
-                    (getHighestTier()?.lootboxChance ?? 0) * 100
-                      | number: '1.2-2'
-                  }}%</strong
-                >
-                chance to find a treasure
-              </li>
-              <li>
-                <strong class="text-third"
-                  >{{
-                    (getHighestTier()?.expBoost ?? 0) * 100 | number: '1.0-2'
-                  }}%</strong
-                >
-                experience boost
-              </li>
-              <li>
-                <strong class="text-third"
-                  >{{
-                    (getHighestTier()?.uruksBoost ?? 0) * 100 | number: '1.0-2'
-                  }}%</strong
-                >
-                Golden Uruks boost per hour
-              </li>
-              <li>
-                Reduce travel time by
-                <strong class="text-third"
-                  >{{
-                    (getHighestTier()?.travelBoost ?? 0) * 100
-                      | number: '1.0-2'
-                  }}%</strong
-                >
-              </li>
-              <li>
-                Export up to
-                <strong class="text-third">{{
-                  getHighestTier()?.uruksAllowed | number: '1.0-2'
-                }}</strong>
-                Golden Uruks per day
-              </li>
-            </ul>
-          }
-          <button
-            type="button"
-            *ngIf="showAction"
-            (click)="phase = 1"
-            class="btn btn-secondary btn-lg btn-block w-100 btn-pending d-flex align-items-center justify-content-center gap-2 mt-3"
-          >
-            Get workforce now!
-          </button>
-        </div>
-      </ng-template>
-
-      <div class="px-1 px-md-5" style="height: 60px">
-        <div
-          class="col-12 d-flex align-items-end justify-content-end gap-2 my-3 mb-5"
+      <div class="px-1 px-md-5 tier-list-wrapper">
+        <ng-container
+          *ngIf="totalMultichainWorkforce$ | async as totalWorkforce"
         >
-          <div class="remove-circle 5" *ngIf="phase == 1">
-            <i
-              (click)="phase = 0; subphase = 0"
-              urSubtitle
-              class="fa-solid fa-arrow-left text-third pointer"
-            ></i>
-          </div>
-          <div class="remove-circle">
-            <i
-              (click)="phase = 1; subphase = 1"
-              urSubtitle
-              class="fa-solid fa-clock-rotate-left text-third pointer"
-            ></i>
-          </div>
-          <div class="remove-circle">
-            <i
-              (click)="removeStaked()"
-              *ngIf="!!(stakeInfo | async)"
-              urSubtitle
-              class="fa-solid fa-circle-minus text-third pointer"
-            ></i>
-          </div>
-        </div>
-        <app-tierized-progress-bar
-          [currentValue]="(stakeInfo | async)?.amountStaked ?? 0"
-          [tooltipTemplate]="tooltipTier"
-          [tiers]="tiers$ | async"
-        ></app-tierized-progress-bar>
+          <app-tierized-progress-bar
+            [currentValue]="totalWorkforce"
+            [tooltipTemplate]="tooltipTier"
+            [tiers]="tiers$ | async"
+          ></app-tierized-progress-bar
+        ></ng-container>
       </div>
     </div>
   </div>

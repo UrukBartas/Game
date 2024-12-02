@@ -119,6 +119,7 @@ nav a {
 
 .topbar {
   position: relative;
+  z-index: 100;
   .level {
     position: absolute;
     right: 0;

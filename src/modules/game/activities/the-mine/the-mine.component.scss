@@ -34,7 +34,7 @@
     z-index: 100;
   }
   .themine-bg {
-    position: absolute;
+    position: fixed;
     top: 0;
     width: 100%;
     height: 100%;
@@ -53,8 +53,6 @@
   .separate {
     display: flex;
     height: 100%;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
     @include media-breakpoint-down(sm) {
       justify-content: start;
@@ -63,6 +61,25 @@
 
   .rotating-icon {
     animation: rotate 3s linear infinite;
+  }
+
+  p {
+    white-space: normal; /* Ajustar el texto a nuevas líneas */
+    word-wrap: break-word; /* Asegurar el ajuste de palabras largas */
+    overflow-wrap: break-word; /* Propiedad moderna para lo mismo */
+    word-break: break-word; /* Forzar el ajuste si es necesario */
+    hyphens: auto; /* Añadir guiones automáticos si es compatible */
+  }
+
+  .table-responsive {
+    margin: 0;
+  }
+
+  .tier-list-wrapper {
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
   }
 
   @keyframes rotate {

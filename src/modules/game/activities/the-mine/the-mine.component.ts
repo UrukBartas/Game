@@ -19,9 +19,11 @@ import {
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
+import { Rarity } from 'src/modules/core/models/items.model';
 import { getRarityColor } from 'src/modules/utils';
 import { ERC20ContractService } from 'src/services/contracts/erc20-contract.service';
 import { NFTContractService } from 'src/services/contracts/nft-contract.service';
+import { PlayerService } from 'src/services/player.service';
 import { StatsService } from 'src/services/stats.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
@@ -74,7 +76,9 @@ export class TheMineComponent extends TemplatePage {
   viewportService = inject(ViewportService);
   ERC20ContractService = inject(ERC20ContractService);
   NFTContractService = inject(NFTContractService);
-
+  playerService = inject(PlayerService);
+  totalMultichainWorkforce$ = this.playerService.getMultichainStakedAmount$();
+  public RarityEnum = Rarity;
   // Reactive form controls
   useWallet = new FormControl(true);
 

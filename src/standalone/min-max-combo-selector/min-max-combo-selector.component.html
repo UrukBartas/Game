@@ -23,21 +23,23 @@
         (input)="valueChange.emit(value)"
       />
 
-      <!-- Buttons -->
-      <button
-        type="button"
-        class="btn btn-secondary fit-content"
-        (click)="calculateValue(0.5)"
-      >
-        HALF
-      </button>
-      <button
-        type="button"
-        class="btn btn-secondary fit-content"
-        (click)="calculateValue(1)"
-      >
-        ALL
-      </button>
+      <div class="buttons">
+        <!-- Buttons -->
+        <button
+          type="button"
+          class="btn btn-secondary fit-content"
+          (click)="calculateValue(0.5)"
+        >
+          HALF
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary fit-content"
+          (click)="calculateValue(1)"
+        >
+          ALL
+        </button>
+      </div>
     </div>
     <div class="info">
       <p

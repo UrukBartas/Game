@@ -17,7 +17,7 @@ export class MinMaxComboSelectorComponent {
   @Output() valueChange = new EventEmitter<number>();
 
   public async calculateValue(factor: number) {
-    this.value = Number(this.value) * factor;
+    this.value = Number(this.max) * factor;
     this.valueChange.emit(this.value);
   }
 }
