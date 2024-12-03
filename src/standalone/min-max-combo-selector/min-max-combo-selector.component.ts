@@ -13,6 +13,7 @@ export class MinMaxComboSelectorComponent {
   @Input() min = 0;
   @Input() max = 0;
   @Input() value = 0;
+  @Input() step = '0.01';
   @Input() summary = '';
   @Output() valueChange = new EventEmitter<number>();
 

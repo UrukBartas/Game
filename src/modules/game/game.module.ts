@@ -20,6 +20,7 @@ import { ExpandInventoryTooltipComponent } from 'src/standalone/expand-inventory
 import { GenericItemTooltipComponent } from 'src/standalone/generic-item-tooltip/generic-item-tooltip.component';
 import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulette.component';
 import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
+import { MinMaxComboSelectorComponent } from 'src/standalone/min-max-combo-selector/min-max-combo-selector.component';
 import { SpinnerComponent } from 'src/standalone/spinner/spinner.component';
 import { TierizedProgressBarComponent } from 'src/standalone/tierized-progress-bar/tierized-progress-bar.component';
 import { SwiperModule } from 'swiper/angular';
@@ -188,6 +189,7 @@ const pipes = [
     ChanceDisplayerComponent,
     LootboxStatsDisplayerComponent,
     NgxEchartsModule,
+    MinMaxComboSelectorComponent,
   ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe, StackPipe, ...pipes],

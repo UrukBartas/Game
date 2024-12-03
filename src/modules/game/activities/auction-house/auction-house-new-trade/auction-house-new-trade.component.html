@@ -106,21 +106,14 @@
         class="col-12"
         *ngIf="getItemType(getSelectedItem()) != marketItemType.ITEM"
       >
-        <div
-          class="quantity"
-          *ngIf="!!getSelectedItem()?.stack && getSelectedItem().stack > 1"
-        >
-          <p class="mb-0 bonus-items text-third w-100" urText>
-            Stack of X{{ quantity.value }} items.
-          </p>
-          <input
-            type="range"
-            class="form-range"
-            step="1"
-            min="1"
-            [max]="getSelectedItem().stack ?? 1"
-            [formControl]="quantity"
-          />
+        <div class="quantity" *ngIf="getQuantity() > 1">
+          <app-min-max-combo-selector
+            [max]="getQuantity()"
+            [value]="0"
+            [step]="'1'"
+            [summary]="'x Stack'"
+            (valueChange)="quantity.patchValue($event)"
+          ></app-min-max-combo-selector>
         </div>
       </div>
       <div class="col-12">
