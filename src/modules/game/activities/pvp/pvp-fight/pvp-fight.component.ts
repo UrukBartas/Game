@@ -75,6 +75,13 @@ export class PvPFightComponent
   public rarityEnum = Rarity;
   public getRarityColor = getRarityColor;
   public getRarityBasedOnIRI = getRarityBasedOnIRI;
+
+  // Necesario para no duplicar eventos sockets
+  private boundHandleTurnResult = this.handleTurnResult.bind(this);
+  private boundHandleAwaitingPlayer = this.handleAwaitingPlayer.bind(this);
+  private boundHandleEnemyLose = this.handleEnemyLose.bind(this);
+  private boundHandleLoseByTimeout = this.handleLoseByTimeout.bind(this);
+
   constructor(
     store: Store,
     viewportService: ViewportService,
@@ -88,10 +95,10 @@ export class PvPFightComponent
   }
 
   private setupFightSockets() {
-    this.bindSocketEvent('turnResult', this.handleTurnResult);
-    this.bindSocketEvent('awaitingPlayer', this.handleAwaitingPlayer);
-    this.bindSocketEvent('enemySurrender', this.handleEnemyLose);
-    this.bindSocketEvent('playerSurrender', this.handleLoseByTimeout);
+    this.websocket.socket.on('turnResult', this.boundHandleTurnResult);
+    this.websocket.socket.on('awaitingPlayer', this.boundHandleAwaitingPlayer);
+    this.websocket.socket.on('enemySurrender', this.boundHandleEnemyLose);
+    this.websocket.socket.on('playerSurrender', this.boundHandleLoseByTimeout);
   }
 
   ngOnInit() {
@@ -137,14 +144,6 @@ export class PvPFightComponent
           this.router.navigateByUrl('/leaderboard');
         },
       });
-  }
-
-  private bindSocketEvent(event: string, handler: Function) {
-    this.websocket.socket.on(event, handler.bind(this));
-  }
-
-  private unbindSocketEvent(event: string, handler: Function) {
-    this.websocket.socket.off(event, handler.bind(this));
   }
 
   private handleTurnResult(fight: FightModel) {
@@ -233,8 +232,9 @@ export class PvPFightComponent
   }
 
   ngOnDestroy() {
-    this.unbindSocketEvent('turnResult', this.handleTurnResult);
-    this.unbindSocketEvent('awaitingPlayer', this.handleAwaitingPlayer);
-    this.unbindSocketEvent('enemySurrender', this.handleEnemyLose);
+    this.websocket.socket.off('turnResult', this.boundHandleTurnResult);
+    this.websocket.socket.off('awaitingPlayer', this.boundHandleAwaitingPlayer);
+    this.websocket.socket.off('enemySurrender', this.boundHandleEnemyLose);
+    this.websocket.socket.off('playerSurrender', this.boundHandleLoseByTimeout);
   }
 }

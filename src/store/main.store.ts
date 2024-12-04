@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { debounceTime, firstValueFrom, take } from 'rxjs';
 import { FightModel } from 'src/modules/core/models/fight.model';
 import { MiscellanyItemData } from 'src/modules/core/models/misc.model';
-import { NotificationModel } from 'src/modules/core/models/notifications.model';
+import { NotificationResponseModel } from 'src/modules/core/models/notifications.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { SessionModel } from 'src/modules/core/models/session.model';
@@ -46,7 +46,7 @@ export class SetSession {
 
 export class SetNotifications {
   static readonly type = '[Notifications] Set';
-  constructor(public payload: NotificationModel[]) {}
+  constructor(public payload: NotificationResponseModel) {}
 }
 
 export class DisconnectWallet {
@@ -79,7 +79,7 @@ export class MainStateModel {
   public session: SessionModel | null;
   public quests: QuestModel[] | null;
   public fight: FightModel | null;
-  public notifications: NotificationModel[] | null;
+  public notifications: NotificationResponseModel | null;
   public skins: MiscellanyItemData[] | null;
   public web3: boolean | null;
 }
@@ -272,6 +272,11 @@ export class MainState {
   @Selector()
   static getSkins(state: MainStateModel): MiscellanyItemData[] {
     return state.skins;
+  }
+
+  @Selector()
+  static getNotifications(state: MainStateModel): NotificationResponseModel {
+    return state.notifications;
   }
 
   private loadedState = false;

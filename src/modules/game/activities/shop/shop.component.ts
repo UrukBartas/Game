@@ -118,17 +118,11 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
   triggerDialog(text: string, duration: number) {
     this.dialog = text;
     this.showDialog = true;
-    setTimeout(() => {
-      animateElement('.shop-tender-dialog', 'fadeIn');
+    animateElement('.shop-tender-dialog', 'fadeIn');
+    animateElement('.shop-tender-dialog', 'fadeOut', {
+      callback: () => (this.showDialog = false),
+      startingDelay: duration,
     });
-
-    setTimeout(() => {
-      animateElement(
-        '.shop-tender-dialog',
-        'fadeOut',
-        () => (this.showDialog = false)
-      );
-    }, duration);
   }
 
   selectItem(item) {

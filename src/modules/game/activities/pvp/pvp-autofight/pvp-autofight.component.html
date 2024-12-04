@@ -1,4 +1,4 @@
-<div *ngIf="fight" id="fight-container" class="container-fluid h-100">
+<div *ngIf="fight" id="autofight-container" class="container-fluid h-100">
   <div
     class="background-image"
     [style.background-image]="'url(' + prefix + fightBackgroundImage + ')'"
@@ -135,24 +135,22 @@
           >-{{ fight.turns[fight.turns.length - 1].playerTurn.damage }}</span
         >
         <img
-          [src]="prefix + quest.data.enemyImage"
+          [src]="prefix + playersData.enemy.image"
           [ngbTooltip]="playerStats"
           [tooltipContext]="{
             player: fight.baseStats.enemy,
-            playerName: quest.data.enemy,
+            playerName: playersData.enemy.name,
           }"
           class="enemy-image shadow"
           [style.animation]="enemyAnimation"
         />
         <span urText style="margin-bottom: -1vh" class="text-white"
-          >{{ quest.data.enemy }} (level {{ quest.level }})</span
+          >{{ playersData.enemy.name }} (level
+          {{ playersData.enemy.level }})</span
         >
-        <span
-          urSubtext
-          class="text-light"
-          style="visibility: hidden; margin: -1vh"
-          >???????</span
-        >
+        <span urSubtext style="margin: -1vh" class="text-light">{{
+          player?.title ?? 'The untitled'
+        }}</span>
         <div
           class="progress shadow"
           [style.height]="getHealthBarHeight() + 'px'"
@@ -239,17 +237,11 @@
     <img class="player-image" [src]="prefix + '/' + player.image" />
     <img
       class="finish-quest-bg"
-      [src]="prefix + '/assets/fight-screens/victory.png'"
+      src="{{ prefix + '/assets/fight-screens/victory.png' }}"
     />
   </div>
   <div *ngIf="defeat" class="finish-quest-screen">
-    <div class="h1 defeat-title text-white">
-      {{
-        quest.data.isAdventurePhase
-          ? 'ADVENTURE PHASE FAILED ☠️'
-          : 'QUEST FAILED ☠️'
-      }}
-    </div>
+    <div class="h1 defeat-title text-white">DEFEAT ☠️</div>
   </div>
 </div>
 

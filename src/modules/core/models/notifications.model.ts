@@ -12,3 +12,11 @@ export interface NotificationModel {
   opened: string[];
   claimed: string[];
 }
+
+export interface NotificationResponseModel {
+  notifications: NotificationModel[];
+  newNotificationsCount: number;
+  currentPage: number;
+  totalPages: number;
+  totalNotifications: number;
+}

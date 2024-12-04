@@ -193,17 +193,11 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
   triggerDialog(text: string, duration: number) {
     this.dialog = text;
     this.showDialog = true;
-    setTimeout(() => {
-      animateElement('.blacksmith-dialog', 'fadeIn');
+    animateElement('.blacksmith-dialog', 'fadeIn');
+    animateElement('.blacksmith-dialog', 'fadeOut', {
+      callback: () => (this.showDialog = false),
+      startingDelay: duration,
     });
-
-    setTimeout(() => {
-      animateElement(
-        '.blacksmith-dialog',
-        'fadeOut',
-        () => (this.showDialog = false)
-      );
-    }, duration);
   }
 
   getButtonSize() {

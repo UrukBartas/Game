@@ -9,8 +9,9 @@ import { ExportImportNftComponent } from './activities/export-import-nft/export-
 import { InventoryComponent } from './activities/inventory/inventory.component';
 import { LeadeboardComponent } from './activities/leadeboard/leadeboard.component';
 import { MissionsComponent } from './activities/missions/missions.component';
-import { PvPResultComponent } from './activities/pvp/pv-presult/pvp-result.component';
+import { AutoPvpFightComponent } from './activities/pvp/pvp-autofight/pvp-autofight.component';
 import { PvPFightComponent } from './activities/pvp/pvp-fight/pvp-fight.component';
+import { PvPResultComponent } from './activities/pvp/pvp-result/pvp-result.component';
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
 import { ShopComponent } from './activities/shop/shop.component';
 import { TheMineComponent } from './activities/the-mine/the-mine.component';
@@ -110,9 +111,15 @@ const routes: Routes = [
         title: 'Leaderboard',
       },
       {
-        path: 'arena',
+        path: 'arena/pvp',
         canActivate: [AuthGuard],
         component: PvPFightComponent,
+        title: 'Arena',
+      },
+      {
+        path: 'arena/auto',
+        canActivate: [AuthGuard],
+        component: AutoPvpFightComponent,
         title: 'Arena',
       },
       {
