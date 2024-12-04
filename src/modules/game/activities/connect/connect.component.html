@@ -33,9 +33,7 @@
             type="submit"
             class="btn btn-lg btn-primary save-button"
             (click)="
-              this.authService.nativePlatform
-                ? this.router.navigateByUrl('/create')
-                : walletService.modal.open()
+              walletService.modal.open()
             "
           >
             Enter the realms

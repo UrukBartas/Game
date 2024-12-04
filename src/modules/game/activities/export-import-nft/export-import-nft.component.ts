@@ -738,23 +738,9 @@ export class ExportImportNftComponent extends TemplatePage {
       const exportedUruks = Number(this.selectedUruksToExport.toString()) ?? 0;
       const fees = BigInt(await this.calculateFees(exportedUruks));
       const uruksInWei = ethers.parseEther(exportedUruks.toString());
-
-      const tx = await this.ERC20ContractService.exportCoins(
-        [uruksInWei],
-        fees
-      );
-
-      const receipt = await waitForTransaction({
-        hash: tx.hash,
+      await this.ERC20ContractService.triggerTx(() => {
+        return this.ERC20ContractService.exportCoins([uruksInWei], fees);
       });
-
-      this.store.dispatch(new RefreshPlayer());
-      this.spinnerService.hide();
-
-      if (receipt.status !== 'success') {
-        throw new Error('Error exporting items!');
-      }
-
       this.toastService.success(
         'The coins got exported, you will receive them in your wallet soon!'
       );
@@ -769,14 +755,12 @@ export class ExportImportNftComponent extends TemplatePage {
   }
 
   private async importERC20() {
-    await this.ERC20ContractService.importCoins([
-      ethers.parseEther(this.selectedUruksToExport.toString()),
-    ]);
-    this.spinnerService.hide();
-    this.toastService.success(
-      'The coins got imported, you will receive them in your inventory soon!'
-    );
-    this.store.dispatch(new RefreshPlayer());
+    await this.ERC20ContractService.triggerTx(() => {
+      return this.ERC20ContractService.importCoins([
+        ethers.parseEther(this.selectedUruksToExport.toString()),
+      ]);
+    }, 'The coins got imported, you will receive them in your inventory soon!');
+
     this.selectedUruksToExport = 0;
   }
 
