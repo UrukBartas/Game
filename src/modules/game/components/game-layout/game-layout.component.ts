@@ -82,8 +82,14 @@ export class GameLayoutComponent {
       icon: 'fa fa-bridge',
       onlyWeb3: true,
     },
+    {
+      path: 'https://app.magicsea.finance/swap?inputCurrency=0x4ab1edfe2706fcac991a41183036e62a8f1dabd3&outputCurrency=IOTA',
+      displayText: 'Get $URUKS',
+      class: 'buy-uruks animate__animated animate__pulse animate__infinite',
+      external: true,
+      image: this.prefix + '/assets/goldenuruks_compact.png',
+    },
   ];
-
   public isSidebarOpened = signal(true);
   public router = inject(Router);
   public activeRoute = inject(ActivatedRoute);

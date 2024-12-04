@@ -119,6 +119,7 @@ nav a {
 
 .topbar {
   position: relative;
+  z-index: 100;
   .level {
     position: absolute;
     right: 0;
@@ -215,5 +216,18 @@ nav a {
       }
       color: $white-100;
     }
+  }
+}
+
+.buy-uruks {
+  span {
+    color: #cbff47;
+  }
+}
+
+.active {
+  i,
+  span {
+    color: white;
   }
 }

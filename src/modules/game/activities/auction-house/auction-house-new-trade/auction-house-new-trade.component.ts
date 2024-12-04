@@ -106,4 +106,12 @@ export class AuctionHouseNewTradeComponent {
     if (!!selectedItem.materialData) return MarketItemType.MATERIAL;
     return null;
   }
+
+  public getQuantity() {
+    const stack = this.getSelectedItem()?.stack ?? 0;
+    const quantity = this.getSelectedItem()?.quantity ?? 0;
+    if (stack > 0) return stack;
+    if (quantity > 0) return quantity;
+    return 1;
+  }
 }

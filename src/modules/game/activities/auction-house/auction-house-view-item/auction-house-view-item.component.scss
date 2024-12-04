@@ -9,7 +9,6 @@
   justify-content: center;
   flex-direction: column;
 
-
   .preview-sell {
     flex-direction: column;
     gap: 10px;
@@ -21,4 +20,12 @@
     top: -10px;
     right: 20px;
   }
+}
+
+.demo-chart {
+  margin: 0; /* Eliminar márgenes */
+  padding: 0; /* Eliminar padding */
+  width: 100%; /* Ancho completo */
+  height: 100%; /* Altura completa */
+  overflow: hidden; /* Evitar scroll innecesario */
 }

@@ -8,6 +8,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { DndModule } from 'ngx-drag-drop';
+import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { TimeAgoPipe } from 'src/app/time-ago.pipe';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
@@ -19,6 +20,7 @@ import { ExpandInventoryTooltipComponent } from 'src/standalone/expand-inventory
 import { GenericItemTooltipComponent } from 'src/standalone/generic-item-tooltip/generic-item-tooltip.component';
 import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulette.component';
 import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
+import { MinMaxComboSelectorComponent } from 'src/standalone/min-max-combo-selector/min-max-combo-selector.component';
 import { SpinnerComponent } from 'src/standalone/spinner/spinner.component';
 import { TierizedProgressBarComponent } from 'src/standalone/tierized-progress-bar/tierized-progress-bar.component';
 import { SwiperModule } from 'swiper/angular';
@@ -85,7 +87,6 @@ import { PercentStatsComponent } from './components/stats-detail/only-stats/only
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { TitleGeneratorModalComponent } from './components/title-generator-modal/title-generator-modal.component';
 import { GameRoutingModule } from './game-routing.module';
-
 const directives = [
   ValidInputDirective,
   TextSizeDirective,
@@ -189,6 +190,8 @@ const pipes = [
     SwiperModule,
     ChanceDisplayerComponent,
     LootboxStatsDisplayerComponent,
+    NgxEchartsModule,
+    MinMaxComboSelectorComponent,
   ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe, StackPipe, ...pipes],

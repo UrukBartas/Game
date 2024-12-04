@@ -93,33 +93,48 @@ app-item-box {
   }
 }
 
+.tab-pane {
+  overflow: auto;
+}
+
 .modal-dialog {
   position: absolute !important;
-  top: 50%;
-  left: 48%;
   border: none !important;
-  transform: translate(-50%, -50%) !important;
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
-  @include media-breakpoint-down(sm) {
-    width: 93% !important;
-  }
+  overflow: auto;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  max-height: 100%;
+  max-width: 100%;
 
   .modal-content {
     background: transparent !important;
     width: fit-content;
+    @include media-breakpoint-down(sm) {
+      width: 90%;
+    }
     border: none !important;
+    height: 100%;
+    @include media-breakpoint-up(sm) {
+      justify-content: center;
+    }
   }
 }
 
 .mobile-menu {
-  left: 50%;
-  top: 50%;
-  margin: 0 !important;
+  height: 100%;
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
   li {
     background-color: $secondary !important;
-    color: $white-100 !important;
+    i,
+    span {
+      color: $white-100 !important;
+    }
     border-radius: 5px;
     box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.4);
     &.nested {

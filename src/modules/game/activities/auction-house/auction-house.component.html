@@ -415,7 +415,7 @@
                 </div>
 
                 <div
-                  class="iri text-center"
+                  class="iri text-center d-none d-md-block"
                   style="width: 100px"
                   [ngStyle]="{
                     color: getRarityColor(
@@ -448,11 +448,26 @@
                 </div>
                 <div class="price text-white" style="width: 100px">
                   <span>
-                    {{ marketListing.price | compressNumber }}
+                    {{
+                      marketListing?.closedPrice ?? marketListing?.price ?? 0
+                        | compressNumber
+                    }}
                     <img
                       class="uruks-icon pb-1"
                       src="{{ prefix + '/assets/goldenuruks.png' }}"
                   /></span>
+                </div>
+                <div
+                  class="number-bids"
+                  [ngClass]="{
+                    'text-muted':
+                      !marketListing.bids || marketListing.bids.length == 0,
+                    'text-third':
+                      !!marketListing.bids && marketListing.bids.length > 0,
+                  }"
+                >
+                  <strong>({{ marketListing.bids.length }})</strong>
+                  bids
                 </div>
               </div>
             } @empty {

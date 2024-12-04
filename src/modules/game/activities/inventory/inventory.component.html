@@ -205,7 +205,7 @@
       <span
         class="title-selector hoverable-text"
         (click)="isViewingPlayer ? false : openTitleSelector()"
-        >{{ (actualPlayer$ | async).title ?? 'The untitled' }}
+        >{{ (actualPlayer$ | async)?.title ?? 'The untitled' }}
         <i
           class="fa-solid fa-arrow-right-arrow-left"
           *ngIf="!isViewingPlayer"

@@ -14,8 +14,10 @@ export interface MarketListing {
   materialId?: number | null;
   miscellanyId?: number | null;
   price: number;
+  closedPrice?:number;
   createdAt: Date;
   updatedAt: Date;
+  closedAt: Date;
   status: ListingStatus;
   bids: Bid[];
   item?: Item | null;
