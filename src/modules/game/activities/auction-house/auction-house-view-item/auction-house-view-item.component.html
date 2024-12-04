@@ -92,7 +92,7 @@
                       <ng-container>
                         <tr
                           *ngFor="let stat of bids"
-                          class="d-flex align-items-center"
+                          class="d-flex align-items-center justify-content-between"
                         >
                           <td
                             [ngbTooltip]="uruks"
@@ -128,19 +128,23 @@
                           </td>
                           <td urSubtext>{{ stat?.createdAt | timeAgo }}</td>
                           <td *ngIf="stat?.bidder?.id != (player$ | async).id">
-                            <i
-                              class="fa-solid fa-check text-secondary pointer mt-1"
-                              urSubtitle
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
                               (click)="acceptOffer(stat.id)"
-                            ></i>
+                            >
+                              <i class="fa-solid fa-check"></i>
+                            </button>
                           </td>
 
                           <td *ngIf="stat?.bidder?.id == (player$ | async).id">
-                            <i
-                              class="fa-solid fa-xmark text-secondary pointer mt-1"
-                              urSubtitle
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
                               (click)="cancelOffer(stat.id)"
-                            ></i>
+                            >
+                              <i class="fa-solid fa-xmark"></i>
+                            </button>
                           </td>
                         </tr>
                       </ng-container>

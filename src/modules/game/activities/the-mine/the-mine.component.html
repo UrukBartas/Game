@@ -28,10 +28,15 @@
     </div>
     @if (tier) {
       <ul class="list-unstyled mt-2">
-        <li>
-          <strong class="text-third">x{{ tier.matFactor }}</strong>
-          materials per hour
-        </li>
+        @if (tier.matFactor > 1) {
+          <li>
+            <strong class="text-third">{{ tier.matFactor * 100 }}%</strong>
+            more materials per hour
+          </li>
+        } @else {
+          <li>Base material rate rewards</li>
+        }
+
         <li>
           <strong class="text-third"
             >{{ tier.lootboxChance * 100 | number: '1.2-2' }}%</strong
