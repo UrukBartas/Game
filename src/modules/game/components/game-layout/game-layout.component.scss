@@ -214,6 +214,14 @@ nav a {
         height: 33px;
         background: $third;
       }
+      .fa-skull {
+        width: 33px;
+        height: 33px;
+        color: $third;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
       color: $white-100;
     }
   }

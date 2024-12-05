@@ -298,7 +298,7 @@ tabset {
   align-items: center;
   background: #0000004a;
   flex-direction: column;
-  z-index: 10;
+  z-index: 1000;
   app-item-box {
     animation: glowing-upgrade 4s infinite;
     position: relative;

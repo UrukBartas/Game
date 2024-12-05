@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { MarketListing } from 'src/modules/core/models/market-listing.model';
 import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
+import { RefreshPlayer } from 'src/store/main.store';
 export enum MarketItemType {
   ITEM = 'ITEM',
   CONSUMABLE = 'CONSUMABLE',
@@ -64,27 +65,39 @@ export class AuctionHouseService extends ApiBaseService {
   }
 
   public addNewMarketListing(payload: NewMarketListingPayloadDTO) {
-    return this.post('/market-listings/new', payload);
+    return this.post('/market-listings/new', payload).pipe(
+      tap(() => this.store.dispatch(new RefreshPlayer()))
+    );
   }
 
   public addNewOffer(payload: { idListing: number; priceOffered: number }) {
-    return this.post('/market-listing/offer/place', payload);
+    return this.post('/market-listing/offer/place', payload).pipe(
+      tap(() => this.store.dispatch(new RefreshPlayer()))
+    );
   }
 
   public cancelOffer(payload: { idBid: number }) {
-    return this.post('/market-listing/offer/cancel', payload);
+    return this.post('/market-listing/offer/cancel', payload).pipe(
+      tap(() => this.store.dispatch(new RefreshPlayer()))
+    );
   }
 
   public acceptOffer(payload: { idListing: number; idBid: number }) {
-    return this.post('/market-listing/offer/accept', payload);
+    return this.post('/market-listing/offer/accept', payload).pipe(
+      tap(() => this.store.dispatch(new RefreshPlayer()))
+    );
   }
 
   public buy(idListing: number) {
-    return this.post('/market-listing/buy/' + idListing, {});
+    return this.post('/market-listing/buy/' + idListing, {}).pipe(
+      tap(() => this.store.dispatch(new RefreshPlayer()))
+    );
   }
 
   public cancel(idListing: number) {
-    return this.post('/market-listing/cancel/' + idListing, {});
+    return this.post('/market-listing/cancel/' + idListing, {}).pipe(
+      tap(() => this.store.dispatch(new RefreshPlayer()))
+    );
   }
 
   public getBids(idListing: number) {

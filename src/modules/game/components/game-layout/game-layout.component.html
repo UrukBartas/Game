@@ -121,7 +121,23 @@
               [image]="'/' + player.image"
             >
             </app-item-box>
+            <strong>{{ player.name }}</strong>
             Level {{ player.level }}
+          </li>
+          <li
+            (click)="
+              router.navigate(['/inventory'], {
+                queryParams: { tab: 1 },
+                replaceUrl: true,
+              })
+            "
+          >
+            <a class="dropdown-item px-2 py-1">
+              <div class="d-flex align-items-center">
+                <div class="fa-solid fa-skull mr-1"></div>
+                <span>{{ 'Character' }}</span>
+              </div>
+            </a>
           </li>
           <li (click)="router.navigateByUrl('/quests')">
             <a class="dropdown-item px-2 py-1">

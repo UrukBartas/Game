@@ -76,6 +76,7 @@ export class ExportImportNftComponent extends TemplatePage {
   public activeCorrectNetwork = this.activeNetworkId.pipe(
     filter((entry) => !!entry)
   );
+  public toNumber = Number;
   public math = Math;
   @ViewChild('staticTabs', { static: false }) staticTabs?: TabsetComponent;
 
