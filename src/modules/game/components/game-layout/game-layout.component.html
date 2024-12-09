@@ -124,6 +124,7 @@
             <strong>{{ player.name }}</strong>
             Level {{ player.level }}
           </li>
+          <hr />
           <li
             (click)="
               router.navigate(['/inventory'], {
@@ -139,6 +140,7 @@
               </div>
             </a>
           </li>
+          <hr />
           <li (click)="router.navigateByUrl('/quests')">
             <a class="dropdown-item px-2 py-1">
               <div class="d-flex align-items-center">

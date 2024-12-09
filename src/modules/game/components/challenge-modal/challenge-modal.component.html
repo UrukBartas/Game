@@ -28,6 +28,13 @@
       <p class="text-white" urText>
         {{ challenger ? 'Do you want to proceed?' : 'Do you accept the duel?' }}
       </p>
+
+      <p *ngIf="playerHasHigherMMR" class="text-danger" urText>
+        * Your AP is higher than the opponent's AP
+      </p>
+      <p *ngIf="autobattleTimeout" class="text-danger" urText>
+        * You have to wait between battles: {{ autobattleTimeout }}
+      </p>
       <p
         *ngIf="challenger"
         class="text-white"
