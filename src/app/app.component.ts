@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { StatusBar } from '@capacitor/status-bar';
 import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
 import { NgbTooltipConfig } from '@ng-bootstrap/ng-bootstrap';
+import { RouteTrackingService } from 'src/modules/core/services/route-tracking.service';
 import { AuthService } from 'src/services/auth.service';
 import { SessionService } from 'src/services/session.service';
 import { WalletService } from 'src/services/wallet.service';
@@ -15,6 +16,8 @@ export class AppComponent {
   public tooltipService = inject(NgbTooltipConfig);
   public sessionService = inject(SessionService);
   public authService = inject(AuthService);
+  public routeTrackingService = inject(RouteTrackingService);
+
   constructor() {
     this.lockOrientation();
     this.tooltipService.container = 'body';

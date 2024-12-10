@@ -33,6 +33,10 @@ export class PlayerService extends ApiBaseService {
     return this.get(`/cost`);
   }
 
+  public getMultichainStakedAmount$(): Observable<number> {
+    return this.get('/get-multichain-staked-amount');
+  }
+
   public upgradeStat(stat: string): Observable<PlayerModel> {
     return this.post(`/upgrade/${stat}`, {});
   }

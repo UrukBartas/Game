@@ -3,11 +3,11 @@
     class="tier"
     *ngFor="let tier of tiers; let i = index"
     [ngbTooltip]="tooltipTemplate"
-    [tooltipContext]="{ tier: tier }"
+    [tooltipContext]="{ tier: tier, usedAs: true }"
   >
     <img
       *ngIf="tier.image"
-      [src]="prefix+tier.image"
+      [src]="prefix + tier.image"
       class="tier-image"
       alt="Tier Image"
     />

@@ -17,6 +17,7 @@ import {
   of,
   Subject,
   switchMap,
+  take,
   tap,
 } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
@@ -233,6 +234,12 @@ export class InventoryComponent extends TemplatePage {
             await Preferences.remove({ key: address });
           }
         }
+      }
+    });
+    this.route.queryParams.pipe(take(1)).subscribe((queryParams) => {
+      const { tab } = queryParams;
+      if (!!tab) {
+        this.activeSlideIndex = Number(tab);
       }
     });
   }

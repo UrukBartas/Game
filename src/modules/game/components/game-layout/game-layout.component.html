@@ -95,10 +95,10 @@
           >
           </app-item-box>
           <div
-            *ngIf="(notifications$ | async) > 0"
+            *ngIf="(notifications$ | async)?.newNotificationsCount > 0"
             class="notifications notifications-player"
           >
-            {{ notifications$ | async }}
+            {{ (notifications$ | async)?.newNotificationsCount }}
           </div>
           <div
             *ngIf="questTimerService.time() as questInProgress"
@@ -121,12 +121,30 @@
               [image]="'/' + player.image"
             >
             </app-item-box>
+            <strong>{{ player.name }}</strong>
             Level {{ player.level }}
           </li>
+          <hr />
+          <li
+            (click)="
+              router.navigate(['/inventory'], {
+                queryParams: { tab: 1 },
+                replaceUrl: true,
+              })
+            "
+          >
+            <a class="dropdown-item px-2 py-1">
+              <div class="d-flex align-items-center">
+                <div class="fa-solid fa-skull mr-1"></div>
+                <span>{{ 'Character' }}</span>
+              </div>
+            </a>
+          </li>
+          <hr />
           <li (click)="router.navigateByUrl('/quests')">
             <a class="dropdown-item px-2 py-1">
               <div class="d-flex align-items-center">
-                <div class="icon fa-sword mr-1"></div>
+                <div class="fa-sword mr-1"></div>
                 <span>{{ questTimerService.time() ?? 'Quests' }}</span>
               </div>
             </a>
@@ -139,10 +157,10 @@
                 <span>Inbox</span>
               </div>
               <div
-                *ngIf="(notifications$ | async) > 0"
+                *ngIf="(notifications$ | async)?.newNotificationsCount > 0"
                 class="notifications notifications-link"
               >
-                {{ notifications$ | async }}
+                {{ (notifications$ | async)?.newNotificationsCount }}
               </div>
             </a>
           </li>
@@ -223,17 +241,21 @@
 <ng-template #menu>
   <ul class="list-group flex-grow-1">
     @for (route of routesNavigation; track route.path) {
-      @if (route.path) {
-        <li
-          class="list-group-item bg-primary d-flex justify-content-{{
-            !isSidebarOpened() ? 'between' : 'center'
-          }} {{ route.class ? route.class() : '' }}"
-          (click)="modalRef ? modalRef.hide() : true"
-          [ngClass]="{ active: router.url == route.path }"
-          [routerLink]="[route.path]"
-          *ngIf="route.display ? route.display() : true"
-        >
-          <i class="{{ route.icon }}"></i>
+      <li
+        class="list-group-item bg-primary d-flex justify-content-{{
+          !isSidebarOpened() ? 'between' : 'center'
+        }} {{ route.class ?? '' }}"
+        (click)="modalRef ? modalRef.hide() : true"
+        [ngClass]="{ active: router.url == route.path }"
+        [routerLink]="[route.path]"
+        *ngIf="route.display ? route.display() : true"
+      >
+        <ng-template #linkContent>
+          @if (!!route.image) {
+            <img src="{{ route.image }}" alt="" style="max-width: 21px" />
+          } @else {
+            <i class="{{ route.icon }}"></i>
+          }
           @if (!isSidebarOpened() || displayingFullScreenModal) {
             <span class="d-sm-flex"
               >{{ route.displayText }}
@@ -247,31 +269,27 @@
               ></i
             ></span>
           }
-        </li>
-      } @else {
-        <li
-          class="list-group-item bg-primary d-flex justify-content-{{
-            !isSidebarOpened() ? 'between' : 'center'
-          }} {{ route.class ? route.class() : '' }}"
-          (click)="route.click(); !route.nested ? modalRef.hide() : false"
-          *ngIf="route.display ? route.display() : true"
+        </ng-template>
+
+        <a
+          *ngIf="route.external; else internalLink"
+          [href]="route.path"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="d-flex align-items-center justify-content-center text-decoration-none w-100 gap-1"
         >
-          <i class="{{ route.icon }}"></i>
-          @if (!isSidebarOpened() || displayingFullScreenModal) {
-            <span class="d-sm-flex"
-              >{{ route.displayText }}
-              <i
-                class="fa-solid mt-1 {{
-                  !!route.expanded && route.expanded()
-                    ? 'fa-turn-down text-white'
-                    : 'fa-turn-up text-dark'
-                }}  mx-2"
-                *ngIf="route.nested"
-              ></i>
-            </span>
-          }
-        </li>
-      }
+          <ng-container *ngTemplateOutlet="linkContent"></ng-container>
+        </a>
+
+        <ng-template #internalLink>
+          <a
+            [routerLink]="[route.path]"
+            class="d-flex align-items-center justify-content-center text-decoration-none w-100 gap-1"
+          >
+            <ng-container *ngTemplateOutlet="linkContent"></ng-container>
+          </a>
+        </ng-template>
+      </li>
     }
   </ul>
 </ng-template>

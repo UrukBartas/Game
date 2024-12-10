@@ -8,6 +8,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { DndModule } from 'ngx-drag-drop';
+import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { TimeAgoPipe } from 'src/app/time-ago.pipe';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
@@ -19,13 +20,14 @@ import { ExpandInventoryTooltipComponent } from 'src/standalone/expand-inventory
 import { GenericItemTooltipComponent } from 'src/standalone/generic-item-tooltip/generic-item-tooltip.component';
 import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulette.component';
 import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
+import { MinMaxComboSelectorComponent } from 'src/standalone/min-max-combo-selector/min-max-combo-selector.component';
 import { SpinnerComponent } from 'src/standalone/spinner/spinner.component';
 import { TierizedProgressBarComponent } from 'src/standalone/tierized-progress-bar/tierized-progress-bar.component';
 import { SwiperModule } from 'swiper/angular';
 import { ChainSwitcherComponent } from '../../standalone/chain-switcher/chain-switcher.component';
-import { ChanceDisplayerComponent } from "../../standalone/chance-displayer/chance-displayer.component";
+import { ChanceDisplayerComponent } from '../../standalone/chance-displayer/chance-displayer.component';
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
-import { LootboxStatsDisplayerComponent } from "../../standalone/lootbox-stats-displayer/lootbox-stats-displayer.component";
+import { LootboxStatsDisplayerComponent } from '../../standalone/lootbox-stats-displayer/lootbox-stats-displayer.component';
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
 import { DoubleClickDirective } from '../core/directives/double-click.directive';
 import { SubtextSizeDirective } from '../core/directives/subtext-size.directive';
@@ -55,8 +57,9 @@ import { InventoryComponent } from './activities/inventory/inventory.component';
 import { ItemSetModalComponent } from './activities/inventory/item-set-modal/item-set-modal.component';
 import { LeadeboardComponent } from './activities/leadeboard/leadeboard.component';
 import { MissionsComponent } from './activities/missions/missions.component';
-import { PvPResultComponent } from './activities/pvp/pv-presult/pvp-result.component';
+import { AutoPvpFightComponent } from './activities/pvp/pvp-autofight/pvp-autofight.component';
 import { PvPFightComponent } from './activities/pvp/pvp-fight/pvp-fight.component';
+import { PvPResultComponent } from './activities/pvp/pvp-result/pvp-result.component';
 import { QuestFightComponent } from './activities/quests/quest-fight/quest-fight.component';
 import { QuestPickerComponent } from './activities/quests/quest-picker/quest-picker.component';
 import { QuestProgressComponent } from './activities/quests/quest-progress/quest-progress.component';
@@ -68,7 +71,7 @@ import { StakeRemoveRequestModalComponent } from './activities/the-mine/stake-re
 import { TheMineInfoModalComponent } from './activities/the-mine/the-mine-help/the-mine-info-modal.component';
 import { TheMineComponent } from './activities/the-mine/the-mine.component';
 import { BaseInventoryComponent } from './components/base-inventory/base-inventory.component';
-import { ChallengeModalComponent } from './components/challengee-modal/challenge-modal.component';
+import { ChallengeModalComponent } from './components/challenge-modal/challenge-modal.component';
 import { ConsumableModalComponent } from './components/consumable-modal/consumable-modal.component';
 import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
 import { FightHistoricComponent } from './components/fight-historic/fight-historic.component';
@@ -77,14 +80,13 @@ import { InventoryTopbarComponent } from './components/inventory-topbar/inventor
 import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
 import { MaterialsInventoryComponent } from './components/materials-inventory/materials-inventory.component';
 import { MiscInventoryComponent } from './components/misc-inventory/misc-inventory.component';
+import { NamePlayerComponent } from './components/name-player/name-player.component';
 import { GenericStatsComponent } from './components/stats-detail/only-stats/only-stats/generic-stats/generic-stats.component';
 import { OnlyStatsComponent } from './components/stats-detail/only-stats/only-stats/only-stats.component';
 import { PercentStatsComponent } from './components/stats-detail/only-stats/only-stats/percent-stats/percent-stats.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { TitleGeneratorModalComponent } from './components/title-generator-modal/title-generator-modal.component';
 import { GameRoutingModule } from './game-routing.module';
-import { NamePlayerComponent } from './components/name-player/name-player.component';
-
 const directives = [
   ValidInputDirective,
   TextSizeDirective,
@@ -117,6 +119,7 @@ const components = [
   AuctionHouseNewTradeComponent,
   AuctionHouseComponent,
   MissionsComponent,
+  AutoPvpFightComponent,
 ];
 
 const pipes = [
@@ -126,7 +129,7 @@ const pipes = [
   StackPipe,
   CompressNumberPipe,
   TimeAgoPipe,
-  CompareItemPipe
+  CompareItemPipe,
 ];
 
 @NgModule({
@@ -152,7 +155,7 @@ const pipes = [
     StakeRemoveRequestModalComponent,
     TitleGeneratorModalComponent,
     ClassSelectorComponent,
-    NamePlayerComponent
+    NamePlayerComponent,
   ],
   imports: [
     ...directives,
@@ -186,9 +189,11 @@ const pipes = [
     TheMineInfoModalComponent,
     SwiperModule,
     ChanceDisplayerComponent,
-    LootboxStatsDisplayerComponent
-],
+    LootboxStatsDisplayerComponent,
+    NgxEchartsModule,
+    MinMaxComboSelectorComponent,
+  ],
   exports: [GameLayoutComponent],
-  providers: [DecimalPipe, AsyncPipe, StackPipe,...pipes],
+  providers: [DecimalPipe, AsyncPipe, StackPipe, ...pipes],
 })
 export class GameModule {}

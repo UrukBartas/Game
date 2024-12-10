@@ -103,6 +103,7 @@ export class EditCharacterComponent extends TemplatePage {
         repeatPassword: ['', this.editing ? [] : [Validators.required]],
         disablePVP: [false, []],
         disableSound: [false, []],
+        disableEmailNotifications: [false, []],
         ignoreMine: [false, []],
       },
       this.editing ? {} : { validator: passwordMatchingValidator() }
@@ -200,6 +201,7 @@ export class EditCharacterComponent extends TemplatePage {
         email,
         disablePVP: configuration?.disablePVP,
         disableSound: configuration?.disableSound,
+        disableEmailNotifications: configuration?.disableEmailNotifications,
         ignoreMine: configuration?.ignoreMine,
       });
     }
@@ -241,15 +243,17 @@ export class EditCharacterComponent extends TemplatePage {
       password,
       disablePVP,
       disableSound,
+      disableEmailNotifications,
       ignoreMine,
     } = this.form.value;
     const configuration: PlayerConfiguration = {
       disablePVP,
       disableSound,
+      disableEmailNotifications,
       ignoreMine,
     };
     const state = this.store.selectSnapshot(MainState.getState);
-    if (this.authService.nativePlatform || !state.web3) {
+    if (!state.web3) {
       this.playerService
         .createByEmail(email, name, clazz, image, password, configuration)
         .pipe(take(1))
@@ -267,11 +271,18 @@ export class EditCharacterComponent extends TemplatePage {
   }
 
   edit() {
-    const { email, password, disablePVP, disableSound, ignoreMine } =
-      this.form.value;
+    const {
+      email,
+      password,
+      disablePVP,
+      disableSound,
+      disableEmailNotifications,
+      ignoreMine,
+    } = this.form.value;
     const configuration: PlayerConfiguration = {
       disablePVP,
       disableSound,
+      disableEmailNotifications,
       ignoreMine,
     };
 

@@ -48,14 +48,15 @@
         >
         <span
           urText
+          style="margin-bottom: -1vh"
           [ngStyle]="{
             color: getRarityColor(getRarityBasedOnIRI(IRI)),
           }"
           >{{ player.name }} (level {{ player.level }})</span
         >
-        <span urSubtext class="text-light">{{
-          player?.title ?? 'The untitled'
-        }}</span>
+        <span urSubtext style="margin-top: -1vh" class="text-light">
+          {{ player?.title ?? 'The untitled' }}
+        </span>
         <div
           class="progress shadow"
           [style.height]="getHealthBarHeight() + 'px'"
@@ -162,12 +163,13 @@
         </div>
         <span
           urText
+          style="margin-bottom: -1vh"
           [ngStyle]="{
             color: getRarityColor(getRarityBasedOnIRI(IRI_ENEMY)),
           }"
           >{{ enemy.name }} (level {{ enemy.level }})</span
         >
-        <span urSubtext class="text-light">{{
+        <span urSubtext style="margin-top: -1vh" class="text-light">{{
           enemy?.title ?? 'The untitled'
         }}</span>
         <div

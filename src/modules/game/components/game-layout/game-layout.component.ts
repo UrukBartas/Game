@@ -20,6 +20,7 @@ import {
 } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component';
 import { InboxModalComponent } from '../inbox-modal/inbox-modal.component';
+import { NotificationResponseModel } from 'src/modules/core/models/notifications.model';
 
 @Component({
   selector: 'app-game-layout',
@@ -37,7 +38,7 @@ export class GameLayoutComponent {
     {
       path: '/presale',
       displayText: 'Black market',
-      icon: 'fa fa-skull-crossbones',
+      icon: 'text-rainbow fa fa-skull-crossbones',
     },
     {
       path: '/inventory',
@@ -81,8 +82,14 @@ export class GameLayoutComponent {
       icon: 'fa fa-bridge',
       onlyWeb3: true,
     },
+    {
+      path: 'https://app.magicsea.finance/swap?inputCurrency=0x4ab1edfe2706fcac991a41183036e62a8f1dabd3&outputCurrency=IOTA',
+      displayText: 'Get $URUKS',
+      class: 'buy-uruks animate__animated animate__pulse animate__infinite',
+      external: true,
+      image: this.prefix + '/assets/goldenuruks_compact.png',
+    },
   ];
-
   public isSidebarOpened = signal(true);
   public router = inject(Router);
   public activeRoute = inject(ActivatedRoute);
@@ -97,16 +104,8 @@ export class GameLayoutComponent {
   public displayingFullScreenModal = false;
   public modalRef?: BsModalRef;
   public loggedWithemail = this.authService.loggedWithEmail;
-  public notifications$: Observable<number> = this.store
-    .select(MainState.getState)
-    .pipe(
-      map(
-        ({ player, notifications }) =>
-          notifications?.filter(
-            (notification) => !notification.opened.includes(player.id)
-          ).length ?? 0
-      )
-    );
+  public notifications$: Observable<NotificationResponseModel> = this.store.select(MainState.getNotifications)
+
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);

@@ -159,30 +159,34 @@ export abstract class BaseFightComponent extends TemplatePage {
 
   triggerVictory(result: FightResultModel) {
     animateElement('.player-image', 'pulse');
-    animateElement('.enemy-image', 'hinge', () => {
-      this.victory = true;
-      this.store.dispatch(new EndFight());
-      setTimeout(() => {
-        animateElement('.finish-quest-screen', 'jackInTheBox');
-        setTimeout(() => {
-          this.afterVictory(result);
-        }, 1500);
-      });
+    animateElement('.enemy-image', 'hinge', {
+      callback: () => {
+        this.victory = true;
+        this.store.dispatch(new EndFight());
+        animateElement('.finish-quest-screen', 'jackInTheBox', {
+          callback: () => this.afterVictory(result),
+          callbackTimeout: 1000,
+          callbackSafeTimeout: 2000,
+        });
+      },
+      callbackSafeTimeout: 2000,
     });
     this.cdr.detectChanges();
   }
 
   triggerDefeat(result: FightResultModel) {
     animateElement('.enemy-image', 'pulse');
-    animateElement('.player-image', 'hinge', () => {
-      this.defeat = true;
-      this.store.dispatch(new EndFight());
-      setTimeout(() => {
-        animateElement('.defeat-title', 'jackInTheBox');
-        setTimeout(() => {
-          this.afterDefeat(result);
-        }, 1500);
-      });
+    animateElement('.player-image', 'hinge', {
+      callback: () => {
+        this.defeat = true;
+        this.store.dispatch(new EndFight());
+        animateElement('.defeat-title', 'jackInTheBox', {
+          callback: () => this.afterDefeat(result),
+          callbackTimeout: 1000,
+          callbackSafeTimeout: 2000,
+        });
+      },
+      callbackSafeTimeout: 2000,
     });
     this.cdr.detectChanges();
   }

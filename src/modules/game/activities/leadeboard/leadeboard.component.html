@@ -148,22 +148,22 @@
       </div>
       <div class="list-leaderboard-item-right">
         <div
-          *ngIf="
-            getPlayerState(player.id) === playerStates.ONLINE &&
-            player.id !== actualAddress
-          "
+          *ngIf="player.id !== actualAddress"
           class="duel-btn"
-          [class.disabled]="player.configuration?.disablePVP"
+          [ngClass]="{
+            'auto-duel-btn': getPlayerState(player.id) === playerStates.OFFLINE,
+          }"
           [ngbTooltip]="tooltipTemplate"
           [tooltipContext]="{
-            text: player.configuration?.disablePVP
-              ? 'Player has disabled PVP'
-              : 'Challenge player',
+            text:
+              getPlayerState(player.id) === playerStates.OFFLINE
+                ? 'Autobattle player'
+                : 'Challenge player',
           }"
           (click)="challengePlayer(player)"
           [attr.disabled]="player.configuration?.disablePVP ? true : null"
         >
-          <div class="icon fa-sword"></div>
+          <div class="fa-sword"></div>
         </div>
 
         <i

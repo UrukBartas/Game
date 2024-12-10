@@ -357,23 +357,9 @@
               !!exportTypeActive
                 ? !isAllowedNetwork(activeNetworkId.getValue())
                   ? 'Incorrect chain connected'
-                  : 'Export'
-                : 'Import'
+                  : 'Export ' + allSelectedItems.length + ' items'
+                : 'Import ' + allSelectedItems.length + ' items'
             }}
-            @if (!!exportTypeActive) {
-              <div
-                class="display-fee"
-                *ngIf="getActiveNetworkImg() as activeNetwork"
-              >
-                <img src="{{ prefix + activeNetwork }}" />
-                <span>{{
-                  calculateFeesBasedOnSelectedItems(
-                    getNFTExportFee$ | async,
-                    flattenIdsAndTypesFromSelection()[0].length
-                  ) | number
-                }}</span>
-              </div>
-            }
           </div>
         </button>
       } @else {
@@ -397,20 +383,44 @@
               !!exportTypeActive
                 ? !isAllowedNetwork(activeNetworkId.getValue())
                   ? 'Incorrect chain connected'
-                  : 'Export'
-                : 'Import'
+                  : 'Export ' + selectedUruksToExport.toFixed(2) + ' GUs'
+                : 'Import ' + selectedUruksToExport.toFixed(2) + ' GUs'
             }}
-            @if (!!exportTypeActive) {
-              <div
-                class="display-fee"
-                *ngIf="getActiveNetworkImg() as activeNetwork"
-              >
-                <img src="{{ prefix + activeNetwork }}" />
-                <span>{{ getERC20ExportFee$ | async | number }}</span>
-              </div>
-            }
           </div>
         </button>
+      }
+
+      @if (!!exportTypeActive) {
+        <ng-container *ngIf="getActiveNetworkImg() as activeNetwork">
+          <ng-container
+            *ngIf="
+              exportingObjectTypeActive == 'nft'
+                ? (calculateFeesBasedOnSelectedItems(
+                    getNFTExportFee$ | async,
+                    flattenIdsAndTypesFromSelection()[0].length
+                  ) | number)
+                : math.floor(
+                    selectedUruksToExport > 1000
+                      ? selectedUruksToExport / 1000 + 1
+                      : selectedUruksToExport != 0
+                        ? 1
+                        : 0
+                  ) * (getERC20ExportFee$ | async) as fee
+            "
+          >
+            <div
+              class="display-fee w-100 justify-content-end"
+              style="font-size: 0.8rem"
+              *ngIf="!!fee && toNumber(fee ?? 0) > 0"
+            >
+              <img src="{{ prefix + activeNetwork }}" />
+              <span class="text-light">
+                Processing fees:
+                {{ fee }}
+              </span>
+            </div></ng-container
+          ></ng-container
+        >
       }
     </div>
     <div

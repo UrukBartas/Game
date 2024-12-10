@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { NotificationModel } from 'src/modules/core/models/notifications.model';
+import {
+  NotificationModel,
+  NotificationResponseModel,
+} from 'src/modules/core/models/notifications.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 
 @Injectable({
@@ -27,8 +30,11 @@ export class NotificationsService extends ApiBaseService {
     });
   }
 
-  getNotifications(): Observable<NotificationModel[]> {
-    return this.get('/');
+  getNotifications(
+    page = 1,
+    pageSize = 10
+  ): Observable<NotificationResponseModel> {
+    return this.post('/', { page, pageSize });
   }
 
   openNotification(notificationId: number): Observable<void> {

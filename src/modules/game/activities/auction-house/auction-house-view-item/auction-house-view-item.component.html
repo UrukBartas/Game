@@ -68,65 +68,221 @@
             Stack of {{ listing.quantity }}
           </div>
         </div>
-        <ng-container *ngIf="getBids$ | async as bids">
-          <div
-            class="table-responsive stat-table"
-            style="max-height: 15vh; overflow: auto; min-height: 15vh"
-            *ngIf="!!bids && bids.length > 0"
-          >
-            <span class="w-100 text-light"> Offers for this item</span>
-            <table class="table table-dark">
-              <tbody>
-                <ng-container>
-                  <tr
-                    *ngFor="let stat of bids"
-                    class="d-flex align-items-center"
-                  >
-                    <td *ngIf="stat?.bidder?.id != (player$ | async).id">
-                      <i
-                        class="fa-solid fa-check text-secondary pointer mt-1"
-                        urSubtitle
-                        (click)="acceptOffer(stat.id)"
-                      ></i>
-                    </td>
+        <tabset class="w-100">
+          <tab>
+            <ng-template tabHeading>
+              <span class="text-white"
+                >📣
+                @if (
+                  viewportService.screenSize != 'xs' &&
+                  viewportService.screenSize != 'sm'
+                ) {
+                  Bids
+                }
+              </span>
+            </ng-template>
+            <ng-container *ngIf="getBids$ | async as bids">
+              @if (!!bids && bids.length > 0) {
+                <div
+                  class="table-responsive stat-table"
+                  style="max-height: 15vh; overflow: auto; min-height: 15vh"
+                >
+                  <table class="table table-dark">
+                    <tbody>
+                      <ng-container>
+                        <tr
+                          *ngFor="let stat of bids"
+                          class="d-flex align-items-center justify-content-between"
+                        >
+                          <td
+                            [ngbTooltip]="uruks"
+                            [tooltipContext]="{
+                              uruks: stat?.amount,
+                            }"
+                            urSubtext
+                          >
+                            <div
+                              class="price text-white text-center"
+                              [ngbTooltip]="uruks"
+                              [tooltipContext]="{
+                                uruks: stat?.amount ?? 0,
+                              }"
+                            >
+                              {{ stat?.amount ?? 0 | compressNumber }}
+                              <img
+                                class="uruks-icon pb-1"
+                                src="{{ prefix + '/assets/goldenuruks.png' }}"
+                                style="width: 20px"
+                              />
+                            </div>
+                          </td>
+                          <td urSubtext>
+                            <app-item-box
+                              [ngbTooltip]="stat?.bidder?.name ?? 'Unknown'"
+                              class="rounded"
+                              [height]="getPlayerImageSize()"
+                              [width]="getPlayerImageSize()"
+                              [image]="stat?.bidder?.image"
+                            >
+                            </app-item-box>
+                          </td>
+                          <td urSubtext>{{ stat?.createdAt | timeAgo }}</td>
+                          <td *ngIf="stat?.bidder?.id != (player$ | async).id">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              (click)="acceptOffer(stat.id)"
+                            >
+                              <i class="fa-solid fa-check"></i>
+                            </button>
+                          </td>
 
-                    <td *ngIf="stat?.bidder?.id == (player$ | async).id">
-                      <i
-                        class="fa-solid fa-xmark text-secondary pointer mt-1"
-                        urSubtitle
-                        (click)="cancelOffer(stat.id)"
-                      ></i>
-                    </td>
-                    <td
-                      [ngbTooltip]="uruks"
-                      [tooltipContext]="{
-                        uruks: stat?.amount,
-                      }"
-                      urSubtext
-                    >
-                      <div
-                        class="price text-white text-center"
-                        [ngbTooltip]="uruks"
-                        [tooltipContext]="{
-                          uruks: stat?.amount ?? 0,
-                        }"
-                      >
-                        {{ stat?.amount ?? 0 | compressNumber }}
-                        <img
-                          class="uruks-icon pb-1"
-                          src="{{ prefix + '/assets/goldenuruks.png' }}"
-                          style="width: 20px"
-                        />
-                      </div>
-                    </td>
-                    <td urSubtext>{{ stat?.bidder?.name ?? 'Unknown' }}</td>
-                    <td urSubtext>{{ stat?.createdAt | timeAgo }}</td>
-                  </tr>
-                </ng-container>
-              </tbody>
-            </table>
-          </div></ng-container
-        >
+                          <td *ngIf="stat?.bidder?.id == (player$ | async).id">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              (click)="cancelOffer(stat.id)"
+                            >
+                              <i class="fa-solid fa-xmark"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              } @else {
+                <span class="text-light">No offers for now.</span>
+              }
+            </ng-container>
+          </tab>
+
+          <tab>
+            <ng-template tabHeading>
+              <span class="text-white"
+                >🤝
+                @if (
+                  viewportService.screenSize != 'xs' &&
+                  viewportService.screenSize != 'sm'
+                ) {
+                  Historic
+                }
+              </span>
+            </ng-template>
+
+            <ng-container
+              *ngIf="getHistoricalTrades$ | async as historicalTrades"
+            >
+              @if (!!historicalTrades && historicalTrades.length > 0) {
+                <p class="text-light">
+                  Historic trades with the same item type are displayed here.
+                </p>
+                <div
+                  class="table-responsive stat-table"
+                  style="max-height: 15vh; overflow: auto; min-height: 15vh"
+                >
+                  <table class="table table-dark">
+                    <tbody>
+                      <ng-container>
+                        <tr
+                          *ngFor="let trade of historicalTrades"
+                          class="d-flex align-items-center"
+                        >
+                          <td
+                            [ngbTooltip]="uruks"
+                            [tooltipContext]="{
+                              uruks: trade?.closedPrice ?? trade?.price ?? 0,
+                            }"
+                            urSubtext
+                          >
+                            <div
+                              class="price text-white text-center"
+                              [ngbTooltip]="uruks"
+                              [tooltipContext]="{
+                                uruks: trade?.closedPrice ?? trade?.price ?? 0,
+                              }"
+                            >
+                              {{
+                                trade?.closedPrice ?? trade?.price ?? 0
+                                  | compressNumber
+                              }}
+                              <img
+                                class="uruks-icon pb-1"
+                                src="{{ prefix + '/assets/goldenuruks.png' }}"
+                                style="width: 20px"
+                              />
+                            </div>
+                          </td>
+                          <td urSubtext>
+                            <app-item-box
+                              [ngbTooltip]="
+                                trade?.tradeCloser?.name ?? 'Unknown'
+                              "
+                              class="rounded"
+                              [height]="getPlayerImageSize()"
+                              [width]="getPlayerImageSize()"
+                              [image]="trade?.tradeCloser?.image"
+                            >
+                            </app-item-box>
+                          </td>
+                          <td urSubtext>{{ trade?.closedAt | timeAgo }}</td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              } @else {
+                <span class="text-light">Not enough data.</span>
+              }
+            </ng-container>
+          </tab>
+          <tab>
+            <ng-template tabHeading>
+              <span class="text-white"
+                >📈
+                @if (
+                  viewportService.screenSize != 'xs' &&
+                  viewportService.screenSize != 'sm'
+                ) {
+                  Chart
+                }
+              </span>
+            </ng-template>
+            <ng-container *ngIf="getPriceSeries$ | async as priceSeries">
+              @if (priceSeries.series && priceSeries.series.length > 1) {
+                <p class="text-light">
+                  Prices are based on item's type. Level or rarity is not taken
+                  in consideration.
+                </p>
+                <div class="d-flex justify-content-center flex-column py-2">
+                  <div
+                    class="price text-white text-center"
+                    [ngbTooltip]="uruks"
+                    [tooltipContext]="{
+                      uruks: priceSeries.avg ?? 0,
+                    }"
+                  >
+                    AVG: {{ priceSeries.avg ?? 0 | compressNumber }}
+                    <img
+                      class="uruks-icon pb-1"
+                      src="{{ prefix + '/assets/goldenuruks.png' }}"
+                      style="width: 20px"
+                    />
+                  </div>
+                  <div class="demo-chart">
+                    <div
+                      echarts
+                      [options]="chartOptions"
+                      style="width: 100%; height: 100%; margin: 0; padding: 0"
+                    ></div>
+                  </div>
+                </div>
+              } @else {
+                <span class="text-light">Not enough data.</span>
+              }
+            </ng-container>
+          </tab>
+        </tabset>
 
         @if (listing.status == 'SOLD') {
           <div class="seller d-flex align-items-center gap-2">

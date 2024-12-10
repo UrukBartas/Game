@@ -106,14 +106,17 @@
     border-radius: 10px;
     display: flex;
     justify-content: space-between;
+
     &:hover {
       background-color: $third;
       transition: 0.5s all;
     }
+
     &-left {
       display: flex;
       gap: 20px;
     }
+    
     &-right {
       display: flex;
       align-items: center;
@@ -127,29 +130,27 @@
       .view-player {
         font-size: 24px;
       }
+
+      .auto-duel-btn {
+        background-color: rgb(196, 169, 18) !important;
+        box-shadow: 0px 1px 2px 2px rgb(125, 102, 0) !important;
+      }
+
       .duel-btn {
         border-radius: 4px;
         background-color: rgb(133 15 15);
         box-shadow: 0px 1px 2px 2px rgb(66 6 6);
-        .icon {
-          width: 30px;
-          height: 30px;
-          background: white;
-        }
-
-        &.disabled {
-          background-color: rgb(100, 100, 100);
-          box-shadow: none;
-          cursor: not-allowed;
-          .icon {
-            background: grey;
-          }
-        }
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
       }
     }
+
     a {
       color: $secondary;
     }
+
     &-left-image-ranking {
       width: 64px;
       height: 64px;
@@ -159,15 +160,18 @@
       background-color: $primary;
       border-radius: 50%;
     }
+
     &-left-container {
       display: flex;
       flex-direction: column;
       justify-content: space-around;
     }
+    
     &-name-container {
       display: flex;
       gap: 5px;
     }
+
     &-badge {
       border: 1px solid $secondary;
       padding: 0px 10px;

@@ -51,6 +51,7 @@ export interface PlayerConfiguration {
   disablePVP: boolean;
   disableSound: boolean;
   ignoreMine: boolean;
+  disableEmailNotifications: boolean;
 }
 
 export interface PlayerStatsModel {

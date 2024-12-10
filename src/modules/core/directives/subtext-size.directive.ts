@@ -1,9 +1,9 @@
 import {
   Directive,
   ElementRef,
-  Renderer2,
-  OnInit,
   OnDestroy,
+  OnInit,
+  Renderer2,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ViewportService } from 'src/services/viewport.service';
@@ -37,15 +37,15 @@ export class SubtextSizeDirective implements OnInit, OnDestroy {
   private getResponsiveTextSize() {
     switch (this.viewportService.screenSize) {
       case 'xxl':
+        return '1rem';
       case 'xl':
       case 'lg':
-        return '1.2rem';
       case 'md':
-        return '1rem';
+        return '0.8rem';
       case 'xs':
       case 'sm':
       default:
-        return '0.8rem';
+        return '0.7rem';
     }
   }
 

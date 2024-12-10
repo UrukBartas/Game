@@ -76,6 +76,8 @@ export class ExportImportNftComponent extends TemplatePage {
   public activeCorrectNetwork = this.activeNetworkId.pipe(
     filter((entry) => !!entry)
   );
+  public toNumber = Number;
+  public math = Math;
   @ViewChild('staticTabs', { static: false }) staticTabs?: TabsetComponent;
 
   public get allSelectedItems() {
@@ -150,7 +152,7 @@ export class ExportImportNftComponent extends TemplatePage {
   public getERC20ExportFee$ = this.activeCorrectNetwork.pipe(
     switchMap(() => {
       return from(this.ERC20ContractService.getExportFee()).pipe(
-        map((entry) => Number(ethers.formatEther(entry.toString())).toFixed(8))
+        map((entry) => Number(ethers.formatEther(entry.toString())))
       );
     })
   );
@@ -717,23 +719,29 @@ export class ExportImportNftComponent extends TemplatePage {
     }
   }
 
+  public async calculateFees(exportedUruks: number): Promise<string> {
+    const exportFee = (await this.ERC20ContractService.getExportFee()) as any; // Obtenlo como string en wei
+    const feeInWei = BigInt(exportFee as string); // Convertir directamente a BigInt para cálculos
+    const feeMultiplier =
+      exportedUruks % 1000 === 0
+        ? Math.floor(exportedUruks / 1000)
+        : Math.floor(exportedUruks / 1000) + 1;
+    const totalFee = feeInWei * BigInt(feeMultiplier);
+    return totalFee.toString();
+  }
+
   private async exportERC20() {
     try {
       await firstValueFrom(
         this.importExport.whiteListItemERC20(this.selectedUruksToExport)
       );
-      const fees = await firstValueFrom(this.getERC20ExportFee$);
-      const tx = await this.ERC20ContractService.exportCoins(
-        [ethers.parseEther(this.selectedUruksToExport.toString())],
-        ethers.parseEther(fees)
-      );
-      const receipt = await waitForTransaction({
-        hash: tx.hash,
+
+      const exportedUruks = Number(this.selectedUruksToExport.toString()) ?? 0;
+      const fees = BigInt(await this.calculateFees(exportedUruks));
+      const uruksInWei = ethers.parseEther(exportedUruks.toString());
+      await this.ERC20ContractService.triggerTx(() => {
+        return this.ERC20ContractService.exportCoins([uruksInWei], fees);
       });
-      this.store.dispatch(new RefreshPlayer());
-      this.spinnerService.hide();
-      if (receipt.status !== 'success')
-        throw new Error('Error exporting items!');
       this.toastService.success(
         'The coins got exported, you will receive them in your wallet soon!'
       );
@@ -748,14 +756,12 @@ export class ExportImportNftComponent extends TemplatePage {
   }
 
   private async importERC20() {
-    await this.ERC20ContractService.importCoins([
-      ethers.parseEther(this.selectedUruksToExport.toString()),
-    ]);
-    this.spinnerService.hide();
-    this.toastService.success(
-      'The coins got imported, you will receive them in your inventory soon!'
-    );
-    this.store.dispatch(new RefreshPlayer());
+    await this.ERC20ContractService.triggerTx(() => {
+      return this.ERC20ContractService.importCoins([
+        ethers.parseEther(this.selectedUruksToExport.toString()),
+      ]);
+    }, 'The coins got imported, you will receive them in your inventory soon!');
+
     this.selectedUruksToExport = 0;
   }
 

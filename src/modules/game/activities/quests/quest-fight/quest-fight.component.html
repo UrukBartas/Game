@@ -50,12 +50,13 @@
         >
         <span
           urText
+          style="margin-bottom: -1vh"
           [ngStyle]="{
             color: getRarityColor(getRarityBasedOnIRI(IRI)),
           }"
           >{{ player.name }} (level {{ player.level }})</span
         >
-        <span urSubtext class="text-light">{{
+        <span urSubtext style="margin: -1vh" class="text-light">{{
           player?.title ?? 'The untitled'
         }}</span>
         <div
@@ -143,10 +144,15 @@
           class="enemy-image shadow"
           [style.animation]="enemyAnimation"
         />
-        <span urText class="text-white"
+        <span urText style="margin-bottom: -1vh" class="text-white"
           >{{ quest.data.enemy }} (level {{ quest.level }})</span
         >
-        <span urSubtext class="text-light">{{ '???????' }}</span>
+        <span
+          urSubtext
+          class="text-light"
+          style="visibility: hidden; margin: -1vh"
+          >???????</span
+        >
         <div
           class="progress shadow"
           [style.height]="getHealthBarHeight() + 'px'"

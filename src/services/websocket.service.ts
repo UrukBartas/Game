@@ -6,7 +6,7 @@ import { BehaviorSubject, Subject, take } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { PlayerStateEnum } from 'src/modules/game/activities/leadeboard/enum/player-state.enum';
-import { ChallengeModalComponent } from 'src/modules/game/components/challengee-modal/challenge-modal.component';
+import { ChallengeModalComponent } from 'src/modules/game/components/challenge-modal/challenge-modal.component';
 import { MainState } from 'src/store/main.store';
 import { SoundService } from './sound.service';
 
@@ -47,7 +47,7 @@ export class WebSocketService {
       const config: ModalOptions = {
         id: challenger.id,
         initialState: {
-          player: challenger,
+          opponent: challenger,
           challenger: false,
           accept: () => {
             this.acceptChallenge(challenger.id, modal);
@@ -98,7 +98,7 @@ export class WebSocketService {
   acceptChallenge(challengerAddress: string, modalRef: BsModalRef): void {
     this.socket.emit('acceptChallenge', { challengerAddress });
     setTimeout(() => {
-      this.router.navigateByUrl('/arena');
+      this.router.navigateByUrl('/arena/pvp');
       modalRef.hide();
     }, 2000);
   }

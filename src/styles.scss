@@ -93,33 +93,48 @@ app-item-box {
   }
 }
 
+.tab-pane {
+  overflow: auto;
+}
+
 .modal-dialog {
   position: absolute !important;
-  top: 50%;
-  left: 48%;
   border: none !important;
-  transform: translate(-50%, -50%) !important;
-  display: flex;
+  display: flex !important;
   justify-content: center;
   align-items: center;
-  @include media-breakpoint-down(sm) {
-    width: 93% !important;
-  }
+  overflow: auto;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  max-height: 100%;
+  max-width: 100%;
 
   .modal-content {
     background: transparent !important;
     width: fit-content;
+    @include media-breakpoint-down(sm) {
+      width: 90%;
+    }
     border: none !important;
+    height: 100%;
+    @include media-breakpoint-up(sm) {
+      justify-content: center;
+    }
   }
 }
 
 .mobile-menu {
-  left: 50%;
-  top: 50%;
-  margin: 0 !important;
+  height: 100%;
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
   li {
     background-color: $secondary !important;
-    color: $white-100 !important;
+    i,
+    span {
+      color: $white-100 !important;
+    }
     border-radius: 5px;
     box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.4);
     &.nested {
@@ -283,7 +298,7 @@ tabset {
   align-items: center;
   background: #0000004a;
   flex-direction: column;
-  z-index: 10;
+  z-index: 1000;
   app-item-box {
     animation: glowing-upgrade 4s infinite;
     position: relative;
@@ -326,6 +341,9 @@ app-adventures {
 .fa-sword {
   -webkit-mask: url(assets/icons/swords.svg) no-repeat center;
   mask: url(assets/icons/swords.svg) no-repeat center;
+  width: 30px;
+  height: 30px;
+  background: white;
 }
 
 .fa-prohib {

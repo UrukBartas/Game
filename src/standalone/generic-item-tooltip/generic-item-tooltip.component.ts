@@ -8,7 +8,7 @@ import { MiscellanyItemData } from 'src/modules/core/models/misc.model';
 import { getRarityColor } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
 export type GenericItem =
-  | ConsumableData
+  | (ConsumableData & { rarity?: Rarity })
   | MaterialData
   | (MiscellanyItemData & { price?: any })
   | (ItemData & { price?: any });

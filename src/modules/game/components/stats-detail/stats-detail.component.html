@@ -14,7 +14,7 @@
                     [width]="getPlayerImageSize()"
                     [image]="player.image"
                   ></app-item-box>
-                  <app-name-player [player]="player"></app-name-player>
+                  <app-name-player [player]="player" [disabledTrigger]="isViewingAnotherPlayer"></app-name-player>
                 </div>
               </div>
               <div class="col-12 col-xl-9">

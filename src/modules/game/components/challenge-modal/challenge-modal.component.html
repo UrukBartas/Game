@@ -1,0 +1,127 @@
+<div id="confirm-modal">
+  <ng-container *ngIf="!awaiting && !challengeResult">
+    <i
+      urTitle
+      class="fa-solid fa-xmark text-white pointer"
+      (click)="modalRef.hide(); cancel ? cancel() : false"
+    ></i>
+    <div class="row d-flex flex-column align-items-center pb-4">
+      <div class="challenger-container">
+        <img class="challenger-image" [src]="prefix + '/' + opponent.image" />
+        <div class="fa-sword"></div>
+      </div>
+
+      <span urTitle class="text-secondary w-fit z-1 pt-2"
+        >{{ opponent.name }}
+      </span>
+      <span urText class="text-white w-fit">Level {{ opponent.level }}</span>
+    </div>
+    <div class="row">
+      <p class="text-white" urText>
+        {{
+          challenger
+            ? 'You are about to challenge'
+            : 'You have been challenged by'
+        }}
+        {{ opponent.name }}
+      </p>
+      <p class="text-white" urText>
+        {{ challenger ? 'Do you want to proceed?' : 'Do you accept the duel?' }}
+      </p>
+
+      <p *ngIf="playerHasHigherMMR" class="text-danger" urText>
+        * Your AP is higher than the opponent's AP
+      </p>
+      <p *ngIf="autobattleTimeout" class="text-danger" urText>
+        * You have to wait between battles: {{ autobattleTimeout }}
+      </p>
+      <p
+        *ngIf="challenger"
+        class="text-white"
+        urText
+        [ngbTooltip]="pvpButtonExplanation"
+      >
+        <i class="fa-solid fa-circle-info px-2"></i>
+        <span style="text-decoration: underline">Info</span>
+      </p>
+    </div>
+    <ng-container *ngIf="challenger">
+      <div class="d-flex w-full justify-content-end gap-2">
+        <button
+          [disabled]="playerHasHigherMMR || autobattleTimeout"
+          [class.disabled]="playerHasHigherMMR || autobattleTimeout"
+          class="duel-btn auto-duel-btn btn btn-secondary"
+          (click)="acceptAuto()"
+        >
+          <i class="fa-solid fa-robot px-2"></i
+          ><span class="d-none d-md-block">{{
+            getAutobattleButtonText()
+          }}</span>
+        </button>
+        <button
+          [disabled]="!opponentConnected || opponent.configuration?.disablePVP"
+          [class.disabled]="!opponentConnected || opponent.configuration?.disablePVP"
+          class="duel-btn btn btn-secondary"
+          (click)="accept()"
+        >
+          <div class="fa-sword pr-2"></div>
+          <span class="d-none d-md-block">Challenge</span>
+        </button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!challenger">
+      <div class="d-flex w-100 justify-content-end pt-3">
+        <button class="btn btn-secondary" (click)="accept()">Accept</button>
+      </div>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="awaiting">
+    <div class="d-flex align-items-center gap-3">
+      <app-spinner></app-spinner>
+      <p urText class="text-white m-0">Waiting for opponent confirmation...</p>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="challengeResult">
+    <ng-container *ngIf="!challengeAccepted">
+      <p urText class="text-white">Opponent declined the duel.</p>
+      <div class="d-flex w-100 justify-content-end pt-3">
+        <button class="btn btn-secondary" (click)="modalRef.hide()">
+          Accept
+        </button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="challengeAccepted">
+      <div class="d-flex align-items-center gap-3">
+        <app-spinner></app-spinner>
+        <p urText class="text-white m-0">
+          {{
+            challenger
+              ? 'Opponent accepted the duel. Joining the fight...'
+              : 'Joining the fight...'
+          }}
+        </p>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>
+
+<ng-template #pvpButtonExplanation>
+  <div class="p-2" style="width: 80vw">
+    <div class="p-2">
+      <h5 urSubtitle class="text-white p-2">Autobattle 🤖</h5>
+      <p urText class="text-white">
+        Autobattle gives you the opportunity to fight an opponent that has more
+        arena points (AP) than you every hour. The battle will be automatic,
+        with no opponent input required.
+      </p>
+    </div>
+    <div class="p-2">
+      <h5 urSubtitle class="text-white p-2">PVP ⚔️</h5>
+      <p urText class="text-white">
+        Normal PVP is a real-time battle against an opponent. When you challenge
+        someone, they will receive a notification with the option to accept or
+        decline the challenge.
+      </p>
+    </div>
+  </div>
+</ng-template>
