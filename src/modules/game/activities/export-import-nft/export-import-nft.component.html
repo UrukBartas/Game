@@ -272,6 +272,7 @@
           <div class="d-flex pending-exports py-2">
             <button
               type="button"
+              [disabled]="true"
               class="btn btn-secondary btn-lg btn-block w-100 btn-pending"
               *ngFor="let whiteListedItemId of pending"
               (click)="
@@ -388,11 +389,7 @@
         <button
           type="button"
           class="btn btn-primary btn-lg btn-block w-100"
-          [disabled]="
-            selectedUruksToExport == 0 ||
-            activeNetworkId.getValue() == 0 ||
-            !isAllowedNetwork(activeNetworkId.getValue())
-          "
+          [disabled]="true"
           (click)="triggerActionForERC20()"
         >
           <div class="d-flex justify-content-center gap-3">
