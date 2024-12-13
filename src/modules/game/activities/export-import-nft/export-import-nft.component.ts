@@ -10,6 +10,7 @@ import {
   watchNetwork,
 } from '@wagmi/core';
 import { ethers } from 'ethers';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -44,6 +45,7 @@ import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
+import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
 import { ItemTypeSC } from './enums/ItemTypesSC';
 
 @Component({
@@ -67,6 +69,7 @@ export class ExportImportNftComponent extends TemplatePage {
   router = inject(Router);
   walletService = inject(WalletService);
   stack = inject(StackPipe);
+  modalService = inject(BsModalService);
   ERC20ContractService = inject(ERC20ContractService);
   NFTContractService = inject(NFTContractService);
   PRESALEContractService = inject(PresaleContractService);
@@ -208,6 +211,25 @@ export class ExportImportNftComponent extends TemplatePage {
     })
   );
 
+  public whitelistedUruks$ = new BehaviorSubject(0);
+  public whitelistedUruksInterval$ = interval(5000).pipe(
+    startWith(0),
+    switchMap(() => {
+      return this.walletService.getValidAddress$;
+    }),
+    switchMap((address) => {
+      return from(this.ERC20ContractService.getWhitelistedCoins(address)).pipe(
+        catchError((err) => {
+          console.error(err);
+          return err;
+        }),
+        map((entry) => {
+          return Number(ethers.formatEther(entry.toString()));
+        })
+      );
+    })
+  );
+
   public currentInventory$ = new BehaviorSubject([]);
   public currentInventoryInterval$ = this.createIntervalObservable(
     5000,
@@ -270,6 +292,10 @@ export class ExportImportNftComponent extends TemplatePage {
 
   constructor() {
     super();
+    //pending URUKS
+    this.whitelistedUruksInterval$
+      .pipe(takeUntilDestroyed())
+      .subscribe((data: any) => this.whitelistedUruks$.next(data));
     this.whiteListedItemsInterval$
       .pipe(takeUntilDestroyed())
       .subscribe((data: any) => this.whiteListedItems$.next(data));
@@ -699,7 +725,25 @@ export class ExportImportNftComponent extends TemplatePage {
     }
   }
 
-  public async triggerActionForERC20() {
+  public displayERC20ConfirmDialog() {
+    return new Promise((resolve, reject) => {
+      const config: ModalOptions = {
+        initialState: {
+          title: 'Do you wan to continue?',
+          description: `Continuing the export, will reset your pending Golden Uruks and you won't be able to recover them. Do you want to proceed?`,
+          accept: async () => {
+            modalRef.hide();
+            resolve(true);
+          },
+        },
+      };
+      const modalRef = this.modalService.show(ConfirmModalComponent, config);
+      modalRef.onHide.subscribe(() => reject());
+    });
+  }
+
+  public async triggerActionForERC20(hasPending = false) {
+    if (hasPending) await this.displayERC20ConfirmDialog();
     this.spinnerService.show();
     try {
       if (!!this.exportTypeActive) {
@@ -730,21 +774,26 @@ export class ExportImportNftComponent extends TemplatePage {
     return totalFee.toString();
   }
 
-  private async exportERC20() {
-    try {
-      await firstValueFrom(
-        this.importExport.whiteListItemERC20(this.selectedUruksToExport)
-      );
+  public async exportPendingERC20(whitelistedUruks: number) {
+    await this.exportERC20(false, whitelistedUruks);
+  }
 
-      const exportedUruks = Number(this.selectedUruksToExport.toString()) ?? 0;
+  private async exportERC20(
+    whitelist = true,
+    uruksToExport = this.selectedUruksToExport
+  ) {
+    try {
+      if (whitelist) {
+        await firstValueFrom(
+          this.importExport.whiteListItemERC20(uruksToExport)
+        );
+      }
+      const exportedUruks = Number(uruksToExport.toString()) ?? 0;
       const fees = BigInt(await this.calculateFees(exportedUruks));
       const uruksInWei = ethers.parseEther(exportedUruks.toString());
       await this.ERC20ContractService.triggerTx(() => {
         return this.ERC20ContractService.exportCoins([uruksInWei], fees);
-      });
-      this.toastService.success(
-        'The coins got exported, you will receive them in your wallet soon!'
-      );
+      }, 'The coins got exported, you will receive them in your wallet soon!');
       this.selectedUruksToExport = 0;
     } catch (error: any) {
       this.toastService.error(

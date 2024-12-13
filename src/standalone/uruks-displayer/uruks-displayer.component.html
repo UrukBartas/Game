@@ -1,0 +1,27 @@
+<ng-template #uruks let-uruks="uruks">
+  <div id="uruks-tooltip-wrapper" class="py-2">
+    <p>Total amount</p>
+    <p urText>
+      {{ uruks }}
+      <img
+        class="navbar-uruks-icon pb-1"
+        src="{{ prefix + '/assets/goldenuruks.png' }}"
+      />
+      Golden uruks
+    </p>
+  </div>
+</ng-template>
+
+<div
+  class="uruks gap-2"
+  [ngbTooltip]="uruks"
+  [tooltipContext]="{
+    uruks: goldenUruks,
+  }"
+>
+  <img
+    class="navbar-uruks-icon pb-1"
+    src="{{ prefix + '/assets/goldenuruks.png' }}"
+  />
+  <span urText class="text-white">{{ goldenUruks | compressNumber }}</span>
+</div>

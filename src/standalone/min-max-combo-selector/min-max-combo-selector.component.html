@@ -44,9 +44,9 @@
     <div class="info">
       <p
         class="text-light text-center mb-0"
-        *ngIf="value > 0 && summary && summary.length > 0"
+        *ngIf="summary && summary.length > 0"
       >
-        {{ value + summary }}
+        {{ (value ?? 0) + summary }}
       </p>
     </div>
   </div>

@@ -29,6 +29,7 @@ import { ChanceDisplayerComponent } from '../../standalone/chance-displayer/chan
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
 import { LootboxStatsDisplayerComponent } from '../../standalone/lootbox-stats-displayer/lootbox-stats-displayer.component';
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
+import { UruksDisplayerComponent } from "../../standalone/uruks-displayer/uruks-displayer.component";
 import { DoubleClickDirective } from '../core/directives/double-click.directive';
 import { SubtextSizeDirective } from '../core/directives/subtext-size.directive';
 import { SubtitleSizeDirective } from '../core/directives/subtitle-size.directive';
@@ -192,7 +193,8 @@ const pipes = [
     LootboxStatsDisplayerComponent,
     NgxEchartsModule,
     MinMaxComboSelectorComponent,
-  ],
+    UruksDisplayerComponent
+],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe, StackPipe, ...pipes],
 })

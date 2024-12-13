@@ -33,35 +33,7 @@
         !isSidebarOpened() ? 'content-extended' : 'content-collapsed'
       }}"
     >
-      <ng-template #uruks let-uruks="uruks">
-        <div id="uruks-tooltip-wrapper" class="py-2">
-          <p>Total amount</p>
-          <p urText>
-            {{ uruks }}
-            <img
-              class="navbar-uruks-icon pb-1"
-              src="{{ prefix + '/assets/goldenuruks.png' }}"
-            />
-            Golden uruks
-          </p>
-        </div>
-      </ng-template>
-
-      <div
-        class="uruks gap-2"
-        [ngbTooltip]="uruks"
-        [tooltipContext]="{
-          uruks: player.uruks,
-        }"
-      >
-        <img
-          class="navbar-uruks-icon pb-1"
-          src="{{ prefix + '/assets/goldenuruks.png' }}"
-        />
-        <span urText class="text-white">{{
-          player.uruks | compressNumber
-        }}</span>
-      </div>
+      <app-uruks-displayer [goldenUruks]="player.uruks"></app-uruks-displayer>
 
       <app-progress-bar
         class="px-2"

@@ -17,6 +17,12 @@ export class ERC20ContractService extends ContractService {
     return this.executeReadContract<String>('balanceOf', [address]);
   }
 
+  getWhitelistedCoins(address: string) {
+    return this.executeReadContract<String>('getCoinsAmountWhitelisted', [
+      address,
+    ]);
+  }
+
   getStakeInfo(address: string) {
     return this.executeReadContract<String>('getStakeInfo', [address]);
   }

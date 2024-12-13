@@ -254,78 +254,77 @@
         </div>
       }
 
-      <div
-        class="all-pending-exports w-100"
-        *ngIf="exportTypeActive && exportingObjectTypeActive == 'nft'"
-      >
-        <div
-          class="container-pending-exports"
-          *ngIf="whiteListedItems$ | async as pending"
-        >
-          <div class="description text-light">
-            {{
-              !!pending && pending.length == 0
-                ? 'No pending exports'
-                : 'Pending exports'
-            }}
-          </div>
-          <div class="d-flex pending-exports py-2">
-            <button
-              type="button"
-              class="btn btn-secondary btn-lg btn-block w-100 btn-pending"
-              *ngFor="let whiteListedItemId of pending"
-              (click)="
-                exportItems(
-                  [whiteListedItemId.id],
-                  [getItemTypeSCBasedOnItem(whiteListedItemId)],
-                  [1]
-                )
-              "
-            >
-              <i
-                class="bi bi-x-circle-fill close-icon-pending"
+      <div class="all-pending-exports w-100" *ngIf="exportTypeActive">
+        @if (exportingObjectTypeActive == 'nft') {
+          <div
+            class="container-pending-exports"
+            *ngIf="whiteListedItems$ | async as pending"
+          >
+            <div class="description text-light">
+              {{
+                !!pending && pending.length == 0
+                  ? 'No pending exports'
+                  : 'Pending exports'
+              }}
+            </div>
+            <div class="d-flex pending-exports py-2">
+              <button
+                type="button"
+                class="btn btn-secondary btn-lg btn-block w-100 btn-pending"
+                *ngFor="let whiteListedItemId of pending"
                 (click)="
-                  $event.preventDefault();
-                  $event.stopPropagation();
-                  cancelPendingExports(
+                  exportItems(
                     [whiteListedItemId.id],
-                    [getItemTypeSCBasedOnItem(whiteListedItemId)]
+                    [getItemTypeSCBasedOnItem(whiteListedItemId)],
+                    [1]
                   )
                 "
-              ></i>
-              <app-item-box
-                [height]="100"
-                [width]="100"
-                [image]="
-                  whiteListedItemId?.itemData?.imageLocal ??
-                  whiteListedItemId?.consumableData?.imageLocal ??
-                  whiteListedItemId?.materialData?.imageLocal ??
-                  whiteListedItemId?.miscellanyItemData?.imageLocal ??
-                  ''
-                "
               >
-              </app-item-box>
-            </button>
+                <i
+                  class="bi bi-x-circle-fill close-icon-pending"
+                  (click)="
+                    $event.preventDefault();
+                    $event.stopPropagation();
+                    cancelPendingExports(
+                      [whiteListedItemId.id],
+                      [getItemTypeSCBasedOnItem(whiteListedItemId)]
+                    )
+                  "
+                ></i>
+                <app-item-box
+                  [height]="100"
+                  [width]="100"
+                  [image]="
+                    whiteListedItemId?.itemData?.imageLocal ??
+                    whiteListedItemId?.consumableData?.imageLocal ??
+                    whiteListedItemId?.materialData?.imageLocal ??
+                    whiteListedItemId?.miscellanyItemData?.imageLocal ??
+                    ''
+                  "
+                >
+                </app-item-box>
+              </button>
+            </div>
+            <div class="w-100 d-flex justify-content-end gap-2">
+              <button
+                *ngIf="pending.length > 0"
+                type="button"
+                class="btn btn-dark"
+                (click)="moveForwardAll(pending)"
+              >
+                Move forward
+              </button>
+              <button
+                *ngIf="pending.length > 0"
+                type="button"
+                class="btn btn-dark"
+                (click)="cancelAll(pending)"
+              >
+                Cancell all
+              </button>
+            </div>
           </div>
-          <div class="w-100 d-flex justify-content-end gap-2">
-            <button
-              *ngIf="pending.length > 0"
-              type="button"
-              class="btn btn-dark"
-              (click)="moveForwardAll(pending)"
-            >
-              Move forward
-            </button>
-            <button
-              *ngIf="pending.length > 0"
-              type="button"
-              class="btn btn-dark"
-              (click)="cancelAll(pending)"
-            >
-              Cancell all
-            </button>
-          </div>
-        </div>
+        }
       </div>
 
       @if (exportingObjectTypeActive == 'nft') {
@@ -362,35 +361,72 @@
           </div>
         </button>
       } @else {
-        <button
-          type="button"
-          *ngIf="!exportTypeActive"
-          class="btn btn-dark btn-lg btn-block w-100"
-          [disabled]="activeNetworkId.getValue() == 0"
-          (click)="addERC20ToWallet()"
-        >
-          Add asset to wallet
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary btn-lg btn-block w-100"
-          [disabled]="
-            selectedUruksToExport == 0 ||
-            activeNetworkId.getValue() == 0 ||
-            !isAllowedNetwork(activeNetworkId.getValue())
-          "
-          (click)="triggerActionForERC20()"
-        >
-          <div class="d-flex justify-content-center gap-3">
-            {{
-              !!exportTypeActive
-                ? !isAllowedNetwork(activeNetworkId.getValue())
-                  ? 'Incorrect chain connected'
-                  : 'Export ' + selectedUruksToExport.toFixed(2) + ' GUs'
-                : 'Import ' + selectedUruksToExport.toFixed(2) + ' GUs'
-            }}
-          </div>
-        </button>
+        @if (!!exportTypeActive) {
+          <button
+            type="button"
+            *ngIf="!!whitelistedUruks$.getValue()"
+            (click)="exportPendingERC20(whitelistedUruks$.getValue())"
+            class="btn btn-dark btn-lg btn-block w-100 d-flex gap-2 justify-content-center"
+          >
+            Export pending
+            <app-uruks-displayer
+              [goldenUruks]="whitelistedUruks$.getValue()"
+            ></app-uruks-displayer>
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary btn-lg btn-block w-100"
+            [disabled]="
+              selectedUruksToExport == 0 ||
+              activeNetworkId.getValue() == 0 ||
+              !isAllowedNetwork(activeNetworkId.getValue())
+            "
+            (click)="triggerActionForERC20(!!whitelistedUruks$.getValue())"
+          >
+            <div class="d-flex justify-content-center gap-3">
+              @if (!isAllowedNetwork(activeNetworkId.getValue())) {
+                Incorrect chain connected
+              } @else {
+                Export
+                <app-uruks-displayer
+                  [goldenUruks]="selectedUruksToExport"
+                ></app-uruks-displayer>
+              }
+            </div>
+          </button>
+        } @else {
+          <button
+            type="button"
+            *ngIf="!exportTypeActive"
+            class="btn btn-dark btn-lg btn-block w-100"
+            [disabled]="activeNetworkId.getValue() == 0"
+            (click)="addERC20ToWallet()"
+          >
+            Add asset to wallet
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary btn-lg btn-block w-100"
+            [disabled]="
+              selectedUruksToExport == 0 ||
+              activeNetworkId.getValue() == 0 ||
+              !isAllowedNetwork(activeNetworkId.getValue())
+            "
+            (click)="triggerActionForERC20()"
+          >
+            <div class="d-flex justify-content-center gap-3">
+              @if (!isAllowedNetwork(activeNetworkId.getValue())) {
+                Incorrect chain connected
+              } @else {
+                Import
+                <app-uruks-displayer
+                  [goldenUruks]="selectedUruksToExport"
+                ></app-uruks-displayer>
+              }
+            </div>
+          </button>
+        }
       }
 
       @if (!!exportTypeActive) {
