@@ -223,24 +223,26 @@
         *ngIf="route.display ? route.display() : true"
       >
         <ng-template #linkContent>
-          @if (!!route.image) {
-            <img src="{{ route.image }}" alt="" style="max-width: 21px" />
-          } @else {
-            <i class="{{ route.icon }}"></i>
-          }
-          @if (!isSidebarOpened() || displayingFullScreenModal) {
-            <span class="d-sm-flex"
-              >{{ route.displayText }}
-              <i
-                class="fa-solid mt-1 {{
-                  !!route.expanded && route.expanded()
-                    ? 'fa-turn-down text-white'
-                    : 'fa-turn-up text-dark'
-                }}  mx-2"
-                *ngIf="route.nested"
-              ></i
-            ></span>
-          }
+          <div class="{{ route.contentClass ?? '' }}">
+            @if (!!route.image) {
+              <img src="{{ route.image }}" alt="" style="max-width: 21px" />
+            } @else {
+              <i class="{{ route.icon }}"></i>
+            }
+            @if (!isSidebarOpened() || displayingFullScreenModal) {
+              <span class="d-sm-flex"
+                >{{ route.displayText }}
+                <i
+                  class="fa-solid mt-1 {{
+                    !!route.expanded && route.expanded()
+                      ? 'fa-turn-down text-white'
+                      : 'fa-turn-up text-dark'
+                  }}  mx-2"
+                  *ngIf="route.nested"
+                ></i
+              ></span>
+            }
+          </div>
         </ng-template>
 
         <a

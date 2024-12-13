@@ -82,6 +82,11 @@ nav a {
 .list-group {
   gap: 5px;
   align-items: end;
+  overflow-x: hidden;
+  overflow-y: auto;
+  @include media-breakpoint-down(sm) {
+    align-items: center;
+  }
 }
 
 .list-group-item {

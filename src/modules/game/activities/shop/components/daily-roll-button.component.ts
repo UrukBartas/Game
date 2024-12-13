@@ -40,7 +40,7 @@ export class DailyRollButtonComponent implements OnDestroy {
     this.shopService
       .getDailyRollData()
       .pipe(take(1))
-      .subscribe(({date}) => {
+      .subscribe(({ date }) => {
         this.showButton = true;
         const currentTime = new Date();
         if (date) {
@@ -108,6 +108,15 @@ export class DailyRollButtonComponent implements OnDestroy {
       default:
         return 'btn-md';
     }
+  }
+
+  isSmallScreen() {
+    switch (this.viewportService.screenSize) {
+      case 'xs':
+      case 'sm':
+        return true;
+    }
+    return false;
   }
 
   ngOnDestroy() {

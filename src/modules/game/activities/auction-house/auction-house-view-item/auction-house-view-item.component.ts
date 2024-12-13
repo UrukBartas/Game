@@ -172,7 +172,7 @@ export class AuctionHouseViewItemComponent {
         this.auctionService.cancel(this.listing.id)
       );
       this.toast.info(
-        `You cancelled the listing and the item should have returned your inventory.`,
+        `You cancelled the listing and the item have returned your inventory.`,
         'Listing cancelled!'
       );
       if (this.onAccept) this.onAccept();

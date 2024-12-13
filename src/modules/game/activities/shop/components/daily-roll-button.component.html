@@ -6,7 +6,9 @@
   [disabled]="!dailyRollButtonStatus.enabled"
 >
   <i class="fa fa-rotate pl-1 pb-1"></i>
-  {{
-    dailyRollButtonStatus.enabled ? 'Daily roll' : dailyRollButtonStatus.timer
-  }}
+  @if (!isSmallScreen()) {
+    {{
+      dailyRollButtonStatus.enabled ? 'Daily roll' : dailyRollButtonStatus.timer
+    }}
+  }
 </button>

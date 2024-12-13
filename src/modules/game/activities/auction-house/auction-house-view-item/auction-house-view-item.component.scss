@@ -33,3 +33,9 @@
   height: 100%; /* Altura completa */
   overflow: hidden; /* Evitar scroll innecesario */
 }
+
+.table-responsive {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}

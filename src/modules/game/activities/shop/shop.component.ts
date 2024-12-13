@@ -276,6 +276,16 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
     return 140;
   }
 
+  isSmallScreen() {
+    switch (this.viewportService.screenSize) {
+      case 'xs':
+      case 'sm':
+        return true;
+    }
+    return false;
+  }
+
+
   getButtonSize() {
     switch (this.viewportService.screenSize) {
       case 'xxl':

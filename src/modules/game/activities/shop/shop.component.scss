@@ -4,6 +4,19 @@
 @import 'node_modules/bootstrap/scss/mixins';
 
 #shop {
+  .shop-options {
+    display: flex;
+    justify-content: space-between;
+  }
+  .item-container {
+    width: fit-content;
+    position: relative;
+  }
+  .container-items-shop {
+    display: flex;
+    width: 90%;
+    overflow: auto;
+  }
   position: relative;
   height: 100%;
   overflow: hidden;
@@ -30,16 +43,14 @@
   }
 
   .item-rack-bg {
-    position: absolute;
-    bottom: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: auto;
     width: 100%;
-    height: 14vw;
+    height: 280px;
     background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/shop/wood.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    @include media-breakpoint-down(sm) {
-      height: 280px !important;
-    }
   }
 
   .uruks-icon {
@@ -64,12 +75,7 @@
   }
 
   .tabs {
-    position: absolute;
-    bottom: 14vw;
-    left: 0;
     @include media-breakpoint-down(sm) {
-      bottom: 280px;
-      left: 0px;
       width: 100%;
       .btn-group {
         width: 100%;
@@ -78,19 +84,11 @@
   }
 
   .roll-buttons {
-    position: absolute;
-    bottom: 14vw;
-    right: 10px;
     display: flex;
     gap: 5px;
-    @include media-breakpoint-down(sm) {
-      bottom: 325px;
-    }
   }
 
   .item-price {
-    position: absolute;
-    bottom: 0;
     width: 100%;
     background: $black-transparent;
     display: flex;
@@ -101,7 +99,7 @@
       max-height: 2vw;
     }
     span {
-      font-size: 1.2vw;
+      font-size: 20px;
       @include media-breakpoint-down(sm) {
         font-size: 17px;
       }
@@ -113,10 +111,7 @@
     top: 5px;
     right: 5px;
     color: $white-100;
-    font-size: 2vw;
-    @include media-breakpoint-down(sm) {
-      font-size: 17px;
-    }
+    font-size: 22px;
   }
 
   .shop-tender-dialog {
@@ -161,11 +156,11 @@
 
     app-item-box {
       .box {
-        width: 8vw !important;
-        height: 8vw !important;
+        width: 160px !important;
+        height: 160px !important;
         @include media-breakpoint-down(sm) {
-          width: 80px !important;
-          height: 80px !important;
+          width: 160px !important;
+          height: 160px !important;
         }
       }
     }

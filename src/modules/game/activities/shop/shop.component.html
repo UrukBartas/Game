@@ -1,53 +1,9 @@
 <div id="shop">
   <div class="shop-bg"></div>
-  <div
-    class="col-12 position-relative d-flex justify-content-center align-items-end h-100 pb-lg-4 pb-sm-2"
-  >
+  <div class="col-12 position-relative d-flex align-items-end h-100">
     <div class="shop-section-bg"></div>
     <div *ngIf="showDialog" class="shop-tender-dialog">
       <span urTitle>{{ dialog }} </span>
-    </div>
-    <div class="item-rack-bg"></div>
-    <div class="tabs">
-      <div class="btn-group" btnRadioGroup [(ngModel)]="selectedTab">
-        <label
-          urText
-          class="btn btn-secondary mb-0 d-flex justify-content-center align-items-center"
-          btnRadio="0"
-          >⚔️ <span class="d-none d-lg-block pl-2">Gear</span></label
-        >
-        <label
-          urText
-          class="btn btn-secondary mb-0 d-flex justify-content-center align-items-center"
-          btnRadio="1"
-          >🧱 <span class="d-none d-lg-block pl-2">Mats</span></label
-        >
-        <label
-          urText
-          class="btn btn-secondary mb-0 d-flex justify-content-center align-items-center"
-          btnRadio="2"
-          >⚗️ <span class="d-none d-lg-block pl-2">Potions</span></label
-        >
-        <label
-          urText
-          class="btn btn-secondary mb-0 d-flex justify-content-center align-items-center"
-          btnRadio="3"
-          >📜 <span class="d-none d-lg-block pl-2">Miscellany</span></label
-        >
-      </div>
-    </div>
-    <div class="roll-buttons">
-      <app-daily-roll-button
-        (buttonClicked)="dailyRoll()"
-      ></app-daily-roll-button>
-      <button
-        urText
-        (click)="premiumRoll()"
-        [class]="'btn btn-primary button-rainbow ' + getButtonSize()"
-      >
-        <i class="fa fa-crown pl-1 pb-1"></i>
-        Premium roll
-      </button>
     </div>
     <div *ngIf="getSelectedItems().length > 0" class="shop-cart">
       <div class="d-flex flex-column gap-2 mb-2 item-list">
@@ -75,30 +31,85 @@
         </div>
       </button>
     </div>
-    <div class="row item-row">
-      <div
-        *ngFor="let item of displayItemsDependingOnType(items)"
-        [class]="
-          'item-container col d-flex justify-content-center position-relative ' +
-          rollAnimation
-        "
-        [ngClass]="{ 'boost-item': item.itemType == miscellanyItemType.Boost }"
-      >
-        <app-item-box
-          [item]="item"
-          [calculatedStack]="obtainStacks"
-          (click)="selectItem(item)"
-          [ngbTooltip]="item.itemData ? itemTooltip : consumableTooltip"
-          [tooltipContext]="{ item: item }"
-          [rarity]="item.itemData ? item.itemData.rarity : item.rarity"
-          [disabled]="item.level > (player$ | async).level"
-          [image]="item.itemData ? item.itemData.imageLocal : item.imageLocal"
-        ></app-item-box>
-        <div class="item-price">
-          <span class="text-white">{{ item.price | number: '1.0-2' }}</span>
+
+    <div class="flex-column w-100">
+      <div class="shop-options">
+        <div class="tabs">
+          <div class="btn-group" btnRadioGroup [(ngModel)]="selectedTab">
+            <label
+              urText
+              class="btn btn-secondary mb-0 d-flex justify-content-center align-items-center"
+              btnRadio="0"
+              >⚔️ <span class="d-none d-lg-block pl-2">Gear</span></label
+            >
+            <label
+              urText
+              class="btn btn-secondary mb-0 d-flex justify-content-center align-items-center"
+              btnRadio="1"
+              >🧱 <span class="d-none d-lg-block pl-2">Mats</span></label
+            >
+            <label
+              urText
+              class="btn btn-secondary mb-0 d-flex justify-content-center align-items-center"
+              btnRadio="2"
+              >⚗️ <span class="d-none d-lg-block pl-2">Potions</span></label
+            >
+            <label
+              urText
+              class="btn btn-secondary mb-0 d-flex justify-content-center align-items-center"
+              btnRadio="3"
+              >📜 <span class="d-none d-lg-block pl-2">Miscellany</span></label
+            >
+          </div>
         </div>
-        <div class="check-icon" *ngIf="item.selected">
-          <i class="fa fa-check-circle"></i>
+        <div class="roll-buttons">
+          <app-daily-roll-button
+            (buttonClicked)="dailyRoll()"
+          ></app-daily-roll-button>
+          <button
+            urText
+            (click)="premiumRoll()"
+            [class]="'btn btn-primary button-rainbow ' + getButtonSize()"
+          >
+            <i class="fa fa-crown pl-1 pb-1"></i>
+            @if (!isSmallScreen()) {
+              Premium roll
+            }
+          </button>
+        </div>
+      </div>
+
+      <div class="row item-row item-rack-bg justify-content-center">
+        <div class="container-items-shop gap-4 mt-4">
+          <div
+            *ngFor="let item of displayItemsDependingOnType(items)"
+            [class]="
+              'item-container d-flex flex-column justify-content-center align-items-center ' +
+              rollAnimation
+            "
+            [ngClass]="{
+              'boost-item': item.itemType == miscellanyItemType.Boost,
+            }"
+          >
+            <app-item-box
+              [item]="item"
+              [calculatedStack]="obtainStacks"
+              (click)="selectItem(item)"
+              [ngbTooltip]="item.itemData ? itemTooltip : consumableTooltip"
+              [tooltipContext]="{ item: item }"
+              [rarity]="item.itemData ? item.itemData.rarity : item.rarity"
+              [disabled]="item.level > (player$ | async).level"
+              [image]="
+                item.itemData ? item.itemData.imageLocal : item.imageLocal
+              "
+            ></app-item-box>
+            <div class="item-price">
+              <span class="text-white">{{ item.price | number: '1.0-2' }}</span>
+            </div>
+            <div class="check-icon" *ngIf="item.selected">
+              <i class="fa fa-check-circle"></i>
+            </div>
+          </div>
         </div>
       </div>
     </div>

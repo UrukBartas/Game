@@ -3,8 +3,9 @@ import { Component, TemplateRef, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { NotificationResponseModel } from 'src/modules/core/models/notifications.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { CompressNumberPipe } from 'src/modules/core/pipes/compress-number.pipe';
 import { calculateXPForLevel } from 'src/modules/utils';
@@ -20,7 +21,6 @@ import {
 } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component';
 import { InboxModalComponent } from '../inbox-modal/inbox-modal.component';
-import { NotificationResponseModel } from 'src/modules/core/models/notifications.model';
 
 @Component({
   selector: 'app-game-layout',
@@ -85,7 +85,8 @@ export class GameLayoutComponent {
     {
       path: 'https://app.magicsea.finance/swap?inputCurrency=0x4ab1edfe2706fcac991a41183036e62a8f1dabd3&outputCurrency=IOTA',
       displayText: 'Get $URUKS',
-      class: 'buy-uruks animate__animated animate__pulse animate__infinite',
+      class: 'buy-uruks',
+      contentClass:'animate__animated animate__pulse animate__infinite',
       external: true,
       image: this.prefix + '/assets/goldenuruks_compact.png',
     },
