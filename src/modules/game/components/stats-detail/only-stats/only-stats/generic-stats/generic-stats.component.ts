@@ -2,20 +2,12 @@ import { Component, inject, Input } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Debounce } from 'lodash-decorators';
 import { ToastrService } from 'ngx-toastr';
-import {
-  firstValueFrom,
-  map,
-  shareReplay,
-  switchMap,
-  tap
-} from 'rxjs';
+import { firstValueFrom, shareReplay, switchMap, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { PlayerService } from 'src/services/player.service';
-import {
-  getPercentage
-} from 'src/standalone/item-tooltip/item-tooltip.component';
-import { MainState, RefreshPlayer } from 'src/store/main.store';
+import { getPercentage } from 'src/standalone/item-tooltip/item-tooltip.component';
+import { RefreshPlayer } from 'src/store/main.store';
 @Component({
   selector: 'app-generic-stats',
   templateUrl: './generic-stats.component.html',
@@ -44,11 +36,6 @@ export class GenericStatsComponent {
     'dodge',
   ];
   allStatsUpgradeStatus$ = this.getUpgradeStatus();
-  public player$ = this.store.select(MainState.getState).pipe(
-    map((entry) => {
-      return entry.player;
-    })
-  );
 
   public getPercentage(key: string) {
     return getPercentage(key);

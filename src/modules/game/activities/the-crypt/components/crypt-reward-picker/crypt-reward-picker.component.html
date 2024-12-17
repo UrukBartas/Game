@@ -1,0 +1,20 @@
+<div class="pick-rewards pb-4">
+  <div class="description desc-mover">
+    <p urTitle>Pick your reward</p>
+  </div>
+  <div class="rewards-container">
+    <div
+      class="reward text-light gap-2"
+      (click)="pickReward(reward)"
+      *ngFor="let reward of possibleRewards$ | async"
+    >
+      <app-item-box
+        [height]="200"
+        [width]="200"
+        [image]="reward.icon"
+        [rarity]="reward.rarity"
+      ></app-item-box>
+      <label urText class="text-center">{{ reward.description }}</label>
+    </div>
+  </div>
+</div>

@@ -14,6 +14,7 @@ import { PvPFightComponent } from './activities/pvp/pvp-fight/pvp-fight.componen
 import { PvPResultComponent } from './activities/pvp/pvp-result/pvp-result.component';
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
 import { ShopComponent } from './activities/shop/shop.component';
+import { TheCryptComponent } from './activities/the-crypt/the-crypt.component';
 import { TheMineComponent } from './activities/the-mine/the-mine.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
@@ -103,6 +104,12 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         component: TheMineComponent,
         title: 'The Mine',
+      },
+      {
+        path: 'the-crypt',
+        canActivate: [AuthGuard],
+        component: TheCryptComponent,
+        title: 'The Crypt',
       },
       {
         path: 'leaderboard',

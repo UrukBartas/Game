@@ -1,0 +1,34 @@
+<div class="crypt-failed">
+  <h2>Defeat in the Crypt</h2>
+  <p>
+    You fought valiantly, but the crypt proved too challenging this time. 😔
+  </p>
+
+  <div class="progress-summary">
+    <h3>Your Progress</h3>
+    <ul>
+      <li>Levels Reached: {{ crypt.currentLevel }}</li>
+      <li>Encounters Completed: {{ completedEncounters.length }}</li>
+    </ul>
+  </div>
+
+  <div *ngIf="crypt.appliedBonuses?.rewards?.length">
+    <h3>Partial Rewards</h3>
+    <ul>
+      <li *ngFor="let reward of crypt.appliedBonuses.rewards">
+        {{ reward.type }}: {{ reward.value }}
+      </li>
+    </ul>
+  </div>
+
+  <div class="reward-info">
+    <p>
+      <strong>Note:</strong> Rewards will be distributed at the end of the week.
+      The deeper your progress into the crypt, the better your rewards!
+    </p>
+  </div>
+
+  <div class="actions">
+    <button class="exit-button" (click)="exit()">Exit</button>
+  </div>
+</div>

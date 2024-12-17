@@ -56,6 +56,7 @@ export interface FightResultModel {
   expFactor?: number;
   completedAdventure?: boolean;
   ganked?: GankMonsters;
+  isCrypt?: boolean;
 }
 
 export enum GankMonsters {

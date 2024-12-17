@@ -9,12 +9,7 @@
     class="btn btn-primary"
   >
     <i class="fa fa-arrow-left px-2 pb-1"></i
-    >{{
-      fightResult.completedAdventure ||
-      fightResult.newQuest?.data?.isAdventurePhase
-        ? 'Adventures'
-        : 'Quests'
-    }}
+    >{{ fightResult.isCrypt ? 'Crypt' : 'Quests' }}
   </button>
 </ng-template>
 <ng-template #itemLootDrop let-loot="loot">
@@ -147,11 +142,7 @@
   ) {
     <span urText class="text-rainbow text-center">Congratulations!</span>
     <span urText class="text-white text-center">
-      {{
-        fightResult.completedAdventure
-          ? 'You finished the adventure!'
-          : 'Your enemy dropped something.'
-      }}
+      {{ 'Your enemy dropped something.' }}
     </span>
   }
   <div class="container-loot" #loot>
@@ -257,14 +248,30 @@
         <p urTitle>{{ victory ? 'Victory!' : 'Defeat!' }}</p>
       </div>
 
+      <!-- Texto épico para Cryptas -->
+      <div *ngIf="fightResult.isCrypt" class="text-center pb-3">
+        <p *ngIf="victory" urText class="text-success text-uppercase">
+          Congratulations, brave adventurer! ⚔️<br />
+          You delve deeper into the crypt, where greater dangers and riches
+          await!
+        </p>
+        <p *ngIf="!victory" urText class="text-danger text-uppercase">
+          The shadows of the crypt have consumed your hero... ☠️<br />
+          Rise again, for this is not the end of your journey.
+        </p>
+      </div>
+
       <div
         class="row pb-4"
         *ngIf="
-          fightResult.player?.level > player.level || thereIsLoot(fightResult)
+          (!fightResult.isCrypt && fightResult.player?.level > player.level) ||
+          thereIsLoot(fightResult)
         "
       >
         <div
-          *ngIf="fightResult.player?.level > player.level"
+          *ngIf="
+            !fightResult.isCrypt && fightResult.player?.level > player.level
+          "
           class="col pb-md-4 col-12 d-flex flex-column gap-2"
         >
           <span #levelUp urSubtitle class="text-rainbow text-center"
@@ -322,10 +329,8 @@
         class="text-white pb-2 text-center"
         *ngIf="!!fightResult.newQuest"
         >{{
-          fightResult?.newQuest?.data?.isAdventurePhase
-            ? fightResult.newQuest.data.lost
-              ? "Don't surrender, try it again! 💪"
-              : 'New adventure phase unlocked:'
+          fightResult.newQuest.data.lost
+            ? "Don't surrender, try it again! 💪"
             : 'New quest unlocked:'
         }}
         <span
@@ -336,13 +341,6 @@
         ></span
       >
 
-      <span
-        urText
-        class="text-white pb-2"
-        *ngIf="!!fightResult.completedAdventure"
-      >
-        Congratulations! You have completed an adventure!
-      </span>
       <div class="pb-2">
         @if (!!fightResult.ganked) {
           <div class="d-flex flex-column">
