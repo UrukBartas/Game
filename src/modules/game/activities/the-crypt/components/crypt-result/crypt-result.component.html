@@ -1,0 +1,14 @@
+<div class="crypt-result">
+  <h2>Encounter Result</h2>
+  <p *ngIf="result.success">You defeated the enemy! 🎉</p>
+  <p *ngIf="!result.success">The enemy defeated you! 😔</p>
+
+  <h3>Rewards:</h3>
+  <ul>
+    <li *ngFor="let reward of result.rewards">
+      {{ reward.type }}: {{ reward.value }}
+    </li>
+  </ul>
+
+  <button (click)="next()">Continue</button>
+</div>

@@ -1,0 +1,46 @@
+<div class="crypt-finished">
+  <h2>Victory in the Crypt! 🎉</h2>
+  <p>
+    Congratulations! You have conquered all the challenges and emerged
+    victorious.
+  </p>
+
+  <div class="progress-summary">
+    <h3>Progress</h3>
+    <ul>
+      <li>Total Levels Completed: {{ crypt.currentLevel }}</li>
+      <li>Encounters Cleared: {{ completedEncounters.length }}</li>
+    </ul>
+  </div>
+
+  <div *ngIf="crypt.appliedBonuses?.rewards?.length">
+    <h3>Final Rewards</h3>
+    <ul>
+      <li *ngFor="let reward of crypt.appliedBonuses.rewards">
+        {{ reward.type }}: {{ reward.value }}
+      </li>
+    </ul>
+  </div>
+
+  <div class="reward-info">
+    <p>
+      <strong>Well done!</strong> Your progress will be evaluated, and rewards
+      will be distributed at the end of the week. The deeper you ventured into
+      the crypt, the better your rewards will be!
+    </p>
+  </div>
+
+  <div class="player-state">
+    <h3>Player Final State</h3>
+    <ul>
+      <li>Health: {{ crypt.playerState.health }}</li>
+      <li>Energy: {{ crypt.playerState.energy }}</li>
+      <li>Damage: {{ crypt.playerState.damage }}</li>
+      <li>Armor: {{ crypt.playerState.armor }}</li>
+    </ul>
+  </div>
+
+  <div class="actions">
+    <button class="exit-button" (click)="exit()">Exit</button>
+  </div>
+</div>

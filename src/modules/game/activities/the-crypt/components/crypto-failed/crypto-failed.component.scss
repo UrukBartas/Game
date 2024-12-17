@@ -1,0 +1,31 @@
+.crypt-failed {
+  text-align: center;
+  color: #ff4d4d;
+}
+
+.retry-button {
+  background-color: #ff4d4d;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.exit-button {
+  background-color: #555;
+  color: white;
+  padding: 10px 20px;
+  margin-left: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.reward-info {
+  margin: 1rem 0;
+  padding: 0.75rem;
+  border: 1px solid #ffc107;
+  background-color: #fff3cd;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #856404;
+  text-align: center;
+}
