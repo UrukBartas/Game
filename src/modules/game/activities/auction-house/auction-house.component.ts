@@ -114,7 +114,9 @@ export class AuctionHouseComponent {
       });
     }
   );
-  public selectStatus = new FormControl<'ACTIVE' | 'SOLD'>('ACTIVE');
+  public selectStatus = new FormControl<
+    'ACTIVE' | 'SOLD' | 'BOUGHT' | 'WITH_BIDS'
+  >('ACTIVE');
   selectStatusChanged = this.selectStatus.valueChanges.subscribe((value) => {
     this.marketListingFilter.set({
       ...this.lastMarketListingFilter,

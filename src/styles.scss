@@ -115,13 +115,18 @@ app-item-box {
     width: fit-content;
     justify-content: center;
     align-items: center;
+    height: 100%;
     @include media-breakpoint-down(sm) {
       width: 90%;
     }
     border: none !important;
-    height: 100%;
     @include media-breakpoint-up(sm) {
       justify-content: center;
+    }
+  }
+  .modal-content:has(#tooltip-modal) {
+    @include media-breakpoint-down(sm) {
+      height: fit-content !important;
     }
   }
 }
@@ -564,4 +569,13 @@ app-balance-selector {
     padding: 5px;
     list-style: none;
   }
+}
+
+app-item-tooltip {
+  width: 100%;
+  display: block;
+}
+
+.tooltip-uruk {
+  display: flex;
 }
