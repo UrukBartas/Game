@@ -556,8 +556,6 @@ export class ExportImportNftComponent extends TemplatePage {
             (item) =>
               selectedItemParsedMaterial.materialDataId == item.materialDataId
           );
-          if (!foundItemInArrayItems)
-            throw new Error('Item does not exist in your inventory!');
           if (amountToExport > foundItemInArrayItems.quantity) {
             throw new Error('You can not export more than you own!');
           }
@@ -574,8 +572,6 @@ export class ExportImportNftComponent extends TemplatePage {
               misc.miscellanyItemDataId ==
               selectedItemParsedMiscellany.miscellanyItemDataId
           );
-          if (foundItemsOfSameType.length == 0)
-            throw new Error('Item does not exist in your inventory!');
           if (amountToExportMiscellany > foundItemsOfSameType.length) {
             throw new Error('You can not export more than you own!');
           }
@@ -597,8 +593,6 @@ export class ExportImportNftComponent extends TemplatePage {
                 consumable.consumableDataId ==
                 selectedItemParsedConsumable.consumableDataId
             );
-          if (foundItemsOfSameTypeConsumables.length == 0)
-            throw new Error('Item does not exist in your inventory!');
           if (
             amountToExportConsumable > foundItemsOfSameTypeConsumables.length
           ) {

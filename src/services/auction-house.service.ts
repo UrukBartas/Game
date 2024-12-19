@@ -26,7 +26,7 @@ export class MarketListingPayload {
   take?: number;
   sortBy?: 'price' | 'recent';
   sortOrder?: 'ASC' | 'DESC';
-  status?: 'ACTIVE' | 'SOLD' | 'CANCELED';
+  status?: 'ACTIVE' | 'SOLD' | 'BOUGHT' | 'WITH_BIDS';
 }
 export class NewMarketListingPayloadDTO {
   price: number;

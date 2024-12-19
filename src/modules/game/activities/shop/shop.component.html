@@ -95,14 +95,27 @@
               [item]="item"
               [calculatedStack]="obtainStacks"
               (click)="selectItem(item)"
-              [ngbTooltip]="item.itemData ? itemTooltip : consumableTooltip"
-              [tooltipContext]="{ item: item }"
               [rarity]="item.itemData ? item.itemData.rarity : item.rarity"
               [disabled]="item.level > (player$ | async).level"
               [image]="
                 item.itemData ? item.itemData.imageLocal : item.imageLocal
               "
-            ></app-item-box>
+            >
+              <div tooltip class="tooltip-uruk">
+                <app-item-tooltip
+                  [item]="item"
+                  [compareWith]="this.getItem$(item.itemData.itemType) | async"
+                ></app-item-tooltip>
+                <app-item-tooltip
+                  *ngIf="
+                    (this.getItem$(item.itemData.itemType) | async) &&
+                    getShowItemCompare()
+                  "
+                  [item]="this.getItem$(item.itemData.itemType) | async"
+                  [isBeingCompared]="true"
+                ></app-item-tooltip>
+              </div>
+            </app-item-box>
             <div class="item-price">
               <span class="text-white">{{ item.price | number: '1.0-2' }}</span>
             </div>
@@ -115,22 +128,6 @@
     </div>
   </div>
 </div>
-
-<ng-template #itemTooltip let-item="item">
-  <div tooltip class="tooltip-uruk">
-    <app-item-tooltip
-      [item]="item"
-      [compareWith]="this.getItem$(item.itemData.itemType) | async"
-    ></app-item-tooltip>
-    <app-item-tooltip
-      *ngIf="
-        (this.getItem$(item.itemData.itemType) | async) && getShowItemCompare()
-      "
-      [item]="this.getItem$(item.itemData.itemType) | async"
-      [isBeingCompared]="true"
-    ></app-item-tooltip>
-  </div>
-</ng-template>
 
 <ng-template #consumableTooltip let-item="item">
   <app-generic-item-tooltip

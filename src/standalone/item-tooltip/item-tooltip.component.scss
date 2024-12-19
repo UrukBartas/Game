@@ -15,7 +15,7 @@
   background-color: $black;
   padding: 15px;
   border-radius: 3px;
-
+  height: 100%;
   .description {
     @include media-breakpoint-down(sm) {
       flex-wrap: wrap;
