@@ -814,25 +814,6 @@ export class ExportImportNftComponent extends TemplatePage {
     this.selectedUruksToExport = 0;
   }
 
-  public async cancelAll(pendingItems: Array<any>) {
-    this.spinnerService.show();
-    try {
-      await this.cancelPendingExports(
-        pendingItems.map((entry) => entry.id),
-        pendingItems.map((entry) => this.getItemTypeSCBasedOnItem(entry)),
-        true
-      );
-      this.spinnerService.hide();
-      this.toastService.success('Success');
-    } catch (error: any) {
-      this.toastService.error(
-        error?.error?.message ?? undefined,
-        'Something went wrong'
-      );
-      this.spinnerService.hide();
-    }
-  }
-
   public async moveForwardAll(pendingItems: Array<any>) {
     this.spinnerService.show();
     try {
