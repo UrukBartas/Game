@@ -556,8 +556,6 @@ export class ExportImportNftComponent extends TemplatePage {
             (item) =>
               selectedItemParsedMaterial.materialDataId == item.materialDataId
           );
-          if (!foundItemInArrayItems)
-            throw new Error('Item does not exist in your inventory!');
           if (amountToExport > foundItemInArrayItems.quantity) {
             throw new Error('You can not export more than you own!');
           }
@@ -574,8 +572,6 @@ export class ExportImportNftComponent extends TemplatePage {
               misc.miscellanyItemDataId ==
               selectedItemParsedMiscellany.miscellanyItemDataId
           );
-          if (foundItemsOfSameType.length == 0)
-            throw new Error('Item does not exist in your inventory!');
           if (amountToExportMiscellany > foundItemsOfSameType.length) {
             throw new Error('You can not export more than you own!');
           }
@@ -597,8 +593,6 @@ export class ExportImportNftComponent extends TemplatePage {
                 consumable.consumableDataId ==
                 selectedItemParsedConsumable.consumableDataId
             );
-          if (foundItemsOfSameTypeConsumables.length == 0)
-            throw new Error('Item does not exist in your inventory!');
           if (
             amountToExportConsumable > foundItemsOfSameTypeConsumables.length
           ) {
@@ -812,25 +806,6 @@ export class ExportImportNftComponent extends TemplatePage {
     }, 'The coins got imported, you will receive them in your inventory soon!');
 
     this.selectedUruksToExport = 0;
-  }
-
-  public async cancelAll(pendingItems: Array<any>) {
-    this.spinnerService.show();
-    try {
-      await this.cancelPendingExports(
-        pendingItems.map((entry) => entry.id),
-        pendingItems.map((entry) => this.getItemTypeSCBasedOnItem(entry)),
-        true
-      );
-      this.spinnerService.hide();
-      this.toastService.success('Success');
-    } catch (error: any) {
-      this.toastService.error(
-        error?.error?.message ?? undefined,
-        'Something went wrong'
-      );
-      this.spinnerService.hide();
-    }
   }
 
   public async moveForwardAll(pendingItems: Array<any>) {

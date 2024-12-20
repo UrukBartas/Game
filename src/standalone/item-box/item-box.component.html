@@ -1,6 +1,13 @@
 <ng-template #tipContent>
   <ng-content select="[tooltip]"></ng-content>
 </ng-template>
+
+<ng-template #tooltipModal>
+  <div id="tooltip-modal" class="gap-2">
+    <ng-container *ngTemplateOutlet="tipContent"></ng-container>
+  </div>
+</ng-template>
+
 <div
   [ngbTooltip]="displayTooltip && !overlayImage ? tipContent : undefined"
   class="box d-flex justify-content-center box-{{ rarity }}"
