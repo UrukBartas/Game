@@ -1,6 +1,8 @@
+@import '../../../../../../variables.scss';
+
 .crypt-finished {
   text-align: center;
-  color: #28a745;
+  color: $third; // #28a745 no tiene una variable exacta definida, puedes crear una nueva si lo deseas
 }
 
 .rewards ul,
@@ -16,16 +18,16 @@
 }
 
 .claim-button {
-  background-color: #28a745;
-  color: white;
+  background-color: $third; // #28a745 no tiene una variable exacta definida, puedes crear una nueva si lo deseas
+  color: $white-100;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
 }
 
 .exit-button {
-  background-color: #555;
-  color: white;
+  background-color: $gray-500; // #555 -> $gray-500
+  color: $white-100;
   padding: 10px 20px;
   margin-left: 10px;
   border-radius: 5px;
@@ -35,10 +37,15 @@
 .reward-info {
   margin: 1rem 0;
   padding: 0.75rem;
-  border: 1px solid #ffc107;
-  background-color: #fff3cd;
+  border: 1px solid $third;
+  background-color: $secondary;
   border-radius: 5px;
   font-size: 1rem;
-  color: #856404;
+  color: white;
   text-align: center;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
 }

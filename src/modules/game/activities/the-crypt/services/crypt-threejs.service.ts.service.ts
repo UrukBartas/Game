@@ -1,24 +1,23 @@
 import { ElementRef, Injectable, NgZone } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { LootboxPresaleThreeService } from 'src/modules/lootbox-presale/services/lootbox-presale-threejs.service';
 import * as THREE from 'three';
 
 @Injectable({
   providedIn: 'root',
 })
-export class LootboxPresaleThreeService {
-  protected scene!: THREE.Scene;
-  protected camera!: THREE.PerspectiveCamera;
-  protected renderer!: THREE.WebGLRenderer;
-  protected smokeParticles: THREE.Mesh[] = [];
-  protected resizeListener!: () => void;
-  private smokeMaterial!: THREE.MeshBasicMaterial; // Add property to store the fog material
+export class CryptThreejsServiceTsService extends LootboxPresaleThreeService {
+  constructor(ngZone: NgZone) {
+    super(ngZone);
+  }
 
-  constructor(protected ngZone: NgZone) {}
-
-  initialize(container: ElementRef<HTMLDivElement>, fogColor: number): void {
+  override initialize(
+    container: ElementRef<HTMLDivElement>,
+    fogColor: number
+  ): void {
     // Create the scene
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x000000);
+    this.scene.background = null; // Elimina el fondo negro para permitir transparencia
 
     // Create the camera
     this.camera = new THREE.PerspectiveCamera(
@@ -31,7 +30,8 @@ export class LootboxPresaleThreeService {
     this.camera.position.z = 5;
 
     // Create the renderer
-    this.renderer = new THREE.WebGLRenderer({ antialias: true });
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    this.renderer.setClearColor(0x000000, 0); // Fondo transparente
     this.renderer.setSize(
       container.nativeElement.clientWidth,
       container.nativeElement.clientHeight
@@ -64,22 +64,23 @@ export class LootboxPresaleThreeService {
     this.animate();
   }
 
-  protected createSmoke(texture: THREE.Texture, fogColor: number) {
-    this.smokeMaterial = new THREE.MeshBasicMaterial({
+  override createSmoke(texture: THREE.Texture, fogColor: number) {
+    const smokeMaterial = new THREE.MeshBasicMaterial({
       map: texture,
       transparent: true,
-      opacity: 0.2,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.5,
+      blending: THREE.NormalBlending,
       depthWrite: false,
       color: fogColor,
     });
+
     const smokeGeometry = new THREE.PlaneGeometry(10, 10);
-    for (let i = 0; i < 80; i++) {
-      const particle = new THREE.Mesh(smokeGeometry, this.smokeMaterial);
+    for (let i = 0; i < 50; i++) {
+      const particle = new THREE.Mesh(smokeGeometry, smokeMaterial);
       particle.position.set(
-        Math.random() * 20 - 10,
-        Math.random() * 10 - 10,
-        Math.random() * 20 - 10
+        Math.random() * 20 - 10, // X position
+        Math.random() * -5 - 5, // Y position: stay below the canvas
+        Math.random() * 20 - 10 // Z position
       );
       particle.rotation.z = Math.random() * Math.PI * 2;
       this.scene.add(particle);
@@ -87,24 +88,15 @@ export class LootboxPresaleThreeService {
     }
   }
 
-  changeFogColor(color: number) {
-    if (this.smokeMaterial) {
-      this.smokeMaterial.color.set(color);
-    }
-  }
-
-  protected onWindowResize() {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-  }
-
-  protected animate = () => {
+  override animate = () => {
     this.ngZone.runOutsideAngular(() => {
       requestAnimationFrame(this.animate);
+
+      // Keep the smoke particles static or move very slightly
       this.smokeParticles.forEach((particle) => {
-        particle.rotation.z += 0.002;
+        particle.rotation.z += 0.001; // Minimal rotation
       });
+
       this.renderer.render(this.scene, this.camera);
     });
   };

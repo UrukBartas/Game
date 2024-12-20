@@ -1,0 +1,64 @@
+@import 'node_modules/bootstrap/scss/mixins';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
+.rewards {
+  display: flex;
+  align-items: center;
+}
+
+.rooms-list {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: auto;
+  width: 100%;
+}
+
+.rooms-list-header {
+  flex-wrap: nowrap;
+  @include media-breakpoint-down(sm) {
+    flex-wrap: wrap;
+  }
+}
+
+.rooms-list-header {
+  @include media-breakpoint-down(sm) {
+    justify-content: start;
+  }
+}
+
+.room {
+  display: flex;
+  align-items: center;
+  position: relative;
+  .img-reward {
+    max-width: 32px;
+  }
+  .arrow {
+    max-width: 32px;
+    transform: rotate(90deg);
+  }
+}
+.locked-screen {
+  pointer-events: none;
+  cursor: not-allowed;
+  app-item-box,
+  .img-reward,
+  .dificulty-indicator {
+    filter: grayscale(1);
+  }
+}
+.dificulty-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  bottom: 10px;
+
+  .uruk-icon {
+    width: 20px;
+    height: 20px;
+  }
+}

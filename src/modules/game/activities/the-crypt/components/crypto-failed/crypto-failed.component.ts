@@ -4,6 +4,7 @@ import {
   CryptModel,
   EncounterStatus,
 } from 'src/modules/core/models/crypt.model';
+import { PlayerModel } from 'src/modules/core/models/player.model';
 
 @Component({
   selector: 'app-crypto-failed',
@@ -13,7 +14,8 @@ import {
 export class CryptoFailedComponent {
   @Input() crypt: CryptModel;
   @Output() startNewCrypt = new EventEmitter<void>();
-
+  @Input() appliedBonuses: Array<any> = [];
+  @Input() currentState: PlayerModel;
   get completedEncounters(): CryptEncounterModel[] {
     return this.crypt.encounters.filter(
       (encounter) => encounter.status === EncounterStatus.COMPLETED

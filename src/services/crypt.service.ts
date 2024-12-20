@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CryptModel, CryptStatus } from 'src/modules/core/models/crypt.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
+import { CryptStats } from 'src/modules/game/activities/the-crypt/components/crypt-start/crypt-start.component';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,14 @@ export class CryptService extends ApiBaseService {
   // Obtener la crypta actual activa
   getCurrent(): Observable<CryptModel> {
     return this.get('/current');
+  }
+
+  getCryptStats(): Observable<CryptStats> {
+    return this.get('/crypt-stats');
+  }
+
+  purchaseOneMoreTry(): Observable<void> {
+    return this.get('/get-more-tries');
   }
 
   // Iniciar una nueva crypta

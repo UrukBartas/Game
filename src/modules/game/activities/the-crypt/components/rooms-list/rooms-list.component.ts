@@ -1,28 +1,33 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   inject,
   Input,
-  Output
+  Output,
+  QueryList,
+  ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import { cloneDeep } from 'lodash';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { environment } from 'src/environments/environment';
-import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { CryptEncounterModel } from 'src/modules/core/models/crypt.model';
 import { Rarity } from 'src/modules/core/models/items.model';
-import { PlayerModel } from 'src/modules/core/models/player.model';
 import { OrderByPipe } from 'src/modules/core/pipes/order-by.pipe';
-import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { getRarityColor } from 'src/modules/utils';
+
 @Component({
-  selector: 'app-crypt-progress',
-  templateUrl: './crypt-progress.component.html',
-  styleUrl: './crypt-progress.component.scss',
+  selector: 'app-rooms-list',
+  templateUrl: './rooms-list.component.html',
+  styleUrl: './rooms-list.component.scss',
 })
-export class CryptProgressComponent extends TemplatePage {
+export class RoomsListComponent {
+  @ViewChildren('activeRoom') roomElements!: QueryList<ElementRef>;
+  @ViewChild('roomsListContainer') roomsListContainer!: ElementRef;
+  sort = inject(OrderByPipe);
   @Input() currentLevel: number = 0;
-  @Input() appliedBonuses: Array<any> = [];
+  public prefix = environment.permaLinkImgPref;
+  getRarityColor = getRarityColor;
   @Input() public set encounters(data: CryptEncounterModel[]) {
     const cloned = cloneDeep(
       this.sort.transform(data, 'id', 'asc')
@@ -43,15 +48,8 @@ export class CryptProgressComponent extends TemplatePage {
     return this._encounters;
   }
   _encounters: CryptEncounterModel[];
-  @Input() currentState: PlayerModel;
-  @Output() startedEncounter = new EventEmitter<CryptEncounterModel>();
-  @Output() surrender = new EventEmitter<void>();
-  public prefix = environment.permaLinkImgPref;
 
-  private modalService = inject(BsModalService);
-  sort = inject(OrderByPipe);
-  getRarityColor = getRarityColor;
-
+  @Output() selectedRoom = new EventEmitter<CryptEncounterModel>();
 
   getDifficultyLevelByRarity(
     index: number,
@@ -84,19 +82,23 @@ export class CryptProgressComponent extends TemplatePage {
     return Rarity.COMMON;
   }
 
-  public triggerSurrender() {
-    const config: ModalOptions = {
-      initialState: {
-        title: 'Are you sure you want to surrender?',
-        description: `If you surrender now, all your progress in the Crypt will be lost, and you will have to start from the beginning.\n\nAre you sure you want to give up?`,
-        accept: async () => {
-          this.surrender.emit();
-          modalRef.hide();
-        },
-      },
-    };
-    const modalRef = this.modalService.show(ConfirmModalComponent, config);
+  ngAfterViewInit(): void {
+    this.focusActiveRoom();
   }
 
+  focusActiveRoom(): void {
+    const activeRoom = this.roomElements.toArray()[this.currentLevel];
+    if (activeRoom) {
+      activeRoom.nativeElement.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center', // Centrar horizontalmente
+        block: 'nearest', // Ajustar verticalmente
+      });
+    }
+  }
 
+  updateCurrentLevel(level: number): void {
+    this.currentLevel = level;
+    this.focusActiveRoom();
+  }
 }

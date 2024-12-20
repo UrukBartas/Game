@@ -1,25 +1,80 @@
+@import '../../../../../../variables.scss';
+.past-crypts {
+  max-height: 400px;
+  overflow: auto;
+}
 .crypt-welcome {
   text-align: center;
-  color: #e0e0e0;
-  background: #1b1b1b;
+  color: $white-300;
+  background: $black-500;
   padding: 2rem;
   border-radius: 10px;
   max-width: 800px;
   margin: 2rem auto;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 15px $black-transparent;
   font-family: 'Georgia', serif;
+  position: relative;
+  z-index: 1;
+}
+
+.crypt-stats {
+  text-align: left;
+  color: $white-300;
+  background: $black-500;
+  padding: 2rem;
+  border-radius: 10px;
+  margin: 2rem auto;
+  box-shadow: 0 4px 15px $black-transparent;
+  font-family: 'Georgia', serif;
+  position: relative;
+  z-index: 1;
+}
+
+.main-container {
+  position: relative;
+  z-index: 1;
+}
+
+.crypt-stats h2 {
+  font-size: 2rem;
+  color: $orange;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 5px $black-300;
+}
+
+.crypt-stats .stat-item {
+  margin-bottom: 1rem;
+}
+
+.crypt-stats ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.crypt-stats ul li {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.crypt-stats ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  color: $orange;
 }
 
 h1 {
   font-size: 2.5rem;
-  color: #c41e3a;
+  color: $red;
   margin-bottom: 1rem;
-  text-shadow: 0 0 5px #830000;
+  text-shadow: 0 0 5px $black-300;
 }
 
 h2,
 h3 {
-  color: #f39c12;
+  color: $orange;
   margin-top: 1.5rem;
 }
 
@@ -49,7 +104,7 @@ ul li::before {
   content: '⚔️';
   position: absolute;
   left: 0;
-  color: #f39c12;
+  color: $orange;
 }
 
 .crypt-challenge {
@@ -59,25 +114,32 @@ ul li::before {
 .challenge-text {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #c41e3a;
+  color: $red;
+}
+
+.failed {
+  color: $red;
+}
+.success {
+  color: $third;
 }
 
 .enter-button {
-  background-color: #c41e3a;
-  color: #fff;
+  background-color: $red;
+  color: $white-100;
   font-size: 1.2rem;
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 5px $black-transparent;
   transition:
     background 0.3s,
     transform 0.2s;
 }
 
 .enter-button:hover {
-  background-color: #a1142c;
+  background-color: $warrior-secondary;
   transform: scale(1.05);
 }
 

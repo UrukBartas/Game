@@ -1,0 +1,70 @@
+<div
+  class="rooms-list gap-3 py-2"
+  #roomsListContainer
+  style="overflow-x: auto; white-space: nowrap"
+>
+  <div
+    class="room"
+    *ngFor="let encounter of encounters; let i = index"
+    [ngClass]="{
+      'locked-screen': i > currentLevel,
+    }"
+    #activeRoom
+    [attr.data-index]="i"
+  >
+    <app-item-box
+      [rarity]="i == currentLevel ? getRarityBasedOnIndex(i) : null"
+      (click)="selectedRoom.emit(encounter)"
+      [active]="i == currentLevel"
+      [overlayImage]="
+        i < currentLevel ? 'assets/check_panoramicv2.webp' : undefined
+      "
+      [height]="140"
+      [width]="200"
+      [image]="encounter.questData.backgroundImage"
+    >
+      <div tooltip class="tooltip-uruk">
+        <span class="text-light p-2" urText>{{
+          encounter.questData.name
+        }}</span>
+      </div>
+    </app-item-box>
+    <div class="dificulty-indicator">
+      <span
+        *ngFor="let skull of [].constructor(encounter.difficultyLevel)"
+        class="skull"
+      >
+        <i
+          [ngStyle]="{ color: getRarityColor(encounter.questData.rarity) }"
+          class="fa-solid fa-skull"
+        ></i>
+      </span>
+    </div>
+    <div class="rewards">
+      <img
+        class="arrow"
+        src="{{ prefix + '/assets/misc/arrow.png' }}"
+        alt=""
+        srcset=""
+      />
+      @if (i == encounters.length - 1) {
+        <img
+          class="img-reward"
+          [src]="prefix + '/assets/misc/opened_chest.png'"
+        />
+      } @else {
+        <img
+          class="img-reward"
+          [src]="prefix + '/assets/leaderboard/level/gold.png'"
+        />
+      }
+      <img
+        [ngClass]="{ invisible: i == encounters.length - 1 }"
+        class="arrow"
+        src="{{ prefix + '/assets/misc/arrow.png' }}"
+        alt=""
+        srcset=""
+      />
+    </div>
+  </div>
+</div>

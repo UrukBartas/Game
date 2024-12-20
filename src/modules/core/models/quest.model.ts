@@ -1,6 +1,5 @@
-import { AdventureData } from 'src/services/adventures-data.service';
-import { QuestDataModel } from './quest-data.model';
 import { Adventure } from 'src/services/adventures.service';
+import { QuestDataModel } from './quest-data.model';
 
 export interface QuestModel {
   id: number;
@@ -13,5 +12,5 @@ export interface QuestModel {
   finishedAt: string;
   active: boolean;
   selected?: boolean;
+  type: 'DEFAULT' | 'CRYPT';
 }
-

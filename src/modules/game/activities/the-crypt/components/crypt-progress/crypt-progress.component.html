@@ -1,92 +1,8 @@
 <div class="crypt-progress pb-4">
-  <div class="stats">
-    <div class="description desc-mover">
-      <p urTitle>Hero state</p>
-    </div>
-    <div
-      class="d-flex justify-content-center player-avatar row"
-      *ngIf="currentState"
-    >
-      <div class="player-basic-info d-flex col-12 gap-2">
-        <app-item-box
-          [height]="getPlayerImageSize()"
-          [width]="getPlayerImageSize()"
-          [image]="currentState.image"
-        ></app-item-box>
-
-        <div class="stats-player col-12">
-          <div class="vitals d-flex gap-2 flex-column">
-            <div
-              class="progress shadow"
-              [style.height]="getHealthBarHeight() + 'px'"
-            >
-              <span class="progress-text position-absolute"
-                >{{
-                  currentState.remainingHealth ?? currentState.stats.health
-                    | number
-                }}/{{ currentState.stats.health | number }}</span
-              >
-              <div
-                class="progress-bar progress-bar-health progress-bar-animated shadow"
-                role="progressbar"
-                aria-valuemin="0"
-                aria-valuemax="100"
-                [style.width]="
-                  ((currentState.remainingHealth ?? currentState.stats.health) /
-                    currentState.stats.health) *
-                    100 +
-                  '%'
-                "
-              ></div>
-            </div>
-            <div
-              class="progress shadow"
-              [style.height]="getHealthBarHeight() + 'px'"
-            >
-              <span class="progress-text position-absolute"
-                >{{
-                  currentState.remainingEnergy ?? currentState.energy | number
-                }}/{{ currentState.energy | number }}</span
-              >
-              <div
-                class="progress-bar progress-bar-energy progress-bar-animated shadow"
-                role="progressbar"
-                aria-valuemin="0"
-                aria-valuemax="100"
-                [style.width]="
-                  ((currentState.remainingEnergy ?? currentState.stats.energy) /
-                    currentState.stats.energy) *
-                    100 +
-                  '%'
-                "
-              ></div>
-            </div>
-          </div>
-          <div class="upgrades gap-2 py-2">
-            <div
-              class="reward text-light"
-              *ngFor="let reward of appliedBonuses"
-            >
-              <app-item-box
-                [height]="50"
-                [width]="50"
-                [image]="reward.icon"
-                [rarity]="reward.rarity"
-              >
-                <div tooltip class="tooltip-uruk p-2">
-                  <label class="text-center">{{ reward.description }}</label>
-                </div>
-              </app-item-box>
-            </div>
-          </div>
-          <app-only-stats
-            [player]="currentState"
-            [simplified]="true"
-          ></app-only-stats>
-        </div>
-      </div>
-    </div>
-  </div>
+  <app-crypt-player-state
+    [currentState]="currentState"
+    [appliedBonuses]="appliedBonuses"
+  ></app-crypt-player-state>
   <div
     class="description desc-mover w-100 rooms-list-header"
     style="align-self: self-start"
@@ -105,68 +21,9 @@
       </button>
     </div>
   </div>
-  <div class="rooms-list gap-3">
-    <div
-      class="room"
-      *ngFor="let encounter of encounters; let i = index"
-      [ngClass]="{
-        'locked-screen': i > currentLevel,
-      }"
-    >
-      <app-item-box
-        [rarity]="i == currentLevel ? getRarityBasedOnIndex(i) : null"
-        (click)="startedEncounter.emit(encounter)"
-        [active]="i == currentLevel"
-        [overlayImage]="
-          i < currentLevel ? 'assets/check_panoramicv2.webp' : undefined
-        "
-        [height]="140"
-        [width]="200"
-        [image]="encounter.questData.backgroundImage"
-      >
-        <div tooltip class="tooltip-uruk">
-          <span class="text-light p-2" urText>{{
-            encounter.questData.name
-          }}</span>
-        </div>
-      </app-item-box>
-      <div class="dificulty-indicator">
-        <span
-          *ngFor="let skull of [].constructor(encounter.difficultyLevel)"
-          class="skull"
-        >
-          <i
-            [ngStyle]="{ color: getRarityColor(encounter.questData.rarity) }"
-            class="fa-solid fa-skull"
-          ></i>
-        </span>
-      </div>
-      <div class="rewards">
-        <img
-          class="arrow"
-          src="{{ prefix + '/assets/misc/arrow.png' }}"
-          alt=""
-          srcset=""
-        />
-        @if (i == encounters.length - 1) {
-          <img
-            class="img-reward"
-            [src]="prefix + '/assets/misc/opened_chest.png'"
-          />
-        } @else {
-          <img
-            class="img-reward"
-            [src]="prefix + '/assets/leaderboard/level/gold.png'"
-          />
-        }
-        <img
-          [ngClass]="{ invisible: i == encounters.length - 1 }"
-          class="arrow"
-          src="{{ prefix + '/assets/misc/arrow.png' }}"
-          alt=""
-          srcset=""
-        />
-      </div>
-    </div>
-  </div>
+  <app-rooms-list
+    [encounters]="encounters"
+    [currentLevel]="currentLevel"
+    (selectedRoom)="startedEncounter.emit($event)"
+  ></app-rooms-list>
 </div>

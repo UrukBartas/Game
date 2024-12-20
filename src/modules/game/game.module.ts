@@ -96,6 +96,8 @@ import { CryptResultComponent } from './activities/the-crypt/components/crypt-re
 import { CryptFinishedComponent } from './activities/the-crypt/components/crypt-finished/crypt-finished.component';
 import { CryptStartComponent } from './activities/the-crypt/components/crypt-start/crypt-start.component';
 import { CryptoFailedComponent } from './activities/the-crypt/components/crypto-failed/crypto-failed.component';
+import { RoomsListComponent } from './activities/the-crypt/components/rooms-list/rooms-list.component';
+import { CryptPlayerStateComponent } from './activities/the-crypt/components/crypt-player-state/crypt-player-state.component';
 const directives = [
   ValidInputDirective,
   TextSizeDirective,
@@ -173,6 +175,8 @@ const pipes = [
     CryptFinishedComponent,
     CryptStartComponent,
     CryptoFailedComponent,
+    RoomsListComponent,
+    CryptPlayerStateComponent,
   ],
   imports: [
     ...directives,

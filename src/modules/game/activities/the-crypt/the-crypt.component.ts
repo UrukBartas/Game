@@ -1,11 +1,14 @@
 import {
   Component,
   effect,
+  ElementRef,
   EventEmitter,
   inject,
   Output,
   signal,
+  ViewChild,
 } from '@angular/core';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
@@ -20,6 +23,8 @@ import {
 import { FightResultModel } from 'src/modules/core/models/fight.model';
 import { CryptService } from 'src/services/crypt.service';
 import { QuestService } from 'src/services/quest.service';
+import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
+import { CryptThreejsServiceTsService } from './services/crypt-threejs.service.ts.service';
 
 @Component({
   selector: 'app-the-crypt',
@@ -35,9 +40,12 @@ export class TheCryptComponent extends TemplatePage {
     status: CryptStatusEnum.IN_PROGRESS,
   });
   public currentCrypt = signal<CryptModel>(null);
-  @Output() statusChanged = new EventEmitter<CryptRouterModel>();
+  private threeService = inject(CryptThreejsServiceTsService);
 
-  constructor() {
+  @Output() statusChanged = new EventEmitter<CryptRouterModel>();
+  @ViewChild('threeContainer', { static: true })
+  threeContainer!: ElementRef<HTMLDivElement>;
+  constructor(protected modalService: BsModalService) {
     super();
     effect(() => {
       this.statusChanged.emit(this.cryptRouter());
@@ -168,8 +176,33 @@ export class TheCryptComponent extends TemplatePage {
     }
   }
 
+  public async getMoreTries() {
+    const config: ModalOptions = {
+      initialState: {
+        title: 'Try again?',
+        description:
+          'You are about to purchase an extra attempt for 1000 Golden Uruks, do you want to continue?',
+        accept: async () => {
+          try {
+            await firstValueFrom(this.cryptService.purchaseOneMoreTry());
+            await this.getCurrentCrypt();
+            this.toast.success('You got one more try... use it wisely');
+          } catch (error) {
+            await this.getCurrentCrypt();
+          }
+          modalRef.hide();
+        },
+      },
+    };
+    const modalRef = this.modalService.show(ConfirmModalComponent, config);
+  }
+
   onFightResolved(data: FightResultModel) {
     // Avanzar al resultado del combate
     this.cryptRouter.set({ status: CryptStatusEnum.RESULT, data });
+  }
+
+  ngOnInit(): void {
+    this.threeService.initialize(this.threeContainer, parseInt('ced4d2', 16));
   }
 }

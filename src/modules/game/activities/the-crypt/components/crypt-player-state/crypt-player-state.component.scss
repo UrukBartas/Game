@@ -1,0 +1,15 @@
+@import 'node_modules/bootstrap/scss/mixins';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
+.upgrades {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.player-basic-info {
+  flex-wrap: nowrap;
+  @include media-breakpoint-down(sm) {
+    flex-wrap: wrap;
+  }
+}
