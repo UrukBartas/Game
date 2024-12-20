@@ -102,18 +102,28 @@
               "
             >
               <div tooltip class="tooltip-uruk">
-                <app-item-tooltip
-                  [item]="item"
-                  [compareWith]="this.getItem$(item.itemData.itemType) | async"
-                ></app-item-tooltip>
-                <app-item-tooltip
-                  *ngIf="
-                    (this.getItem$(item.itemData.itemType) | async) &&
-                    getShowItemCompare()
-                  "
-                  [item]="this.getItem$(item.itemData.itemType) | async"
-                  [isBeingCompared]="true"
-                ></app-item-tooltip>
+                @if (item.itemData) {
+                  <app-item-tooltip
+                    [item]="item"
+                    [compareWith]="
+                      this.getItem$(item.itemData.itemType) | async
+                    "
+                  ></app-item-tooltip>
+                  <app-item-tooltip
+                    *ngIf="
+                      (this.getItem$(item.itemData.itemType) | async) &&
+                      getShowItemCompare()
+                    "
+                    [item]="this.getItem$(item.itemData.itemType) | async"
+                    [isBeingCompared]="true"
+                  ></app-item-tooltip>
+                } @else {
+                  <app-generic-item-tooltip
+                    [showPrice]="true"
+                    [souldBound]="!!item?.souldBoundByDefault"
+                    [item]="item"
+                  ></app-generic-item-tooltip>
+                }
               </div>
             </app-item-box>
             <div class="item-price">
@@ -128,11 +138,3 @@
     </div>
   </div>
 </div>
-
-<ng-template #consumableTooltip let-item="item">
-  <app-generic-item-tooltip
-    [showPrice]="true"
-    [souldBound]="!!item?.souldBoundByDefault"
-    [item]="item"
-  ></app-generic-item-tooltip>
-</ng-template>
