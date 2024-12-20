@@ -87,6 +87,9 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      @include media-breakpoint-down(sm) {
+        justify-content: flex-start;
+      }
       .listing-items {
         display: flex;
         flex-direction: column;
