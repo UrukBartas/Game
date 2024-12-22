@@ -83,12 +83,7 @@ export class TheMineComponent extends TemplatePage {
   useWallet = new FormControl(true);
 
   // Player state from the store
-  player$ = this.store.select(MainState.getState).pipe(
-    map((entry) => entry.player),
-    tap((player) => {
-      console.debug('URUK BARTAS DEBUG: Player state updated', player);
-    })
-  );
+  player$ = this.store.select(MainState.getPlayer);
 
   // Selected Uruks to export
   public selectedUruksToExport = 0;
@@ -99,26 +94,19 @@ export class TheMineComponent extends TemplatePage {
   erc20BalanceInterval$ = interval(2000).pipe(
     startWith(0),
     switchMap(() => {
-      console.debug('URUK BARTAS DEBUG: Fetching valid wallet address');
       return this.walletService.getValidAddress$;
     }),
     switchMap(() => {
-      console.debug('URUK BARTAS DEBUG: Fetching ERC20 balance for address');
       return from(
         this.ERC20ContractService.getBalanceOf(getAccount().address)
       ).pipe(
         catchError((err) => {
-          console.error('URUK BARTAS DEBUG: Error fetching ERC20 balance', err);
           return err;
         }),
         map((entry) => {
           const formattedBalance = Number(
             ethers.formatEther(entry.toString())
           ).toFixed(8);
-          console.debug(
-            'URUK BARTAS DEBUG: Fetched ERC20 balance',
-            formattedBalance
-          );
           return formattedBalance;
         })
       );
@@ -131,22 +119,16 @@ export class TheMineComponent extends TemplatePage {
   stakeInfoInterval$ = interval(5000).pipe(
     startWith(0),
     switchMap(() => {
-      console.debug(
-        'URUK BARTAS DEBUG: Fetching valid wallet address for stake info'
-      );
       return this.walletService.getValidAddress$;
     }),
     switchMap(() => {
-      console.debug('URUK BARTAS DEBUG: Fetching stake info for address');
       return from(
         this.ERC20ContractService.getStakeInfo(getAccount().address)
       ).pipe(
         catchError((err) => {
-          console.error('URUK BARTAS DEBUG: Error fetching stake info', err);
           return err;
         }),
         map((entry: any) => {
-          console.debug('URUK BARTAS DEBUG: Raw stake info fetched', entry);
           const [amountStaked, timeStaked, requests] = entry;
           const formattedStakeInfo = {
             amountStaked: Number(ethers.formatEther(amountStaked.toString())),
@@ -160,10 +142,6 @@ export class TheMineComponent extends TemplatePage {
               };
             }),
           };
-          console.debug(
-            'URUK BARTAS DEBUG: Formatted stake info',
-            formattedStakeInfo
-          );
           return formattedStakeInfo;
         })
       );
@@ -173,29 +151,23 @@ export class TheMineComponent extends TemplatePage {
   constructor() {
     super();
 
-    console.debug('URUK BARTAS DEBUG: Initializing TheMineComponent');
-
     this.erc20BalanceInterval$
       .pipe(takeUntilDestroyed())
       .subscribe((data: any) => {
-        console.debug('URUK BARTAS DEBUG: Updated ERC20 balance', data);
         this.erc20Balance$.next(data);
       });
 
     this.stakeInfoInterval$.pipe(takeUntilDestroyed()).subscribe((data) => {
-      console.debug('URUK BARTAS DEBUG: Updated stake info', data);
       this.stakeInfo.next(data);
     });
 
     this.useWallet.valueChanges.pipe(takeUntilDestroyed()).subscribe((data) => {
-      console.debug('URUK BARTAS DEBUG: useWallet value changed', data);
       this.stakeType = data ? 'wallet' : 'in-game';
     });
 
     interval(5000)
       .pipe(takeUntilDestroyed())
       .subscribe(() => {
-        console.debug('URUK BARTAS DEBUG: Dispatching RefreshPlayer action');
         this.store.dispatch(new RefreshPlayer());
       });
 
@@ -206,16 +178,10 @@ export class TheMineComponent extends TemplatePage {
     const eighteenDaysInMillis = 18 * 24 * 60 * 60 * 1000;
     const newTimestamp = requestTime + eighteenDaysInMillis;
     const endTime = new Date(newTimestamp);
-    console.debug('URUK BARTAS DEBUG: Calculated end time', {
-      requestTime,
-      endTime,
-    });
     return endTime;
   }
 
   public removeStaked() {
-    console.debug('URUK BARTAS DEBUG: Triggering removeStaked');
-
     const config: ModalOptions = {
       initialState: {
         title: 'Remove staked position',
@@ -223,7 +189,6 @@ export class TheMineComponent extends TemplatePage {
         description:
           'You are about to request an unstake of your funds, this will take 18 days to get completed. Do you want to continue?',
         accept: async (data: number) => {
-          console.debug('URUK BARTAS DEBUG: Unstaking funds with amount', data);
           await this.ERC20ContractService.triggerTx(() => {
             return this.ERC20ContractService.requestUnstake(
               [ethers.parseEther(data.toString())],
@@ -242,11 +207,6 @@ export class TheMineComponent extends TemplatePage {
   }
 
   public async giveUruksToWorkers() {
-    console.debug(
-      'URUK BARTAS DEBUG: Attempting to give Uruks to workers',
-      this.selectedUruksToExport
-    );
-
     this.spinnerService.show();
 
     try {
@@ -254,12 +214,10 @@ export class TheMineComponent extends TemplatePage {
         [ethers.parseEther(this.selectedUruksToExport.toString())],
         []
       );
-      console.debug('URUK BARTAS DEBUG: Transaction initiated', tx);
 
       const receipt = await waitForTransaction({
         hash: tx.hash,
       });
-      console.debug('URUK BARTAS DEBUG: Transaction receipt', receipt);
 
       this.toastService.success(
         this.selectedUruksToExport + ' given to the goblin workers!'
@@ -268,10 +226,6 @@ export class TheMineComponent extends TemplatePage {
       this.selectedUruksToExport = 0;
       this.store.dispatch(new RefreshPlayer());
     } catch (error) {
-      console.error(
-        'URUK BARTAS DEBUG: Error during giveUruksToWorkers transaction',
-        error
-      );
       this.toastService.error(
         'Error during transaction - Transaction canceled'
       );
@@ -281,16 +235,9 @@ export class TheMineComponent extends TemplatePage {
   }
 
   public async claimTokens(index: number) {
-    console.debug('URUK BARTAS DEBUG: Claiming tokens for index', index);
-
-    try {
-      const result = await this.ERC20ContractService.triggerTx(() => {
-        return this.ERC20ContractService.unstakeTokens([index], []);
-      });
-      console.debug('URUK BARTAS DEBUG: Tokens claimed', result);
-    } catch (error) {
-      console.error('URUK BARTAS DEBUG: Error during claimTokens', error);
-    }
+    await this.ERC20ContractService.triggerTx(() => {
+      return this.ERC20ContractService.unstakeTokens([index], []);
+    });
   }
 
   getActiveTier(amount: number) {
@@ -299,10 +246,6 @@ export class TheMineComponent extends TemplatePage {
         (amount >= tier.start && amount < tier.end) ||
         (amount >= tier.start && !tier.end)
     );
-    console.debug('URUK BARTAS DEBUG: Calculated active tier', {
-      amount,
-      activeTier,
-    });
     return activeTier || null;
   }
 
@@ -310,57 +253,47 @@ export class TheMineComponent extends TemplatePage {
     const screenSize = this.viewportService.screenSize;
     const imageSize = ['xxl', 'xl', 'lg'].includes(screenSize) ? 200 : 100;
 
-    console.debug('URUK BARTAS DEBUG: Calculated tier image size', {
-      screenSize,
-      imageSize,
-    });
-
     return imageSize;
   }
 
   public isBigScreen() {
     const isBig = ['xxl', 'xl', 'lg'].includes(this.viewportService.screenSize);
-    console.debug('URUK BARTAS DEBUG: Is big screen?', isBig);
     return isBig;
   }
 
   public getHighestTier() {
     const highestTier = this.tiers[this.tiers.length - 1];
-    console.debug('URUK BARTAS DEBUG: Retrieved highest tier', highestTier);
     return highestTier;
   }
 
   startCountdown() {
-    console.debug('URUK BARTAS DEBUG: Starting countdown');
-    interval(1000).subscribe(() => {
-      const now = new Date();
-      const nextMidnight = new Date();
-      nextMidnight.setHours(24, 0, 0, 0);
+    interval(1000)
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        const now = new Date();
+        const nextMidnight = new Date();
+        nextMidnight.setHours(24, 0, 0, 0);
 
-      const timeDifference = Math.floor(
-        (nextMidnight.getTime() - now.getTime()) / 1000
-      );
+        const timeDifference = Math.floor(
+          (nextMidnight.getTime() - now.getTime()) / 1000
+        );
 
-      const hours = Math.floor(timeDifference / 3600);
-      const minutes = Math.floor((timeDifference % 3600) / 60);
-      const seconds = timeDifference % 60;
+        const hours = Math.floor(timeDifference / 3600);
+        const minutes = Math.floor((timeDifference % 3600) / 60);
+        const seconds = timeDifference % 60;
 
-      this.formattedTime = `${this.pad(hours)}:${this.pad(
-        minutes
-      )}:${this.pad(seconds)}`;
-
-      console.debug('URUK BARTAS DEBUG: Countdown updated', this.formattedTime);
-    });
+        this.formattedTime = `${this.pad(hours)}:${this.pad(
+          minutes
+        )}:${this.pad(seconds)}`;
+      });
   }
 
   pad(value: number) {
     const paddedValue = value.toString().padStart(2, '0');
-    console.debug('URUK BARTAS DEBUG: Padded value', { value, paddedValue });
     return paddedValue;
   }
 
   public displayHelpMine() {
-    console.debug('URUK BARTAS DEBUG: Displaying mine help modal');
     this.modalService.show(TheMineInfoModalComponent);
   }
 }
