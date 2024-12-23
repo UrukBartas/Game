@@ -1,86 +1,78 @@
+<ng-template #actions>
+  @if ((lastLoadedStats?.remainingAttempts ?? 0) <= 0) {
+    <p class="challenge-text">You don't have more tries for this week!</p>
+    <button
+      class="enter-button animate__animated animate__pulse animate__infinite"
+      (click)="getMoreCryptTries.emit()"
+    >
+      Get more!
+    </button>
+  } @else {
+    <p class="challenge-text">Are you ready to face death?</p>
+    <button class="enter-button" (click)="startCrypt.emit()">
+      💀 Enter the Crypt
+    </button>
+  }
+</ng-template>
+
 <ng-template #cryptmsg>
   <div class="crypt-welcome">
     <!-- Título Épico -->
     <h1 urTitle>💀 Welcome to the Crypt ⚔️</h1>
 
+    <!-- Introducción Narrativa -->
     <p class="crypt-intro">
       Once you step into the Crypt, <strong>there is no turning back.</strong>
       Trapped beneath the earth, your fate will be sealed by your decisions. You
       cannot trade, equip new items, or escape. You fight or you perish.
     </p>
 
+    <!-- Normas y Funcionamiento -->
     <div class="crypt-rules">
       <h2 urText>🛡️ The Rules of the Crypt 🗡️</h2>
-      <button
-        class="btn btn-link d-lg-none text-white"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#rulesCollapse"
-        aria-expanded="false"
-        aria-controls="rulesCollapse"
-      >
-        Show Rules
-      </button>
-      <div class="collapse d-lg-block" id="rulesCollapse">
-        <ul>
-          <li>
-            Your current state will be <strong>saved</strong> at the start.
-          </li>
-          <li>
-            After each battle, you can <strong>choose upgrades</strong> to aid
-            your survival.
-          </li>
-          <li>
-            With each room, the
-            <strong>difficulty increases exponentially</strong>. Enemies become
-            stronger and deadlier. Choose your rewards wisely.
-          </li>
-          <li>
-            The Crypt resets <strong>every week</strong>. Your rewards will
-            depend on how deep you go.
-          </li>
-          <li>
-            The deeper you descend, the
-            <strong>greater the treasures</strong> at the end of the week!
-          </li>
-        </ul>
-      </div>
+      <ul>
+        <li>Your current state will be <strong>saved</strong> at the start.</li>
+        <li>
+          After each battle, you can <strong>choose upgrades</strong> to aid
+          your survival.
+        </li>
+        <li>
+          With each room, the
+          <strong>difficulty increases exponentially</strong>. Enemies become
+          stronger and deadlier. Choose your rewards wisely.
+        </li>
+        <li>
+          The Crypt resets <strong>every week</strong>. Your rewards will depend
+          on how deep you go.
+        </li>
+        <li>
+          The deeper you descend, the <strong>greater the treasures</strong> at
+          the end of the week!
+        </li>
+      </ul>
     </div>
 
+    <!-- Mensaje de Preparación -->
     <div class="crypt-preparation">
       <h3 urText>⚔️ Prepare Yourself, Adventurer! ⚔️</h3>
-      <button
-        class="btn btn-link d-lg-none text-white"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#preparationCollapse"
-        aria-expanded="false"
-        aria-controls="preparationCollapse"
-      >
-        Show Preparation Message
-      </button>
-      <div class="collapse d-lg-block" id="preparationCollapse">
-        <p>
-          Equip your <strong>best items</strong>, stock up on
-          <strong>consumables</strong>, and steel your resolve. You will need
-          everything you have to survive the Crypt’s horrors.
-        </p>
-      </div>
-    </div>
+      <p>
+        Equip your <strong>best items</strong>, stock up on
+        <strong>consumables</strong>, and steel your resolve. You will need
+        everything you have to survive the Crypt’s horrors.
+      </p>
+      <ng-container *ngTemplateOutlet="actions"></ng-container>
 
+      <button class="read-rules-button" (click)="hideModal()">Hide</button>
+    </div>
   </div>
 </ng-template>
-
 <div
-  class="row h-100 main-container px-4"
+  class="row h-100 main-container align-items-center justify-content-center"
   data-aos="fade-up"
-  data-aos-delay="500"
-  data-aos-duration="1000"
+  data-aos-delay="1000"
+  data-aos-duration="2000"
 >
-  <div class="col-12 col-lg-6">
-    <ng-container *ngTemplateOutlet="cryptmsg"></ng-container>
-  </div>
-  <div class="col-12 col-lg-6">
+  <div class="col-12 col-md-6">
     <div class="crypt-stats" *ngIf="stats$ | async as stats">
       <h2 urTitle class="mt-0">📜 Crypt Statistics</h2>
       <!-- Máxima profundidad alcanzada -->
@@ -142,23 +134,13 @@
           ⚔️ Total Battles Fought: <strong>{{ stats.totalCrypts }}</strong>
         </p>
       </div>
-    </div>
+      <div class="crypt-challenge">
+        <ng-container *ngTemplateOutlet="actions"></ng-container>
 
-    <div class="crypt-stats">
-      @if ((lastLoadedStats?.remainingAttempts ?? 0) <= 0) {
-        <p class="challenge-text">You don't have more tries for this week!</p>
-        <button
-          class="enter-button animate__animated animate__pulse animate__infinite"
-          (click)="getMoreCryptTries.emit()"
-        >
-          Get more!
+        <button class="read-rules-button" (click)="openModal(cryptmsg)">
+          📜 Read the rules
         </button>
-      } @else {
-        <p class="challenge-text">Are you ready to face death?</p>
-        <button class="enter-button" (click)="startCrypt.emit()">
-          Enter the Crypt
-        </button>
-      }
+      </div>
     </div>
   </div>
 </div>

@@ -74,6 +74,27 @@
           }}</strong>
           Golden Uruks per day
         </li>
+        <li
+          *ngIf="
+            tier.id === 'PICKEAXE' ||
+            tier.id === 'MINE_MACHINE' ||
+            tier.id === 'DYNAMITE' ||
+            tier.id === 'BLAST_FURNACE'
+          "
+        >
+          <strong class="text-third">
+            {{
+              tier.id === 'PICKEAXE'
+                ? '+1'
+                : tier.id === 'MINE_MACHINE'
+                  ? '+2'
+                  : tier.id === 'DYNAMITE'
+                    ? '+3'
+                    : '+4'
+            }}
+          </strong>
+          extra crypt attempts per week
+        </li>
         <li *ngIf="tier.id === 'BLAST_FURNACE'" class="mt-2 text-light">
           For every
           <strong [ngStyle]="{ color: getRarityColor(RarityEnum.MYTHIC) }"

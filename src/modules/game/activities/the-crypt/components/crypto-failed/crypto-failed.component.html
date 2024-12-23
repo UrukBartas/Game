@@ -5,7 +5,6 @@
   </p>
 
   <div class="player-state">
-    <h3>Player Final State</h3>
     <app-crypt-player-state
       [hideTitle]="true"
       [currentState]="currentState"
@@ -16,22 +15,12 @@
   <div class="progress-summary">
     <h3>Your Progress</h3>
     <ul>
-      <li>Levels Reached: {{ crypt.currentLevel }}</li>
       <li>Encounters Completed: {{ completedEncounters.length }}</li>
     </ul>
     <app-rooms-list
       [encounters]="crypt.encounters"
       [currentLevel]="crypt.currentLevel"
     ></app-rooms-list>
-  </div>
-
-  <div *ngIf="crypt.appliedBonuses?.rewards?.length">
-    <h3>Partial Rewards</h3>
-    <ul>
-      <li *ngFor="let reward of crypt.appliedBonuses.rewards">
-        {{ reward.type }}: {{ reward.value }}
-      </li>
-    </ul>
   </div>
 
   <div class="reward-info">

@@ -5,7 +5,9 @@ import {
   Input,
   Output,
   SimpleChanges,
+  TemplateRef,
 } from '@angular/core';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { tap } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { CryptModel } from 'src/modules/core/models/crypt.model';
@@ -26,11 +28,20 @@ export class CryptStartComponent extends TemplatePage {
   @Output() startCrypt = new EventEmitter<void>();
   @Output() getMoreCryptTries = new EventEmitter<void>();
   crypService = inject(CryptService);
+  modalService = inject(BsModalService);
   lastLoadedStats!: CryptStats;
   stats$ = this.getStats();
 
   ngOnChanges(changes: SimpleChanges): void {
     this.stats$ = this.getStats();
+  }
+
+  public openModal(template: TemplateRef<any>) {
+    this.modalService.show(template);
+  }
+
+  public hideModal() {
+    this.modalService.hide();
   }
 
   private getStats() {

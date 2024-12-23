@@ -17,10 +17,6 @@
   box-shadow: 0 4px 15px $black-transparent;
   position: relative;
   z-index: 1;
-  @include media-breakpoint-down(lg) {
-    max-height: 40vh;
-    overflow-y: auto;
-  }
 }
 
 .crypt-stats {
@@ -33,11 +29,6 @@
   box-shadow: 0 4px 15px $black-transparent;
   position: relative;
   z-index: 1;
-  @include media-breakpoint-down(lg) {
-    max-height: 20vh;
-    overflow-y: auto;
-    margin-top: 1vh;
-  }
 }
 
 .main-container {
@@ -130,9 +121,7 @@ ul li::before {
   color: $third;
 }
 
-.enter-button {
-  background-color: $red;
-  color: $white-100;
+.crypt-button {
   font-size: 1.2rem;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -145,6 +134,18 @@ ul li::before {
   &:hover {
     transform: scale(1.05);
   }
+}
+
+.enter-button {
+  @extend .crypt-button;
+  background-color: $red;
+  color: $white-100;
+}
+
+.read-rules-button {
+  @extend .crypt-button;
+  background-color: $black-300;
+  color: $white-100;
 }
 
 .enter-button:active {

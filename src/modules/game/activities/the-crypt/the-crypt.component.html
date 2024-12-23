@@ -2,9 +2,7 @@
   #threeContainer
   class="three-container"
   [ngClass]="{
-    'd-none':
-      cryptRouter().status != cryptStatusEnum.STARTING &&
-      cryptRouter().status != cryptStatusEnum.FAILED,
+    'd-none': cryptRouter().status != cryptStatusEnum.STARTING,
   }"
 ></div>
 <div
