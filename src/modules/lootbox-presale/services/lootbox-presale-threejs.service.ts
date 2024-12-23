@@ -1,4 +1,4 @@
-import { Injectable, ElementRef, NgZone } from '@angular/core';
+import { ElementRef, Injectable, NgZone } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import * as THREE from 'three';
 
@@ -6,14 +6,14 @@ import * as THREE from 'three';
   providedIn: 'root',
 })
 export class LootboxPresaleThreeService {
-  private scene!: THREE.Scene;
-  private camera!: THREE.PerspectiveCamera;
-  private renderer!: THREE.WebGLRenderer;
-  private smokeParticles: THREE.Mesh[] = [];
-  private resizeListener!: () => void;
+  protected scene!: THREE.Scene;
+  protected camera!: THREE.PerspectiveCamera;
+  protected renderer!: THREE.WebGLRenderer;
+  protected smokeParticles: THREE.Mesh[] = [];
+  protected resizeListener!: () => void;
   private smokeMaterial!: THREE.MeshBasicMaterial; // Add property to store the fog material
 
-  constructor(private ngZone: NgZone) {}
+  constructor(protected ngZone: NgZone) {}
 
   initialize(container: ElementRef<HTMLDivElement>, fogColor: number): void {
     // Create the scene
@@ -50,10 +50,13 @@ export class LootboxPresaleThreeService {
 
     // Load fog texture
     const loader = new THREE.TextureLoader();
-    loader.load(environment.permaLinkImgPref + '/assets/presale/fog.png', (texture) => {
-      // Create smoke particles using the texture
-      this.createSmoke(texture, fogColor);
-    });
+    loader.load(
+      environment.permaLinkImgPref + '/assets/presale/fog.png',
+      (texture) => {
+        // Create smoke particles using the texture
+        this.createSmoke(texture, fogColor);
+      }
+    );
 
     this.resizeListener = this.onWindowResize.bind(this);
     window.addEventListener('resize', this.resizeListener);
@@ -61,7 +64,7 @@ export class LootboxPresaleThreeService {
     this.animate();
   }
 
-  private createSmoke(texture: THREE.Texture, fogColor: number) {
+  protected createSmoke(texture: THREE.Texture, fogColor: number) {
     this.smokeMaterial = new THREE.MeshBasicMaterial({
       map: texture,
       transparent: true,
@@ -90,13 +93,13 @@ export class LootboxPresaleThreeService {
     }
   }
 
-  private onWindowResize() {
+  protected onWindowResize() {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
-  private animate = () => {
+  protected animate = () => {
     this.ngZone.runOutsideAngular(() => {
       requestAnimationFrame(this.animate);
       this.smokeParticles.forEach((particle) => {

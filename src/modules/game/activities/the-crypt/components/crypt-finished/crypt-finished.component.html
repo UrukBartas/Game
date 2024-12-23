@@ -1,0 +1,39 @@
+<div class="crypt-finished">
+  <h2>Victory in the Crypt! 🎉</h2>
+  <p>
+    Congratulations! You have conquered all the challenges and emerged
+    victorious.
+  </p>
+
+  <div class="player-state">
+    <h3>Player Final State</h3>
+    <app-crypt-player-state
+      [hideTitle]="true"
+      [currentState]="currentState"
+      [appliedBonuses]="appliedBonuses"
+    ></app-crypt-player-state>
+  </div>
+
+  <div class="progress-summary">
+    <h3>Your Progress</h3>
+    <ul>
+      <li>Levels Reached: {{ crypt.currentLevel }}</li>
+      <li>Encounters Completed: {{ completedEncounters.length }}</li>
+    </ul>
+    <app-rooms-list
+      [encounters]="crypt.encounters"
+      [currentLevel]="crypt.currentLevel"
+    ></app-rooms-list>
+  </div>
+
+  <div class="reward-info">
+    <p class="mb-0">
+      <strong>Well done!</strong> Your progress will be evaluated, and rewards
+      will be distributed at the end of the week.
+    </p>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-dark" (click)="exit()">Try again ⚔️</button>
+  </div>
+</div>

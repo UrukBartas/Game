@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { FightModel, GankMonsters } from 'src/modules/core/models/fight.model';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
+import { SetQuests } from 'src/store/main.store';
 
 @Injectable({
   providedIn: 'root',
@@ -43,5 +44,10 @@ export class QuestService extends ApiBaseService {
     rollNumber: number;
   }> {
     return this.get('/roll-data');
+  }
+
+  async updateStore() {
+    const quests = await firstValueFrom(this.getActive());
+    this.store.dispatch(new SetQuests(quests));
   }
 }

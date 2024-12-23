@@ -41,6 +41,21 @@
       {{ quest.data.description }}
     </div>
 
+    <div urSubtext class="description mb-3 px-4 text-center d-flex flex-column">
+      <span
+        >Total time:
+        <span class="text-white">{{
+          questTimerService.totalTime()
+        }}</span></span
+      >
+      <span
+        >Reduced time:
+        <span class="yellow-text"
+          >{{ questTimerService.reducedTime() }} ({{ questTimerService.reductionPercentage() }}%)</span
+        ></span
+      >
+    </div>
+
     <div
       class="progress position-relative"
       [style.height]="getProgressBarHeight() + 'px'"
@@ -58,7 +73,7 @@
         <span urText class="w-100 text-center d-block">🦄</span>
         <ng-template #reducedTime>
           <div class="p-2">
-            Time reduced by boosts ({{
+            Time reduced by boosts {{ questTimerService.reducedTime() }} ({{
               questTimerService.reductionPercentage()
             }}%)
           </div>

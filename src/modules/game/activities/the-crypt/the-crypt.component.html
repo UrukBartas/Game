@@ -1,0 +1,59 @@
+<div
+  #threeContainer
+  class="three-container"
+  [ngClass]="{
+    'd-none': cryptRouter().status != cryptStatusEnum.STARTING,
+  }"
+></div>
+<div
+  id="crypt"
+  class="py-2"
+  [ngClass]="{
+    'apply-background': cryptRouter().status == cryptStatusEnum.STARTING,
+  }"
+>
+  <ng-container [ngSwitch]="cryptRouter().status">
+    <app-crypt-start
+      *ngSwitchCase="cryptStatusEnum.STARTING"
+      [crypt]="currentCrypt()"
+      (startCrypt)="onStartExistingCrypt()"
+      (getMoreCryptTries)="getMoreTries()"
+    ></app-crypt-start>
+    <app-crypt-reward-picker
+      *ngSwitchCase="cryptStatusEnum.PICKING_REWARD"
+      (rewardChosen)="onRewardChosen($event)"
+    ></app-crypt-reward-picker>
+    <app-crypt-progress
+      *ngSwitchCase="cryptStatusEnum.IN_PROGRESS"
+      [currentLevel]="currentCrypt()?.currentLevel ?? 0"
+      [encounters]="currentCrypt()?.encounters ?? []"
+      [appliedBonuses]="currentCrypt()?.appliedBonuses?.rewards ?? []"
+      [currentState]="currentCrypt()?.playerState"
+      (startedEncounter)="startEncounter($event)"
+      (surrender)="onCryptSurrender()"
+    ></app-crypt-progress>
+    <app-quest-fight
+      *ngSwitchCase="cryptStatusEnum.FIGHT"
+      (questStatusChange)="onFightResolved($event.data)"
+    ></app-quest-fight>
+    <app-quest-result
+      *ngSwitchCase="cryptStatusEnum.RESULT"
+      [result]="cryptRouter().data"
+      (questStatusChange)="refresh()"
+    ></app-quest-result>
+    <app-crypto-failed
+      *ngSwitchCase="cryptStatusEnum.FAILED"
+      [appliedBonuses]="currentCrypt()?.appliedBonuses?.rewards ?? []"
+      [currentState]="currentCrypt()?.playerState"
+      [crypt]="currentCrypt()"
+      (startNewCrypt)="onCryptStart()"
+    ></app-crypto-failed>
+    <app-crypt-finished
+      *ngSwitchCase="cryptStatusEnum.FINISHED"
+      [appliedBonuses]="currentCrypt()?.appliedBonuses?.rewards ?? []"
+      [currentState]="currentCrypt()?.playerState"
+      [crypt]="currentCrypt()"
+      (startNewCrypt)="onCryptStart()"
+    ></app-crypt-finished>
+  </ng-container>
+</div>

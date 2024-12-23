@@ -88,6 +88,16 @@ import { PercentStatsComponent } from './components/stats-detail/only-stats/only
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { TitleGeneratorModalComponent } from './components/title-generator-modal/title-generator-modal.component';
 import { GameRoutingModule } from './game-routing.module';
+import { TheCryptComponent } from './activities/the-crypt/the-crypt.component';
+import { CryptRewardPickerComponent } from './activities/the-crypt/components/crypt-reward-picker/crypt-reward-picker.component';
+import { CryptProgressComponent } from './activities/the-crypt/components/crypt-progress/crypt-progress.component';
+import { CryptFightComponent } from './activities/the-crypt/components/crypt-fight/crypt-fight.component';
+import { CryptResultComponent } from './activities/the-crypt/components/crypt-result/crypt-result.component';
+import { CryptFinishedComponent } from './activities/the-crypt/components/crypt-finished/crypt-finished.component';
+import { CryptStartComponent } from './activities/the-crypt/components/crypt-start/crypt-start.component';
+import { CryptoFailedComponent } from './activities/the-crypt/components/crypto-failed/crypto-failed.component';
+import { RoomsListComponent } from './activities/the-crypt/components/rooms-list/rooms-list.component';
+import { CryptPlayerStateComponent } from './activities/the-crypt/components/crypt-player-state/crypt-player-state.component';
 const directives = [
   ValidInputDirective,
   TextSizeDirective,
@@ -157,6 +167,16 @@ const pipes = [
     TitleGeneratorModalComponent,
     ClassSelectorComponent,
     NamePlayerComponent,
+    TheCryptComponent,
+    CryptRewardPickerComponent,
+    CryptProgressComponent,
+    CryptFightComponent,
+    CryptResultComponent,
+    CryptFinishedComponent,
+    CryptStartComponent,
+    CryptoFailedComponent,
+    RoomsListComponent,
+    CryptPlayerStateComponent,
   ],
   imports: [
     ...directives,

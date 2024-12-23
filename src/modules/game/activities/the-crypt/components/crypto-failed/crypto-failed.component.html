@@ -1,0 +1,36 @@
+<div class="crypt-failed">
+  <h2>Defeat in the Crypt</h2>
+  <p>
+    You fought valiantly, but the crypt proved too challenging this time. 😔
+  </p>
+
+  <div class="player-state">
+    <app-crypt-player-state
+      [hideTitle]="true"
+      [currentState]="currentState"
+      [appliedBonuses]="appliedBonuses"
+    ></app-crypt-player-state>
+  </div>
+
+  <div class="progress-summary">
+    <h3>Your Progress</h3>
+    <ul>
+      <li>Encounters Completed: {{ completedEncounters.length }}</li>
+    </ul>
+    <app-rooms-list
+      [encounters]="crypt.encounters"
+      [currentLevel]="crypt.currentLevel"
+    ></app-rooms-list>
+  </div>
+
+  <div class="reward-info">
+    <p class="mb-0">
+      <strong>Note:</strong> Rewards will be distributed at the end of the week.
+      The deeper your progress into the crypt, the better your rewards!
+    </p>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-dark" (click)="exit()">Try again ⚔️</button>
+  </div>
+</div>

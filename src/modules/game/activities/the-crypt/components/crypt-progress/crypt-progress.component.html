@@ -1,0 +1,29 @@
+<div class="crypt-progress pb-4" [style.background-image]="'url(' + getBackgroundImage() + ')'">
+  <app-crypt-player-state
+    [currentState]="currentState"
+    [appliedBonuses]="appliedBonuses"
+  ></app-crypt-player-state>
+  <div
+    class="description desc-mover w-100 rooms-list-header"
+    style="align-self: self-start"
+  >
+    <p urTitle>Rooms list</p>
+    <div class="actions pb-3 pb-md-0">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="startedEncounter.emit(encounters[currentLevel])"
+      >
+        ⚔️ Fight next encounter!
+      </button>
+      <button type="button" class="btn btn-dark" (click)="triggerSurrender()">
+        💀 Surrender
+      </button>
+    </div>
+  </div>
+  <app-rooms-list
+    [encounters]="encounters"
+    [currentLevel]="currentLevel"
+    (selectedRoom)="startedEncounter.emit($event)"
+  ></app-rooms-list>
+</div>

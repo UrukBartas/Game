@@ -3,10 +3,7 @@
     <span class="text-white bg-black">{{ text }}</span>
   </div>
 </ng-template>
-<div
-  class="table-responsive stat-table"
-  *ngIf="player$ | async as currentPlayer"
->
+<div class="table-responsive stat-table" *ngIf="player as currentPlayer">
   <table class="table table-dark" [ngClass]="{ 'table-striped': !simplified }">
     <tbody [ngClass]="{ 'simplified-table-body row': simplified }">
       <tr *ngIf="!simplified">
@@ -22,7 +19,7 @@
           ></i>
         </td>
         <td>
-          {{ player.stats[stat.key] | number: '1.0-2' }}
+          {{ player.stats[stat.key] || player[stat.key] | number: '1.0-2' }}
           {{ stat.suffix ? stat.suffix : '' }}
           <span
             *ngIf="!!hoveredItemStats && !!hoveredItemStats[stat.key]"
@@ -55,8 +52,8 @@
           >
             {{ allStatsUpgradeCost[stat.key] }}
             @if (
-              player.stats[stat.key] < cappedStats[stat.key] ||
-              !cappedStats[stat.key]
+              (player.stats[stat.key] || player[stat.key]) <
+                cappedStats[stat.key] || !cappedStats[stat.key]
             ) {
               <img
                 class="navbar-uruks-icon"

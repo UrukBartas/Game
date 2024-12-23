@@ -1,0 +1,153 @@
+@import '../../../../../../variables.scss';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
+
+.past-crypts {
+  max-height: 400px;
+  overflow: auto;
+}
+.crypt-welcome {
+  text-align: center;
+  color: $white-300;
+  background: $black-semitransparent;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 800px;
+  box-shadow: 0 4px 15px $black-transparent;
+  position: relative;
+  z-index: 1;
+}
+
+.crypt-stats {
+  text-align: left;
+  color: $white-300;
+  background: $black-semitransparent;
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 1vh;
+  box-shadow: 0 4px 15px $black-transparent;
+  position: relative;
+  z-index: 1;
+}
+
+.main-container {
+  position: relative;
+  z-index: 1;
+}
+
+.crypt-stats h2 {
+  font-size: 2rem;
+  color: $orange;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 5px $black-300;
+}
+
+.crypt-stats .stat-item {
+  margin-bottom: 1rem;
+}
+
+.crypt-stats ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.crypt-stats ul li {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.crypt-stats ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  color: $orange;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: $red;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 5px $black-300;
+}
+
+h2,
+h3 {
+  color: $orange;
+  margin-top: 1.5rem;
+}
+
+.crypt-intro,
+.crypt-preparation p,
+.challenge-text {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+ul {
+  text-align: left;
+  margin: 1rem auto;
+  padding: 0;
+  list-style-type: none;
+  max-width: 600px;
+}
+
+ul li {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+ul li::before {
+  content: '⚔️';
+  position: absolute;
+  left: 0;
+  color: $orange;
+}
+
+.challenge-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: $red;
+}
+
+.failed {
+  color: $red;
+}
+.success {
+  color: $third;
+}
+
+.crypt-button {
+  font-size: 1.2rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px $black-transparent;
+  transition:
+    background 0.3s,
+    transform 0.2s;
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.enter-button {
+  @extend .crypt-button;
+  background-color: $red;
+  color: $white-100;
+}
+
+.read-rules-button {
+  @extend .crypt-button;
+  background-color: $black-300;
+  color: $white-100;
+}
+
+.enter-button:active {
+  transform: scale(0.95);
+}

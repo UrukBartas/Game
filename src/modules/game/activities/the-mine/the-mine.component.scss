@@ -34,7 +34,7 @@
     z-index: 100;
   }
   .themine-bg {
-    position: fixed;
+    position: absolute;
     top: 0;
     width: 100%;
     height: 100%;
@@ -79,7 +79,7 @@
     height: 100px;
     display: flex;
     flex-direction: column;
-    justify-content: end;
+    justify-content: flex-end;
   }
 
   @keyframes rotate {
