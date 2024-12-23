@@ -29,6 +29,10 @@ export class PlayerService extends ApiBaseService {
     this.controllerPrefix = '/player';
   }
 
+  public getExtraAttemptPrice(): Observable<number> {
+    return this.get('/crypt-attempt-price');
+  }
+
   public getUpgradeCost(): Observable<{ cost: number }> {
     return this.get(`/cost`);
   }

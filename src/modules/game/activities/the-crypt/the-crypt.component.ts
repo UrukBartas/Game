@@ -22,6 +22,7 @@ import {
 } from 'src/modules/core/models/crypt.model';
 import { FightResultModel } from 'src/modules/core/models/fight.model';
 import { CryptService } from 'src/services/crypt.service';
+import { PlayerService } from 'src/services/player.service';
 import { QuestService } from 'src/services/quest.service';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
 import { CryptThreejsServiceTsService } from './services/crypt-threejs.service.ts.service';
@@ -35,6 +36,7 @@ export class TheCryptComponent extends TemplatePage {
   cryptStatusEnum = CryptStatusEnum;
   cryptService = inject(CryptService);
   questService = inject(QuestService);
+  playerService = inject(PlayerService);
   toast = inject(ToastrService);
   cryptRouter = signal<CryptRouterModel>({
     status: CryptStatusEnum.IN_PROGRESS,
@@ -177,11 +179,13 @@ export class TheCryptComponent extends TemplatePage {
   }
 
   public async getMoreTries() {
+    const price = await firstValueFrom(
+      this.playerService.getExtraAttemptPrice()
+    );
     const config: ModalOptions = {
       initialState: {
         title: 'Try again?',
-        description:
-          'You are about to purchase an extra attempt for 1000 Golden Uruks, do you want to continue?',
+        description: `You are about to purchase an extra attempt for ${price} Golden Uruks, do you want to continue?`,
         accept: async () => {
           try {
             await firstValueFrom(this.cryptService.purchaseOneMoreTry());
