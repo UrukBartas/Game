@@ -1,4 +1,4 @@
-<div class="crypt-progress pb-4">
+<div class="crypt-progress pb-4" [style.background-image]="'url(' + getBackgroundImage() + ')'">
   <app-crypt-player-state
     [currentState]="currentState"
     [appliedBonuses]="appliedBonuses"

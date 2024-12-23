@@ -52,6 +52,14 @@ export class CryptProgressComponent extends TemplatePage {
   sort = inject(OrderByPipe);
   getRarityColor = getRarityColor;
 
+  getBackgroundImage() {
+    let image = this.encounters.find((encounter, index) => index === this.currentLevel)?.questData.backgroundImage;
+    if (!image) {
+      image = '/assets/backgrounds/sewers.webp'
+    }
+    return this.prefix + image;
+  }
+
 
   getDifficultyLevelByRarity(
     index: number,
