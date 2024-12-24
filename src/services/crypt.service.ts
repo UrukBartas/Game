@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Memoize } from 'lodash-decorators';
 import { Observable } from 'rxjs';
-import { CryptModel, CryptStatus } from 'src/modules/core/models/crypt.model';
+import {
+  CryptEncounterModel,
+  CryptModel,
+  CryptStatus,
+} from 'src/modules/core/models/crypt.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 import { CryptStats } from 'src/modules/game/activities/the-crypt/components/crypt-start/crypt-start.component';
 
@@ -12,6 +17,14 @@ export class CryptService extends ApiBaseService {
   constructor(private http: HttpClient) {
     super(http);
     this.controllerPrefix = '/crypt';
+  }
+  @Memoize()
+  static getCurrentLevel(
+    crypt: CryptModel & { encounters: Array<CryptEncounterModel> }
+  ) {
+    return (
+      crypt?.encounters?.filter((e) => e.status == 'COMPLETED').length ?? 0
+    );
   }
 
   // Obtener la crypta actual activa

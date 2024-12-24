@@ -31,6 +31,8 @@ export class CryptStartComponent extends TemplatePage {
   modalService = inject(BsModalService);
   lastLoadedStats!: CryptStats;
   stats$ = this.getStats();
+  public getCurrentLevel = CryptService.getCurrentLevel;
+
 
   ngOnChanges(changes: SimpleChanges): void {
     this.stats$ = this.getStats();

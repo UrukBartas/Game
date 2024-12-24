@@ -21,7 +21,6 @@ export interface CryptModel {
   playerId: string; // The ID of the player associated with the crypt
   weekStart: string; // Start date of the crypt's associated week (ISO format)
   status: CryptStatus; // Current status of the crypt
-  currentLevel: number; // The current level reached in the crypt
   playerState: PlayerModel; // The saved state of the player during the crypt
   encounters: CryptEncounterModel[]; // List of encounters in the crypt
   createdAt: string; // Timestamp when the crypt was created

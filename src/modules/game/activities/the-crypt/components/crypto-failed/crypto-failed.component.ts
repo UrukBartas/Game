@@ -13,6 +13,7 @@ import { PlayerModel } from 'src/modules/core/models/player.model';
 })
 export class CryptoFailedComponent {
   @Input() crypt: CryptModel;
+  @Input() currentLevel = 0;
   @Output() startNewCrypt = new EventEmitter<void>();
   @Input() appliedBonuses: Array<any> = [];
   @Input() currentState: PlayerModel;

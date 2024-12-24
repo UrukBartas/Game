@@ -88,16 +88,17 @@
           <li *ngIf="stats.cryptDetails.length == 0">No data yet.</li>
           <li *ngFor="let crypt of stats.cryptDetails" class="d-flex gap-2">
             <app-item-box
-              [rarity]="crypt.encounters[crypt.currentLevel].rarity"
+              [rarity]="crypt.encounters[getCurrentLevel(crypt)].rarity"
               [height]="70"
               [width]="100"
               [image]="
-                crypt.encounters[crypt.currentLevel].questData.backgroundImage
+                crypt.encounters[getCurrentLevel(crypt)].questData
+                  .backgroundImage
               "
             >
               <div tooltip class="tooltip-uruk">
                 <span class="text-light p-2" urText>{{
-                  crypt.encounters[crypt.currentLevel].questData.name
+                  crypt.encounters[getCurrentLevel(crypt)].questData.name
                 }}</span>
               </div>
             </app-item-box>
@@ -105,7 +106,7 @@
               <div>
                 <strong>{{ crypt.endDate | date: 'shortDate' }}</strong>
               </div>
-              <div>Depth {{ crypt.currentLevel }}</div>
+              <div>Depth {{ getCurrentLevel(crypt) }}</div>
               <div>
                 Status:
                 <span

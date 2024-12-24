@@ -25,7 +25,7 @@
     ></app-crypt-reward-picker>
     <app-crypt-progress
       *ngSwitchCase="cryptStatusEnum.IN_PROGRESS"
-      [currentLevel]="currentCrypt()?.currentLevel ?? 0"
+      [currentLevel]="getCurrentLevel(currentCrypt()) ?? 0"
       [encounters]="currentCrypt()?.encounters ?? []"
       [appliedBonuses]="currentCrypt()?.appliedBonuses?.rewards ?? []"
       [currentState]="currentCrypt()?.playerState"
@@ -43,6 +43,7 @@
     ></app-quest-result>
     <app-crypto-failed
       *ngSwitchCase="cryptStatusEnum.FAILED"
+      [currentLevel]="getCurrentLevel(currentCrypt()) ?? 0"
       [appliedBonuses]="currentCrypt()?.appliedBonuses?.rewards ?? []"
       [currentState]="currentCrypt()?.playerState"
       [crypt]="currentCrypt()"
@@ -50,6 +51,7 @@
     ></app-crypto-failed>
     <app-crypt-finished
       *ngSwitchCase="cryptStatusEnum.FINISHED"
+      [currentLevel]="getCurrentLevel(currentCrypt()) ?? 0"
       [appliedBonuses]="currentCrypt()?.appliedBonuses?.rewards ?? []"
       [currentState]="currentCrypt()?.playerState"
       [crypt]="currentCrypt()"

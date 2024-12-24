@@ -16,6 +16,7 @@ export class CryptFinishedComponent {
   @Output() startNewCrypt = new EventEmitter<void>();
   @Input() currentState: PlayerModel;
   @Input() appliedBonuses: Array<any> = [];
+  @Input() currentLevel = 0;
   get completedEncounters(): CryptEncounterModel[] {
     return this.crypt.encounters.filter(
       (encounter) => encounter.status === EncounterStatus.COMPLETED

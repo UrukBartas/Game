@@ -47,6 +47,7 @@ export class TheCryptComponent extends TemplatePage {
   @Output() statusChanged = new EventEmitter<CryptRouterModel>();
   @ViewChild('threeContainer', { static: true })
   threeContainer!: ElementRef<HTMLDivElement>;
+  public getCurrentLevel = CryptService.getCurrentLevel;
   constructor(protected modalService: BsModalService) {
     super();
     effect(() => {

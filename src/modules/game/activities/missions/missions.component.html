@@ -15,11 +15,12 @@
         </div>
       </div>
       <div
-        class="col-md-6 col-12 mission-container adventure locked-screen"
+        class="col-md-6 col-12 mission-container adventure"
+        (click)="router.navigate(['/the-crypt'])"
       >
         <div class="image-container"></div>
         <div class="content">
-          <span urText>The Crypt (disabled)</span>
+          <span urText>The Crypt (only whitelisted)</span>
           <i urTitle class="fa fa-skull-crossbones"></i>
           <span urSubtext class="text-center">
             Enter the Crypt, a labyrinth of escalating challenges. Survive

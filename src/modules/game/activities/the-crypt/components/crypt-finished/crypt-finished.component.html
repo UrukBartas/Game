@@ -17,12 +17,12 @@
   <div class="progress-summary">
     <h3>Your Progress</h3>
     <ul>
-      <li>Levels Reached: {{ crypt.currentLevel }}</li>
+      <li>Levels Reached: {{ currentLevel }}</li>
       <li>Encounters Completed: {{ completedEncounters.length }}</li>
     </ul>
     <app-rooms-list
       [encounters]="crypt.encounters"
-      [currentLevel]="crypt.currentLevel"
+      [currentLevel]="currentLevel"
     ></app-rooms-list>
   </div>
 
