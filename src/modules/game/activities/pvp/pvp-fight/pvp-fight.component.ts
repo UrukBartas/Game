@@ -22,7 +22,7 @@ import {
   tap,
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { BaseFightComponent } from 'src/modules/core/components/base-fight.component';
+import { BaseFightComponent } from 'src/modules/core/components/base-fight/base-fight.component';
 import {
   FighterTurnModel,
   FightModel,
@@ -48,11 +48,8 @@ import { MainState } from 'src/store/main.store';
   styleUrls: ['./pvp-fight.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class PvPFightComponent
-  extends BaseFightComponent
-  implements OnInit, OnDestroy
-{
-  fightBackgroundImage = this.getBackground();
+export class PvPFightComponent {
+  /* fightBackgroundImage = this.getBackground();
   private router = inject(Router);
   private ngZone = inject(NgZone);
   private destroyRef = inject(DestroyRef);
@@ -236,5 +233,5 @@ export class PvPFightComponent
     this.websocket.socket.off('awaitingPlayer', this.boundHandleAwaitingPlayer);
     this.websocket.socket.off('enemySurrender', this.boundHandleEnemyLose);
     this.websocket.socket.off('playerSurrender', this.boundHandleLoseByTimeout);
-  }
+  } */
 }

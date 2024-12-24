@@ -98,6 +98,7 @@ import { CryptStartComponent } from './activities/the-crypt/components/crypt-sta
 import { CryptoFailedComponent } from './activities/the-crypt/components/crypto-failed/crypto-failed.component';
 import { RoomsListComponent } from './activities/the-crypt/components/rooms-list/rooms-list.component';
 import { CryptPlayerStateComponent } from './activities/the-crypt/components/crypt-player-state/crypt-player-state.component';
+import { BaseFightComponent } from '../core/components/base-fight/base-fight.component';
 const directives = [
   ValidInputDirective,
   TextSizeDirective,
@@ -131,6 +132,7 @@ const components = [
   AuctionHouseComponent,
   MissionsComponent,
   AutoPvpFightComponent,
+  BaseFightComponent
 ];
 
 const pipes = [

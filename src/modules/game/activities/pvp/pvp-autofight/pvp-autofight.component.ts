@@ -9,7 +9,7 @@ import { Store } from '@ngxs/store';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { take } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { BaseFightComponent } from 'src/modules/core/components/base-fight.component';
+import { BaseFightComponent } from 'src/modules/core/components/base-fight/base-fight.component';
 import {
   FighterTurnModel,
   FightResultModel,
@@ -33,10 +33,8 @@ import { MainState } from 'src/store/main.store';
   encapsulation: ViewEncapsulation.None,
 })
 export class AutoPvpFightComponent
-  extends BaseFightComponent
-  implements OnInit
 {
-  fightBackgroundImage = this.getBackground();
+  /* fightBackgroundImage = this.getBackground();
   player: PlayerModel = this.store.selectSnapshot(MainState.getState).player;
   public prefix = environment.permaLinkImgPref;
   public IRI = 0;
@@ -112,5 +110,5 @@ export class AutoPvpFightComponent
 
   getBackground(): string {
     return '/assets/backgrounds/village.webp';
-  }
+  } */
 }

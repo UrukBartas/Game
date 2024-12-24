@@ -2,44 +2,80 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Input,
   Output,
+  ViewEncapsulation,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { QuestRouterModel } from 'src/modules/game/activities/quests/models/quest-router.model';
+import { environment } from 'src/environments/environment';
+import { Rarity } from 'src/modules/core/models/items.model';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { ConsumableModalComponent } from 'src/modules/game/components/consumable-modal/consumable-modal.component';
-import { animateElement } from 'src/modules/utils';
+import {
+  animateElement,
+  getRarityBasedOnIRI,
+  getRarityColor,
+} from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
 import { EndFight } from 'src/store/main.store';
-import { BuffType } from '../models/fight-buff.model';
+import { BuffType } from '../../models/fight-buff.model';
 import {
   FighterTurnModel,
   FightModel,
   FightResultModel,
   TurnActionEnum,
-} from '../models/fight.model';
-import { TemplatePage } from './template-page.component';
+} from '../../models/fight.model';
+import { PlayerModel } from '../../models/player.model';
+import { QuestModel } from '../../models/quest.model';
+import { TemplatePage } from '../template-page.component';
 
 @Component({
-  template: '',
+  selector: 'app-base-fight',
+  templateUrl: './base-fight.component.html',
+  styleUrls: ['./base-fight.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export abstract class BaseFightComponent extends TemplatePage {
-  turnActions = TurnActionEnum;
-  fight: FightModel;
-  victory = false;
-  defeat = false;
-  private lastClickTime: number = 0;
-  showPlayerAction = false;
-  showEnemyAction = false;
-  showReceivedPlayerDamage = false;
-  showReceivedEnemyDamage = false;
-  playerAnimation;
-  enemyAnimation;
-  buffType = BuffType;
-  isOpponent = false;
+  @Input() backgroundImage: string;
+  @Input() quest: QuestModel;
+  @Input() player: PlayerModel;
+  @Input() enemy: PlayerModel;
+  @Input() set setFight(fight: FightModel) {
+    if (fight) {
+      if (this.fight) {
+        this.onActionSubmited(fight);
+      }
+      this.fight = fight;
+    }
+  }
 
-  @Output() questStatusChange = new EventEmitter<QuestRouterModel>();
+  @Output() onActionSubmit = new EventEmitter<{
+    action: TurnActionEnum;
+    consumableId?: number;
+  }>();
+  @Output() onSurrender = new EventEmitter<void>();
+  @Output() onDefeat = new EventEmitter<FightResultModel>();
+  @Output() onVictory = new EventEmitter<FightResultModel>();
+
+  public turnActions = TurnActionEnum;
+  public victory = false;
+  public defeat = false;
+  public fight: FightModel;
+  public showPlayerAction = false;
+  public showEnemyAction = false;
+  public showReceivedPlayerDamage = false;
+  public showReceivedEnemyDamage = false;
+  public playerAnimation;
+  public enemyAnimation;
+  public buffType = BuffType;
+  public isOpponent = false;
+  public prefix = environment.permaLinkImgPref;
+  public getRarityColor = getRarityColor;
+  public getRarityBasedOnIRI = getRarityBasedOnIRI;
+  public IRI = 0;
+  public IRI_RARITY: Rarity = Rarity.COMMON;
+  private lastClickTime: number = 0;
 
   constructor(
     protected store: Store,
@@ -50,16 +86,6 @@ export abstract class BaseFightComponent extends TemplatePage {
     super();
   }
 
-  abstract getBackground(): string;
-  abstract submitAction(action: TurnActionEnum, consumableId?: number): void;
-  abstract getTurn(): {
-    playerTurn: FighterTurnModel;
-    enemyTurn: FighterTurnModel;
-  };
-  abstract onSurrender(): void;
-  abstract afterDefeat(result: FightResultModel): void;
-  abstract afterVictory(result: FightResultModel): void;
-
   doAction(action: TurnActionEnum, consumableId?: number) {
     const currentTime = Date.now();
 
@@ -68,7 +94,7 @@ export abstract class BaseFightComponent extends TemplatePage {
     }
     this.lastClickTime = currentTime;
 
-    this.submitAction(action, consumableId);
+    this.onActionSubmit.emit({ action, consumableId });
   }
 
   onActionSubmited(fight: FightModel) {
@@ -157,6 +183,17 @@ export abstract class BaseFightComponent extends TemplatePage {
     }
   }
 
+  getTurn(): {
+    playerTurn: FighterTurnModel;
+    enemyTurn: FighterTurnModel;
+  } {
+    const turn = this.fight.turns[this.fight.turns.length - 1];
+    return {
+      playerTurn: this.isOpponent ? turn.enemyTurn : turn.playerTurn,
+      enemyTurn: this.isOpponent ? turn.playerTurn : turn.enemyTurn,
+    };
+  }
+
   triggerVictory(result: FightResultModel) {
     animateElement('.player-image', 'pulse');
     animateElement('.enemy-image', 'hinge', {
@@ -164,7 +201,7 @@ export abstract class BaseFightComponent extends TemplatePage {
         this.victory = true;
         this.store.dispatch(new EndFight());
         animateElement('.finish-quest-screen', 'jackInTheBox', {
-          callback: () => this.afterVictory(result),
+          callback: () => this.onVictory.emit(result),
           callbackTimeout: 1000,
           callbackSafeTimeout: 2000,
         });
@@ -181,7 +218,7 @@ export abstract class BaseFightComponent extends TemplatePage {
         this.defeat = true;
         this.store.dispatch(new EndFight());
         animateElement('.defeat-title', 'jackInTheBox', {
-          callback: () => this.afterDefeat(result),
+          callback: () => this.onDefeat.emit(result),
           callbackTimeout: 1000,
           callbackSafeTimeout: 2000,
         });
@@ -288,7 +325,7 @@ export abstract class BaseFightComponent extends TemplatePage {
         title: 'Surrender',
         description: 'Do you want to surrender the fight?',
         accept: () => {
-          this.onSurrender();
+          this.onSurrender.emit();
           modalRef.hide();
         },
       },
