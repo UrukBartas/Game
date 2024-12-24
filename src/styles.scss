@@ -626,3 +626,14 @@ app-item-tooltip {
 app-rooms-list {
   width: 100%;
 }
+
+.locked-screen {
+  pointer-events: none;
+  cursor: not-allowed;
+  app-item-box,
+  .image-container,
+  .img-reward,
+  .dificulty-indicator {
+    filter: grayscale(1);
+  }
+}

@@ -39,15 +39,7 @@
     transform: rotate(90deg);
   }
 }
-.locked-screen {
-  pointer-events: none;
-  cursor: not-allowed;
-  app-item-box,
-  .img-reward,
-  .dificulty-indicator {
-    filter: grayscale(1);
-  }
-}
+
 .dificulty-indicator {
   display: flex;
   justify-content: center;
