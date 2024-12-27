@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { SessionModel } from 'src/modules/core/models/session.model';
+import { Realm, SessionModel } from 'src/modules/core/models/session.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 
 @Injectable({
@@ -27,6 +27,26 @@ export class SessionService extends ApiBaseService {
       '/chains/' + (!!environment.production ? 'prod' : 'dev'),
       false,
       false
+    );
+  }
+
+  public getRealms(): Observable<Array<Realm>> {
+    return this.get(
+      '/realms/' + (!!environment.production ? 'prod' : 'dev'),
+      false,
+      false
+    ).pipe(
+      map((e) => {
+        return [
+          {
+            id: 'local',
+            name: 'Localhost',
+            url: 'http://localhost:4200/',
+            icon: 'fa-solid fa-skull',
+          },
+          ...e,
+        ];
+      })
     );
   }
 }

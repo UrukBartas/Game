@@ -13,6 +13,9 @@
   button {
     background-color: #be781c !important;
     border-color: #844c0d !important;
+    &:hover {
+      background-color: #844c0d !important;
+    }
   }
 
   .logo {
