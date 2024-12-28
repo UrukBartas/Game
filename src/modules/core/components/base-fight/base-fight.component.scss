@@ -1,4 +1,4 @@
-@import '../../../../../variables.scss';
+@import '../../../../variables.scss';
 @import 'node_modules/bootstrap/scss/functions';
 @import 'node_modules/bootstrap/scss/variables';
 @import 'node_modules/bootstrap/scss/mixins';
@@ -43,37 +43,6 @@
       }
       border-radius: 20%;
       max-width: 300px;
-    }
-    .status-bar {
-      position: relative;
-      width: 80%;
-      height: 30px;
-      display: flex;
-      gap: 5px;
-
-      .text-purple {
-        color: #6d507c;
-      }
-
-      .text-blue {
-        color: #048ba8;
-      }
-
-      .text-yellow {
-        color: #fea520;
-      }
-
-      .fa-flask {
-        padding-right: 7px;
-        padding-top: 3px;
-        position: relative;
-        span {
-          position: absolute;
-          bottom: 3px;
-          color: white;
-          font-size: 10px;
-        }
-      }
     }
   }
 

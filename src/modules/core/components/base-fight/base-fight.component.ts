@@ -3,13 +3,16 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
+  OnInit,
   Output,
+  signal,
   ViewEncapsulation,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Rarity } from 'src/modules/core/models/items.model';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { ConsumableModalComponent } from 'src/modules/game/components/consumable-modal/consumable-modal.component';
 import {
@@ -20,15 +23,13 @@ import {
 import { ViewportService } from 'src/services/viewport.service';
 import { EndFight } from 'src/store/main.store';
 import { BuffType } from '../../models/fight-buff.model';
-import {
-  FighterTurnModel,
-  FightModel,
-  FightResultModel,
-  TurnActionEnum,
-} from '../../models/fight.model';
-import { PlayerModel } from '../../models/player.model';
-import { QuestModel } from '../../models/quest.model';
+import { FightResultModel, TurnActionEnum } from '../../models/fight.model';
 import { TemplatePage } from '../template-page.component';
+import {
+  BaseFighterModel,
+  BaseFightModel,
+  FightTypes,
+} from './models/base-fight.model';
 
 @Component({
   selector: 'app-base-fight',
@@ -36,19 +37,35 @@ import { TemplatePage } from '../template-page.component';
   styleUrls: ['./base-fight.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export abstract class BaseFightComponent extends TemplatePage {
+export class BaseFightComponent
+  extends TemplatePage
+  implements OnInit, OnDestroy
+{
+  // Constants
+  public prefix = environment.permaLinkImgPref;
+  public fightTypes = FightTypes;
+  public buffType = BuffType;
+  public turnActions = TurnActionEnum;
+
+  // Variable
+  public player = signal<BaseFighterModel>(null);
+  public enemy = signal<BaseFighterModel>(null);
+  public victory = false;
+  public defeat = false;
+  public showPlayerAction = false;
+  public showEnemyAction = false;
+  public showReceivedPlayerDamage = false;
+  public showReceivedEnemyDamage = false;
+  public playerAnimation: string;
+  public enemyAnimation: string;
+  private lastClickTime: number = 0;
+  private destroy$ = new Subject<void>();
+
+  @Input() fightType: FightTypes;
   @Input() backgroundImage: string;
-  @Input() quest: QuestModel;
-  @Input() player: PlayerModel;
-  @Input() enemy: PlayerModel;
-  @Input() set setFight(fight: FightModel) {
-    if (fight) {
-      if (this.fight) {
-        this.onActionSubmited(fight);
-      }
-      this.fight = fight;
-    }
-  }
+  @Input() fight$: Observable<BaseFightModel>;
+  @Input() triggerVictory$: Observable<any>;
+  @Input() triggerDefeat$: Observable<any>;
 
   @Output() onActionSubmit = new EventEmitter<{
     action: TurnActionEnum;
@@ -57,25 +74,6 @@ export abstract class BaseFightComponent extends TemplatePage {
   @Output() onSurrender = new EventEmitter<void>();
   @Output() onDefeat = new EventEmitter<FightResultModel>();
   @Output() onVictory = new EventEmitter<FightResultModel>();
-
-  public turnActions = TurnActionEnum;
-  public victory = false;
-  public defeat = false;
-  public fight: FightModel;
-  public showPlayerAction = false;
-  public showEnemyAction = false;
-  public showReceivedPlayerDamage = false;
-  public showReceivedEnemyDamage = false;
-  public playerAnimation;
-  public enemyAnimation;
-  public buffType = BuffType;
-  public isOpponent = false;
-  public prefix = environment.permaLinkImgPref;
-  public getRarityColor = getRarityColor;
-  public getRarityBasedOnIRI = getRarityBasedOnIRI;
-  public IRI = 0;
-  public IRI_RARITY: Rarity = Rarity.COMMON;
-  private lastClickTime: number = 0;
 
   constructor(
     protected store: Store,
@@ -86,10 +84,44 @@ export abstract class BaseFightComponent extends TemplatePage {
     super();
   }
 
+  ngOnInit(): void {
+    this.setupFightListener();
+    this.setupFightResultListeners();
+  }
+
+  private setupFightListener() {
+    this.fight$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((fight: BaseFightModel) => {
+        if (fight) {
+          const { player, enemy, load } = fight;
+
+          this.player.set(player);
+          this.enemy.set(enemy);
+          if (!load) {
+            this.onActionSubmited(fight);
+          }
+        }
+      });
+  }
+
+  private setupFightResultListeners() {
+    this.triggerDefeat$?.pipe(takeUntil(this.destroy$)).subscribe((result) => {
+      this.triggerDefeat(result);
+    });
+    this.triggerVictory$?.pipe(takeUntil(this.destroy$)).subscribe((result) => {
+      this.triggerVictory(result);
+    });
+  }
+
   doAction(action: TurnActionEnum, consumableId?: number) {
     const currentTime = Date.now();
 
-    if (currentTime - this.lastClickTime < 1000 || this.fight.result) {
+    if (
+      currentTime - this.lastClickTime < 1000 ||
+      this.defeat ||
+      this.victory
+    ) {
       return;
     }
     this.lastClickTime = currentTime;
@@ -97,29 +129,26 @@ export abstract class BaseFightComponent extends TemplatePage {
     this.onActionSubmit.emit({ action, consumableId });
   }
 
-  onActionSubmited(fight: FightModel) {
-    const { player, enemy } = fight.currentStats;
+  onActionSubmited(fight: BaseFightModel) {
+    const { player, enemy } = fight;
 
-    this.controlTurnActions();
+    this.controlTurnActions(fight);
 
-    const ripPlayer = player.health < 1;
-    const ripEnemy = enemy.health < 1;
+    const ripPlayer = player.currentStats.health < 1;
+    const ripEnemy = enemy.currentStats.health < 1;
 
     if (ripPlayer || ripEnemy) {
-      this.controlEndScreen(ripPlayer, fight.result);
+      ripPlayer
+        ? this.triggerDefeat(fight.result)
+        : this.triggerVictory(fight.result);
     }
   }
 
-  private controlEndScreen(ripPlayer: boolean, result: FightResultModel) {
-    const victory =
-      (this.isOpponent && ripPlayer) || (!this.isOpponent && !ripPlayer);
-    victory ? this.triggerVictory(result) : this.triggerDefeat(result);
-  }
+  private controlTurnActions(fight: BaseFightModel) {
+    const { player, enemy } = fight;
+    const lastPlayerAction = player.lastTurn.action;
+    const lastEnemyAction = enemy.lastTurn.action;
 
-  private controlTurnActions() {
-    const { playerTurn, enemyTurn } = this.getTurn();
-    const lastPlayerAction = playerTurn.action;
-    const lastEnemyAction = enemyTurn.action;
     if (
       lastPlayerAction === TurnActionEnum.ATTACK ||
       lastPlayerAction === TurnActionEnum.CRIT
@@ -143,7 +172,7 @@ export abstract class BaseFightComponent extends TemplatePage {
           : 'attack-left',
         1
       );
-      if (enemyTurn.damage > 0) {
+      if (enemy.lastTurn.damage > 0) {
         this.showReceivedPlayerDamage = true;
         setTimeout(() => {
           this.showReceivedPlayerDamage = false;
@@ -183,23 +212,12 @@ export abstract class BaseFightComponent extends TemplatePage {
     }
   }
 
-  getTurn(): {
-    playerTurn: FighterTurnModel;
-    enemyTurn: FighterTurnModel;
-  } {
-    const turn = this.fight.turns[this.fight.turns.length - 1];
-    return {
-      playerTurn: this.isOpponent ? turn.enemyTurn : turn.playerTurn,
-      enemyTurn: this.isOpponent ? turn.playerTurn : turn.enemyTurn,
-    };
-  }
-
   triggerVictory(result: FightResultModel) {
     animateElement('.player-image', 'pulse');
     animateElement('.enemy-image', 'hinge', {
       callback: () => {
         this.victory = true;
-        this.store.dispatch(new EndFight());
+        this.store.dispatch(new EndFight(this.fightType));
         animateElement('.finish-quest-screen', 'jackInTheBox', {
           callback: () => this.onVictory.emit(result),
           callbackTimeout: 1000,
@@ -216,7 +234,7 @@ export abstract class BaseFightComponent extends TemplatePage {
     animateElement('.player-image', 'hinge', {
       callback: () => {
         this.defeat = true;
-        this.store.dispatch(new EndFight());
+        this.store.dispatch(new EndFight(this.fightType));
         animateElement('.defeat-title', 'jackInTheBox', {
           callback: () => this.onDefeat.emit(result),
           callbackTimeout: 1000,
@@ -240,6 +258,10 @@ export abstract class BaseFightComponent extends TemplatePage {
       },
     };
     const modalRef = this.modalService.show(ConsumableModalComponent, config);
+  }
+
+  getIRIRarityColor(iri: number) {
+    return getRarityColor(getRarityBasedOnIRI(iri));
   }
 
   getHealthBarHeight() {
@@ -269,21 +291,6 @@ export abstract class BaseFightComponent extends TemplatePage {
       case 'sm':
       default:
         return 20;
-    }
-  }
-
-  getTimerBarHeight() {
-    switch (this.viewportService.screenWidth) {
-      case 'xxl':
-      case 'xl':
-      case 'lg':
-        return 30;
-      case 'md':
-        return 20;
-      case 'xs':
-      case 'sm':
-      default:
-        return 15;
     }
   }
 
@@ -331,5 +338,9 @@ export abstract class BaseFightComponent extends TemplatePage {
       },
     };
     const modalRef = this.modalService.show(ConfirmModalComponent, config);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
   }
 }

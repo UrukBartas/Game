@@ -29,7 +29,7 @@ import { ChanceDisplayerComponent } from '../../standalone/chance-displayer/chan
 import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
 import { LootboxStatsDisplayerComponent } from '../../standalone/lootbox-stats-displayer/lootbox-stats-displayer.component';
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
-import { UruksDisplayerComponent } from "../../standalone/uruks-displayer/uruks-displayer.component";
+import { UruksDisplayerComponent } from '../../standalone/uruks-displayer/uruks-displayer.component';
 import { DoubleClickDirective } from '../core/directives/double-click.directive';
 import { SubtextSizeDirective } from '../core/directives/subtext-size.directive';
 import { SubtitleSizeDirective } from '../core/directives/subtitle-size.directive';
@@ -99,6 +99,9 @@ import { CryptoFailedComponent } from './activities/the-crypt/components/crypto-
 import { RoomsListComponent } from './activities/the-crypt/components/rooms-list/rooms-list.component';
 import { CryptPlayerStateComponent } from './activities/the-crypt/components/crypt-player-state/crypt-player-state.component';
 import { BaseFightComponent } from '../core/components/base-fight/base-fight.component';
+import { FighterStatusComponent } from '../core/components/base-fight/components/fighter-status/fighter-status.component';
+import { FighterStatsTooltipComponent } from '../core/components/base-fight/components/fighter-stats-tooltip/fighter-stats-tooltip.component';
+
 const directives = [
   ValidInputDirective,
   TextSizeDirective,
@@ -132,7 +135,9 @@ const components = [
   AuctionHouseComponent,
   MissionsComponent,
   AutoPvpFightComponent,
-  BaseFightComponent
+  BaseFightComponent,
+  FighterStatusComponent,
+  FighterStatsTooltipComponent,
 ];
 
 const pipes = [
@@ -215,8 +220,8 @@ const pipes = [
     LootboxStatsDisplayerComponent,
     NgxEchartsModule,
     MinMaxComboSelectorComponent,
-    UruksDisplayerComponent
-],
+    UruksDisplayerComponent,
+  ],
   exports: [GameLayoutComponent],
   providers: [DecimalPipe, AsyncPipe, StackPipe, ...pipes],
 })
