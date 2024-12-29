@@ -101,6 +101,7 @@ import { CryptPlayerStateComponent } from './activities/the-crypt/components/cry
 import { BaseFightComponent } from '../core/components/base-fight/base-fight.component';
 import { FighterStatusComponent } from '../core/components/base-fight/components/fighter-status/fighter-status.component';
 import { FighterStatsTooltipComponent } from '../core/components/base-fight/components/fighter-stats-tooltip/fighter-stats-tooltip.component';
+import { FightLogsModalComponent } from '../core/components/base-fight/components/fight-logs-modal/fight-logs-modal.component';
 
 const directives = [
   ValidInputDirective,
@@ -138,6 +139,7 @@ const components = [
   BaseFightComponent,
   FighterStatusComponent,
   FighterStatsTooltipComponent,
+  FightLogsModalComponent
 ];
 
 const pipes = [

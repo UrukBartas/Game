@@ -129,7 +129,7 @@ export class PvPFightComponent {
     const realPlayer = !isOpponent ? player : enemy;
     const realEnemy = isOpponent ? player : enemy;
 
-    return {
+    const adaptedFight = {
       load,
       player: {
         name: realPlayer.name,
@@ -154,6 +154,8 @@ export class PvPFightComponent {
       turns: fight.turns,
       result: fight.result,
     };
+    
+    return adaptedFight;
   }
 
   private handleAwaitingPlayer() {

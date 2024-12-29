@@ -20,9 +20,8 @@ export class PvPResultComponent {
   }
 
   private handleRouting(): void {
-    console.log(this.router);
-    
     const lastRoute = this.routeTrackingService.getPreviousUrl();
+    
     if (!this.allowedRoutes.includes(lastRoute)) {
       this.router.navigate(['/leaderboard']);
     }

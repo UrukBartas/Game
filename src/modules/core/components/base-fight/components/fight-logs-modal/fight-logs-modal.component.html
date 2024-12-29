@@ -1,0 +1,98 @@
+<div id="confirm-modal">
+  <div class="row">
+    <p class="text-third" urTitle>Historic</p>
+  </div>
+  <div class="row logs">
+    <ng-container *ngFor="let fightTurn of fightTurns">
+      <ng-container
+        [ngTemplateOutlet]="registry"
+        [ngTemplateOutletContext]="{
+          fightTurn: fightTurn.playerTurn,
+          isPlayer: true,
+        }"
+      >
+      </ng-container>
+      <ng-container
+        [ngTemplateOutlet]="registry"
+        [ngTemplateOutletContext]="{
+          fightTurn: fightTurn.enemyTurn,
+          isPlayer: false,
+        }"
+      >
+      </ng-container>
+    </ng-container>
+  </div>
+  <div class="d-flex w-100 justify-content-end pt-3">
+    <button class="btn btn-secondary btn-transparent" (click)="modalRef.hide()">
+      Close
+    </button>
+  </div>
+</div>
+
+<ng-template #registry let-fightTurn="fightTurn" let-isPlayer="isPlayer">
+  @switch (fightTurn.action) {
+    @case (turnActions.ATTACK) {
+      <p class="text-white" style="white-space: pre-line" urSubtext>
+        <span
+          [ngClass]="{ 'text-third': isPlayer, 'text-danger': !isPlayer }"
+          >{{ isPlayer ? player : enemy }}</span
+        >
+        attacked for {{ fightTurn.damage }}
+      </p>
+    }
+    @case (turnActions.CRIT) {
+      <p class="text-white" style="white-space: pre-line" urSubtext>
+        <span
+          [ngClass]="{ 'text-third': isPlayer, 'text-danger': !isPlayer }"
+          >{{ isPlayer ? player : enemy }}</span
+        >
+        did a CRITICAL attack for {{ fightTurn.damage }}!
+      </p>
+    }
+    @case (turnActions.DEFEND) {
+      <p class="text-white" style="white-space: pre-line" urSubtext>
+        <span
+          [ngClass]="{ 'text-third': isPlayer, 'text-danger': !isPlayer }"
+          >{{ isPlayer ? player : enemy }}</span
+        >
+        took a defensive stance
+      </p>
+    }
+    @case (turnActions.CHARGE) {
+      <p class="text-white" style="white-space: pre-line" urSubtext>
+        <span
+          [ngClass]="{ 'text-third': isPlayer, 'text-danger': !isPlayer }"
+          >{{ isPlayer ? player : enemy }}</span
+        >
+        charged energy for the turn
+      </p>
+    }
+    @case (turnActions.USE_ITEM) {
+      <p class="text-white" style="white-space: pre-line" urSubtext>
+        <span
+          [ngClass]="{ 'text-third': isPlayer, 'text-danger': !isPlayer }"
+          >{{ isPlayer ? player : enemy }}</span
+        >
+        used an item
+      </p>
+    }
+    @case (turnActions.BLOCKED) {
+      <p class="text-white" style="white-space: pre-line" urSubtext>
+        <span
+          [ngClass]="{ 'text-third': isPlayer, 'text-danger': !isPlayer }"
+          >{{ isPlayer ? player : enemy }}</span
+        >
+        attack was blocked!
+      </p>
+    }
+    @case (turnActions.MISS) {
+      <p class="text-white" style="white-space: pre-line" urSubtext>
+        <span
+          [ngClass]="{ 'text-third': isPlayer, 'text-danger': !isPlayer }"
+          >{{ isPlayer ? player : enemy }}</span
+        >
+        missed the attack!
+      </p>
+    }
+  }
+</ng-template>

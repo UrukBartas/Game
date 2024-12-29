@@ -23,13 +23,19 @@ import {
 import { ViewportService } from 'src/services/viewport.service';
 import { EndFight } from 'src/store/main.store';
 import { BuffType } from '../../models/fight-buff.model';
-import { FightResultModel, TurnActionEnum } from '../../models/fight.model';
+import {
+  FightResultModel,
+  FightTurnModel,
+  TurnActionEnum,
+} from '../../models/fight.model';
 import { TemplatePage } from '../template-page.component';
 import {
   BaseFighterModel,
   BaseFightModel,
   FightTypes,
 } from './models/base-fight.model';
+import { FightAnimationsService } from './services/fight-animations.service';
+import { FightLogsModalComponent } from './components/fight-logs-modal/fight-logs-modal.component';
 
 @Component({
   selector: 'app-base-fight',
@@ -52,14 +58,9 @@ export class BaseFightComponent
   public enemy = signal<BaseFighterModel>(null);
   public victory = false;
   public defeat = false;
-  public showPlayerAction = false;
-  public showEnemyAction = false;
-  public showReceivedPlayerDamage = false;
-  public showReceivedEnemyDamage = false;
-  public playerAnimation: string;
-  public enemyAnimation: string;
   private lastClickTime: number = 0;
   private destroy$ = new Subject<void>();
+  private fightTurns: FightTurnModel[] = [];
 
   @Input() fightType: FightTypes;
   @Input() backgroundImage: string;
@@ -76,10 +77,11 @@ export class BaseFightComponent
   @Output() onVictory = new EventEmitter<FightResultModel>();
 
   constructor(
-    protected store: Store,
-    protected viewportService: ViewportService,
-    protected modalService: BsModalService,
-    protected cdr: ChangeDetectorRef
+    private store: Store,
+    private viewportService: ViewportService,
+    private modalService: BsModalService,
+    private cdr: ChangeDetectorRef,
+    private fightAnimationsService: FightAnimationsService
   ) {
     super();
   }
@@ -94,10 +96,11 @@ export class BaseFightComponent
       .pipe(takeUntil(this.destroy$))
       .subscribe((fight: BaseFightModel) => {
         if (fight) {
-          const { player, enemy, load } = fight;
+          const { player, enemy, load, turns } = fight;
 
           this.player.set(player);
           this.enemy.set(enemy);
+          this.fightTurns = turns;
           if (!load) {
             this.onActionSubmited(fight);
           }
@@ -132,82 +135,16 @@ export class BaseFightComponent
   onActionSubmited(fight: BaseFightModel) {
     const { player, enemy } = fight;
 
-    this.controlTurnActions(fight);
+    this.fightAnimationsService.controlTurnActions(fight);
 
     const ripPlayer = player.currentStats.health < 1;
     const ripEnemy = enemy.currentStats.health < 1;
 
     if (ripPlayer || ripEnemy) {
-      ripPlayer
-        ? this.triggerDefeat(fight.result)
-        : this.triggerVictory(fight.result);
-    }
-  }
-
-  private controlTurnActions(fight: BaseFightModel) {
-    const { player, enemy } = fight;
-    const lastPlayerAction = player.lastTurn.action;
-    const lastEnemyAction = enemy.lastTurn.action;
-
-    if (
-      lastPlayerAction === TurnActionEnum.ATTACK ||
-      lastPlayerAction === TurnActionEnum.CRIT
-    ) {
-      this.handlePlayerAnimation(
-        this.viewportService.screenWidth == 'xs' ? 'attack-up' : 'attack-right',
-        1
-      );
-      this.showReceivedEnemyDamage = true;
       setTimeout(() => {
-        this.showReceivedEnemyDamage = false;
-      }, 1000);
-    }
-    if (
-      lastEnemyAction === TurnActionEnum.ATTACK ||
-      lastEnemyAction === TurnActionEnum.CRIT
-    ) {
-      this.handleEnemyAnimation(
-        this.viewportService.screenWidth == 'xs'
-          ? 'attack-down'
-          : 'attack-left',
-        1
-      );
-      if (enemy.lastTurn.damage > 0) {
-        this.showReceivedPlayerDamage = true;
-        setTimeout(() => {
-          this.showReceivedPlayerDamage = false;
-        }, 1000);
-      }
-    }
-    if (lastPlayerAction === TurnActionEnum.DEFEND) {
-      this.handlePlayerAnimation('defend-right', 1);
-    }
-    if (lastEnemyAction === TurnActionEnum.DEFEND) {
-      this.handleEnemyAnimation('defend-left', 1);
-    }
-    if (lastPlayerAction === TurnActionEnum.CHARGE) {
-      this.handlePlayerAnimation('charge', 1);
-    }
-    if (lastEnemyAction === TurnActionEnum.CHARGE) {
-      this.handleEnemyAnimation('charge', 1);
-    }
-    if (
-      lastPlayerAction === TurnActionEnum.BLOCKED ||
-      lastPlayerAction === TurnActionEnum.MISS
-    ) {
-      this.showPlayerAction = true;
-      setTimeout(() => {
-        this.showPlayerAction = false;
-      }, 1000);
-    }
-
-    if (
-      lastEnemyAction === TurnActionEnum.BLOCKED ||
-      lastEnemyAction === TurnActionEnum.MISS
-    ) {
-      this.showEnemyAction = true;
-      setTimeout(() => {
-        this.showEnemyAction = false;
+        ripPlayer
+          ? this.triggerDefeat(fight.result)
+          : this.triggerVictory(fight.result);
       }, 1000);
     }
   }
@@ -308,24 +245,6 @@ export class BaseFightComponent
     }
   }
 
-  // duration in seconds
-  private handlePlayerAnimation(animation: string, duration: number) {
-    this.playerAnimation = `${animation} ${duration}s ease-in-out`;
-    this.cdr.detectChanges();
-    setTimeout(() => {
-      this.playerAnimation = '';
-    }, duration * 1000);
-  }
-
-  // duration in seconds
-  private handleEnemyAnimation(animation: string, duration: number) {
-    this.enemyAnimation = `${animation} ${duration}s`;
-    this.cdr.detectChanges();
-    setTimeout(() => {
-      this.enemyAnimation = '';
-    }, duration * 1000);
-  }
-
   surrender() {
     const config: ModalOptions = {
       initialState: {
@@ -338,6 +257,17 @@ export class BaseFightComponent
       },
     };
     const modalRef = this.modalService.show(ConfirmModalComponent, config);
+  }
+
+  showCombatLog() {
+    const config: ModalOptions = {
+      initialState: {
+        fightTurns: this.fightTurns,
+        player: this.player().name,
+        enemy: this.enemy().name,
+      },
+    };
+    const modalRef = this.modalService.show(FightLogsModalComponent, config);
   }
 
   ngOnDestroy(): void {

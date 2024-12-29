@@ -18,17 +18,25 @@
     >
       <i class="fa fa-flag"></i>
     </button>
+    <button
+      (click)="showCombatLog()"
+      [class]="
+        'btn btn-primary combat-log-button action-button shadow ' +
+        getButtonSize()
+      "
+    >
+      <i class="fa fa-file-lines"></i>
+    </button>
     <div class="row position-relative h-100">
       <div class="col-12 col-sm-6 fighter-container player-container">
-        <!-- TODO: Component actions -->
         <img
           [src]="prefix + '/' + player().image"
           [ngbTooltip]="fighterStats"
           [tooltipContext]="{ fighter: player() }"
           class="player-image shadow"
-          [style.animation]="playerAnimation"
         />
         <span
+          class="text-shadow"
           [ngStyle]="{
             color: getIRIRarityColor(player().iri),
           }"
@@ -36,7 +44,7 @@
           style="margin-bottom: -1vh"
           >{{ player().name }} (level {{ player().level }})</span
         >
-        <span urSubtext style="margin: -1vh" class="text-light">{{
+        <span urSubtext style="margin: -1vh" class="text-light text-shadow">{{
           player().title ?? 'The untitled'
         }}</span>
         <div
@@ -90,24 +98,22 @@
         </ng-container>
       </div>
       <div class="col-12 col-sm-6 fighter-container enemy-container">
-        <!-- TODO: Component actions -->
         <img
           [src]="prefix + enemy().image"
           [ngbTooltip]="fighterStats"
           [tooltipContext]="{ fighter: enemy() }"
           class="enemy-image shadow"
-          [style.animation]="enemyAnimation"
         />
         <span
+          class="text-shadow"
           [ngStyle]="{
             color: getIRIRarityColor(enemy().iri),
           }"
           urText
           style="margin-bottom: -1vh"
-          class="text-white"
           >{{ enemy().name }} (level {{ enemy().level }})</span
         >
-        <span urSubtext style="margin-top: -1vh" class="text-light">{{
+        <span urSubtext style="margin-top: -1vh" class="text-light text-shadow">{{
           enemy().title ?? 'The untitled'
         }}</span>
 
@@ -164,12 +170,14 @@
       </div>
       <div class="action-buttons">
         <button
+          [disabled]="victory || defeat"
           (click)="doAction(turnActions.ATTACK)"
           [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
         >
           <i class="fa fa-hand-fist"></i> ATTACK
         </button>
         <button
+          [disabled]="victory || defeat"
           (click)="doAction(turnActions.DEFEND)"
           [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
         >
@@ -177,12 +185,14 @@
         </button>
 
         <button
+          [disabled]="victory || defeat"
           (click)="doAction(turnActions.CHARGE)"
           [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
         >
           <i class="fa fa-bolt"></i> CHARGE
         </button>
         <button
+          [disabled]="victory || defeat"
           (click)="openConsumableModal()"
           [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
         >

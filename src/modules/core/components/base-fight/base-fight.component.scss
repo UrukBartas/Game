@@ -83,6 +83,13 @@
     z-index: 100;
   }
 
+  .combat-log-button {
+    position: absolute;
+    top: 3%;
+    right: 3%;
+    z-index: 100;
+  }
+
   .finish-quest-screen {
     position: fixed;
     top: 0;
@@ -187,15 +194,77 @@
     }
   }
 
+  @keyframes crit-attack-right {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    20% {
+      transform: translate(25vw, -5vh) rotateZ(25deg) scale(1.2);
+    }
+    60% {
+      transform: translate(50vw, 0px) scale(1);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes crit-attack-down {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    20% {
+      transform: translate(0px, 25vh) rotateZ(15deg) scale(1.2);
+    }
+    60% {
+      transform: translate(0px, 50vh) scale(1);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes crit-attack-left {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    20% {
+      transform: translate(-25vw, -5vh) rotateZ(-25deg) scale(1.2);
+    }
+    60% {
+      transform: translate(-50vw, 0px) scale(1);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes crit-attack-up {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    20% {
+      transform: translate(0px, -25vh) rotateZ(-15deg) scale(1.2);
+    }
+    60% {
+      transform: translate(0px, -50vh) scale(1);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+
   @keyframes defend-right {
     0% {
       transform: translate(0px, 0px);
     }
     50% {
-      transform: translate(-10vw, 0px);
+      transform: translate(-10vw, 0px) scale(1.05);
+      opacity: 0.8;
     }
     100% {
       transform: translate(0px, 0px);
+      opacity: 1;
     }
   }
 
@@ -204,10 +273,12 @@
       transform: translate(0px, 0px);
     }
     50% {
-      transform: translate(10vw, 0px);
+      transform: translate(10vw, 0px) scale(1.05);
+      opacity: 0.8;
     }
     100% {
       transform: translate(0px, 0px);
+      opacity: 1;
     }
   }
 
@@ -217,14 +288,48 @@
     }
     50% {
       transform: translate(0px, -10vh);
+      filter: brightness(1.2);
     }
     70% {
-      transform: translate(0px, 0px);
+      transform: translate(0px, 0px) rotateX(30deg);
       transform-origin: center bottom;
-      transform: rotateX(30deg);
+      filter: brightness(1);
     }
     100% {
       transform: rotateX(0deg);
+    }
+  }
+
+  @keyframes blocked {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    25% {
+      transform: translate(-5vw, 0px) scale(1.05);
+    }
+    50% {
+      transform: translate(0px, 0px);
+    }
+    75% {
+      transform: translate(-2vw, 0px);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes missed {
+    0% {
+      transform: translate(0px, 0px) rotateZ(0deg);
+    }
+    50% {
+      transform: translate(10vw, -10vh) rotateZ(30deg);
+    }
+    75% {
+      transform: translate(5vw, 0px) rotateZ(15deg);
+    }
+    100% {
+      transform: translate(0px, 0px) rotateZ(0deg);
     }
   }
 }
