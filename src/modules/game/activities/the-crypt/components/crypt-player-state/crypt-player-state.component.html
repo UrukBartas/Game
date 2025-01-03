@@ -13,72 +13,76 @@
         [image]="currentState.image"
       ></app-item-box>
 
-      <div class="stats-player">
-        <div class="vitals d-flex gap-2 flex-column">
-          <div
-            class="progress shadow"
-            [style.height]="getHealthBarHeight() + 'px'"
-          >
-            <span class="progress-text position-absolute"
-              >{{
-                currentState.remainingHealth ?? currentState.stats.health
-                  | number
-              }}/{{ currentState.stats.health | number }}</span
-            >
+      <div class="stats-player row">
+        <div class="col-12 col-lg-6">
+          <div class="vitals d-flex gap-2 flex-column">
             <div
-              class="progress-bar progress-bar-health progress-bar-animated shadow"
-              role="progressbar"
-              aria-valuemin="0"
-              aria-valuemax="100"
-              [style.width]="
-                ((currentState.remainingHealth ?? currentState.stats.health) /
-                  currentState.stats.health) *
-                  100 +
-                '%'
-              "
-            ></div>
+              class="progress shadow"
+              [style.height]="getHealthBarHeight() + 'px'"
+            >
+              <span class="progress-text position-absolute"
+                >{{ currentState.stats.health | number }}/{{
+                  currentState.stats.health | number
+                }}</span
+              >
+              <div
+                class="progress-bar progress-bar-health progress-bar-animated shadow"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                [style.width]="
+                  (currentState.stats.health / currentState.stats.health) *
+                    100 +
+                  '%'
+                "
+              ></div>
+            </div>
+            <div
+              class="progress shadow"
+              [style.height]="getHealthBarHeight() + 'px'"
+            >
+              <span class="progress-text position-absolute"
+                >{{ currentState.energy | number }}/{{
+                  currentState.energy | number
+                }}</span
+              >
+              <div
+                class="progress-bar progress-bar-energy progress-bar-animated shadow"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                [style.width]="
+                  (currentState.stats.energy / currentState.stats.energy) *
+                    100 +
+                  '%'
+                "
+              ></div>
+            </div>
           </div>
-          <div
-            class="progress shadow"
-            [style.height]="getHealthBarHeight() + 'px'"
-          >
-            <span class="progress-text position-absolute"
-              >{{
-                currentState.remainingEnergy ?? currentState.energy | number
-              }}/{{ currentState.energy | number }}</span
-            >
+          <div class="upgrades gap-2 py-2">
             <div
-              class="progress-bar progress-bar-energy progress-bar-animated shadow"
-              role="progressbar"
-              aria-valuemin="0"
-              aria-valuemax="100"
-              [style.width]="
-                ((currentState.remainingEnergy ?? currentState.stats.energy) /
-                  currentState.stats.energy) *
-                  100 +
-                '%'
-              "
-            ></div>
+              class="reward text-light"
+              *ngFor="let reward of appliedBonuses"
+            >
+              <app-item-box
+                [height]="50"
+                [width]="50"
+                [image]="reward.icon"
+                [rarity]="reward.rarity"
+              >
+                <div tooltip class="tooltip-uruk p-2">
+                  <label class="text-center">{{ reward.description }}</label>
+                </div>
+              </app-item-box>
+            </div>
           </div>
         </div>
-        <div class="upgrades gap-2 py-2">
-          <div class="reward text-light" *ngFor="let reward of appliedBonuses">
-            <app-item-box
-              [height]="50"
-              [width]="50"
-              [image]="reward.icon"
-              [rarity]="reward.rarity"
-            >
-              <div tooltip class="tooltip-uruk p-2">
-                <label class="text-center">{{ reward.description }}</label>
-              </div>
-            </app-item-box>
-          </div>
+        <div class="col-12 col-lg-6">
+          <app-only-stats
+            [player]="currentState"
+            [simplified]="true"
+          ></app-only-stats>
         </div>
-        <app-only-stats
-          [player]="currentState"
-          [simplified]="true"
-        ></app-only-stats>
       </div>
     </div>
   </div>

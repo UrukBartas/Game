@@ -28,7 +28,7 @@
       [currentLevel]="getCurrentLevel(currentCrypt()) ?? 0"
       [encounters]="currentCrypt()?.encounters ?? []"
       [appliedBonuses]="currentCrypt()?.appliedBonuses?.rewards ?? []"
-      [currentState]="currentCrypt()?.playerState"
+      [currentState]="lastLoadedPlayer"
       (startedEncounter)="startEncounter($event)"
       (surrender)="onCryptSurrender()"
     ></app-crypt-progress>
@@ -45,7 +45,7 @@
       *ngSwitchCase="cryptStatusEnum.FAILED"
       [currentLevel]="getCurrentLevel(currentCrypt()) ?? 0"
       [appliedBonuses]="currentCrypt()?.appliedBonuses?.rewards ?? []"
-      [currentState]="currentCrypt()?.playerState"
+      [currentState]="lastLoadedPlayer"
       [crypt]="currentCrypt()"
       (startNewCrypt)="onCryptStart()"
     ></app-crypto-failed>
@@ -53,7 +53,7 @@
       *ngSwitchCase="cryptStatusEnum.FINISHED"
       [currentLevel]="getCurrentLevel(currentCrypt()) ?? 0"
       [appliedBonuses]="currentCrypt()?.appliedBonuses?.rewards ?? []"
-      [currentState]="currentCrypt()?.playerState"
+      [currentState]="lastLoadedPlayer"
       [crypt]="currentCrypt()"
       (startNewCrypt)="onCryptStart()"
     ></app-crypt-finished>

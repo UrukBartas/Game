@@ -37,16 +37,17 @@ export class SessionService extends ApiBaseService {
       false
     ).pipe(
       map((e) => {
-        return e;
-        // return [
-        //   {
-        //     id: 'local',
-        //     name: 'Localhost',
-        //     url: 'http://localhost:4200/',
-        //     icon: 'fa-solid fa-skull',
-        //   },
-        //   ...e,
-        // ];
+        return environment.production
+          ? e
+          : [
+              {
+                id: 'local',
+                name: 'Localhost',
+                url: 'http://localhost:4200/',
+                icon: 'fa-solid fa-skull',
+              },
+              ...e,
+            ];
       })
     );
   }
