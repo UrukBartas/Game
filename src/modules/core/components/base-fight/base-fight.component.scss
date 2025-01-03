@@ -1,0 +1,335 @@
+@import '../../../../variables.scss';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
+
+#fight-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+
+  .background-image {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 101%;
+    height: 101%;
+    filter: brightness(60%) blur(1px);
+  }
+
+  .crit-text {
+    color: $yellow !important;
+  }
+
+  .fighter-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3%;
+    padding-top: 1%;
+
+    .player-image,
+    .enemy-image {
+      aspect-ratio: 1 / 1;
+      width: 50%;
+      @include media-breakpoint-down(sm) {
+        width: 30%;
+      }
+      border-radius: 20%;
+      max-width: 300px;
+    }
+  }
+
+  .player-container {
+    order: 1;
+    @include media-breakpoint-down(sm) {
+      order: 2;
+    }
+  }
+
+  .enemy-container {
+    order: 2;
+    @include media-breakpoint-down(sm) {
+      order: 1;
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    gap: 3%;
+    height: fit-content;
+    order: 3;
+  }
+
+  .action-button {
+    background-color: rgb(222 222 222 / 25%) !important;
+    @include media-breakpoint-down(sm) {
+      font-size: 13px;
+    }
+  }
+
+  .surrender-button {
+    position: absolute;
+    top: 3%;
+    left: 3%;
+    z-index: 100;
+  }
+
+  .combat-log-button {
+    position: absolute;
+    top: 3%;
+    right: 3%;
+    z-index: 100;
+  }
+
+  .finish-quest-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+
+    .finish-quest-bg {
+      width: 150vh;
+      z-index: 1;
+      position: absolute;
+      max-width: 150vw;
+      padding-bottom: 40px;
+      @include media-breakpoint-up(lg) {
+        max-width: 1400px;
+      }
+    }
+
+    .player-image {
+      width: 30vh;
+      position: relative;
+      z-index: 1;
+      max-width: 30vw;
+      margin-left: 10px;
+      @include media-breakpoint-up(lg) {
+        max-width: 300px;
+      }
+    }
+  }
+
+  // animations
+
+  @keyframes attack-right {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    15% {
+      transform: translate(25vw, -10vh);
+      transform: rotateZ(45deg);
+    }
+    50% {
+      transform: translate(50vw, 0px);
+    }
+    100% {
+      transform: translate(0px, 0px);
+      transform: rotateZ(0);
+    }
+  }
+
+  @keyframes attack-down {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    15% {
+      transform: translate(0px, 25vh);
+      transform: rotateZ(45deg);
+    }
+    50% {
+      transform: translate(0px, 50vh);
+    }
+    100% {
+      transform: translate(0px, 0px);
+      transform: rotateZ(0);
+    }
+  }
+
+  @keyframes attack-left {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    15% {
+      transform: translate(-25vw, -10vh);
+      transform: rotateZ(-45deg);
+    }
+    50% {
+      transform: translate(-50vw, 0px);
+    }
+    100% {
+      transform: translate(0px, 0px);
+      transform: rotateZ(0);
+    }
+  }
+
+  @keyframes attack-up {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    15% {
+      transform: translate(0px, -25vh);
+      transform: rotateZ(-45deg);
+    }
+    50% {
+      transform: translate(0px, -50vh);
+    }
+    100% {
+      transform: translate(0px, 0px);
+      transform: rotateZ(0);
+    }
+  }
+
+  @keyframes crit-attack-right {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    20% {
+      transform: translate(25vw, -5vh) rotateZ(25deg) scale(1.2);
+    }
+    60% {
+      transform: translate(50vw, 0px) scale(1);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes crit-attack-down {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    20% {
+      transform: translate(0px, 25vh) rotateZ(15deg) scale(1.2);
+    }
+    60% {
+      transform: translate(0px, 50vh) scale(1);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes crit-attack-left {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    20% {
+      transform: translate(-25vw, -5vh) rotateZ(-25deg) scale(1.2);
+    }
+    60% {
+      transform: translate(-50vw, 0px) scale(1);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes crit-attack-up {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    20% {
+      transform: translate(0px, -25vh) rotateZ(-15deg) scale(1.2);
+    }
+    60% {
+      transform: translate(0px, -50vh) scale(1);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes defend-right {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    50% {
+      transform: translate(-10vw, 0px) scale(1.05);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translate(0px, 0px);
+      opacity: 1;
+    }
+  }
+
+  @keyframes defend-left {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    50% {
+      transform: translate(10vw, 0px) scale(1.05);
+      opacity: 0.8;
+    }
+    100% {
+      transform: translate(0px, 0px);
+      opacity: 1;
+    }
+  }
+
+  @keyframes charge {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    50% {
+      transform: translate(0px, -10vh);
+      filter: brightness(1.2);
+    }
+    70% {
+      transform: translate(0px, 0px) rotateX(30deg);
+      transform-origin: center bottom;
+      filter: brightness(1);
+    }
+    100% {
+      transform: rotateX(0deg);
+    }
+  }
+
+  @keyframes blocked {
+    0% {
+      transform: translate(0px, 0px);
+    }
+    25% {
+      transform: translate(-5vw, 0px) scale(1.05);
+    }
+    50% {
+      transform: translate(0px, 0px);
+    }
+    75% {
+      transform: translate(-2vw, 0px);
+    }
+    100% {
+      transform: translate(0px, 0px);
+    }
+  }
+
+  @keyframes missed {
+    0% {
+      transform: translate(0px, 0px) rotateZ(0deg);
+    }
+    50% {
+      transform: translate(10vw, -10vh) rotateZ(30deg);
+    }
+    75% {
+      transform: translate(5vw, 0px) rotateZ(15deg);
+    }
+    100% {
+      transform: translate(0px, 0px) rotateZ(0deg);
+    }
+  }
+}

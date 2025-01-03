@@ -6,6 +6,7 @@ import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { disconnect } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
 import { debounceTime, firstValueFrom, take } from 'rxjs';
+import { FightTypes } from 'src/modules/core/components/base-fight/models/base-fight.model';
 import { FightModel } from 'src/modules/core/models/fight.model';
 import { MiscellanyItemData } from 'src/modules/core/models/misc.model';
 import { NotificationResponseModel } from 'src/modules/core/models/notifications.model';
@@ -65,30 +66,30 @@ export class SetSkins {
 
 export class StartFight {
   static readonly type = '[Fight] Start';
-  constructor(public payload: FightModel) {}
+  constructor(public fightType: FightTypes) {}
 }
 
 export class EndFight {
   static readonly type = '[Fight] End';
-  constructor() {}
+  constructor(public fightType: FightTypes) {}
 }
 
 export class MainStateModel {
-  public address: string | null;
-  public player: PlayerModel | null;
-  public session: SessionModel | null;
-  public quests: QuestModel[] | null;
-  public fight: FightModel | null;
-  public notifications: NotificationResponseModel | null;
-  public skins: MiscellanyItemData[] | null;
-  public web3: boolean | null;
+  public address: string;
+  public player: PlayerModel;
+  public session: SessionModel;
+  public quests: QuestModel[];
+  public activeFightTypes: FightTypes[];
+  public notifications: NotificationResponseModel;
+  public skins: MiscellanyItemData[];
+  public web3: boolean;
 }
 const defaultState = {
   address: '',
   player: null,
   session: null,
   quests: null,
-  fight: null,
+  activeFightTypes: [],
   notifications: null,
   skins: null,
   web3: false,
@@ -245,18 +246,30 @@ export class MainState {
   @Action(StartFight)
   startFight(
     { patchState }: StateContext<MainStateModel>,
-    { payload }: StartFight
+    { fightType }: StartFight
   ) {
-    patchState({
-      fight: payload,
-    });
+    const activeFightTypes =
+      this.store.selectSnapshot(MainState.getActiveFightTypes) || [];
+
+    activeFightTypes.push(fightType);
+
+    patchState({ activeFightTypes });
   }
 
   @Action(EndFight)
-  endFight({ patchState }: StateContext<MainStateModel>) {
-    patchState({
-      fight: null,
-    });
+  endFight(
+    { patchState }: StateContext<MainStateModel>,
+    { fightType }: EndFight
+  ) {
+    const activeFightTypes =
+      this.store.selectSnapshot(MainState.getActiveFightTypes) || [];
+    const activeFightIndex = activeFightTypes.indexOf(fightType);
+
+    if (activeFightIndex !== -1) {
+      activeFightTypes.splice(activeFightIndex, 1);
+    }
+
+    patchState({ activeFightTypes });
   }
 
   @Selector()
@@ -277,6 +290,11 @@ export class MainState {
   @Selector()
   static getNotifications(state: MainStateModel): NotificationResponseModel {
     return state.notifications;
+  }
+
+  @Selector()
+  static getActiveFightTypes(state: MainStateModel): FightTypes[] {
+    return state.activeFightTypes;
   }
 
   private loadedState = false;

@@ -1,0 +1,36 @@
+<div id="status-bar">
+  <ng-container *ngFor="let buff of fighterStatus.buffs | keyvalue">
+    <ng-container [ngSwitch]="+buff.key">
+      <ng-container *ngSwitchCase="buffType.CHARGE">
+        <span urText [ngbTooltip]="charged">🔥</span>
+      </ng-container>
+      <ng-container *ngSwitchCase="buffType.ARMOR_POTION">
+        <i urText [ngbTooltip]="armorPotion" class="fa fa-flask text-blue">
+          <span>{{ buff.value }}</span>
+        </i>
+      </ng-container>
+      <ng-container *ngSwitchCase="buffType.ENERGY_POTION">
+        <i urText [ngbTooltip]="energyPotion" class="fa fa-flask text-yellow">
+          <span>{{ buff.value }}</span>
+        </i>
+      </ng-container>
+      <ng-container *ngSwitchCase="buffType.FURY_POTION">
+        <i urText [ngbTooltip]="furyPotion" class="fa fa-flask text-purple">
+          <span>{{ buff.value }}</span>
+        </i>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+
+  <span urText *ngIf="fighterStatus.energy < 40" [ngbTooltip]="exhausted"
+    >😫</span
+  >
+</div>
+
+<ng-template #exhausted>Exhausted: Attacks do 50% less damage</ng-template>
+<ng-template #charged>Charged: Next attack does 50% more damage</ng-template>
+<ng-template #furyPotion>Fury potion: 10% increased damage</ng-template>
+<ng-template #energyPotion
+  >Energy potion: Recover 20 energy points each turn</ng-template
+>
+<ng-template #armorPotion>Armor potion: 20% increased armor</ng-template>
