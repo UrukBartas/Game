@@ -1,0 +1,232 @@
+<div
+  *ngIf="player() && enemy()"
+  id="fight-container"
+  class="container-fluid h-100"
+>
+  <div
+    class="background-image"
+    [style.background-image]="'url(' + prefix + backgroundImage + ')'"
+  ></div>
+
+  <ng-container *ngIf="!victory && !defeat">
+    <button
+      (click)="surrender()"
+      [class]="
+        'btn btn-primary surrender-button action-button shadow ' +
+        getButtonSize()
+      "
+    >
+      <i class="fa fa-flag"></i>
+    </button>
+    <button
+      (click)="showCombatLog()"
+      [class]="
+        'btn btn-primary combat-log-button action-button shadow ' +
+        getButtonSize()
+      "
+    >
+      <i class="fa fa-file-lines"></i>
+    </button>
+    <div class="row position-relative h-100">
+      <div class="col-12 col-sm-6 fighter-container player-container">
+        <img
+          [src]="prefix + '/' + player().image"
+          [ngbTooltip]="fighterStats"
+          [tooltipContext]="{ fighter: player() }"
+          class="player-image shadow"
+        />
+        <span
+          class="text-shadow"
+          [ngStyle]="{
+            color: getIRIRarityColor(player().iri),
+          }"
+          urText
+          style="margin-bottom: -1vh"
+          >{{ player().name }} (level {{ player().level }})</span
+        >
+        <span urSubtext style="margin: -1vh" class="text-light text-shadow">{{
+          player().title ?? 'The untitled'
+        }}</span>
+        <div
+          class="progress shadow"
+          [style.height]="getHealthBarHeight() + 'px'"
+        >
+          <span class="progress-text position-absolute"
+            >{{ player().currentStats.health | number }}/{{
+              player().baseStats.health | number
+            }}</span
+          >
+          <div
+            class="progress-bar progress-bar-health progress-bar-animated shadow"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            [style.width]="
+              (player().currentStats.health / player().baseStats.health) * 100 +
+              '%'
+            "
+          ></div>
+        </div>
+
+        <div
+          class="progress shadow"
+          [style.height]="getEnergyBarHeight() + 'px'"
+        >
+          <span class="progress-text position-absolute"
+            >{{ player().currentStats.energy | number }}/{{
+              player().baseStats.energy | number
+            }}</span
+          >
+          <div
+            class="progress-bar progress-bar-energy progress-bar-animated shadow"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            [style.width]="
+              (player().currentStats.energy / player().baseStats.energy) * 100 +
+              '%'
+            "
+          ></div>
+        </div>
+        <ng-content select="[playerTimerBar]"></ng-content>
+        <ng-container
+          [ngTemplateOutlet]="statusBar"
+          [ngTemplateOutletContext]="{
+            fighterStatus: player().currentStats,
+          }"
+        >
+        </ng-container>
+      </div>
+      <div class="col-12 col-sm-6 fighter-container enemy-container">
+        <img
+          [src]="prefix + enemy().image"
+          [ngbTooltip]="fighterStats"
+          [tooltipContext]="{ fighter: enemy() }"
+          class="enemy-image shadow"
+        />
+        <span
+          class="text-shadow"
+          [ngStyle]="{
+            color: getIRIRarityColor(enemy().iri),
+          }"
+          urText
+          style="margin-bottom: -1vh"
+          >{{ enemy().name }} (level {{ enemy().level }})</span
+        >
+        <span urSubtext style="margin-top: -1vh" class="text-light text-shadow">{{
+          enemy().title ?? 'The untitled'
+        }}</span>
+
+        <div
+          class="progress shadow"
+          [style.height]="getHealthBarHeight() + 'px'"
+        >
+          <span class="progress-text position-absolute"
+            >{{ enemy().currentStats.health | number }}/{{
+              enemy().baseStats.health | number
+            }}</span
+          >
+          <div
+            class="progress-bar progress-bar-health progress-bar-animated shadow"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            [style.width]="
+              (enemy().currentStats.health / enemy().baseStats.health) * 100 +
+              '%'
+            "
+          ></div>
+        </div>
+
+        <div
+          class="progress shadow"
+          [style.height]="getEnergyBarHeight() + 'px'"
+        >
+          <span class="progress-text position-absolute"
+            >{{ enemy().currentStats.energy | number }}/{{
+              enemy().baseStats.energy | number
+            }}</span
+          >
+          <div
+            class="progress-bar progress-bar-energy progress-bar-animated shadow"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            [style.width]="
+              (enemy().currentStats.energy / enemy().baseStats.energy) * 100 +
+              '%'
+            "
+          ></div>
+        </div>
+
+        <ng-content select="[enemyTimerBar]"></ng-content>
+        <ng-container
+          [ngTemplateOutlet]="statusBar"
+          [ngTemplateOutletContext]="{
+            fighterStatus: enemy().currentStats,
+          }"
+        >
+        </ng-container>
+      </div>
+      <div class="action-buttons">
+        <button
+          [disabled]="victory || defeat"
+          (click)="doAction(turnActions.ATTACK)"
+          [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
+        >
+          <i class="fa fa-hand-fist"></i> ATTACK
+        </button>
+        <button
+          [disabled]="victory || defeat"
+          (click)="doAction(turnActions.DEFEND)"
+          [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
+        >
+          <i class="fa fa-shield"></i> DEFEND
+        </button>
+
+        <button
+          [disabled]="victory || defeat"
+          (click)="doAction(turnActions.CHARGE)"
+          [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
+        >
+          <i class="fa fa-bolt"></i> CHARGE
+        </button>
+        <button
+          [disabled]="victory || defeat"
+          (click)="openConsumableModal()"
+          [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
+        >
+          <i class="fa fa-flask"></i> ITEMS
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <div *ngIf="victory" class="finish-quest-screen">
+    <img class="player-image" [src]="prefix + '/' + player().image" />
+    <img
+      class="finish-quest-bg"
+      [src]="prefix + '/assets/fight-screens/victory.png'"
+    />
+  </div>
+  <div *ngIf="defeat" class="finish-quest-screen">
+    <div class="h1 defeat-title text-white">
+      {{
+        fightType === fightTypes.CRYPT
+          ? 'CRYPT ENCOUNTER FAILED ☠️'
+          : 'QUEST FAILED ☠️'
+      }}
+    </div>
+  </div>
+</div>
+
+<ng-template #statusBar let-fighterStatus="fighterStatus">
+  <app-fighter-status
+    style="width: 82%"
+    [fighterStatus]="fighterStatus"
+  ></app-fighter-status>
+</ng-template>
+
+<ng-template #fighterStats let-fighter="fighter">
+  <app-fighter-stats-tooltip [fighter]="fighter"></app-fighter-stats-tooltip>
+</ng-template>

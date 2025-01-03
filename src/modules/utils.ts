@@ -50,7 +50,9 @@ export function getIRIFromCurrentPlayer(player: PlayerModel) {
   equippedItems.forEach(
     (equippedItem) => (totalIRI = totalIRI + equippedItem.item_rarity_stat)
   );
-  return totalIRI / equippedItems.length;
+  const averageIRI = totalIRI / equippedItems.length;
+  
+  return isNaN(averageIRI) ? 0 : Math.round(averageIRI);
 }
 
 export function getRarityBasedOnIRI(iri: number) {

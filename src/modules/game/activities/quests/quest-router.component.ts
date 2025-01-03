@@ -17,6 +17,7 @@ import { QuestService } from 'src/services/quest.service';
 import { MainState } from 'src/store/main.store';
 import { QuestStatusEnum } from './enums/quest-status.enum';
 import { QuestRouterModel } from './models/quest-router.model';
+import { FightTypes } from 'src/modules/core/components/base-fight/models/base-fight.model';
 
 @Component({
   selector: 'app-quest-router',
@@ -110,9 +111,12 @@ export class QuestRouterComponent extends TemplatePage {
       activeQuest = quests.find((quest) => quest.startedAt !== null);
     }
 
-    const activeFight = this.store.selectSnapshot(MainState.getState).fight;
+    const activeQuestFight = this.store
+      .selectSnapshot(MainState.getActiveFightTypes)
+      .includes(FightTypes.QUEST);
+      
     if (activeQuest) {
-      if (!activeFight) {
+      if (!activeQuestFight) {
         this.questRouter().status = QuestStatusEnum.IN_PROGRESS;
       } else {
         this.questRouter().status = QuestStatusEnum.FIGHT;
