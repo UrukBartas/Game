@@ -29,33 +29,74 @@
             <ng-container *ngTemplateOutlet="login"></ng-container>
           }
         } @else {
-          <button
-            type="submit"
-            class="btn btn-lg btn-primary save-button"
-            (click)="
-              this.authService.nativePlatform
-                ? this.router.navigateByUrl('/create')
-                : walletService.modal.open()
-            "
-          >
-            Enter the realms
-            <i class="fa-solid fa-torii-gate pl-2"></i>
-          </button>
-          <div class="divider">
-            <span class="text-light">OR</span>
-          </div>
-          <p
-            urText
-            class="text-white text-center pointer"
-            (click)="doingLoginWithWeb2 = true"
-          >
-            Login with email
-          </p>
+          @if (showingRealms) {
+            <ng-container *ngTemplateOutlet="listRealms"></ng-container>
+          } @else {
+            <button
+              type="submit"
+              class="btn btn-lg btn-primary save-button"
+              (click)="handleEnterRealms()"
+            >
+              @if (!!selectedRealm) {
+                Enter the {{ selectedRealm.name }} realm
+              } @else {
+                Enter the realms
+              }
+
+              <i class="fa-solid fa-torii-gate pl-2"></i>
+            </button>
+            <div class="divider">
+              <span class="text-light">OR</span>
+            </div>
+            <div class="options d-flex gap-4">
+              <p
+                urText
+                class="text-white text-center pointer hoverable-text"
+                (click)="doingLoginWithWeb2 = true"
+              >
+                Login with email
+              </p>
+
+              <p
+                urText
+                class="text-white text-center pointer hoverable-text"
+                *ngIf="!!selectedRealm"
+                (click)="showingRealms = true"
+              >
+                Change realms
+              </p>
+            </div>
+          }
         }
       }
     </div>
   }
 </div>
+
+<ng-template #listRealms>
+  <p urText class="text-white text-center mb-0">
+    Select the realm you want to connect
+  </p>
+  <button
+    type="submit"
+    class="btn btn-lg btn-primary save-button w-100"
+    *ngFor="let realm of lastLoadedRealms"
+    (click)="handleSelectedRealm(realm)"
+  >
+    {{ realm.name }}
+    <i class="{{ realm.icon }} pl-2"></i>
+  </button>
+  <div class="divider">
+    <span class="text-light">OR</span>
+  </div>
+  <p
+    urText
+    class="text-white text-center pointer"
+    (click)="showingRealms = false"
+  >
+    Go back
+  </p>
+</ng-template>
 
 <ng-template #newPassword>
   <div class="gap-3 px-3 email-container">
