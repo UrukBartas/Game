@@ -1,15 +1,12 @@
-import {
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  Output
-} from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { CryptEncounterModel } from 'src/modules/core/models/crypt.model';
+import {
+  CryptEncounterModel,
+  CryptModel,
+} from 'src/modules/core/models/crypt.model';
 import { Rarity } from 'src/modules/core/models/items.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { OrderByPipe } from 'src/modules/core/pipes/order-by.pipe';
@@ -44,8 +41,10 @@ export class CryptProgressComponent extends TemplatePage {
   }
   _encounters: CryptEncounterModel[];
   @Input() currentState: PlayerModel;
+  @Input() crypt: CryptModel;
   @Output() startedEncounter = new EventEmitter<CryptEncounterModel>();
   @Output() surrender = new EventEmitter<void>();
+  @Output() takeShortBreak = new EventEmitter<void>();
   public prefix = environment.permaLinkImgPref;
 
   private modalService = inject(BsModalService);
@@ -53,13 +52,14 @@ export class CryptProgressComponent extends TemplatePage {
   getRarityColor = getRarityColor;
 
   getBackgroundImage() {
-    let image = this.encounters.find((encounter, index) => index === this.currentLevel)?.questData.backgroundImage;
+    let image = this.encounters.find(
+      (encounter, index) => index === this.currentLevel
+    )?.questData.backgroundImage;
     if (!image) {
-      image = '/assets/backgrounds/sewers.webp'
+      image = '/assets/backgrounds/sewers.webp';
     }
     return this.prefix + image;
   }
-
 
   getDifficultyLevelByRarity(
     index: number,
@@ -106,5 +106,23 @@ export class CryptProgressComponent extends TemplatePage {
     const modalRef = this.modalService.show(ConfirmModalComponent, config);
   }
 
+  public takeShortBreakFn() {
+    const config: ModalOptions = {
+      initialState: {
+        title: 'Take a Short Break',
+        description: `Taking a short break comes with risks and rewards. Here’s what could happen:
 
+- **25% chance:** You may encounter unforeseen dangers that could result in losing 10% of your remaining health or even death if your health is too low.
+- **5% chance:** An unfortunate twist of fate might cause your immediate demise, ending your progress in the Crypt.
+- **70% chance:** You could recover 20% of your health (up to your maximum) and continue exploring the Crypt with renewed vitality.
+
+Do you want to take the risk?`,
+        accept: async () => {
+          this.takeShortBreak.emit();
+          modalRef.hide();
+        },
+      },
+    };
+    const modalRef = this.modalService.show(ConfirmModalComponent, config);
+  }
 }

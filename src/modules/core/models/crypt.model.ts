@@ -24,6 +24,8 @@ export interface CryptModel {
   createdAt: string; // Timestamp when the crypt was created
   updatedAt: string; // Timestamp of the last update to the crypt
   appliedBonuses: { rewards: Array<any> };
+  remainingHealth: number;
+  remainingEnergy: number;
 }
 
 export interface CryptEncounterModel {

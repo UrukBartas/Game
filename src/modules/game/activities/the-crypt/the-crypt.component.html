@@ -29,6 +29,8 @@
       [encounters]="currentCrypt()?.encounters ?? []"
       [appliedBonuses]="currentCrypt()?.appliedBonuses?.rewards ?? []"
       [currentState]="lastLoadedPlayer"
+      [crypt]="currentCrypt()"
+      (takeShortBreak)="takeShortBreak()"
       (startedEncounter)="startEncounter($event)"
       (surrender)="onCryptSurrender()"
     ></app-crypt-progress>

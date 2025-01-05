@@ -192,6 +192,19 @@ export class TheCryptComponent extends TemplatePage {
     }
   }
 
+  public async takeShortBreak() {
+    try {
+      await firstValueFrom(
+        this.cryptService
+          .takeShortBreak(this.currentCrypt().id)
+          .pipe(tap((e) => this.toast.info(e.result)))
+      );
+      await this.getCurrentCrypt();
+    } catch (error) {
+      await this.getCurrentCrypt();
+    }
+  }
+
   public async getMoreTries() {
     const price = await firstValueFrom(
       this.playerService.getExtraAttemptPrice()

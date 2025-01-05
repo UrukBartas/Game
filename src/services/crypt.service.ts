@@ -69,6 +69,10 @@ export class CryptService extends ApiBaseService {
     return this.post(`/${cryptId}/encounters/${encounterId}/start`, {});
   }
 
+  takeShortBreak(cryptId: number) {
+    return this.post(`/${cryptId}/take-short-break`, {});
+  }
+
   // Obtener todas las cryptas según filtros
   getCrypts(
     status?: CryptStatus,

@@ -1,4 +1,5 @@
 import { Component, inject, Input } from '@angular/core';
+import { CryptModel } from 'src/modules/core/models/crypt.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { ViewportService } from 'src/services/viewport.service';
 
@@ -10,6 +11,7 @@ import { ViewportService } from 'src/services/viewport.service';
 export class CryptPlayerStateComponent {
   private viewportService = inject(ViewportService);
   @Input() currentState: PlayerModel;
+  @Input() crypt: CryptModel;
   @Input() hideTitle = false;
   @Input() appliedBonuses: Array<any> = [];
   public getPlayerImageSize() {

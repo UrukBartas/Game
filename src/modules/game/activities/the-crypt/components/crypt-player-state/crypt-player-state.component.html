@@ -21,7 +21,7 @@
               [style.height]="getHealthBarHeight() + 'px'"
             >
               <span class="progress-text position-absolute"
-                >{{ currentState.stats.health | number }}/{{
+                >{{ crypt?.remainingHealth ?? 0 | number }}/{{
                   currentState.stats.health | number
                 }}</span
               >
@@ -31,7 +31,7 @@
                 aria-valuemin="0"
                 aria-valuemax="100"
                 [style.width]="
-                  (currentState.stats.health / currentState.stats.health) *
+                  ((crypt?.remainingHealth ?? 0) / currentState.stats.health) *
                     100 +
                   '%'
                 "
@@ -42,7 +42,7 @@
               [style.height]="getHealthBarHeight() + 'px'"
             >
               <span class="progress-text position-absolute"
-                >{{ currentState.energy | number }}/{{
+                >{{ crypt?.remainingEnergy ?? 0 | number }}/{{
                   currentState.energy | number
                 }}</span
               >
@@ -52,7 +52,7 @@
                 aria-valuemin="0"
                 aria-valuemax="100"
                 [style.width]="
-                  (currentState.stats.energy / currentState.stats.energy) *
+                  ((crypt?.remainingEnergy ?? 0) / currentState.stats.energy) *
                     100 +
                   '%'
                 "
