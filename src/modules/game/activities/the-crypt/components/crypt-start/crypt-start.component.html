@@ -106,16 +106,20 @@
               <div>
                 <strong>{{ crypt.endDate | date: 'shortDate' }}</strong>
               </div>
-              <div>Depth {{ getCurrentLevel(crypt) }}</div>
+              <div>Depth achieved {{ getCurrentLevel(crypt) }}</div>
               <div>
                 Status:
                 <span
                   [class.success]="crypt.success"
                   [ngClass]="{
                     success: crypt.status == 'COMPLETED',
-                    failed: crypt.status == 'FAILED',
+                    onprogress: crypt.status == 'FAILED',
                   }"
-                  >{{ crypt.status }}</span
+                  >{{
+                    crypt.status == 'FAILED'
+                      ? getFailedStatus(stats.maxDepth, getCurrentLevel(crypt))
+                      : 'Finished'
+                  }}</span
                 >
               </div>
             </div>

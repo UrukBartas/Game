@@ -33,7 +33,6 @@ export class CryptStartComponent extends TemplatePage {
   stats$ = this.getStats();
   public getCurrentLevel = CryptService.getCurrentLevel;
 
-
   ngOnChanges(changes: SimpleChanges): void {
     this.stats$ = this.getStats();
   }
@@ -50,5 +49,13 @@ export class CryptStartComponent extends TemplatePage {
     return this.crypService
       .getCryptStats()
       .pipe(tap((e) => (this.lastLoadedStats = e)));
+  }
+
+  public getFailedStatus(maxDepth: number, depth: number) {
+    if (depth == maxDepth) {
+      return 'Maximum depth achieved!';
+    } else {
+      return 'Progress saved';
+    }
   }
 }

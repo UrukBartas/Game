@@ -76,12 +76,12 @@ export class GameLayoutComponent {
       icon: 'fa fa-gem',
       onlyWeb3: true,
     },
-    // {
-    //   path: '/export-import',
-    //   displayText: 'Bridge',
-    //   icon: 'fa fa-bridge',
-    //   onlyWeb3: true,
-    // },
+    {
+      path: '/export-import',
+      displayText: 'Bridge',
+      icon: 'fa fa-bridge',
+      onlyWeb3: true,
+    },
     {
       path: 'https://app.magicsea.finance/swap?inputCurrency=0x4ab1edfe2706fcac991a41183036e62a8f1dabd3&outputCurrency=IOTA',
       displayText: 'Get $URUKS',
