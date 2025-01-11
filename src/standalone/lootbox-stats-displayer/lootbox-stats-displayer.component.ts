@@ -53,7 +53,10 @@ export class LootboxStatsDisplayerComponent {
     const res = await firstValueFrom(
       this.stats.lootboxPossibilities(this._openingType())
     );
-    if (this._openingType() == 'ComboLootbox') {
+    if (
+      this._openingType() == 'ComboLootbox' ||
+      this._openingType() == 'CryptLootbox'
+    ) {
       this.possibilitiesComboBox = this.parsePossibilitiesComboBox(
         res,
         this._openingRarity()
@@ -72,10 +75,12 @@ export class LootboxStatsDisplayerComponent {
   public rarityEnum = Rarity;
   public pathPortrait = 'assets/premium-portraits/5.webp';
   public pathMaterial = 'assets/materials/38.webp';
+  public pathConsumable = 'assets/consumables/energy_medium_potion.webp';
   public pathMounts = 'assets/mounts/1.webp';
   public pathPrefix = 'assets/misc/titles/title_preffix.png';
   public pathSuffix = 'assets/misc/titles/title_suffix.png';
   public pathSilhouette = 'assets/misc/siluettes/knight.jpg';
+  public pathBoost = 'assets/misc/boosts/exp_boost.png';
   public mapTypeImage = {};
 
   constructor(private miscService: MiscellanyService) {
@@ -94,10 +99,11 @@ export class LootboxStatsDisplayerComponent {
       [MiscellanyItemType.Portrait]: this.pathPortrait,
       ['MATERIAL']: this.pathMaterial,
       ['MOUNT']: this.pathMounts,
+      ['CONSUMABLE']: this.pathConsumable,
       [MiscellanyItemType.Title_Prefix]: this.pathPrefix,
       [MiscellanyItemType.Title_Suffix]: this.pathSuffix,
       [MiscellanyItemType.MoneyBag]: 'assets/misc/bags/medium_bag_money.png',
-      [MiscellanyItemType.Boost + '_EXP']: 'assets/misc/boosts/exp_boost.png',
+      [MiscellanyItemType.Boost + '_EXP']: this.pathBoost,
       [MiscellanyItemType.Boost + '_URUKS']:
         'assets/misc/boosts/coin_boost.png',
       [MiscellanyItemType.Silhouette]: this.pathSilhouette,
@@ -112,7 +118,9 @@ export class LootboxStatsDisplayerComponent {
       Portraits: 0,
       Materials: 0,
       Mount: 0,
+      Consumables: 0,
       Others: [] as any[],
+      Boost: 0,
       Title_Prefix: 0,
       Title_Suffix: 0,
       Bonus: possibilities[rarity]?.bonusDrop ?? [],
@@ -130,6 +138,10 @@ export class LootboxStatsDisplayerComponent {
         result.Title_Prefix += item.chance;
       } else if (item.type == 'Title_Suffix') {
         result.Title_Suffix += item.chance;
+      } else if (item.type == 'CONSUMABLE') {
+        result.Consumables += item.chance;
+      } else if (item.type == 'Boost') {
+        result.Boost += item.chance;
       } else {
         result.Others.push({
           key: key,
@@ -185,6 +197,22 @@ export class LootboxStatsDisplayerComponent {
         height: this.itemHeight,
         width: this.itemWidth,
       },
+      {
+        rarity: Rarity.UNCOMMON,
+        value: result.Consumables,
+        image: this.pathConsumable,
+        type: 'Consumable',
+        height: this.itemHeight,
+        width: this.itemWidth,
+      },
+      {
+        rarity: Rarity.EPIC,
+        value: result.Boost,
+        image: this.pathBoost,
+        type: 'Boost',
+        height: this.itemHeight,
+        width: this.itemWidth,
+      },
       ...result.Others,
     ];
     return cloneDeep(result);
@@ -204,7 +232,7 @@ export class LootboxStatsDisplayerComponent {
   }
 
   public getImageBasedOnType(
-    itemType: 'ITEM' | 'MoneyBag' | 'ItemSet',
+    itemType: 'ITEM' | 'MoneyBag' | 'ItemSet' | 'Lootbox',
     rarity: Rarity,
     key?: string
   ): string {
@@ -236,6 +264,15 @@ export class LootboxStatsDisplayerComponent {
         MythicItemPackage: 'mythic_package_box.webp',
       };
       path = `assets/misc/packages/${mapItemSets[key]}`;
+    } else if (itemType == 'Lootbox') {
+      const mapLootboxes = {
+        [Rarity.COMMON]: 'commonbox',
+        [Rarity.UNCOMMON]: 'uncommon',
+        [Rarity.EPIC]: 'epic',
+        [Rarity.LEGENDARY]: 'legendary',
+        [Rarity.MYTHIC]: 'mythic',
+      };
+      path = `assets/misc/lootboxes/${mapLootboxes[rarity]}.png`;
     }
 
     return path;

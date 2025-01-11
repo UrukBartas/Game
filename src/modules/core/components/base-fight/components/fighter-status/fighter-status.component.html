@@ -2,35 +2,156 @@
   <ng-container *ngFor="let buff of fighterStatus.buffs | keyvalue">
     <ng-container [ngSwitch]="+buff.key">
       <ng-container *ngSwitchCase="buffType.CHARGE">
-        <span urText [ngbTooltip]="charged">🔥</span>
+        <span
+          urText
+          [ngbTooltip]="
+            'Charged: Next attack does 50% more damage for ' +
+            buff.value.turns +
+            ' turns'
+          "
+        >
+          🔥
+        </span>
       </ng-container>
       <ng-container *ngSwitchCase="buffType.ARMOR_POTION">
-        <i urText [ngbTooltip]="armorPotion" class="fa fa-flask text-blue">
-          <span>{{ buff.value }}</span>
+        <i
+          urText
+          [ngbTooltip]="
+            'Armor potion: ' +
+            buff.value.value +
+            '% increased armor for ' +
+            buff.value.turns +
+            ' turns'
+          "
+          class="fa fa-flask text-gray"
+        >
+          <span>{{ buff.value.turns }}</span>
         </i>
       </ng-container>
       <ng-container *ngSwitchCase="buffType.ENERGY_POTION">
-        <i urText [ngbTooltip]="energyPotion" class="fa fa-flask text-yellow">
-          <span>{{ buff.value }}</span>
+        <i
+          urText
+          [ngbTooltip]="
+            'Energy potion: Recover ' +
+            buff.value.value +
+            '% energy each turn for ' +
+            buff.value.turns +
+            ' turns'
+          "
+          class="fa fa-flask text-yellow"
+        >
+          <span>{{ buff.value.turns }}</span>
         </i>
       </ng-container>
       <ng-container *ngSwitchCase="buffType.FURY_POTION">
-        <i urText [ngbTooltip]="furyPotion" class="fa fa-flask text-purple">
-          <span>{{ buff.value }}</span>
+        <i
+          urText
+          [ngbTooltip]="
+            'Fury potion: ' +
+            buff.value.value +
+            '% increased damage for ' +
+            buff.value.turns +
+            ' turns'
+          "
+          class="fa fa-flask text-orange"
+        >
+          <span>{{ buff.value.turns }}</span>
+        </i>
+      </ng-container>
+      <ng-container *ngSwitchCase="buffType.SPEED_POTION">
+        <i
+          urText
+          [ngbTooltip]="
+            'Speed potion: ' +
+            buff.value.value +
+            '% increased speed for ' +
+            buff.value.turns +
+            ' turns'
+          "
+          class="fa fa-flask text-green"
+        >
+          <span>{{ buff.value.turns }}</span>
+        </i>
+      </ng-container>
+      <ng-container *ngSwitchCase="buffType.PENETRATION_POTION">
+        <i
+          urText
+          [ngbTooltip]="
+            'Penetration potion: ' +
+            buff.value.value +
+            '% increased penetration for ' +
+            buff.value.turns +
+            ' turns'
+          "
+          class="fa fa-flask text-deep-blue"
+        >
+          <span>{{ buff.value.turns }}</span>
+        </i>
+      </ng-container>
+      <ng-container *ngSwitchCase="buffType.CRIT_POTION">
+        <i
+          urText
+          [ngbTooltip]="
+            'Crit potion: ' +
+            buff.value.value +
+            '% increased critical hit chance for ' +
+            buff.value.turns +
+            ' turns'
+          "
+          class="fa fa-flask text-purple"
+        >
+          <span>{{ buff.value.turns }}</span>
+        </i>
+      </ng-container>
+      <ng-container *ngSwitchCase="buffType.DODGE_POTION">
+        <i
+          urText
+          [ngbTooltip]="
+            'Dodge potion: ' +
+            buff.value.value +
+            '% increased dodge chance for ' +
+            buff.value.turns +
+            ' turns'
+          "
+          class="fa fa-flask text-turquoise"
+        >
+          <span>{{ buff.value.turns }}</span>
+        </i>
+      </ng-container>
+      <ng-container *ngSwitchCase="buffType.BLOCK_POTION">
+        <i
+          urText
+          [ngbTooltip]="
+            'Block potion: ' +
+            buff.value.value +
+            '% increased block chance for ' +
+            buff.value.turns +
+            ' turns'
+          "
+          class="fa fa-flask text-sky-blue"
+        >
+          <span>{{ buff.value.turns }}</span>
+        </i>
+      </ng-container>
+      <ng-container *ngSwitchCase="buffType.ACCURACY_POTION">
+        <i
+          urText
+          [ngbTooltip]="
+            'Accuracy potion: ' +
+            buff.value.value +
+            '% increased accuracy for ' +
+            buff.value.turns +
+            ' turns'
+          "
+          class="fa fa-flask text-white"
+        >
+          <span>{{ buff.value.turns }}</span>
         </i>
       </ng-container>
     </ng-container>
   </ng-container>
-
+  <ng-template #exhausted>Exhausted: Attacks do 50% less damage</ng-template>
   <span urText *ngIf="fighterStatus.energy < 40" [ngbTooltip]="exhausted"
     >😫</span
   >
 </div>
-
-<ng-template #exhausted>Exhausted: Attacks do 50% less damage</ng-template>
-<ng-template #charged>Charged: Next attack does 50% more damage</ng-template>
-<ng-template #furyPotion>Fury potion: 10% increased damage</ng-template>
-<ng-template #energyPotion
-  >Energy potion: Recover 20 energy points each turn</ng-template
->
-<ng-template #armorPotion>Armor potion: 20% increased armor</ng-template>

@@ -328,7 +328,8 @@
     class="list-options"
     *ngIf="
       data.miscellanyItemData.itemType == 'Lootbox' ||
-      data.miscellanyItemData.itemType == 'ComboLootbox'
+      data.miscellanyItemData.itemType == 'ComboLootbox' ||
+      data.miscellanyItemData.itemType == 'CryptLootbox'
     "
   >
     <li (click)="open(data); contextMenuService.hideContextMenu()">Open</li>

@@ -1,5 +1,5 @@
 <div class="stats-info-lootbox p-2">
-  @if (_openingType() == 'ComboLootbox') {
+  @if (_openingType() == 'ComboLootbox' || _openingType() == 'CryptLootbox') {
     <ng-container *ngIf="!!possibilitiesComboBox">
       <ng-container
         *ngFor="let item of lootboxMergedItems | orderBy: 'value' | reverse"
