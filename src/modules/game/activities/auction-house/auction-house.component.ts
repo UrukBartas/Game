@@ -52,6 +52,7 @@ export class AuctionHouseComponent {
     { label: 'Lootbox', subtype: MiscellanyItemType.Lootbox },
     { label: 'Recipe', subtype: MiscellanyItemType.Recipe },
     { label: 'Combo Lootbox', subtype: MiscellanyItemType.ComboLootbox },
+    { label: 'Crypt Lootbox', subtype: MiscellanyItemType.CryptLootbox },
     { label: 'Portrait', subtype: MiscellanyItemType.Portrait },
     { label: 'Money Bag', subtype: MiscellanyItemType.MoneyBag },
     { label: 'Item Set', subtype: MiscellanyItemType.ItemSet },

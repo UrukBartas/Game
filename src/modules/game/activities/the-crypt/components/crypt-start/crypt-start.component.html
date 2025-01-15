@@ -16,53 +16,59 @@
 </ng-template>
 
 <ng-template #cryptmsg>
-  <div class="crypt-welcome">
-    <!-- Título Épico -->
-    <h1 urTitle>💀 Welcome to the Crypt ⚔️</h1>
+  <div class="crypt-welcome" style="position: relative">
+    <i
+      class="fa-regular fa-circle-xmark close-icon pointer"
+      (click)="hideModal()"
+    ></i>
+    <div class="content">
+      <!-- Título Épico -->
+      <h1 urTitle>💀 Welcome to the Crypt ⚔️</h1>
 
-    <!-- Introducción Narrativa -->
-    <p class="crypt-intro">
-      Once you step into the Crypt, <strong>there is no turning back.</strong>
-      Trapped beneath the earth, your fate will be sealed by your decisions. You
-      cannot trade, equip new items, or escape. You fight or you perish.
-    </p>
-
-    <!-- Normas y Funcionamiento -->
-    <div class="crypt-rules">
-      <h2 urText>🛡️ The Rules of the Crypt 🗡️</h2>
-      <ul>
-        <li>Your current state will be <strong>saved</strong> at the start.</li>
-        <li>
-          After each battle, you can <strong>choose upgrades</strong> to aid
-          your survival.
-        </li>
-        <li>
-          With each room, the
-          <strong>difficulty increases exponentially</strong>. Enemies become
-          stronger and deadlier. Choose your rewards wisely.
-        </li>
-        <li>
-          The Crypt resets <strong>every week</strong>. Your rewards will depend
-          on how deep you go.
-        </li>
-        <li>
-          The deeper you descend, the <strong>greater the treasures</strong> at
-          the end of the week!
-        </li>
-      </ul>
-    </div>
-
-    <!-- Mensaje de Preparación -->
-    <div class="crypt-preparation">
-      <h3 urText>⚔️ Prepare Yourself, Adventurer! ⚔️</h3>
-      <p>
-        Equip your <strong>best items</strong>, stock up on
-        <strong>consumables</strong>, and steel your resolve. You will need
-        everything you have to survive the Crypt’s horrors.
+      <!-- Introducción Narrativa -->
+      <p class="crypt-intro">
+        Once you step into the Crypt, <strong>there is no turning back.</strong>
+        Trapped beneath the earth, your fate will be sealed by your decisions.
+        You cannot trade, equip new items, or escape. You fight or you perish.
       </p>
-      <ng-container *ngTemplateOutlet="actions"></ng-container>
 
-      <button class="read-rules-button" (click)="hideModal()">Hide</button>
+      <!-- Normas y Funcionamiento -->
+      <div class="crypt-rules">
+        <h2 urText>🛡️ The Rules of the Crypt 🗡️</h2>
+        <ul>
+          <li>
+            Your current state will be <strong>saved</strong> at the start.
+          </li>
+          <li>
+            After each battle, you can <strong>choose upgrades</strong> to aid
+            your survival.
+          </li>
+          <li>
+            With each room, the
+            <strong>difficulty increases exponentially</strong>. Enemies become
+            stronger and deadlier. Choose your rewards wisely.
+          </li>
+          <li>
+            The Crypt resets <strong>every week</strong>. Your rewards will
+            depend on how deep you go.
+          </li>
+          <li>
+            The deeper you descend, the
+            <strong>greater the treasures</strong> at the end of the week!
+          </li>
+        </ul>
+      </div>
+
+      <!-- Mensaje de Preparación -->
+      <div class="crypt-preparation">
+        <h3 urText>⚔️ Prepare Yourself, Adventurer! ⚔️</h3>
+        <p>
+          Equip your <strong>best items</strong>, stock up on
+          <strong>consumables</strong>, and steel your resolve. You will need
+          everything you have to survive the Crypt’s horrors.
+        </p>
+        <ng-container *ngTemplateOutlet="actions"></ng-container>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -106,16 +112,20 @@
               <div>
                 <strong>{{ crypt.endDate | date: 'shortDate' }}</strong>
               </div>
-              <div>Depth {{ getCurrentLevel(crypt) }}</div>
+              <div>Depth achieved {{ getCurrentLevel(crypt) }}</div>
               <div>
                 Status:
                 <span
                   [class.success]="crypt.success"
                   [ngClass]="{
                     success: crypt.status == 'COMPLETED',
-                    failed: crypt.status == 'FAILED',
+                    onprogress: crypt.status == 'FAILED',
                   }"
-                  >{{ crypt.status }}</span
+                  >{{
+                    crypt.status == 'FAILED'
+                      ? getFailedStatus(stats.maxDepth, getCurrentLevel(crypt))
+                      : 'Finished'
+                  }}</span
                 >
               </div>
             </div>

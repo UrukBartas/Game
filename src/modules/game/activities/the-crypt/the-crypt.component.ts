@@ -8,9 +8,12 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Store } from '@ngxs/store';
+import { cloneDeep } from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map, tap } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import {
   CryptEncounterModel,
@@ -21,9 +24,11 @@ import {
   EncounterStatus,
 } from 'src/modules/core/models/crypt.model';
 import { FightResultModel } from 'src/modules/core/models/fight.model';
+import { PlayerModel } from 'src/modules/core/models/player.model';
 import { CryptService } from 'src/services/crypt.service';
 import { PlayerService } from 'src/services/player.service';
 import { QuestService } from 'src/services/quest.service';
+import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
 import { CryptThreejsServiceTsService } from './services/crypt-threejs.service.ts.service';
 
@@ -37,13 +42,19 @@ export class TheCryptComponent extends TemplatePage {
   cryptService = inject(CryptService);
   questService = inject(QuestService);
   playerService = inject(PlayerService);
+
   toast = inject(ToastrService);
   cryptRouter = signal<CryptRouterModel>({
     status: CryptStatusEnum.IN_PROGRESS,
   });
   public currentCrypt = signal<CryptModel>(null);
   private threeService = inject(CryptThreejsServiceTsService);
-
+  store = inject(Store);
+  public lastLoadedPlayer: PlayerModel;
+  private player$ = this.store.select(MainState.getState).pipe(
+    map((entry) => cloneDeep(entry.player)),
+    tap((e) => (this.lastLoadedPlayer = e))
+  );
   @Output() statusChanged = new EventEmitter<CryptRouterModel>();
   @ViewChild('threeContainer', { static: true })
   threeContainer!: ElementRef<HTMLDivElement>;
@@ -71,6 +82,7 @@ export class TheCryptComponent extends TemplatePage {
       { allowSignalWrites: true }
     );
     this.getCurrentCrypt();
+    this.player$.pipe(takeUntilDestroyed()).subscribe();
   }
 
   public refresh() {
@@ -81,6 +93,7 @@ export class TheCryptComponent extends TemplatePage {
     await this.questService.updateStore();
     const res = await firstValueFrom(this.cryptService.getCurrent());
     this.currentCrypt.set(res);
+    this.store.dispatch(new RefreshPlayer());
   }
 
   private calculateCryptStatus(cryptData: CryptModel): CryptStatusEnum {
@@ -172,6 +185,19 @@ export class TheCryptComponent extends TemplatePage {
     try {
       await firstValueFrom(
         this.cryptService.endCrypt(this.currentCrypt().id, CryptStatus.FAILED)
+      );
+      await this.getCurrentCrypt();
+    } catch (error) {
+      await this.getCurrentCrypt();
+    }
+  }
+
+  public async takeShortBreak() {
+    try {
+      await firstValueFrom(
+        this.cryptService
+          .takeShortBreak(this.currentCrypt().id)
+          .pipe(tap((e) => this.toast.info(e.result)))
       );
       await this.getCurrentCrypt();
     } catch (error) {

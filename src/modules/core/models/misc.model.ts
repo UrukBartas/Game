@@ -1,10 +1,11 @@
-import { ItemEdition, Rarity } from './items.model';
+import { Rarity } from './items.model';
 import { PlayerModel } from './player.model';
 
 export enum MiscellanyItemType {
   Lootbox = 'Lootbox',
   Recipe = 'Recipe',
   ComboLootbox = 'ComboLootbox',
+  CryptLootbox = 'CryptLootbox',
   Portrait = 'Portrait',
   MoneyBag = 'MoneyBag',
   ItemSet = 'ItemSet',
@@ -35,6 +36,12 @@ export enum MiscellanyItemIdentifier {
   MoneyBag1000 = 'MoneyBag1000',
   RecipeEnchant = 'RecipeEnchant',
 
+  CryptCommonLootbox = 'CryptCommonLootbox',
+  CryptUncommonLootbox = 'CryptUncommonLootbox',
+  CryptEpicLootbox = 'CryptEpicLootbox',
+  CryptLegendaryLootbox = 'CryptLegendaryLootbox',
+  CryptMythicLootbox = 'CryptMythicLootbox',
+
   PortraitMageBase = 'Portrait_Mage_Base',
   PortraitWarlockBase = 'Portrait_Warlock_Base',
   PortraitRogueBase = 'Portrait_Rogue_Base',
@@ -52,7 +59,6 @@ export enum MiscellanyItemIdentifier {
   PortraitRogueWest = 'Portrait_Rogue_West',
   PortraitWarriorWest = 'Portrait_Warrior_West',
 }
-
 
 export const MiscellanyItemIdentifierDisplay: Record<
   MiscellanyItemIdentifier,
@@ -77,6 +83,11 @@ export const MiscellanyItemIdentifierDisplay: Record<
   [MiscellanyItemIdentifier.MoneyBag500]: 'Money Bag (500)',
   [MiscellanyItemIdentifier.MoneyBag1000]: 'Money Bag (1000)',
   [MiscellanyItemIdentifier.RecipeEnchant]: 'Enchant Recipe',
+  [MiscellanyItemIdentifier.CryptCommonLootbox]: 'Common Crypt Lootbox',
+  [MiscellanyItemIdentifier.CryptUncommonLootbox]: 'Uncommon Crypt Lootbox',
+  [MiscellanyItemIdentifier.CryptEpicLootbox]: 'Epic Crypt Lootbox',
+  [MiscellanyItemIdentifier.CryptLegendaryLootbox]: 'Legendary Crypt Lootbox',
+  [MiscellanyItemIdentifier.CryptMythicLootbox]: 'Mythic Crypt Lootbox',
 
   // New Portrait Identifiers
   [MiscellanyItemIdentifier.PortraitMageBase]: 'Elaris',
@@ -88,12 +99,12 @@ export const MiscellanyItemIdentifierDisplay: Record<
   [MiscellanyItemIdentifier.PortraitWarlockPresale]: 'Spooky Orgok',
   [MiscellanyItemIdentifier.PortraitRoguePresale]: 'Spooky Nyx',
   [MiscellanyItemIdentifier.PortraitWarriorPresale]: 'Spooky Tulkas',
-  
+
   [MiscellanyItemIdentifier.PortraitMageUnleashed]: 'Elaris Unleashed',
   [MiscellanyItemIdentifier.PortraitWarlockUnleashed]: 'Orgok Unleashed',
   [MiscellanyItemIdentifier.PortraitRogueUnleashed]: 'Nyx Unleashed',
   [MiscellanyItemIdentifier.PortraitWarriorUnleashed]: 'Tulkas Unleashed',
-  
+
   [MiscellanyItemIdentifier.PortraitMageWest]: 'Elaris West',
   [MiscellanyItemIdentifier.PortraitWarlockWest]: 'Orgok West',
   [MiscellanyItemIdentifier.PortraitRogueWest]: 'Nyx West',

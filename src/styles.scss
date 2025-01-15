@@ -511,7 +511,6 @@ app-auction-house {
 .stat-table,
 .rarity-table {
   flex: 1;
-  margin: 10px;
   max-width: 100% !important;
   min-height: fit-content;
 }
@@ -658,4 +657,12 @@ app-rooms-list {
   .dificulty-indicator {
     filter: grayscale(1);
   }
+}
+
+.close-icon {
+  color: white;
+  position: absolute;
+  font-size: 22px;
+  top: -10px;
+  right: 20px;
 }

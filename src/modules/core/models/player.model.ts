@@ -45,8 +45,6 @@ export interface PlayerModel {
   mmr: number;
   finishedQuestsCount: number;
   configuration: PlayerConfiguration;
-  remainingHealth?: number;
-  remainingEnergy?: number;
 }
 
 export interface PlayerConfiguration {

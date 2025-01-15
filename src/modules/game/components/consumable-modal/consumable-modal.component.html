@@ -1,6 +1,10 @@
 <div id="consumables-container">
+  <i
+    class="fa-regular fa-circle-xmark close-icon pointer"
+    (click)="modalRef.hide()"
+  ></i>
   <div class="row consumables">
-    @for (consumable of consumables; track $index) {
+    @for (consumable of consumables | stack: 'consumableDataId'; track $index) {
       <div class="consumable-container">
         <app-item-box
           (click)="selectItem(consumable)"
@@ -9,6 +13,7 @@
           [image]="consumable.consumableData.imageLocal"
           [height]="getItemBoxSize()"
           [width]="getItemBoxSize()"
+          [stack]="consumable.stack"
         ></app-item-box>
         <div class="check-icon" *ngIf="consumable.selected">
           <i class="fa fa-check-circle"></i>

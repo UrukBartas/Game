@@ -1,6 +1,10 @@
 @import '../../../../variables.scss';
 
 #consumables-container {
+  .close-icon {
+    top: -30px;
+    right: 0px;
+  }
   height: 80vh;
   width: 70vw;
   position: relative;

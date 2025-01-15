@@ -1,19 +1,9 @@
 <div class="crypt-failed">
-  <h2>Defeat in the Crypt</h2>
-  <p>
-    You fought valiantly, but the crypt proved too challenging this time. 😔
-  </p>
-
-  <div class="player-state">
-    <app-crypt-player-state
-      [hideTitle]="true"
-      [currentState]="currentState"
-      [appliedBonuses]="appliedBonuses"
-    ></app-crypt-player-state>
-  </div>
-
   <div class="progress-summary">
-    <h3>Your Progress</h3>
+    <h2>Defeat in the Crypt</h2>
+    <p>
+      You fought valiantly, but the crypt proved too challenging this time. 😔
+    </p>
     <ul>
       <li>Encounters Completed: {{ completedEncounters.length }}</li>
     </ul>

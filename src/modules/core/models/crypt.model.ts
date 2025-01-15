@@ -1,4 +1,3 @@
-import { PlayerModel } from './player.model';
 import { QuestDataModel } from './quest-data.model';
 
 export enum CryptStatus {
@@ -21,11 +20,12 @@ export interface CryptModel {
   playerId: string; // The ID of the player associated with the crypt
   weekStart: string; // Start date of the crypt's associated week (ISO format)
   status: CryptStatus; // Current status of the crypt
-  playerState: PlayerModel; // The saved state of the player during the crypt
   encounters: CryptEncounterModel[]; // List of encounters in the crypt
   createdAt: string; // Timestamp when the crypt was created
   updatedAt: string; // Timestamp of the last update to the crypt
   appliedBonuses: { rewards: Array<any> };
+  remainingHealth: number;
+  remainingEnergy: number;
 }
 
 export interface CryptEncounterModel {

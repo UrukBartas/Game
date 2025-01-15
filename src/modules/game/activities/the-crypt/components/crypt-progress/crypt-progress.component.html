@@ -1,6 +1,10 @@
-<div class="crypt-progress pb-4" [style.background-image]="'url(' + getBackgroundImage() + ')'">
+<div
+  class="crypt-progress pb-4"
+  [style.background-image]="'url(' + getBackgroundImage() + ')'"
+>
   <app-crypt-player-state
     [currentState]="currentState"
+    [crypt]="crypt"
     [appliedBonuses]="appliedBonuses"
   ></app-crypt-player-state>
   <div
@@ -15,6 +19,9 @@
         (click)="startedEncounter.emit(encounters[currentLevel])"
       >
         ⚔️ Fight next encounter!
+      </button>
+      <button type="button" class="btn btn-dark" (click)="takeShortBreakFn()">
+        💤 Take short break
       </button>
       <button type="button" class="btn btn-dark" (click)="triggerSurrender()">
         💀 Surrender

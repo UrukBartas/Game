@@ -121,6 +121,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
       image: '/assets/icons/boxes.png',
       type: [
         MiscellanyItemType.ComboLootbox,
+        MiscellanyItemType.CryptLootbox,
         MiscellanyItemType.Lootbox,
         MiscellanyItemType.ItemSet,
         MiscellanyItemType.MoneyBag,

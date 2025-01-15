@@ -3,10 +3,19 @@
 @import 'node_modules/bootstrap/scss/variables';
 @import 'node_modules/bootstrap/scss/mixins';
 
+:host ::ng-deep {
+  :host ::ng-deep {
+    .close-icon {
+      top: -5px;
+    }
+  }
+}
+
 .past-crypts {
   max-height: 400px;
   overflow: auto;
 }
+
 .crypt-welcome {
   text-align: center;
   color: $white-300;
@@ -17,6 +26,13 @@
   box-shadow: 0 4px 15px $black-transparent;
   position: relative;
   z-index: 1;
+  @include media-breakpoint-down(sm) {
+    max-height: 70%;
+    .content {
+      overflow: auto;
+      height: 100%;
+    }
+  }
 }
 
 .crypt-stats {
@@ -82,7 +98,6 @@ h3 {
 .crypt-intro,
 .crypt-preparation p,
 .challenge-text {
-  font-size: 1.2rem;
   margin-bottom: 1rem;
   line-height: 1.5;
 }
@@ -119,6 +134,9 @@ ul li::before {
 }
 .success {
   color: $third;
+}
+.onprogress {
+  color: $rogue-primary;
 }
 
 .crypt-button {
