@@ -3,7 +3,12 @@ import { Component, Input, TemplateRef } from '@angular/core';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from 'src/environments/environment';
 import { CompressNumberPipe } from 'src/modules/core/pipes/compress-number.pipe';
-
+export interface Tier {
+  start: number;
+  end: number;
+  image?: string;
+  class?: Function;
+}
 @Component({
   selector: 'app-tierized-progress-bar',
   standalone: true,
@@ -13,8 +18,8 @@ import { CompressNumberPipe } from 'src/modules/core/pipes/compress-number.pipe'
 })
 export class TierizedProgressBarComponent {
   @Input() currentValue: number = 0;
-  @Input() tiers: { start: number; end: number; image?: string }[] = [];
-
+  @Input() tiers: Tier[] = [];
+  @Input() mode: 'default' | 'durability' = 'default';
   @Input() tooltipTemplate: TemplateRef<any>;
   public prefix = environment.permaLinkImgPref;
 
@@ -27,5 +32,11 @@ export class TierizedProgressBarComponent {
     const tierRange = tier.end - tier.start;
     const progressInTier = this.currentValue - tier.start;
     return (progressInTier / tierRange) * 100;
+  }
+
+  public getActiveTier() {
+    return this.tiers.find(
+      (e) => this.currentValue >= e.start && this.currentValue <= e.end
+    );
   }
 }

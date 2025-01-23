@@ -666,3 +666,19 @@ app-rooms-list {
   top: -10px;
   right: 20px;
 }
+
+.danger-bg {
+  background-color: $warrior-primary !important;
+}
+
+.warning-bg {
+  background-color: $rogue-primary !important;
+}
+
+.good-bg {
+  background-color: $mage-primary !important;
+}
+
+.perfect-bg {
+  background-color: #9d44b5 !important;
+}

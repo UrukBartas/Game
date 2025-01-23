@@ -18,8 +18,10 @@
     }
     {{
       (key == 'damage'
-        ? abs(item[key]) + ' - ' + ceil(abs(item[key]) * 1.2)
-        : abs(item[key])) +
+        ? formatNumberFn(item[key]) +
+          ' - ' +
+          formatNumberFn(ceil(abs(item[key]) * 1.2))
+        : formatNumberFn(item[key])) +
         getPercentage(key) +
         ' ' +
         parseKeyPascalCase(key == 'damage' ? 'Base damage' : key)
@@ -60,6 +62,13 @@
       >
         Level {{ item.level }}
       </p>
+      <!-- <app-tierized-progress-bar
+        [tiers]="durabilityTiers"
+        [currentValue]="
+          durabilityTierValue(item.durability, item.itemData.rarity)
+        "
+        [mode]="'durability'"
+      ></app-tierized-progress-bar> -->
     </div>
     <div class="description w-100">
       <p

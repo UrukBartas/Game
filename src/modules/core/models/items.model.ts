@@ -24,6 +24,7 @@ export interface Item {
 
   equipped: boolean;
   enabled: boolean;
+  durability?: number;
   price?: number;
   slotEquipped?: ItemType;
 

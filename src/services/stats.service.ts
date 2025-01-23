@@ -37,6 +37,10 @@ export class StatsService extends ApiBaseService {
     return this.get('/creature-weakness');
   }
 
+  getDurabilityByRarity(): Observable<any> {
+    return this.get('/durability-by-rarity');
+  }
+
   getMineTiers(): Observable<Array<any>> {
     return this.get('/stake-tiers');
   }

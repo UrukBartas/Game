@@ -13,16 +13,22 @@
     />
 
     <!-- Barra de progreso individual por tier -->
-    <div class="progress" [style.width]="getTierProgress(tier) + '%'"></div>
+    <div
+      class="progress {{ tier.class ? tier.class(getActiveTier()) : '' }}"
+      [style.width]="getTierProgress(tier) + '%'"
+    ></div>
 
     <!-- Indicador de inicio del tier -->
-    <div class="tier-indicator start-indicator" *ngIf="i === 0">
+    <div
+      class="tier-indicator start-indicator"
+      *ngIf="i === 0 && mode == 'default'"
+    >
       <div class="indicator-value">{{ tier.start | compressNumber }}</div>
       <span class="indicator"></span>
     </div>
 
     <!-- Indicador de fin del tier -->
-    <div class="tier-indicator end-indicator">
+    <div class="tier-indicator end-indicator" *ngIf="mode == 'default'">
       <div class="indicator-value">{{ tier.end | compressNumber }}</div>
       <span class="indicator"></span>
     </div>

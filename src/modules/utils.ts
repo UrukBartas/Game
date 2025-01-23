@@ -23,6 +23,28 @@ function blendColors(color: string, percent: number): string {
   );
 }
 
+export function getDurabilityTier(durability: number, rarity: Rarity): number {
+  // Define los límites de cada tier en base a la rareza y las durabilidades iniciales del script
+  const thresholdsByRarity = {
+    [Rarity.COMMON]: [0, 12.5, 25, 37.5, 50], // Rango: 0-50
+    [Rarity.UNCOMMON]: [0, 18.75, 37.5, 56.25, 75], // Rango: 0-75
+    [Rarity.EPIC]: [0, 25, 50, 75, 100], // Rango: 0-100
+    [Rarity.LEGENDARY]: [0, 31.25, 62.5, 93.75, 125], // Rango: 0-125
+    [Rarity.MYTHIC]: [0, 37.5, 75, 112.5, 150], // Rango: 0-150
+  };
+
+  const thresholds = thresholdsByRarity[rarity] ?? [0, 25, 50, 75, 100];
+
+  // Determina el tier según los límites
+  for (let tier = thresholds.length - 1; tier >= 0; tier--) {
+    if (durability >= thresholds[tier]) {
+      return tier;
+    }
+  }
+
+  return 0; // Valor por defecto si no entra en ningún rango
+}
+
 export function getRarityColor(rarity: Rarity, percent = 0): string {
   const baseColor = (() => {
     switch (rarity) {
@@ -51,7 +73,7 @@ export function getIRIFromCurrentPlayer(player: PlayerModel) {
     (equippedItem) => (totalIRI = totalIRI + equippedItem.item_rarity_stat)
   );
   const averageIRI = totalIRI / equippedItems.length;
-  
+
   return isNaN(averageIRI) ? 0 : Math.round(averageIRI);
 }
 

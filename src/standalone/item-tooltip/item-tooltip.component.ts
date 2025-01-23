@@ -9,12 +9,17 @@ import { environment } from 'src/environments/environment';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
 import {
+  getDurabilityTier,
   getRarityBasedOnIRI,
   getRarityColor,
   getRarityText,
 } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
+import {
+  Tier,
+  TierizedProgressBarComponent,
+} from '../tierized-progress-bar/tierized-progress-bar.component';
 export const avoidableStats = [
   'id',
   'level',
@@ -33,6 +38,12 @@ export const avoidableStats = [
   'quantityToExport',
   'item_rarity_stat',
   'canBeUpgraded',
+  'enchantmentCount',
+  'enchantAddRarityCount',
+  'enchantIncreaseLevelCount',
+  'enchantRebornCount',
+  'enchantShuffleCount',
+  'durability',
 ];
 export const mapPercentLabels = {
   per_health: 'total health',
@@ -102,7 +113,12 @@ export const getPercentage = (key: string) => {
 @Component({
   selector: 'app-item-tooltip',
   standalone: true,
-  imports: [CommonModule, CompareItemPipe, NgbTooltipModule],
+  imports: [
+    CommonModule,
+    CompareItemPipe,
+    NgbTooltipModule,
+    TierizedProgressBarComponent,
+  ],
   templateUrl: './item-tooltip.component.html',
   styleUrl: './item-tooltip.component.scss',
 })
@@ -114,9 +130,33 @@ export class ItemTooltipComponent {
   public getExtraData() {
     return this.item.extraData || this.extraData;
   }
+  public durabilityTiers: Tier[] = [
+    {
+      start: 0,
+      end: 1,
+      class: (activeTier: Tier) => this.getDurabilityColor(activeTier),
+    },
+    {
+      start: 1,
+      end: 2,
+      class: (activeTier: Tier) => this.getDurabilityColor(activeTier),
+    },
+    {
+      start: 2,
+      end: 3,
+      class: (activeTier: Tier) => this.getDurabilityColor(activeTier),
+    },
+    {
+      start: 3,
+      end: 4,
+      class: (activeTier: Tier) => this.getDurabilityColor(activeTier),
+    },
+  ];
+  public durabilityTierValue = getDurabilityTier;
   public getRarityColor = getRarityColor;
   public getRarityText = getRarityText;
   public getRarityBasedOnIRI = getRarityBasedOnIRI;
+  public formatNumberFn = this.formatNumber;
   public viewportService = inject(ViewportService);
   public route = inject(ActivatedRoute);
   public rarityEnum = Rarity;
@@ -160,5 +200,20 @@ export class ItemTooltipComponent {
 
   public getPercentage(key: string) {
     return getPercentage(key);
+  }
+  //4 tiers
+  private getDurabilityColor = (activeTierDurability: Tier): string => {
+    if (activeTierDurability.end <= 1) return 'danger-bg';
+    else if (activeTierDurability.end <= 2) {
+      return 'warning-bg';
+    } else if (activeTierDurability.end <= 3) {
+      return 'good-bg';
+    } else {
+      return 'perfect-bg';
+    }
+  };
+
+  formatNumber(value) {
+    return value % 1 === 0 ? value : parseFloat(value.toFixed(2));
   }
 }
