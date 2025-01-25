@@ -16,6 +16,7 @@ import {
 } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
+import { ItemBoxComponent } from '../item-box/item-box.component';
 import {
   Tier,
   TierizedProgressBarComponent,
@@ -118,11 +119,13 @@ export const getPercentage = (key: string) => {
     CompareItemPipe,
     NgbTooltipModule,
     TierizedProgressBarComponent,
+    ItemBoxComponent,
   ],
   templateUrl: './item-tooltip.component.html',
   styleUrl: './item-tooltip.component.scss',
 })
 export class ItemTooltipComponent {
+  public prefix = environment.permaLinkImgPref;
   @Input() item: Item;
   @Input() extraData: any = null;
   @Input() compareWith: Item;
@@ -130,6 +133,29 @@ export class ItemTooltipComponent {
   public getExtraData() {
     return this.item.extraData || this.extraData;
   }
+  mapEnchantsImgs = {
+    enchantAddRarityCount: {
+      image: '/assets/misc/recipes/add_recipe.webp',
+      description: (times) =>
+        `This item was enchanted ${times} times with the Recipe of Enchantment`,
+    },
+    enchantIncreaseLevelCount: {
+      image: '/assets/misc/recipes/upgrade_level_recipe.webp',
+      description: (times) =>
+        `This item was enchanted ${times} times with the Recipe of Ascension`,
+    },
+    enchantRebornCount: {
+      image: '/assets/misc/recipes/total_rebirth.webp',
+      description: (times) =>
+        `This item was enchanted ${times} times with the Recipe of Total Reborn`,
+    },
+    enchantShuffleCount: {
+      image: '/assets/misc/recipes/shuffle_recipe.webp',
+      description: (times) =>
+        `This item was enchanted ${times} times with the Recipe of Rarity Reborn`,
+    },
+  };
+  public keys = Object.keys;
   public durabilityTiers: Tier[] = [
     {
       start: 0,
@@ -166,7 +192,6 @@ export class ItemTooltipComponent {
   public ceil = Math.ceil;
   public nonPorcentualStatsLength = 0;
   private store = inject(Store);
-  public prefix = environment.permaLinkImgPref;
 
   public player$ = this.store
     .select(MainState.getState)

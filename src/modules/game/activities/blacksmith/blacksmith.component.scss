@@ -3,6 +3,45 @@
 @import 'node_modules/bootstrap/scss/functions';
 @import 'node_modules/bootstrap/scss/variables';
 
+.carousel-btns {
+  width: 100%;
+  height: 100%;
+  .carousel-control-prev,
+  .carousel-control-next {
+    align-items: end;
+  }
+  .item,
+  .item > .action {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .item {
+    gap: 20px;
+  }
+  .description > img {
+    border-radius: 50%;
+    max-width: 64px;
+    max-height: 64px;
+  }
+  .description {
+    gap: 5px;
+    align-items: center;
+  }
+  button {
+    width: 100%;
+    max-width: 300px;
+    @include media-breakpoint-down(sm) {
+      max-width: 250px;
+    }
+  }
+}
+
+.uruk-card {
+  max-width: 550px;
+}
+
 #blacksmith {
   position: relative;
   height: 100%;
@@ -36,7 +75,6 @@
     flex-direction: column;
     gap: 5vh;
     align-items: center;
-    background: rgba(0, 0, 0, 0.4392156863);
     padding: 20px;
     @include media-breakpoint-up(lg) {
       right: 12vw;

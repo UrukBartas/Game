@@ -119,6 +119,23 @@
         *ngIf="item.item_rarity_stat"
         ><strong>IRI</strong> {{ item.item_rarity_stat.toFixed(2) }}</span
       >
+      <div class="enchants-applied pb-2">
+        <ng-container *ngFor="let enchantKey of keys(mapEnchantsImgs)">
+          <app-item-box
+            *ngIf="!!item[enchantKey]"
+            [image]="mapEnchantsImgs[enchantKey].image"
+            [height]="32"
+            [width]="32"
+            [stack]="item[enchantKey]"
+          >
+            <div tooltip class="tooltip-uruk">
+              <span class="text-third p-3">
+                {{ mapEnchantsImgs[enchantKey].description(item[enchantKey]) }}
+              </span>
+            </div>
+          </app-item-box>
+        </ng-container>
+      </div>
     </div>
     <div class="description stat px-3">
       <ul>

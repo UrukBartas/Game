@@ -79,83 +79,172 @@
     </tabset>
   </div>
 
-  <div class="item-container">
-    <div class="container-multiple">
-      @if (selectedMultipleItems.length === 0) {
-        <app-item-box
-          #anvil
-          dndDropzone
-          (dndDrop)="onAnvilDrop($event)"
-          [active]="hovered"
-          [ngbTooltip]="itemTooltip"
-          [tooltipContext]="{ item: null }"
-          [height]="getItemBoxSize()"
-          [width]="getItemBoxSize()"
-        ></app-item-box>
-      } @else {
-        @for (
-          selectedMultipleItem of selectedMultipleItems;
-          track selectedMultipleItem.id
-        ) {
+  <div
+    class="item-container uruk-card"
+    data-aos="fade-up"
+    data-aos-delay="3000"
+    data-aos-duration="2000"
+  >
+    <ng-template #selector>
+      <div
+        class="container-multiple"
+        *ngIf="
+          (!!selectedMultipleItems && selectedMultipleItems.length > 0) ||
+          hovered
+        "
+      >
+        @if (selectedMultipleItems.length === 0) {
           <app-item-box
             #anvil
             dndDropzone
             (dndDrop)="onAnvilDrop($event)"
             [active]="hovered"
             [ngbTooltip]="itemTooltip"
-            [tooltipContext]="{ item: selectedMultipleItem }"
+            [tooltipContext]="{ item: null }"
             [height]="getItemBoxSize()"
             [width]="getItemBoxSize()"
-            [upgradeLevel]="selectedMultipleItem?.upgradeLevel"
-            [image]="
-              selectedMultipleItem
-                ? selectedMultipleItem?.itemData.imageLocal
-                : null
-            "
           ></app-item-box>
+        } @else {
+          @for (
+            selectedMultipleItem of selectedMultipleItems;
+            track selectedMultipleItem.id
+          ) {
+            <app-item-box
+              #anvil
+              dndDropzone
+              (dndDrop)="onAnvilDrop($event)"
+              [active]="hovered"
+              [ngbTooltip]="itemTooltip"
+              [tooltipContext]="{ item: selectedMultipleItem }"
+              [height]="getItemBoxSize()"
+              [width]="getItemBoxSize()"
+              [upgradeLevel]="selectedMultipleItem?.upgradeLevel"
+              [image]="
+                selectedMultipleItem
+                  ? selectedMultipleItem?.itemData.imageLocal
+                  : null
+              "
+            ></app-item-box>
+          }
         }
-      }
-    </div>
+      </div>
+    </ng-template>
 
+    <carousel
+      [isAnimated]="true"
+      [(activeSlide)]="activeSlideIndex"
+      [showIndicators]="false"
+      [interval]="0"
+      class="carousel-btns"
+    >
+      <slide>
+        <div class="action gap-2">
+          <div class="description">
+            <img
+              src="{{ prefix + '/assets/blacksmith/melt.webp' }}"
+              alt=""
+              srcset=""
+            />
+            <div class="text-light">
+              Break down items into magical dust, which can be used to enhance
+              and upgrade other items.
+            </div>
+          </div>
+          <ng-container *ngTemplateOutlet="selector"></ng-container>
+        </div>
+        <button
+          (click)="openModal('melt')"
+          [disabled]="selectedMultipleItems.length == 0"
+          [class]="'btn btn-primary ' + getButtonSize()"
+        >
+          <i class="fa fa-fire pl-1 pb-1"></i>
+          Melt
+        </button>
+      </slide>
+      <slide>
+        <div class="action gap-2">
+          <div class="description">
+            <img
+              src="{{ prefix + '/assets/blacksmith/upgrade.webp' }}"
+              alt=""
+              srcset=""
+            />
+            <div class="text-light">
+              Utilize valuable resources to improve the stats or quality of an
+              item.
+            </div>
+          </div>
+          <ng-container *ngTemplateOutlet="selector"></ng-container>
+        </div>
+        <button
+          (click)="openModal('upgrade')"
+          [disabled]="
+            !!multipleSelection.value || selectedMultipleItems.length == 0
+          "
+          [class]="'btn btn-primary mx-1 ' + getButtonSize()"
+        >
+          <i class="fa fa-gears pl-1 pb-1"></i>
+          Upgrade
+        </button>
+      </slide>
+      <slide>
+        <div class="action gap-2">
+          <div class="description">
+            <img
+              src="{{ prefix + '/assets/blacksmith/enchant.webp' }}"
+              alt=""
+              srcset=""
+            />
+            <div class="text-light">
+              Apply unique enchantments to boost the item's performance,
+              attributes, or abilities.
+            </div>
+          </div>
+          <ng-container *ngTemplateOutlet="selector"></ng-container>
+        </div>
+        <button
+          (click)="openModal('enchant')"
+          [disabled]="
+            !!multipleSelection.value || selectedMultipleItems.length == 0
+          "
+          [class]="'btn btn-primary  ' + getButtonSize()"
+        >
+          <i class="fa fa-wand-magic-sparkles pl-1 pb-1"></i>
+          Enchant
+        </button>
+      </slide>
+      <slide>
+        <div class="action gap-2">
+          <div class="description">
+            <img
+              src="{{ prefix + '/assets/blacksmith/combine.webp' }}"
+              alt=""
+              srcset=""
+            />
+            <div class="text-light">
+              Fuse multiple items together for a chance to create a more
+              powerful or rare item.
+            </div>
+          </div>
+          <ng-container *ngTemplateOutlet="selector"></ng-container>
+        </div>
+        <button
+          (click)="openModal('combine')"
+          [disabled]="selectedMultipleItems.length < 2"
+          [class]="'btn btn-primary ' + getButtonSize()"
+        >
+          <i class="fa fa-hand-fist pl-1 pb-1"></i>
+          Combine
+        </button>
+      </slide>
+    </carousel>
+    <!--
     <div class="action-anvil">
-      <button
-        (click)="openModal('melt')"
-        [disabled]="selectedMultipleItems.length == 0"
-        [class]="'btn btn-primary ' + getButtonSize()"
-      >
-        <i class="fa fa-fire pl-1 pb-1"></i>
-        Melt
-      </button>
 
-      <button
-        (click)="openModal('upgrade')"
-        [disabled]="
-          !!multipleSelection.value || selectedMultipleItems.length == 0
-        "
-        [class]="'btn btn-primary mx-1 ' + getButtonSize()"
-      >
-        <i class="fa fa-gears pl-1 pb-1"></i>
-        Upgrade
-      </button>
-      <button
-        (click)="openModal('enchant')"
-        [disabled]="
-          !!multipleSelection.value || selectedMultipleItems.length == 0
-        "
-        [class]="'btn btn-primary  ' + getButtonSize()"
-      >
-        <i class="fa fa-wand-magic-sparkles pl-1 pb-1"></i>
-        Enchant
-      </button>
-      <button
-        (click)="openModal('combine')"
-        [disabled]="selectedMultipleItems.length < 2"
-        [class]="'btn btn-primary ' + getButtonSize()"
-      >
-        <i class="fa fa-hand-fist pl-1 pb-1"></i>
-        Combine
-      </button>
-    </div>
+
+
+
+    </div> -->
   </div>
 
   <ng-container *ngIf="resultItem">

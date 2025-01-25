@@ -1,0 +1,32 @@
+<div id="shopping">
+  <div class="container-fluid h-100">
+    <div class="row h-100">
+      <div
+        class="col-md-6 col-12 shopping-container quest"
+        (click)="router.navigate(['/shop'])"
+      >
+        <div class="image-container"></div>
+        <div class="content">
+          <span urText>Merchant</span>
+          <i urTitle class="fa fa-shop"></i>
+          <span urSubtext class="text-center">
+            A merchant offering items, consumables, materials, and more.
+          </span>
+        </div>
+      </div>
+      <div
+        class="col-md-6 col-12 shopping-container adventure"
+        (click)="router.navigate(['/auction-house'])"
+      >
+        <div class="image-container"></div>
+        <div class="content">
+          <span urText>Auction House</span>
+          <i urTitle class="fa fa-coins"></i>
+          <span urSubtext class="text-center">
+            Buy and sell items with other players in a dynamic marketplace!
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

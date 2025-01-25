@@ -13,6 +13,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { DndDropEvent } from 'ngx-drag-drop';
 import * as party from 'party-js';
 import { filter, firstValueFrom, map, Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Item } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
@@ -36,7 +37,8 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
   private viewportService = inject(ViewportService);
   private modalService = inject(BsModalService);
   private store = inject(Store);
-
+  public activeSlideIndex = 0;
+  public prefix = environment.permaLinkImgPref;
   dialog: string;
   showDialog = false;
   resultItem;

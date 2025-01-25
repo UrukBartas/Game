@@ -14,6 +14,7 @@ import { PvPFightComponent } from './activities/pvp/pvp-fight/pvp-fight.componen
 import { PvPResultComponent } from './activities/pvp/pvp-result/pvp-result.component';
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
 import { ShopComponent } from './activities/shop/shop.component';
+import { ShoppingComponent } from './activities/shopping/shopping.component';
 import { TheCryptComponent } from './activities/the-crypt/the-crypt.component';
 import { TheMineComponent } from './activities/the-mine/the-mine.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
@@ -56,7 +57,13 @@ const routes: Routes = [
         path: 'missions',
         canActivate: [AuthGuard],
         component: MissionsComponent,
-        title: 'Quests',
+        title: 'Missions',
+      },
+      {
+        path: 'shopping',
+        canActivate: [AuthGuard],
+        component: ShoppingComponent,
+        title: 'Shopping',
       },
       {
         path: 'quests',

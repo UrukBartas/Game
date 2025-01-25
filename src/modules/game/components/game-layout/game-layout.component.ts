@@ -51,14 +51,9 @@ export class GameLayoutComponent {
       icon: 'fa-solid fa-dragon',
     },
     {
-      path: '/shop',
-      displayText: 'Shop',
+      path: '/shopping',
+      displayText: 'Shopping',
       icon: 'fa fa-shop',
-    },
-    {
-      path: '/auction-house',
-      icon: 'fa fa-coins',
-      displayText: 'Auction House',
     },
     {
       path: '/blacksmith',
@@ -86,7 +81,7 @@ export class GameLayoutComponent {
       path: 'https://app.magicsea.finance/swap?inputCurrency=0x4ab1edfe2706fcac991a41183036e62a8f1dabd3&outputCurrency=IOTA',
       displayText: 'Get $URUKS',
       class: 'buy-uruks',
-      contentClass:'animate__animated animate__pulse animate__infinite',
+      contentClass: 'animate__animated animate__pulse animate__infinite',
       external: true,
       image: this.prefix + '/assets/goldenuruks_compact.png',
     },
@@ -105,8 +100,8 @@ export class GameLayoutComponent {
   public displayingFullScreenModal = false;
   public modalRef?: BsModalRef;
   public loggedWithemail = this.authService.loggedWithEmail;
-  public notifications$: Observable<NotificationResponseModel> = this.store.select(MainState.getNotifications)
-
+  public notifications$: Observable<NotificationResponseModel> =
+    this.store.select(MainState.getNotifications);
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);
