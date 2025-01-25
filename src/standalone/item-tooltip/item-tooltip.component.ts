@@ -239,6 +239,6 @@ export class ItemTooltipComponent {
   };
 
   formatNumber(value) {
-    return value % 1 === 0 ? value : parseFloat(value.toFixed(2));
+    return this.abs(value % 1 === 0 ? value : parseFloat(value.toFixed(2)));
   }
 }
