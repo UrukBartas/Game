@@ -299,6 +299,12 @@ ngb-tooltip-window {
   }
 }
 
+.item-inventory {
+  @include media-breakpoint-down(sm) {
+    padding: 0px !important;
+  }
+}
+
 tabset {
   .item-inventory {
     padding-top: 10px;
@@ -667,18 +673,22 @@ app-rooms-list {
   right: 20px;
 }
 
-.danger-bg {
+.danger-durability {
   background-color: $warrior-primary !important;
+  color: $warrior-primary !important;
 }
 
-.warning-bg {
+.warning-durability {
   background-color: $rogue-primary !important;
+  color: $rogue-primary !important;
 }
 
-.good-bg {
+.good-durability {
   background-color: $mage-primary !important;
+  color: $mage-primary !important;
 }
 
-.perfect-bg {
+.perfect-durability {
   background-color: #9d44b5 !important;
+  color: #9d44b5 !important;
 }

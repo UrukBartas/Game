@@ -86,6 +86,10 @@
     data-aos-duration="2000"
   >
     <ng-template #selector>
+      <div class="text-danger" urSubtext *ngIf="!selectedItemsAreGoodEnough()">
+        Some of the items you've selected have very low durability; the
+        blacksmith might not be too pleased with them.
+      </div>
       <div
         class="container-multiple"
         *ngIf="
@@ -93,7 +97,7 @@
           hovered
         "
       >
-        @if (selectedMultipleItems.length === 0) {
+        <!-- @if (selectedMultipleItems.length === 0) {
           <app-item-box
             #anvil
             dndDropzone
@@ -104,28 +108,26 @@
             [height]="getItemBoxSize()"
             [width]="getItemBoxSize()"
           ></app-item-box>
-        } @else {
-          @for (
-            selectedMultipleItem of selectedMultipleItems;
-            track selectedMultipleItem.id
-          ) {
-            <app-item-box
-              #anvil
-              dndDropzone
-              (dndDrop)="onAnvilDrop($event)"
-              [active]="hovered"
-              [ngbTooltip]="itemTooltip"
-              [tooltipContext]="{ item: selectedMultipleItem }"
-              [height]="getItemBoxSize()"
-              [width]="getItemBoxSize()"
-              [upgradeLevel]="selectedMultipleItem?.upgradeLevel"
-              [image]="
-                selectedMultipleItem
-                  ? selectedMultipleItem?.itemData.imageLocal
-                  : null
-              "
-            ></app-item-box>
-          }
+        } @else { -->
+        @for (
+          selectedMultipleItem of selectedMultipleItems;
+          track selectedMultipleItem.id
+        ) {
+          <app-item-box
+            #anvil
+            [active]="hovered"
+            [ngbTooltip]="itemTooltip"
+            [tooltipContext]="{ item: selectedMultipleItem }"
+            [height]="getItemBoxSize()"
+            [width]="getItemBoxSize()"
+            [upgradeLevel]="selectedMultipleItem?.upgradeLevel"
+            [image]="
+              selectedMultipleItem
+                ? selectedMultipleItem?.itemData.imageLocal
+                : null
+            "
+          ></app-item-box>
+          <!-- } -->
         }
       </div>
     </ng-template>
@@ -165,6 +167,29 @@
         <div class="action gap-2">
           <div class="description">
             <img
+              src="{{ prefix + '/assets/blacksmith/repairs.webp' }}"
+              alt="Blacksmith Repair"
+              srcset=""
+            />
+            <div class="text-light">
+              Repair your items to restore their durability.
+            </div>
+          </div>
+          <ng-container *ngTemplateOutlet="selector"></ng-container>
+        </div>
+        <button
+          [disabled]="selectedMultipleItems.length == 0"
+          [class]="'btn btn-primary ' + getButtonSize()"
+          (click)="openModal('repairs')"
+        >
+          <i class="fa fa-hammer pl-1 pb-1"></i>
+          Repair
+        </button>
+      </slide>
+      <slide *ngIf="!multipleSelection.value">
+        <div class="action gap-2">
+          <div class="description">
+            <img
               src="{{ prefix + '/assets/blacksmith/upgrade.webp' }}"
               alt=""
               srcset=""
@@ -187,7 +212,7 @@
           Upgrade
         </button>
       </slide>
-      <slide>
+      <slide *ngIf="!multipleSelection.value">
         <div class="action gap-2">
           <div class="description">
             <img

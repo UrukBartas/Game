@@ -84,4 +84,12 @@ export class ItemService extends ApiBaseService {
   public getCombineItems(itemsIds: Array<number>) {
     return this.post('/combine-items/', { ids: itemsIds });
   }
+
+  public getRepairItemsPreview(itemsIds: Array<number>) {
+    return this.post('/repair-items-preview/', { ids: itemsIds });
+  }
+
+  public getRepairItems(itemsIds: Array<number>) {
+    return this.post('/repair-items/', { ids: itemsIds });
+  }
 }

@@ -1,5 +1,5 @@
 import { AnimateSettingsModel } from './core/models/animate-callback.model';
-import { Rarity } from './core/models/items.model';
+import { Item, Rarity } from './core/models/items.model';
 import { PlayerModel } from './core/models/player.model';
 import { ItemTypeSC } from './game/activities/export-import-nft/enums/ItemTypesSC';
 
@@ -23,17 +23,33 @@ function blendColors(color: string, percent: number): string {
   );
 }
 
+export function durabilityIsEnough(item: Item) {
+  const maxDurability = getMaxDurability(item.itemData.rarity) || 100;
+  const currentDurabilityInPercentage = (item.durability / maxDurability) * 100;
+  return currentDurabilityInPercentage >= 25;
+}
+
+export const durabilitiesByRarity = {
+  [Rarity.COMMON]: [0, 12.5, 25, 37.5, 50], // Rango: 0-50
+  [Rarity.UNCOMMON]: [0, 18.75, 37.5, 56.25, 75], // Rango: 0-75
+  [Rarity.EPIC]: [0, 25, 50, 75, 100], // Rango: 0-100
+  [Rarity.LEGENDARY]: [0, 31.25, 62.5, 93.75, 125], // Rango: 0-125
+  [Rarity.MYTHIC]: [0, 37.5, 75, 112.5, 150], // Rango: 0-150
+};
+
+export function getMaxDurability(rarity: Rarity) {
+  return durabilitiesByRarity[rarity][durabilitiesByRarity[rarity].length - 1];
+}
+
+export function getDurabilityPercentage(durability: number, rarity: Rarity) {
+  const maxDurability = getMaxDurability(rarity);
+  return (durability / maxDurability) * 100;
+}
+
 export function getDurabilityTier(durability: number, rarity: Rarity): number {
   // Define los límites de cada tier en base a la rareza y las durabilidades iniciales del script
-  const thresholdsByRarity = {
-    [Rarity.COMMON]: [0, 12.5, 25, 37.5, 50], // Rango: 0-50
-    [Rarity.UNCOMMON]: [0, 18.75, 37.5, 56.25, 75], // Rango: 0-75
-    [Rarity.EPIC]: [0, 25, 50, 75, 100], // Rango: 0-100
-    [Rarity.LEGENDARY]: [0, 31.25, 62.5, 93.75, 125], // Rango: 0-125
-    [Rarity.MYTHIC]: [0, 37.5, 75, 112.5, 150], // Rango: 0-150
-  };
 
-  const thresholds = thresholdsByRarity[rarity] ?? [0, 25, 50, 75, 100];
+  const thresholds = durabilitiesByRarity[rarity] ?? [0, 25, 50, 75, 100];
 
   // Determina el tier según los límites
   for (let tier = thresholds.length - 1; tier >= 0; tier--) {

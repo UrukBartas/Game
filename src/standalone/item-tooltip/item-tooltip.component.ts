@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
 import {
+  getDurabilityPercentage,
   getDurabilityTier,
   getRarityBasedOnIRI,
   getRarityColor,
@@ -179,6 +180,7 @@ export class ItemTooltipComponent {
     },
   ];
   public durabilityTierValue = getDurabilityTier;
+  public getDurabilityPercentage = getDurabilityPercentage;
   public getRarityColor = getRarityColor;
   public getRarityText = getRarityText;
   public getRarityBasedOnIRI = getRarityBasedOnIRI;
@@ -228,13 +230,13 @@ export class ItemTooltipComponent {
   }
   //4 tiers
   private getDurabilityColor = (activeTierDurability: Tier): string => {
-    if (activeTierDurability.end <= 1) return 'danger-bg';
+    if (activeTierDurability.end <= 1) return 'danger-durability';
     else if (activeTierDurability.end <= 2) {
-      return 'warning-bg';
+      return 'warning-durability';
     } else if (activeTierDurability.end <= 3) {
-      return 'good-bg';
+      return 'good-durability';
     } else {
-      return 'perfect-bg';
+      return 'perfect-durability';
     }
   };
 

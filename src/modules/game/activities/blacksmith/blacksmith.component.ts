@@ -10,14 +10,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { DndDropEvent } from 'ngx-drag-drop';
+import { ToastrService } from 'ngx-toastr';
 import * as party from 'party-js';
 import { filter, firstValueFrom, map, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Item } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
-import { animateElement } from 'src/modules/utils';
+import { animateElement, durabilityIsEnough } from 'src/modules/utils';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
@@ -36,6 +36,7 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
   private playerService = inject(PlayerService);
   private viewportService = inject(ViewportService);
   private modalService = inject(BsModalService);
+  private toast = inject(ToastrService);
   private store = inject(Store);
   public activeSlideIndex = 0;
   public prefix = environment.permaLinkImgPref;
@@ -99,7 +100,7 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
     }, 250);
   }
 
-  openModal(action: 'melt' | 'upgrade' | 'enchant' | 'combine') {
+  openModal(action: 'melt' | 'upgrade' | 'enchant' | 'combine' | 'repairs') {
     const config: ModalOptions = {
       initialState: {
         action,
@@ -117,7 +118,8 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
         },
       },
     };
-    this.modalService.show(BlacksmithModalComponent, config);
+    const ref = this.modalService.show(BlacksmithModalComponent, config);
+    ref.content.tellQuote.subscribe((data) => this.triggerDialog(data, 2500));
   }
 
   private onRecycleDone() {
@@ -139,7 +141,7 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
     } else if (random === 4) {
       this.triggerDialog(`That orc aint nothing but a goblin! 😎`, 2500);
     }
-
+    this.toast.success('Successful operation!');
     this.store.dispatch(new RefreshPlayer());
     setTimeout(() => {
       party.sparkles(this.anvil.nativeElement, {
@@ -177,6 +179,10 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
     return ronnieColemanQuotes[randomIndex];
   }
 
+  public selectedItemsAreGoodEnough() {
+    return !!this.selectedMultipleItems.every((e) => !!durabilityIsEnough(e));
+  }
+
   public closeResult() {
     if (!this.resultItem) {
       this.selectedMultipleItems = [];
@@ -188,9 +194,9 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
     this.resultItem = null;
   }
 
-  onAnvilDrop(event: DndDropEvent) {
-    this.selectedMultipleItems = [event.data];
-  }
+  // onAnvilDrop(event: DndDropEvent) {
+  //   this.selectedMultipleItems = [event.data];
+  // }
 
   triggerDialog(text: string, duration: number) {
     this.dialog = text;

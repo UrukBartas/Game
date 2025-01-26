@@ -62,13 +62,6 @@
       >
         Level {{ item.level }}
       </p>
-      <!-- <app-tierized-progress-bar
-        [tiers]="durabilityTiers"
-        [currentValue]="
-          durabilityTierValue(item.durability, item.itemData.rarity)
-        "
-        [mode]="'durability'"
-      ></app-tierized-progress-bar> -->
     </div>
     <div class="description w-100">
       <p
@@ -97,6 +90,24 @@
         {{ mapItemType(item.itemData.itemType) }} -
         {{ getRarityText(item.itemData.rarity) }}
       </p>
+      <div class="durability-display d-flex gap-2">
+        <span class="text-light"
+          >{{
+            getDurabilityPercentage(
+              item.durability,
+              item.itemData.rarity
+            ).toFixed(2)
+          }}%</span
+        >
+        -
+        <app-tierized-progress-bar
+          [tiers]="durabilityTiers"
+          [currentValue]="
+            durabilityTierValue(item.durability, item.itemData.rarity)
+          "
+          [mode]="'durability'"
+        ></app-tierized-progress-bar>
+      </div>
     </div>
   </div>
   <div

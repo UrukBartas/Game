@@ -44,6 +44,9 @@
       @case ('combine') {
         Combine item <i class="fa fa-hand-fist pl-1 pb-1"></i>
       }
+      @case ('repairs') {
+        Repair items <i class="fa fa-hammer pl-1 pb-1"></i>
+      }
       @default {}
     }
   </p>
@@ -76,6 +79,11 @@
     @case ('combine') {
       <div class="col-12 col-sm-6 text-white pb-2" urText>
         Possibilities of getting new item:
+      </div>
+    }
+    @case ('repairs') {
+      <div class="col-12 col-sm-6 text-white pb-2" urText>
+        Items after repair:
       </div>
     }
     @default {}
@@ -257,6 +265,20 @@
             ></ng-container>
           }
         </div>
+      </div>
+    }
+    @case ('repairs') {
+      <div class="col-12 d-flex pb-2 overflow-auto flex-wrap">
+        <app-item-box
+          *ngFor="let item of preview.result"
+          [height]="getItemBoxSize()"
+          [width]="getItemBoxSize()"
+          [image]="item.itemData.imageLocal"
+        >
+          <div tooltip class="tooltip-uruk">
+            <app-item-tooltip [item]="item"></app-item-tooltip>
+          </div>
+        </app-item-box>
       </div>
     }
     @default {}
