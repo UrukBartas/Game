@@ -690,19 +690,30 @@ export class ExportImportNftComponent extends TemplatePage {
         const distribution = await this.getRawSelectedItems();
         const nftImports = distribution['NFT'];
         const presaleImports = distribution['PRESALE'];
-
+        let hashNfts = null;
+        let hashNftsPresale = null;
         if (nftImports.ids.length > 0) {
-          await this.NFTContractService.importNftToItem([
+          hashNfts = await this.NFTContractService.importNftToItem([
             nftImports.ids,
             nftImports.itemTypes,
           ]);
         }
 
         if (presaleImports.ids.length > 0) {
-          await this.PRESALEContractService.importNftToGame([
+          hashNftsPresale = await this.PRESALEContractService.importNftToGame([
             presaleImports.ids,
           ]);
         }
+        await Promise.all([
+          hashNfts
+            ? firstValueFrom(this.importExport.importNft(hashNfts.hash))
+            : Promise.resolve(),
+          hashNftsPresale
+            ? firstValueFrom(
+                this.importExport.importNftPresale(hashNftsPresale.hash)
+              )
+            : Promise.resolve(),
+        ]);
 
         this.spinnerService.hide();
         this.sendThemToTheAbyssAndBurnThemLikeJs();
@@ -799,13 +810,25 @@ export class ExportImportNftComponent extends TemplatePage {
   }
 
   private async importERC20() {
-    await this.ERC20ContractService.triggerTx(() => {
-      return this.ERC20ContractService.importCoins([
+    this.spinnerService.show();
+    try {
+      const res = await this.ERC20ContractService.importCoins([
         ethers.parseEther(this.selectedUruksToExport.toString()),
       ]);
-    }, 'The coins got imported, you will receive them in your inventory soon!');
-
-    this.selectedUruksToExport = 0;
+      await firstValueFrom(this.importExport.importTokens(res.hash));
+      this.spinnerService.hide();
+      this.toastService.success(
+        'The coins got imported, you will receive them in your inventory soon!'
+      );
+      this.selectedUruksToExport = 0;
+    } catch (error: any) {
+      this.toastService.error(
+        error?.error?.message ?? error?.cause?.reason ?? error ?? undefined,
+        'Something went wrong'
+      );
+      this.spinnerService.hide();
+      this.selectedUruksToExport = 0;
+    }
   }
 
   public async moveForwardAll(pendingItems: Array<any>) {

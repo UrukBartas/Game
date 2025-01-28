@@ -23,6 +23,18 @@ export class ExportImportService extends ApiBaseService {
     });
   }
 
+  public importNft(txHash: string) {
+    return this.post('/import-nft/' + txHash, {});
+  }
+
+  public importTokens(txHash: string) {
+    return this.post('/import-tokens/' + txHash, {});
+  }
+
+  public importNftPresale(txHash: string) {
+    return this.post('/import-nft-presale/' + txHash, {});
+  }
+
   public whiteListItemERC20(amount: number) {
     return this.post('/whitelist-export-erc20/' + amount.toString(), {});
   }
