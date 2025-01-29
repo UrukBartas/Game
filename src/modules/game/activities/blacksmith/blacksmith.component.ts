@@ -34,7 +34,7 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
   @ViewChild('result', { read: ElementRef }) result: ElementRef;
 
   private playerService = inject(PlayerService);
-  private viewportService = inject(ViewportService);
+  public viewportService = inject(ViewportService);
   private modalService = inject(BsModalService);
   private toast = inject(ToastrService);
   private store = inject(Store);
@@ -73,11 +73,13 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
     map((store) => store.player)
   );
 
+  public playerEquippedItems$ = this.player$.pipe(map((e) => e.items));
+
   constructor() {
     super();
     this.inventoryUpdated$.pipe(takeUntilDestroyed()).subscribe(async () => {
       this.currentInventory = await firstValueFrom(
-        this.playerService.getItemsBlacksmith()
+        this.playerService.getItems()
       );
     });
     this.materialUpdated$.pipe(takeUntilDestroyed()).subscribe(async () => {

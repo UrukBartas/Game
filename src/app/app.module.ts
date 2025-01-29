@@ -1,6 +1,6 @@
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HammerModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
@@ -24,6 +24,13 @@ import { RedirectPageComponent } from 'src/modules/core/components/redirect-page
 import * as echarts from 'echarts'; // Importa ECharts
 import { NgxEchartsModule } from 'ngx-echarts';
 import { TimeAgoPipe } from './time-ago.pipe';
+import { HammerGestureConfig } from '@angular/platform-browser';
+
+export class MyHammerConfig extends HammerGestureConfig {
+  override overrides = {
+    press: { time: 500 } // Habilita "longpress" con 500ms de presión
+  };
+}
 
 @NgModule({
   declarations: [
@@ -48,15 +55,16 @@ import { TimeAgoPipe } from './time-ago.pipe';
     FocuserComponent,
     FormsModule,
     ReactiveFormsModule,
-    NgxEchartsModule.forRoot({ echarts }), // ConfiguraciÃ³n predeterminada
+    NgxEchartsModule.forRoot({ echarts }), // Configuración predeterminada
+    HammerModule, // Agregado HammerJS para gestos táctiles
   ],
   providers: [
     ThreePortalService,
     StackPipe,
     TimeAgoPipe,
     { provide: HTTP_INTERCEPTORS, useClass: HttpUrukInterceptor, multi: true },
+    { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig }, // Configuración de HammerJS
   ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
-

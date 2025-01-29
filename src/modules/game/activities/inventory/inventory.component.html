@@ -383,11 +383,24 @@
                 "
                 (contextmenu)="
                   itemSet
-                    ? contextMenuService.onContextMenu(
-                        $event,
-                        contextOptions,
-                        itemSet
-                      )
+                    ? contextMenuService.isTouchDevice()
+                      ? false
+                      : contextMenuService.onContextMenu(
+                          $event,
+                          contextOptions,
+                          itemSet
+                        )
+                    : false
+                "
+                (press)="
+                  itemSet
+                    ? contextMenuService.isTouchDevice()
+                      ? contextMenuService.onContextMenu(
+                          $event,
+                          contextOptions,
+                          itemSet
+                        )
+                      : false
                     : false
                 "
               >
@@ -537,8 +550,27 @@
   let-equipType="equipType"
   let-secondHandSlot="secondHandSlot"
 >
+  <ng-template #contextOptions>
+    <app-context-menu-inventory-options
+      [item]="toItem(item$ | async)"
+      [displayDestroy]="false"
+      [displayEquip]="false"
+      [displayEquipLeftHand]="false"
+    >
+    </app-context-menu-inventory-options>
+  </ng-template>
   <app-item-box
     dndDropzone
+    (contextmenu)="
+      contextMenuService.isTouchDevice()
+        ? false
+        : contextMenuService.onContextMenu($event, contextOptions)
+    "
+    (press)="
+      contextMenuService.isTouchDevice()
+        ? contextMenuService.onContextMenu($event, contextOptions)
+        : false
+    "
     [class.second-hand-slot]="secondHandSlot"
     (dndDrop)="onDrop($event, equipType)"
     (appDoubleClick)="unEquipItem(item$)"

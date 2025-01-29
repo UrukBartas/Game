@@ -130,10 +130,6 @@ export class PlayerService extends ApiBaseService {
     return this.get('/inventory');
   }
 
-  getItemsBlacksmith() {
-    return this.get('/blacksmith-inventory');
-  }
-
   getItemsSize() {
     return this.get('/inventory-size');
   }
