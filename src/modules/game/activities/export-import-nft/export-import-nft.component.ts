@@ -816,10 +816,10 @@ export class ExportImportNftComponent extends TemplatePage {
         ethers.parseEther(this.selectedUruksToExport.toString()),
       ]);
       await firstValueFrom(this.importExport.importTokens(res.hash));
-      this.spinnerService.hide();
       this.toastService.success(
-        'The coins got imported, you will receive them in your inventory soon!'
+        'The coins are getting imported, you will receive them in your inventory soon!'
       );
+      this.spinnerService.hide();
       this.selectedUruksToExport = 0;
     } catch (error: any) {
       this.toastService.error(
