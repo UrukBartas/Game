@@ -1,10 +1,11 @@
 <ul class="list-options">
-  <li (click)="clickEquip.emit()">Equip</li>
+  <li (click)="clickEquip.emit()" *ngIf="displayEquip">Equip</li>
   <li
     (click)="equipLeftHand.emit()"
-    *ngIf="item.itemData.itemType == itemType.Weapon1H"
+    *ngIf="item.itemData.itemType == itemType.Weapon1H && displayEquipLeftHand"
   >
     Equip on left hand
   </li>
-  <li (click)="clickDestroy.emit()">Destroy</li>
+  <li (click)="repairItem(item)" *ngIf="displayRepair">Repair</li>
+  <li (click)="clickDestroy.emit()" *ngIf="displayDestroy">Destroy</li>
 </ul>

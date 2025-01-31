@@ -4,48 +4,53 @@
     <span urTitle>{{ dialog }} </span>
   </div>
 
+  <ng-template #extraFilters>
+    <div class="d-flex gap-3 align-items-center">
+      <div
+        class="form-check form-switch"
+        (click)="
+          multipleSelection.patchValue(!multipleSelection.value);
+          selectedMultipleItems = []
+        "
+      >
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [formControl]="multipleSelection"
+        />
+        <label class="form-check-label text-light" for="flexSwitchCheckChecked"
+          >Multiple</label
+        >
+      </div>
+
+      <div
+        class="form-check form-switch"
+        (click)="upgradableItems.patchValue(!upgradableItems.value)"
+      >
+        <input
+          class="form-check-input"
+          type="checkbox"
+          [formControl]="upgradableItems"
+        />
+        <label class="form-check-label text-light" for="flexSwitchCheckChecked"
+          >Upgradable</label
+        >
+      </div>
+    </div>
+  </ng-template>
+
   <div class="inventory-container inventory">
     <tabset>
       <tab id="tab1">
         <ng-template tabHeading>
-          <span>⚔️</span>
+          <span
+            >⚔️
+            @if (!['xs', 'sm', 'md'].includes(viewportService.screenSize)) {
+              Inventory
+            }
+          </span>
         </ng-template>
-        <div class="d-flex gap-3 align-items-center">
-          <div
-            class="form-check form-switch"
-            (click)="
-              multipleSelection.patchValue(!multipleSelection.value);
-              selectedMultipleItems = []
-            "
-          >
-            <input
-              class="form-check-input"
-              type="checkbox"
-              [formControl]="multipleSelection"
-            />
-            <label
-              class="form-check-label text-light"
-              for="flexSwitchCheckChecked"
-              >Multiple</label
-            >
-          </div>
-
-          <div
-            class="form-check form-switch"
-            (click)="upgradableItems.patchValue(!upgradableItems.value)"
-          >
-            <input
-              class="form-check-input"
-              type="checkbox"
-              [formControl]="upgradableItems"
-            />
-            <label
-              class="form-check-label text-light"
-              for="flexSwitchCheckChecked"
-              >Upgradable</label
-            >
-          </div>
-        </div>
+        <ng-container *ngTemplateOutlet="extraFilters"></ng-container>
 
         <app-item-inventory
           class="overflow-auto"
@@ -68,7 +73,42 @@
       </tab>
       <tab>
         <ng-template tabHeading>
-          <span>🧱</span>
+          <span
+            >🛡️
+            @if (!['xs', 'sm', 'md'].includes(viewportService.screenSize)) {
+              Equipped
+            }
+          </span>
+        </ng-template>
+        <ng-container *ngTemplateOutlet="extraFilters"></ng-container>
+
+        <app-item-inventory
+          class="overflow-auto"
+          [showContextualMenu]="true"
+          [multipleSelection]="!!multipleSelection.value"
+          [contextMenuTemplate]="'anvil'"
+          [items]="playerEquippedItems$ | async"
+          [sockets]="currentSize$ | async"
+          [disableDND]="false"
+          [boxSize]="40"
+          [calculatedStack]="calculatedStackRule"
+          (onDragStart)="hovered = true"
+          (onDragEnd)="hovered = false"
+          (onDoubleClick)="
+            !!$event ? (selectedMultipleItems = [$event]) : false
+          "
+          [(selectedItems)]="selectedMultipleItems"
+        >
+        </app-item-inventory>
+      </tab>
+      <tab>
+        <ng-template tabHeading>
+          <span
+            >🧱
+            @if (!['xs', 'sm', 'md'].includes(viewportService.screenSize)) {
+              Mats
+            }
+          </span>
         </ng-template>
         <app-materials-inventory
           [items]="currentMaterials"

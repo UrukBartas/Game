@@ -405,7 +405,16 @@
     *ngFor="let item of filteredItems"
     (contextmenu)="
       actionable
-        ? contextMenuService.onContextMenu($event, contextOptions, item)
+        ? contextMenuService.isTouchDevice()
+          ? false
+          : contextMenuService.onContextMenu($event, contextOptions, item)
+        : false
+    "
+    (press)="
+      actionable
+        ? contextMenuService.isTouchDevice()
+          ? contextMenuService.onContextMenu($event, contextOptions, item)
+          : false
         : false
     "
     (appDoubleClick)="actionable ? open(item) : false"

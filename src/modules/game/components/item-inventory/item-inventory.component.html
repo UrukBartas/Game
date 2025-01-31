@@ -36,13 +36,24 @@
     <app-item-box
       (contextmenu)="
         actionable
-          ? contextMenuService.onContextMenu($event, contextOptions)
+          ? contextMenuService.isTouchDevice()
+            ? false
+            : contextMenuService.onContextMenu($event, contextOptions)
+          : false
+      "
+      (press)="
+        actionable
+          ? contextMenuService.isTouchDevice()
+            ? contextMenuService.onContextMenu($event, contextOptions)
+            : false
           : false
       "
       (click)="addToSelectedItems(item)"
       (mouseover)="onHover.emit(item)"
       (mouseout)="onHover.emit(null)"
-      (dndStart)="actionable ? onDragStart.emit({ event: $event, data: item }) : false"
+      (dndStart)="
+        actionable ? onDragStart.emit({ event: $event, data: item }) : false
+      "
       (dndEnd)="actionable ? onDragEnd.emit($event) : false"
       (appDoubleClick)="actionable ? onDoubleClick.emit(item) : false"
       [dndDraggable]="item"
