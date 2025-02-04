@@ -3,7 +3,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Item, ItemType } from 'src/modules/core/models/items.model';
-import { fillInventoryBasedOnPlayerSockets } from 'src/modules/utils';
+import {
+  fillInventoryBasedOnPlayerSockets,
+  getShowItemCompare,
+  globalCalculatedStackRule,
+} from 'src/modules/utils';
 import { ContextMenuService } from 'src/services/context-menu.service';
 import { ItemService } from 'src/services/item.service';
 import { ViewportService } from 'src/services/viewport.service';
@@ -20,7 +24,7 @@ export class ItemInventoryComponent extends BaseInventoryComponent {
   @Input() equippedItemOfType: Item;
   @Input() showContextualMenu = false;
   @Input() contextMenuTemplate: 'anvil' | 'default' = 'default';
-  @Input() calculatedStack: Function;
+  @Input() calculatedStack: Function = globalCalculatedStackRule;
   @Output() onDragStart = new EventEmitter<any>();
   @Output() onDragEnd = new EventEmitter<any>();
   @Output() onDoubleClick = new EventEmitter<any>();
@@ -60,17 +64,7 @@ export class ItemInventoryComponent extends BaseInventoryComponent {
   }
 
   getShowItemCompare(): boolean {
-    switch (this.viewportService.screenSize) {
-      case 'xxl':
-      case 'xl':
-      case 'lg':
-        return true;
-      case 'md':
-      case 'xs':
-      case 'sm':
-      default:
-        return false;
-    }
+    return getShowItemCompare(this.viewportService);
   }
 
   public filterByName() {}

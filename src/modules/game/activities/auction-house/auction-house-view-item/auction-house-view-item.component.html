@@ -68,6 +68,32 @@
             Stack of {{ listing.quantity }}
           </div>
         </div>
+        <div
+          class="form-group mb-2 w-100"
+          *ngIf="
+            listing.status == 'ACTIVE' &&
+            listing.seller.id == (player$ | async).id
+          "
+        >
+          <label for="characterName" class="text-third">Edit price tag</label>
+          <div class="d-flex">
+            <input
+              #inputPrice
+              type="number"
+              class="form-control"
+              id="characterName"
+              [value]="listing.price"
+              name="characterName"
+            />
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="changePrice(inputPrice.value)"
+            >
+              <i class="fa-solid fa-check"></i>
+            </button>
+          </div>
+        </div>
         <tabset class="w-100">
           <tab>
             <ng-template tabHeading>

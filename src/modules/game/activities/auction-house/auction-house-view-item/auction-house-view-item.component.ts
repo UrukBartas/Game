@@ -83,6 +83,16 @@ export class AuctionHouseViewItemComponent {
     return 40;
   }
 
+  public async changePrice(newPrice: any) {
+    await firstValueFrom(
+      this.auctionService.changePrice$(this.listing.id, newPrice)
+    );
+    this.toast.info(
+      `Item price has been changed to ${newPrice} Golden Uruks.`,
+      'Successful operation!'
+    );
+  }
+
   createLineChart(series: { price: number; date: string }[]): void {
     this.chartOptions = {
       tooltip: {

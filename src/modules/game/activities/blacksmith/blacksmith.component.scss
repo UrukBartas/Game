@@ -167,9 +167,6 @@
 }
 
 app-item-inventory {
-  .stack {
-    font-size: 16px !important;
-  }
   .item-inventory {
     @include media-breakpoint-down(sm) {
       max-height: 25vh;

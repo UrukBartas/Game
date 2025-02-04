@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
-import { firstValueFrom } from 'rxjs';
 import { Item, ItemType } from 'src/modules/core/models/items.model';
+import { BlacksmithModalComponent } from 'src/modules/game/activities/blacksmith/modal/blacksmith-modal.component';
 import { ContextMenuService } from 'src/services/context-menu.service';
 import { ItemService } from 'src/services/item.service';
+import { RefreshPlayer } from 'src/store/main.store';
 
 @Component({
   selector: 'app-context-menu-inventory-options',
@@ -23,14 +26,28 @@ export class ContextMenuInventoryOptionsComponent {
   @Output() equipLeftHand = new EventEmitter<void>();
   @Output() clickDestroy = new EventEmitter<void>();
   public itemType = ItemType;
+  public store = inject(Store);
+  modalService = inject(BsModalService);
   contextMenuService = inject(ContextMenuService);
 
   private itemService = inject(ItemService);
   private toast = inject(ToastrService);
 
   public async repairItem(item: Item) {
-    await firstValueFrom(this.itemService.getRepairItems([item.id]));
-    this.toast.success('Repair of ' + item.itemData.name + ' was successful!');
+    const config: ModalOptions = {
+      initialState: {
+        action: 'repairs',
+        items: [item],
+        onJobDone: (result) => {
+          this.store.dispatch(new RefreshPlayer());
+          this.toast.success(
+            'Repair of ' + item.itemData.name + ' was successful!'
+          );
+        },
+      },
+    };
+    const ref = this.modalService.show(BlacksmithModalComponent, config);
+    //  await firstValueFrom(this.itemService.getRepairItems([item.id]));
     this.contextMenuService.hideContextMenu();
   }
 }

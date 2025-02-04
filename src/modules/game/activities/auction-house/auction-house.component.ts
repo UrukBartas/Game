@@ -8,24 +8,28 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Store } from '@ngxs/store';
 import { cloneDeep } from 'lodash-es';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
-import { debounceTime, tap } from 'rxjs';
+import { debounceTime, filter, map, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ItemType, Rarity } from 'src/modules/core/models/items.model';
+import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { MarketListing } from 'src/modules/core/models/market-listing.model';
 import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
 import {
   getGenericItemItemData,
   getRarityBasedOnIRI,
   getRarityColor,
+  getShowItemCompare,
 } from 'src/modules/utils';
 import {
   AuctionHouseService,
   MarketItemType,
   MarketListingPayload,
 } from 'src/services/auction-house.service';
+import { ViewportService } from 'src/services/viewport.service';
+import { MainState } from 'src/store/main.store';
 import { AuctionHouseNewTradeComponent } from './auction-house-new-trade/auction-house-new-trade.component';
 import { AuctionHouseViewItemComponent } from './auction-house-view-item/auction-house-view-item.component';
 
@@ -37,6 +41,7 @@ import { AuctionHouseViewItemComponent } from './auction-house-view-item/auction
 export class AuctionHouseComponent {
   auctionService = inject(AuctionHouseService);
   bsModalService = inject(BsModalService);
+  viewportService = inject(ViewportService);
   private marketListingFilter = signal<MarketListingPayload>({});
   public marketItemType = MarketItemType;
   public itemType = ItemType;
@@ -45,6 +50,23 @@ export class AuctionHouseComponent {
   public lastMarketListingFilter: MarketListingPayload = null;
   getRarityColor = getRarityColor;
   getRarityBasedOnIRI = getRarityBasedOnIRI;
+  store = inject(Store);
+  player$ = this.store
+    .select(MainState.getState)
+    .pipe(map((entry) => entry.player));
+
+  public getItem$ = (itemType: ItemType) => {
+    return this.player$.pipe(
+      filter((player) => !!player),
+      map((player) => player.items),
+      map((items: Array<Item>) => {
+        const foundItem = items.find(
+          (item) => item.itemData.itemType == itemType && item.equipped
+        );
+        return foundItem;
+      })
+    );
+  };
   public sortOrderUp = false;
   public sortType: 'price' | 'recent' = 'recent';
   public prefix = environment.permaLinkImgPref;
@@ -143,6 +165,9 @@ export class AuctionHouseComponent {
         },
       },
     });
+    ref.onHide.subscribe(() =>
+      this.marketListingFilter.set(cloneDeep(this.lastMarketListingFilter))
+    );
   }
 
   public getData(listing: MarketListing) {
@@ -213,5 +238,9 @@ export class AuctionHouseComponent {
 
   public closeModal() {
     this.modalService.hide();
+  }
+
+  getShowItemCompare(): boolean {
+    return getShowItemCompare(this.viewportService);
   }
 }

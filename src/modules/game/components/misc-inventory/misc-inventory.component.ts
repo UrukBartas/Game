@@ -36,6 +36,7 @@ import {
   getMountTimeReductionByRarity,
   getRarityColor,
   getRarityText,
+  getShowItemCompare,
 } from 'src/modules/utils';
 import { ContextMenuService } from 'src/services/context-menu.service';
 import { ItemService } from 'src/services/item.service';
@@ -189,17 +190,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   };
 
   getShowItemCompare(): boolean {
-    switch (this.viewportService.screenSize) {
-      case 'xxl':
-      case 'xl':
-      case 'lg':
-        return true;
-      case 'md':
-      case 'xs':
-      case 'sm':
-      default:
-        return false;
-    }
+    return getShowItemCompare(this.viewportService);
   }
 
   public spinEndedHandle() {

@@ -17,7 +17,11 @@ import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Item } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
-import { animateElement, durabilityIsEnough } from 'src/modules/utils';
+import {
+  animateElement,
+  durabilityIsEnough,
+  globalCalculatedStackRule
+} from 'src/modules/utils';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
@@ -45,9 +49,7 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
   resultItem;
   hovered = false;
 
-  public calculatedStackRule = (item: Item) => {
-    return !!item && !!item.canBeUpgraded ? '✨' : '';
-  };
+  calculatedStackRule = globalCalculatedStackRule;
 
   public filterByUpgradableItems = (items: Item[]) => {
     if (!!this.upgradableItems.value)

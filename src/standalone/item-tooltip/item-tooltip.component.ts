@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
 import {
+  calculatedDurabilityRule,
   getDurabilityPercentage,
   getDurabilityTier,
   getRarityBasedOnIRI,
@@ -185,6 +186,7 @@ export class ItemTooltipComponent {
   public getRarityText = getRarityText;
   public getRarityBasedOnIRI = getRarityBasedOnIRI;
   public formatNumberFn = this.formatNumber;
+  public durabilityIndicator = calculatedDurabilityRule
   public viewportService = inject(ViewportService);
   public route = inject(ActivatedRoute);
   public rarityEnum = Rarity;

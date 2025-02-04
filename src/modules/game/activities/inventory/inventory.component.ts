@@ -34,6 +34,7 @@ import {
   getRarityBasedOnIRI,
   getRarityColor,
   getRarityText,
+  globalCalculatedStackRule,
 } from 'src/modules/utils';
 import { ContextMenuService } from 'src/services/context-menu.service';
 import { ItemService } from 'src/services/item.service';
@@ -69,6 +70,7 @@ export class InventoryComponent extends TemplatePage {
   walletService = inject(WalletService);
   public activeSlideIndex = 0;
   public maxLevel = 10;
+  calculatedStackRule = globalCalculatedStackRule;
   public currentSize$ = this.store.select(MainState.getState).pipe(
     filter((player) => !!player),
     map((entry) => entry.player.sockets)

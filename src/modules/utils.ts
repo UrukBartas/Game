@@ -1,7 +1,43 @@
+import { ViewportService } from 'src/services/viewport.service';
 import { AnimateSettingsModel } from './core/models/animate-callback.model';
 import { Item, Rarity } from './core/models/items.model';
 import { PlayerModel } from './core/models/player.model';
 import { ItemTypeSC } from './game/activities/export-import-nft/enums/ItemTypesSC';
+
+export const getShowItemCompare = (viewportService: ViewportService) => {
+  switch (viewportService.screenHeight) {
+    case 'xxl':
+    case 'xl':
+    case 'lg':
+    case 'md':
+      return true;
+    case 'xs':
+    case 'sm':
+    default:
+      return false;
+  }
+};
+
+export const globalCalculatedStackRule = (item: Item) => {
+  return [calculatedStackRule(item), calculatedDurabilityRule(item)].join(' ');
+};
+
+export const calculatedStackRule = (item: Item) => {
+  return !!item && !!item.canBeUpgraded ? '✨' : '';
+};
+
+export const calculatedDurabilityRule = (item: Item) => {
+  const percentage = getDurabilityPercentage(
+    item.durability,
+    item.itemData.rarity
+  );
+  if (percentage > 25 && percentage <= 50) {
+    return '⚠️';
+  } else if (percentage <= 25) {
+    return '💀';
+  }
+  return '';
+};
 
 function blendColors(color: string, percent: number): string {
   const f = parseInt(color.slice(1), 16);

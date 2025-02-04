@@ -50,6 +50,7 @@
                   <app-item-inventory
                     [items]="currentInventory"
                     [sockets]="currentSize$ | async"
+                    [calculatedStack]="calculatedStackRule"
                     [equippedItemOfType]="
                       !!hoveredItem
                         ? (this.getItem$(

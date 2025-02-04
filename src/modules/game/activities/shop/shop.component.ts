@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
-import { animateElement } from 'src/modules/utils';
+import { animateElement, getShowItemCompare } from 'src/modules/utils';
 import { ShopService } from 'src/services/shop.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
@@ -285,7 +285,6 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
     return false;
   }
 
-
   getButtonSize() {
     switch (this.viewportService.screenSize) {
       case 'xxl':
@@ -301,16 +300,6 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
   }
 
   getShowItemCompare(): boolean {
-    switch (this.viewportService.screenHeight) {
-      case 'xxl':
-      case 'xl':
-      case 'lg':
-      case 'md':
-        return true;
-      case 'xs':
-      case 'sm':
-      default:
-        return false;
-    }
+    return getShowItemCompare(this.viewportService);
   }
 }
