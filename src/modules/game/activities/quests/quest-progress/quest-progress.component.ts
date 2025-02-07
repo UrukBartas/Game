@@ -22,8 +22,8 @@ export class QuestProgressComponent extends TemplatePage {
   quest: QuestModel;
   questStarted = false;
   @Select(MainState.getPlayer) player$: Observable<PlayerModel>;
-  public prefix = environment.permaLinkImgPref;
-  
+  public prefix = ViewportService.getPreffixImg();
+
   constructor(
     public viewportService: ViewportService,
     private store: Store

@@ -1,3 +1,6 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
 #missions {
   height: 100%;
 
@@ -54,9 +57,15 @@
 
   .quest .image-container {
     background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/missions/quest.webp');
+    @include media-breakpoint-down(sm) {
+      background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets_mobile/assets/missions/quest.webp');
+    }
   }
 
   .adventure .image-container {
     background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/missions/crypt.webp');
+    @include media-breakpoint-down(sm) {
+      background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets_mobile/assets/missions/crypt.webp');
+    }
   }
 }

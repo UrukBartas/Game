@@ -1,9 +1,14 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
 #login {
   background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/login/login.webp');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-
+  @include media-breakpoint-down(sm) {
+    background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets_mobile/assets/login/login.webp');
+  }
   .email-container {
     width: 100%;
     display: flex;

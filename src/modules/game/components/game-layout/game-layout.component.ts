@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { NotificationResponseModel } from 'src/modules/core/models/notifications.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { CompressNumberPipe } from 'src/modules/core/pipes/compress-number.pipe';
@@ -15,9 +14,9 @@ import { QuestTimerService } from 'src/services/quest-timer.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import {
-  DisconnectWallet,
-  MainState,
-  MainStateModel,
+    DisconnectWallet,
+    MainState,
+    MainStateModel,
 } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component';
 import { InboxModalComponent } from '../inbox-modal/inbox-modal.component';
@@ -33,7 +32,7 @@ export class GameLayoutComponent {
   public getActiveRoute = () => {
     return this.routesNavigation.find((entry) => entry.path == this.router.url);
   };
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   public routesNavigation: any[] = [
     {
       path: '/presale',

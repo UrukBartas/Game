@@ -1,9 +1,9 @@
 import { Component, inject, NgZone, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { take } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { PvPFightService } from 'src/services/pvp-fight.service';
+import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
   selector: 'app-challenge-modal',
@@ -24,7 +24,7 @@ export class ChallengeModalComponent implements OnInit {
   modalRef = inject(BsModalRef);
   pvpFightService = inject(PvPFightService);
   ngZone = inject(NgZone);
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   autobattleTimeout = null;
   private countdownInterval: any;
 

@@ -12,11 +12,11 @@ import { Preferences } from '@capacitor/preferences';
 import { Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom, tap } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Realm } from 'src/modules/core/models/session.model';
 import { AuthService } from 'src/services/auth.service';
 import { SessionService } from 'src/services/session.service';
+import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import { LoginPlayer, MainState } from 'src/store/main.store';
 import { passwordPattern } from '../edit-character/edit-character.component';
@@ -32,7 +32,7 @@ export class ConnectComponent
 {
   @ViewChild('threeContainer', { static: true })
   threeContainer!: ElementRef<HTMLDivElement>;
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   walletService = inject(WalletService);
   authService = inject(AuthService);
   toast = inject(ToastrService);

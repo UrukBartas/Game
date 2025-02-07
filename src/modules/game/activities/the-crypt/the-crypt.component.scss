@@ -14,6 +14,9 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  @include media-breakpoint-down(sm) {
+    background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets_mobile/assets/backgrounds/crypt.webp');
+  }
 }
 
 .three-container {

@@ -1,3 +1,6 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
 #shopping {
   height: 100%;
 
@@ -54,9 +57,15 @@
 
   .quest .image-container {
     background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/shop/shop.png');
+    @include media-breakpoint-down(sm) {
+      background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets_mobile/assets/shop/shop.png');
+    }
   }
 
   .adventure .image-container {
     background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/auction-house/auction-house.webp');
+    @include media-breakpoint-down(sm) {
+      background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets_mobile/assets/auction-house/auction-house.webp');
+    }
   }
 }

@@ -64,6 +64,7 @@
     background-position-x: 80%;
     @include media-breakpoint-down(sm) {
       background-position-x: 65%;
+      background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets_mobile/assets/blacksmith/blacksmith.webp');
     }
   }
 

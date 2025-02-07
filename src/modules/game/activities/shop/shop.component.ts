@@ -1,14 +1,13 @@
 import { DecimalPipe } from '@angular/common';
 import {
-  AfterViewInit,
-  Component,
-  inject,
-  ViewEncapsulation,
+    AfterViewInit,
+    Component,
+    inject,
+    ViewEncapsulation,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { filter, firstValueFrom, map, take } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
@@ -38,7 +37,7 @@ export class ShopComponent extends TemplatePage implements AfterViewInit {
   premiumRollsNumber = 0;
   public selectedTab = '0';
   public miscellanyItemType = MiscellanyItemType;
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   player$ = this.store
     .select(MainState.getState)
     .pipe(map((entry) => entry.player));

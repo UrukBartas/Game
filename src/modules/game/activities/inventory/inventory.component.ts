@@ -77,6 +77,7 @@ export class InventoryComponent extends TemplatePage {
   );
   public selectedItemSet!: ItemSet;
   containerExpanded = false;
+  public prefix = ViewportService.getPreffixImg();
 
   public async activateSilhouette(id: MiscellanyItemIdentifier) {
     const set = await firstValueFrom(this.miscService.setSilhouette(id));

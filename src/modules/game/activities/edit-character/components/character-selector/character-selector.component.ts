@@ -3,7 +3,6 @@ import { Store } from '@ngxs/store';
 import { cloneDeep } from 'lodash-es';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { firstValueFrom } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import {
   MiscellanyItemData,
   MiscellanyItemIdentifier,
@@ -12,6 +11,7 @@ import { PlayerClass } from 'src/modules/core/models/player.model';
 import { getRarityColor } from 'src/modules/utils';
 import { MiscellanyService } from 'src/services/miscellany.service';
 import { PlayerService } from 'src/services/player.service';
+import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer, SetSkins } from 'src/store/main.store';
 import SwiperCore, {
   EffectCoverflow,
@@ -50,7 +50,7 @@ export class ClassSelectorComponent implements OnInit {
 
   modalRef = inject(BsModalRef);
   store = inject(Store);
-  imagePrefix = environment.permaLinkImgPref;
+  imagePrefix = ViewportService.getPreffixImg();
   classes = [];
   selectedClass!: PlayerClass;
   skins: MiscellanyItemData[] = [];

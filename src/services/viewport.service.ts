@@ -1,23 +1,25 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ViewportService {
+  public static currentStaticSize = 'xs';
   public screenSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' =
-    this.getViewport();
+    ViewportService.getViewport();
   public screenWidth: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' =
     this.getViewportWidth();
   public screenHeight: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl' =
     this.getViewportHeight();
   public screenSizeChanges: Subject<'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'> =
-    new Subject();
+    new BehaviorSubject(ViewportService.getViewport());
 
   constructor(private zone: NgZone) {
     window.addEventListener('resize', () => {
       this.zone.run(() => {
-        this.screenSize = this.getViewport();
+        this.screenSize = ViewportService.getViewport();
         this.screenWidth = this.getViewportWidth();
         this.screenHeight = this.getViewportHeight();
         this.screenSizeChanges.next(this.screenSize);
@@ -25,7 +27,20 @@ export class ViewportService {
     });
   }
 
-  private getViewport() {
+  static getPreffixImg() {
+    const currentSize = ViewportService.getViewport();
+    let res = environment.permaLinkImgPrefMobile;
+    switch (currentSize) {
+      case 'xxl':
+      case 'xl':
+      case 'lg':
+        res = environment.permaLinkImgPref;
+    }
+    console.log(res);
+    return res;
+  }
+
+  private static getViewport() {
     const vmax = Math.max(
       Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
       Math.max(document.documentElement.clientHeight, window.innerHeight || 0)

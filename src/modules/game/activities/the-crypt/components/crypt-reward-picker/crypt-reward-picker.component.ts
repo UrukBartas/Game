@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { CryptService } from 'src/services/crypt.service';
+import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
   selector: 'app-crypt-reward-picker',
@@ -10,7 +10,7 @@ import { CryptService } from 'src/services/crypt.service';
 export class CryptRewardPickerComponent {
   crypt = inject(CryptService);
   possibleRewards$ = this.crypt.getRewards();
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   @Output() rewardChosen = new EventEmitter<any>();
 
   pickReward(reward: any) {

@@ -8,10 +8,10 @@ import {
   inject,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { environment } from 'src/environments/environment';
 import { Item } from 'src/modules/core/models/items.model';
 import { getGenericItemItemData } from 'src/modules/utils';
 import { SoundService } from 'src/services/sound.service';
+import { ViewportService } from 'src/services/viewport.service';
 import { GenericItemTooltipComponent } from '../generic-item-tooltip/generic-item-tooltip.component';
 import { ItemBoxComponent } from '../item-box/item-box.component';
 import { ItemTooltipComponent } from '../item-tooltip/item-tooltip.component';
@@ -37,7 +37,7 @@ export class ItemRouletteComponent {
   interval: any;
   store = inject(Store);
   sound = inject(SoundService);
- public prefix = environment.permaLinkImgPref;
+ public prefix = ViewportService.getPreffixImg();
   @Output() spinEnded = new EventEmitter<void>();
   public spinRunning = false;
 

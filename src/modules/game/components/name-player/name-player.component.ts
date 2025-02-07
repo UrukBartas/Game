@@ -2,9 +2,9 @@ import { Component, inject, Input } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { AuthService } from 'src/services/auth.service';
+import { ViewportService } from 'src/services/viewport.service';
 import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component';
 
 @Component({
@@ -18,7 +18,7 @@ export class NamePlayerComponent {
   bsModalService = inject(BsModalService);
   authService = inject(AuthService);
   toastService = inject(ToastrService);
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
 
   public clickedIcon() {
     if (!!this.player.emailVerified || this.disabledTrigger) return;

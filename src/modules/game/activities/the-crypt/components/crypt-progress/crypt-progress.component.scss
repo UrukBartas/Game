@@ -1,9 +1,15 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
 .crypt-progress {
   position: relative;
   display: flex;
   align-items: center;
   flex-direction: column;
   background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/backgrounds/sewers.webp');
+  @include media-breakpoint-down(sm) {
+    background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets_mobile/assets/backgrounds/sewers.webp');
+  }
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

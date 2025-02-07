@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { firstValueFrom } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 @Component({
   selector: 'app-presale-claim-info-modal',
@@ -17,7 +17,7 @@ export class PresaleClaimInfoModalComponent {
   walletService = inject(WalletService);
   router = inject(Router);
 
-  public preffix = environment.permaLinkImgPref;
+  public preffix = ViewportService.getPreffixImg();
 
   public async redirectToOpenBox() {
     const address = await firstValueFrom(this.walletService.getValidAddress$);

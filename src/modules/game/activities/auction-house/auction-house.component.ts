@@ -1,11 +1,11 @@
 import {
-  Component,
-  computed,
-  effect,
-  inject,
-  signal,
-  TemplateRef,
-  WritableSignal,
+    Component,
+    computed,
+    effect,
+    inject,
+    signal,
+    TemplateRef,
+    WritableSignal,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
@@ -13,20 +13,19 @@ import { cloneDeep } from 'lodash-es';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { debounceTime, filter, map, tap } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { MarketListing } from 'src/modules/core/models/market-listing.model';
 import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
 import {
-  getGenericItemItemData,
-  getRarityBasedOnIRI,
-  getRarityColor,
-  getShowItemCompare,
+    getGenericItemItemData,
+    getRarityBasedOnIRI,
+    getRarityColor,
+    getShowItemCompare,
 } from 'src/modules/utils';
 import {
-  AuctionHouseService,
-  MarketItemType,
-  MarketListingPayload,
+    AuctionHouseService,
+    MarketItemType,
+    MarketListingPayload,
 } from 'src/services/auction-house.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
@@ -69,7 +68,7 @@ export class AuctionHouseComponent {
   };
   public sortOrderUp = false;
   public sortType: 'price' | 'recent' = 'recent';
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   marketSubtypes = [
     { label: 'Lootbox', subtype: MiscellanyItemType.Lootbox },
     { label: 'Recipe', subtype: MiscellanyItemType.Recipe },

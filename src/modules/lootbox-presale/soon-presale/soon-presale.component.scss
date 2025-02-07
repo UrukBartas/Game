@@ -1,7 +1,14 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
+
 .bg {
   background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/misc/presale-announce.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   height: 100%;
+  @include media-breakpoint-down(sm) {
+    background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets_mobile/assets/misc/presale-announce.png');
+  }
 }

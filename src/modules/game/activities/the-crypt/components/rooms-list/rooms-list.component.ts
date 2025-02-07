@@ -10,11 +10,11 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { cloneDeep } from 'lodash';
-import { environment } from 'src/environments/environment';
 import { CryptEncounterModel } from 'src/modules/core/models/crypt.model';
 import { Rarity } from 'src/modules/core/models/items.model';
 import { OrderByPipe } from 'src/modules/core/pipes/order-by.pipe';
 import { getRarityColor } from 'src/modules/utils';
+import { ViewportService } from 'src/services/viewport.service';
 
 @Component({
   selector: 'app-rooms-list',
@@ -26,7 +26,7 @@ export class RoomsListComponent {
   @ViewChild('roomsListContainer') roomsListContainer!: ElementRef;
   sort = inject(OrderByPipe);
   @Input() currentLevel: number = 0;
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   getRarityColor = getRarityColor;
   @Input() public set encounters(data: CryptEncounterModel[]) {
     const cloned = cloneDeep(

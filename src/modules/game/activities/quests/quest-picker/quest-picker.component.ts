@@ -1,22 +1,21 @@
 import {
-  Component,
-  computed,
-  EventEmitter,
-  inject,
-  Input,
-  Output,
-  signal,
+    Component,
+    computed,
+    EventEmitter,
+    inject,
+    Input,
+    Output,
+    signal,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { firstValueFrom, map, take, tap } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Rarity } from 'src/modules/core/models/items.model';
 import {
-  MonsterType,
-  QuestDataModel,
+    MonsterType,
+    QuestDataModel,
 } from 'src/modules/core/models/quest-data.model';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
@@ -55,7 +54,7 @@ export class QuestPickerComponent extends TemplatePage {
   statService = inject(StatsService);
   @Output() questChanged = new EventEmitter<QuestModel>();
   loading = false;
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
 
   public slots$ = this.store
     .select(MainState.getState)
@@ -98,7 +97,7 @@ export class QuestPickerComponent extends TemplatePage {
   };
 
   public getPathMonsterType = (questData: QuestDataModel) => {
-    return environment.permaLinkImgPref+ `/assets/quests/types/${questData.monsterType}.png`;
+    return ViewportService.getPreffixImg()+ `/assets/quests/types/${questData.monsterType}.png`;
   };
 
   constructor(

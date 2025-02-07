@@ -3,11 +3,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import {
-  getAccount,
-  getNetwork,
-  switchNetwork,
-  waitForTransaction,
-  watchNetwork,
+    getAccount,
+    getNetwork,
+    switchNetwork,
+    waitForTransaction,
+    watchNetwork,
 } from '@wagmi/core';
 import { ethers } from 'ethers';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -15,20 +15,19 @@ import { TabsetComponent } from 'ngx-bootstrap/tabs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import {
-  BehaviorSubject,
-  catchError,
-  EMPTY,
-  filter,
-  firstValueFrom,
-  forkJoin,
-  from,
-  interval,
-  map,
-  Observable,
-  startWith,
-  switchMap,
+    BehaviorSubject,
+    catchError,
+    EMPTY,
+    filter,
+    firstValueFrom,
+    forkJoin,
+    from,
+    interval,
+    map,
+    Observable,
+    startWith,
+    switchMap,
 } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Consumable } from 'src/modules/core/models/consumable.model';
 import { Item } from 'src/modules/core/models/items.model';
@@ -74,7 +73,7 @@ export class ExportImportNftComponent extends TemplatePage {
   NFTContractService = inject(NFTContractService);
   PRESALEContractService = inject(PresaleContractService);
   activatedRoute = inject(ActivatedRoute);
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   public activeNetworkId = new BehaviorSubject<number>(0);
   public activeCorrectNetwork = this.activeNetworkId.pipe(
     filter((entry) => !!entry)

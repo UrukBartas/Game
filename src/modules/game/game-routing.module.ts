@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { AdventuresComponent } from './activities/adventures/adventures.component';
 import { AuctionHouseComponent } from './activities/auction-house/auction-house.component';
 import { BlacksmithComponent } from './activities/blacksmith/blacksmith.component';
 import { EditCharacterComponent } from './activities/edit-character/edit-character.component';
@@ -70,12 +69,6 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         component: QuestRouterComponent,
         title: 'Quests',
-      },
-      {
-        path: 'adventures',
-        canActivate: [AuthGuard],
-        component: AdventuresComponent,
-        title: 'Adventures',
       },
       {
         path: 'shop',

@@ -25,6 +25,9 @@
   .bg {
     background-color: $black;
     background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/backgrounds/field.png');
+    @include media-breakpoint-down(sm) {
+      background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets_mobile/assets/backgrounds/field.png');
+    }
     background-size: cover;
     background-repeat: no-repeat;
     filter: blur(5px);
@@ -49,6 +52,9 @@
 
   .bg-uruk {
     background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/goldenuruks.png');
+    @include media-breakpoint-down(sm) {
+      background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets_mobile/assets/goldenuruks.png');
+    }
     background-repeat: no-repeat;
     position: absolute;
     width: 100%;

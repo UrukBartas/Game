@@ -30,6 +30,10 @@ import { ItemBoxComponent } from '../../standalone/item-box/item-box.component';
 import { LootboxStatsDisplayerComponent } from '../../standalone/lootbox-stats-displayer/lootbox-stats-displayer.component';
 import { ProgressBarComponent } from '../../standalone/progress-bar/progress-bar.component';
 import { UruksDisplayerComponent } from '../../standalone/uruks-displayer/uruks-displayer.component';
+import { BaseFightComponent } from '../core/components/base-fight/base-fight.component';
+import { FightLogsModalComponent } from '../core/components/base-fight/components/fight-logs-modal/fight-logs-modal.component';
+import { FighterStatsTooltipComponent } from '../core/components/base-fight/components/fighter-stats-tooltip/fighter-stats-tooltip.component';
+import { FighterStatusComponent } from '../core/components/base-fight/components/fighter-status/fighter-status.component';
 import { DoubleClickDirective } from '../core/directives/double-click.directive';
 import { SubtextSizeDirective } from '../core/directives/subtext-size.directive';
 import { SubtitleSizeDirective } from '../core/directives/subtitle-size.directive';
@@ -42,9 +46,6 @@ import { CompressNumberPipe } from '../core/pipes/compress-number.pipe';
 import { ItemdataToItemPipe } from '../core/pipes/itemdata-to-item.pipe';
 import { OrderByPipe } from '../core/pipes/order-by.pipe';
 import { StackPipe } from '../core/pipes/stack.pipe';
-import { AdventurePickerComponent } from './activities/adventures/adventure-picker/adventure-picker.component';
-import { AdventuresRouterComponent } from './activities/adventures/adventures-router.component';
-import { AdventuresComponent } from './activities/adventures/adventures.component';
 import { AuctionHouseNewTradeComponent } from './activities/auction-house/auction-house-new-trade/auction-house-new-trade.component';
 import { AuctionHouseViewItemComponent } from './activities/auction-house/auction-house-view-item/auction-house-view-item.component';
 import { AuctionHouseComponent } from './activities/auction-house/auction-house.component';
@@ -68,6 +69,17 @@ import { QuestResultComponent } from './activities/quests/quest-result/quest-res
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
 import { DailyRollButtonComponent } from './activities/shop/components/daily-roll-button.component';
 import { ShopComponent } from './activities/shop/shop.component';
+import { ShoppingComponent } from './activities/shopping/shopping.component';
+import { CryptFightComponent } from './activities/the-crypt/components/crypt-fight/crypt-fight.component';
+import { CryptFinishedComponent } from './activities/the-crypt/components/crypt-finished/crypt-finished.component';
+import { CryptPlayerStateComponent } from './activities/the-crypt/components/crypt-player-state/crypt-player-state.component';
+import { CryptProgressComponent } from './activities/the-crypt/components/crypt-progress/crypt-progress.component';
+import { CryptResultComponent } from './activities/the-crypt/components/crypt-result/crypt-result.component';
+import { CryptRewardPickerComponent } from './activities/the-crypt/components/crypt-reward-picker/crypt-reward-picker.component';
+import { CryptStartComponent } from './activities/the-crypt/components/crypt-start/crypt-start.component';
+import { CryptoFailedComponent } from './activities/the-crypt/components/crypto-failed/crypto-failed.component';
+import { RoomsListComponent } from './activities/the-crypt/components/rooms-list/rooms-list.component';
+import { TheCryptComponent } from './activities/the-crypt/the-crypt.component';
 import { StakeRemoveRequestModalComponent } from './activities/the-mine/stake-remove-request-modal/stake-remove-request-modal.component';
 import { TheMineInfoModalComponent } from './activities/the-mine/the-mine-help/the-mine-info-modal.component';
 import { TheMineComponent } from './activities/the-mine/the-mine.component';
@@ -88,21 +100,6 @@ import { PercentStatsComponent } from './components/stats-detail/only-stats/only
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { TitleGeneratorModalComponent } from './components/title-generator-modal/title-generator-modal.component';
 import { GameRoutingModule } from './game-routing.module';
-import { TheCryptComponent } from './activities/the-crypt/the-crypt.component';
-import { CryptRewardPickerComponent } from './activities/the-crypt/components/crypt-reward-picker/crypt-reward-picker.component';
-import { CryptProgressComponent } from './activities/the-crypt/components/crypt-progress/crypt-progress.component';
-import { CryptFightComponent } from './activities/the-crypt/components/crypt-fight/crypt-fight.component';
-import { CryptResultComponent } from './activities/the-crypt/components/crypt-result/crypt-result.component';
-import { CryptFinishedComponent } from './activities/the-crypt/components/crypt-finished/crypt-finished.component';
-import { CryptStartComponent } from './activities/the-crypt/components/crypt-start/crypt-start.component';
-import { CryptoFailedComponent } from './activities/the-crypt/components/crypto-failed/crypto-failed.component';
-import { RoomsListComponent } from './activities/the-crypt/components/rooms-list/rooms-list.component';
-import { CryptPlayerStateComponent } from './activities/the-crypt/components/crypt-player-state/crypt-player-state.component';
-import { BaseFightComponent } from '../core/components/base-fight/base-fight.component';
-import { FighterStatusComponent } from '../core/components/base-fight/components/fighter-status/fighter-status.component';
-import { FighterStatsTooltipComponent } from '../core/components/base-fight/components/fighter-stats-tooltip/fighter-stats-tooltip.component';
-import { FightLogsModalComponent } from '../core/components/base-fight/components/fight-logs-modal/fight-logs-modal.component';
-import { ShoppingComponent } from './activities/shopping/shopping.component';
 
 const directives = [
   ValidInputDirective,
@@ -160,9 +157,6 @@ const pipes = [
     RegisterReferralComponent,
     ItemInventoryComponent,
     ConsumablesInventoryComponent,
-    AdventuresComponent,
-    AdventurePickerComponent,
-    AdventuresRouterComponent,
     MaterialsInventoryComponent,
     InventoryTopbarComponent,
     MiscInventoryComponent,

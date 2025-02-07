@@ -8,16 +8,15 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import {
-  BehaviorSubject,
-  catchError,
-  from,
-  interval,
-  map,
-  startWith,
-  switchMap,
-  tap,
+    BehaviorSubject,
+    catchError,
+    from,
+    interval,
+    map,
+    startWith,
+    switchMap,
+    tap,
 } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Rarity } from 'src/modules/core/models/items.model';
 import { getRarityColor } from 'src/modules/utils';
@@ -65,7 +64,7 @@ export class TheMineComponent extends TemplatePage {
 
   // Constants
   public CONTRACT_IMAGE = 'assets/materials/15.webp';
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
 
   // Injected services
   store = inject(Store);

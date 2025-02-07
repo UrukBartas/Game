@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, TemplateRef } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { ConsumableData } from 'src/modules/core/models/consumable.model';
 import { ItemData, Rarity } from 'src/modules/core/models/items.model';
 import { MaterialData } from 'src/modules/core/models/material.model';
@@ -26,7 +25,7 @@ export class GenericItemTooltipComponent {
   @Input() customTemplate: TemplateRef<any>;
   @Input() extraData: any = null;
   rarityEnum = Rarity;
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   public hasExtraData = () => Object.keys(this.extraData ?? {}).length > 0;
   viewportService = inject(ViewportService);
   public getRarityColor = getRarityColor;

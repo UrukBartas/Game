@@ -5,23 +5,22 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
 import { camelCase } from 'lodash-es';
 import { map } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
 import {
-  calculatedDurabilityRule,
-  getDurabilityPercentage,
-  getDurabilityTier,
-  getRarityBasedOnIRI,
-  getRarityColor,
-  getRarityText,
+    calculatedDurabilityRule,
+    getDurabilityPercentage,
+    getDurabilityTier,
+    getRarityBasedOnIRI,
+    getRarityColor,
+    getRarityText,
 } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
 import { ItemBoxComponent } from '../item-box/item-box.component';
 import {
-  Tier,
-  TierizedProgressBarComponent,
+    Tier,
+    TierizedProgressBarComponent,
 } from '../tierized-progress-bar/tierized-progress-bar.component';
 export const avoidableStats = [
   'id',
@@ -127,7 +126,7 @@ export const getPercentage = (key: string) => {
   styleUrl: './item-tooltip.component.scss',
 })
 export class ItemTooltipComponent {
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   @Input() item: Item;
   @Input() extraData: any = null;
   @Input() compareWith: Item;

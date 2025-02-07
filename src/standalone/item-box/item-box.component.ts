@@ -1,15 +1,14 @@
 import { CommonModule } from '@angular/common';
 import {
-  Component,
-  HostBinding,
-  inject,
-  Input,
-  TemplateRef,
+    Component,
+    HostBinding,
+    inject,
+    Input,
+    TemplateRef,
 } from '@angular/core';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { memoize } from 'lodash-decorators';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { environment } from 'src/environments/environment';
 import { Rarity } from 'src/modules/core/models/items.model';
 import { getRarityColor } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
@@ -42,7 +41,7 @@ export class ItemBoxComponent {
   public isNaNLocal = isNaN;
   getRarityColor = getRarityColor;
   rarityEnum = Rarity;
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
 
   @memoize()
   public addPrefix(image: string) {

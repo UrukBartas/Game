@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, TemplateRef } from '@angular/core';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
-import { environment } from 'src/environments/environment';
 import { CompressNumberPipe } from 'src/modules/core/pipes/compress-number.pipe';
+import { ViewportService } from 'src/services/viewport.service';
 export interface Tier {
   start: number;
   end: number;
@@ -21,7 +21,7 @@ export class TierizedProgressBarComponent {
   @Input() tiers: Tier[] = [];
   @Input() mode: 'default' | 'durability' = 'default';
   @Input() tooltipTemplate: TemplateRef<any>;
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
 
   // Calcula el progreso dentro de un tier específico
   getTierProgress(tier: { start: number; end: number }): number {

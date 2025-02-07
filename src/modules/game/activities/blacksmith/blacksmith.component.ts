@@ -1,10 +1,10 @@
 import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  inject,
-  ViewChild,
-  ViewEncapsulation,
+    AfterViewInit,
+    Component,
+    ElementRef,
+    inject,
+    ViewChild,
+    ViewEncapsulation,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
@@ -13,14 +13,13 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import * as party from 'party-js';
 import { filter, firstValueFrom, map, Subject } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Item } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
 import {
-  animateElement,
-  durabilityIsEnough,
-  globalCalculatedStackRule
+    animateElement,
+    durabilityIsEnough,
+    globalCalculatedStackRule
 } from 'src/modules/utils';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
@@ -43,7 +42,7 @@ export class BlacksmithComponent extends TemplatePage implements AfterViewInit {
   private toast = inject(ToastrService);
   private store = inject(Store);
   public activeSlideIndex = 0;
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   dialog: string;
   showDialog = false;
   resultItem;

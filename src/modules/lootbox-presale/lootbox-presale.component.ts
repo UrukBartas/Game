@@ -18,12 +18,12 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import * as party from 'party-js';
 import { finalize, firstValueFrom, forkJoin, from, map, switchMap } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import {
   LootboxPresaleTypeEnum,
   PresaleContractService,
 } from 'src/services/contracts/presale-contract.service';
 import { MiscellanyService } from 'src/services/miscellany.service';
+import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import { WebSocketService } from 'src/services/websocket.service';
 import { ChainSwitcherComponent } from 'src/standalone/chain-switcher/chain-switcher.component';
@@ -97,7 +97,7 @@ export class LootboxPresaleComponent implements AfterViewInit {
   sliderValue = 1;
   looboxes$ = this.miscService.getPresaleBoxes();
   lastLoadedLootboxes = [] as Array<LootboxDataBlockchain>;
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   public MiscellanyItemType = MiscellanyItemType;
 
   public boxesMap = {

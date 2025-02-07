@@ -12,7 +12,6 @@ import {
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { ConsumableModalComponent } from 'src/modules/game/components/consumable-modal/consumable-modal.component';
 import {
@@ -29,13 +28,13 @@ import {
   TurnActionEnum,
 } from '../../models/fight.model';
 import { TemplatePage } from '../template-page.component';
+import { FightLogsModalComponent } from './components/fight-logs-modal/fight-logs-modal.component';
 import {
   BaseFighterModel,
   BaseFightModel,
   FightTypes,
 } from './models/base-fight.model';
 import { FightAnimationsService } from './services/fight-animations.service';
-import { FightLogsModalComponent } from './components/fight-logs-modal/fight-logs-modal.component';
 
 @Component({
   selector: 'app-base-fight',
@@ -48,7 +47,7 @@ export class BaseFightComponent
   implements OnInit, OnDestroy
 {
   // Constants
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   public fightTypes = FightTypes;
   public buffType = BuffType;
   public turnActions = TurnActionEnum;

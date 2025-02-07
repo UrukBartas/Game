@@ -1,18 +1,17 @@
 import {
-  Component,
-  computed,
-  EventEmitter,
-  inject,
-  OnInit,
-  Output,
-  signal,
+    Component,
+    computed,
+    EventEmitter,
+    inject,
+    OnInit,
+    Output,
+    signal,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { camelCase } from 'lodash-es';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { catchError, firstValueFrom, of, take, throwError } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { Item, Rarity } from 'src/modules/core/models/items.model';
 import { Material, MaterialData } from 'src/modules/core/models/material.model';
 import { durabilityIsEnough, getRarityColor } from 'src/modules/utils';
@@ -42,7 +41,7 @@ export class BlacksmithModalComponent implements OnInit {
   public camelCase = camelCase;
   public objectKeys = Object.keys;
 
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
 
   @Output() tellQuote = new EventEmitter<string>();
 

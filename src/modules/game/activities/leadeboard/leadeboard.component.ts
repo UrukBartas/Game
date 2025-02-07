@@ -5,12 +5,13 @@ import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { debounceTime, first, map, race, take, tap } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Rarity } from 'src/modules/core/models/items.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { getRarityColor, truncateEthereumAddress } from 'src/modules/utils';
 import { PlayerService } from 'src/services/player.service';
+import { PvPFightService } from 'src/services/pvp-fight.service';
+import { ViewportService } from 'src/services/viewport.service';
 import { WebSocketService } from 'src/services/websocket.service';
 import { MainState } from 'src/store/main.store';
 import { ChallengeModalComponent } from '../../components/challenge-modal/challenge-modal.component';
@@ -18,7 +19,6 @@ import { pvpTiers } from './const/pvp-tiers';
 import { questTiers } from './const/quest-tiers';
 import { LeaderboardType } from './enum/leaderboard-type.enum';
 import { PlayerStateEnum } from './enum/player-state.enum';
-import { PvPFightService } from 'src/services/pvp-fight.service';
 
 @Component({
   selector: 'app-leadeboard',
@@ -39,7 +39,7 @@ export class LeadeboardComponent extends TemplatePage {
   public to = signal<Date>(new Date());
   public nameOrWallet = signal('');
   public lastPageSize = 0;
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   public getLeaderboard$ = computed(() => {
     return this.playerService
       .getLeaderboard(

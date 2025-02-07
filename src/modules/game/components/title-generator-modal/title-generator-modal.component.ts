@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { filter, firstValueFrom, map } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { MiscellanyItemData } from 'src/modules/core/models/misc.model';
 import { MiscellanyService } from 'src/services/miscellany.service';
+import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 
 @Component({
@@ -18,7 +18,7 @@ export class TitleGeneratorModalComponent {
   router = inject(Router);
   store = inject(Store);
   miscService = inject(MiscellanyService);
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   public player$ = this.store.select(MainState.getState).pipe(
     filter((player) => !!player),
     map((player) => player.player)

@@ -3,9 +3,9 @@ import { Store } from '@ngxs/store';
 import { Debounce } from 'lodash-decorators';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom, shareReplay, switchMap, tap } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { PlayerService } from 'src/services/player.service';
+import { ViewportService } from 'src/services/viewport.service';
 import { getPercentage } from 'src/standalone/item-tooltip/item-tooltip.component';
 import { RefreshPlayer } from 'src/store/main.store';
 @Component({
@@ -22,7 +22,7 @@ export class GenericStatsComponent {
   toastService = inject(ToastrService);
   store = inject(Store);
 
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
   allowedStatsToUpgrade = [
     'health',
     'armor',

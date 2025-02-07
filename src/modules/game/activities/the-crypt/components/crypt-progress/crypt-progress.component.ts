@@ -1,7 +1,6 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import {
   CryptEncounterModel,
@@ -12,6 +11,7 @@ import { PlayerModel } from 'src/modules/core/models/player.model';
 import { OrderByPipe } from 'src/modules/core/pipes/order-by.pipe';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { getRarityColor } from 'src/modules/utils';
+import { ViewportService } from 'src/services/viewport.service';
 @Component({
   selector: 'app-crypt-progress',
   templateUrl: './crypt-progress.component.html',
@@ -45,7 +45,7 @@ export class CryptProgressComponent extends TemplatePage {
   @Output() startedEncounter = new EventEmitter<CryptEncounterModel>();
   @Output() surrender = new EventEmitter<void>();
   @Output() takeShortBreak = new EventEmitter<void>();
-  public prefix = environment.permaLinkImgPref;
+  public prefix = ViewportService.getPreffixImg();
 
   private modalService = inject(BsModalService);
   sort = inject(OrderByPipe);
