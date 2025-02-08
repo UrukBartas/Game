@@ -101,5 +101,92 @@
         >
       }
     </div>
+  } @else {
+    <div class="notification-lector">
+      <div class="d-flex justify-content-between">
+        <span urText class="text-secondary">{{
+          openedNotification.title
+        }}</span>
+        <span urSubtext class="text-white">{{
+          openedNotification.createdAt | date: 'shortDate'
+        }}</span>
+      </div>
+      <markdown
+        class="markdown"
+        [data]="openedNotification.content"
+        [disableSanitizer]="true"
+      >
+      </markdown>
+    </div>
+
+    <div class="footer">
+      <button
+        (click)="openedNotification = null"
+        class="btn btn-primary back-btn"
+        style="height: fit-content"
+      >
+        <i class="fa-solid fa-arrow-left"></i> Back
+      </button>
+      @if (attachments?.length > 0) {
+        <div class="attachments">
+          <div class="d-flex gap-1 overflow-auto">
+            @for (attachment of attachments; track $index) {
+              <app-item-box
+                [height]="getItemBoxSize()"
+                [width]="getItemBoxSize()"
+                [image]="attachment.data.imageLocal"
+                [stack]="attachment.quantity"
+              >
+                <div tooltip class="tooltip-uruk">
+                  <app-generic-item-tooltip
+                    [item]="attachment.data"
+                  ></app-generic-item-tooltip>
+                </div>
+              </app-item-box>
+            }
+          </div>
+          <button
+            (click)="claimItems(openedNotification)"
+            [disabled]="openedNotification.claimed.includes(playerId)"
+            class="btn btn-secondary ml-2"
+          >
+            @if (openedNotification.claimed.includes(playerId)) {
+              <i class="fa-solid fa-check"></i> Claimed
+            } @else {
+              <i class="fa-solid fa-gift"></i> Claim
+            }
+          </button>
+        </div>
+      }
+    </div>
   }
+
+  <div
+    *ngIf="notifications$ | async as notificationsState"
+    class="pagination-controls"
+  >
+    <button
+      (click)="prevPage()"
+      [disabled]="notificationsState.currentPage === 1"
+    >
+      <i
+        class="bi bi-caret-left-fill"
+        [ngClass]="{ 'disabled-icon': notificationsState.currentPage === 1 }"
+      ></i>
+    </button>
+    <button
+      (click)="nextPage()"
+      [disabled]="
+        notificationsState.currentPage >= notificationsState.totalPages
+      "
+    >
+      <i
+        class="bi bi-caret-right-fill"
+        [ngClass]="{
+          'disabled-icon':
+            notificationsState.currentPage >= notificationsState.totalPages,
+        }"
+      ></i>
+    </button>
+  </div>
 </div>
