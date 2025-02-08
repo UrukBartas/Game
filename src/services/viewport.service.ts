@@ -36,7 +36,6 @@ export class ViewportService {
       case 'lg':
         res = environment.permaLinkImgPref;
     }
-    console.log(res);
     return res;
   }
 

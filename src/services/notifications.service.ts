@@ -2,8 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
-  NotificationModel,
-  NotificationResponseModel,
+  NotificationResponseModel
 } from 'src/modules/core/models/notifications.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 
@@ -47,5 +46,9 @@ export class NotificationsService extends ApiBaseService {
 
   claimAttachments(notificationId: number) {
     return this.get(`/${notificationId}/claim`);
+  }
+
+  setSelectionToRead(notificationIds: number[]): Observable<void> {
+    return this.post('/set-read', { notificationIds });
   }
 }

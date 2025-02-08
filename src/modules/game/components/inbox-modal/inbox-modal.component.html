@@ -1,122 +1,105 @@
 <div id="inbox-modal">
   <div class="title d-flex justify-content-between">
-    <span urText class="text-third"
-      ><i class="fa fa-envelope pr-2"></i> Inbox</span
-    >
+    <span urText class="text-third">
+      <i class="fa fa-envelope pr-2"></i> Inbox
+    </span>
     <div class="btn btn-transparent text-white" (click)="modalRef.hide()">
       <i class="fa fa-x"></i>
     </div>
   </div>
+
   @if (!openedNotification) {
-    <div class="notification-container">
-      @for (notification of (notifications$ | async).notifications; track $index) {
-        <div
-          class="notification d-flex flex-row"
-          (click)="openNotification(notification)"
+    <div class="form-check form-switch">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        id="toggleSelectionMode"
+        [(ngModel)]="selectionMode"
+      />
+      <label class="form-check-label text-light" for="toggleSelectionMode">
+        {{ selectionMode ? 'Multi-Select: ON' : 'Multi-Select: OFF' }}
+      </label>
+    </div>
+
+    <div class="d-flex justify-content-start align-items-center mb-2">
+      <!-- ✅ Toggle para activar selección múltiple -->
+      <div class="d-flex align-items-center">
+        <!-- ✅ Botón "Select All" que solo aparece si el modo selección está activo -->
+        <button
+          *ngIf="selectionMode"
+          class="btn btn-secondary ml-3"
+          (click)="toggleSelectAll()"
         >
-          @if (!notification.opened.includes(playerId)) {
-            <div class="new-notification"></div>
+          {{ allSelected ? 'Deselect All' : 'Select All' }}
+        </button>
+      </div>
+
+      <!-- ✅ Botón "Set to Read" -->
+      <button
+        *ngIf="selectionMode && selectedNotifications.length > 0"
+        class="btn btn-primary"
+        (click)="markSelectedAsRead()"
+      >
+        <i class="fa fa-check"></i> Set to Read
+      </button>
+    </div>
+
+    <div class="notification-container">
+      @for (
+        notification of (notifications$ | async).notifications;
+        track $index
+      ) {
+        <div class="notification d-flex flex-row">
+          <!-- Checkbox solo si el modo selección está activo -->
+          @if (selectionMode) {
+            <input
+              type="checkbox"
+              class="form-check-input mx-2"
+              (change)="toggleSelection(notification)"
+              [checked]="selectedNotifications.includes(notification)"
+            />
           }
-          @if (hasAttachments(notification)) {
-            <i class="fa fa-gift px-2"></i>
-          }
-          @if (notification.titleImage) {
-            <img class="notification-image" [src]="prefix+notification.titleImage" />
-          }
-          <div class="notification-text px-2 d-flex flex-column">
-            <div class="d-flex justify-content-between">
-              <span urText class="text-secondary">{{
-                notification.title
+
+          <div
+            class="d-flex flex-row flex-grow-1"
+            (click)="!selectionMode ? openNotification(notification) : null"
+          >
+            @if (!notification.opened.includes(playerId)) {
+              <div class="new-notification"></div>
+            }
+            @if (hasAttachments(notification)) {
+              <i class="fa fa-gift px-2"></i>
+            }
+            @if (notification.titleImage) {
+              <img
+                class="notification-image"
+                [src]="prefix + notification.titleImage"
+              />
+            }
+
+            <div class="notification-text px-2 d-flex flex-column">
+              <div class="d-flex justify-content-between">
+                <span urText class="text-secondary">{{
+                  notification.title
+                }}</span>
+              </div>
+              <span urSubtext class="text-white">{{
+                notification.description
               }}</span>
             </div>
-            <span urSubtext class="text-white">{{
-              notification.description
-            }}</span>
-          </div>
-          <div class="notification-date">
-            <i urSubtext class="text-white pr-2">{{
-              notification.createdAt | date: 'shortDate'
-            }}</i>
+
+            <div class="notification-date">
+              <i urSubtext class="text-white pr-2">{{
+                notification.createdAt | date: 'shortDate'
+              }}</i>
+            </div>
           </div>
         </div>
       } @empty {
-        <span class="text-white">You have not received any notification yet.</span>
-      }
-    </div>
-  } @else {
-    <div class="notification-lector">
-      <div class="d-flex justify-content-between">
-        <span urText class="text-secondary">{{
-          openedNotification.title
-        }}</span>
-        <span urSubtext class="text-white">{{
-          openedNotification.createdAt | date: 'shortDate'
-        }}</span>
-      </div>
-      <markdown
-        class="markdown"
-        [data]="openedNotification.content"
-        [disableSanitizer]="true"
-      >
-      </markdown>
-    </div>
-
-    <div class="footer">
-      <button
-        (click)="openedNotification = null"
-        class="btn btn-primary back-btn"
-        style="height: fit-content"
-      >
-        <i class="fa-solid fa-arrow-left"></i> Back
-      </button>
-      @if (attachments?.length > 0) {
-        <div class="attachments">
-          <div class="d-flex gap-1 overflow-auto">
-            @for (attachment of attachments; track $index) {
-              <app-item-box
-                [height]="getItemBoxSize()"
-                [width]="getItemBoxSize()"
-                [image]="attachment.data.imageLocal"
-                [stack]="attachment.quantity"
-              >
-                <div tooltip class="tooltip-uruk">
-                  <app-generic-item-tooltip
-                    [item]="attachment.data"
-                  ></app-generic-item-tooltip>
-                </div>
-              </app-item-box>
-            }
-          </div>
-          <button
-            (click)="claimItems(openedNotification)"
-            [disabled]="openedNotification.claimed.includes(playerId)"
-            class="btn btn-secondary ml-2"
-          >
-            @if (openedNotification.claimed.includes(playerId)) {
-              <i class="fa-solid fa-check"></i> Claimed
-            } @else {
-              <i class="fa-solid fa-gift"></i> Claim
-            }
-          </button>
-        </div>
+        <span class="text-white"
+          >You have not received any notification yet.</span
+        >
       }
     </div>
   }
-
-  <div *ngIf="(notifications$ | async) as notificationsState" class="pagination-controls">
-    <button (click)="prevPage()" [disabled]="notificationsState.currentPage === 1">
-      <i
-        class="bi bi-caret-left-fill"
-        [ngClass]="{ 'disabled-icon': notificationsState.currentPage === 1 }"
-      ></i>
-    </button>
-    <button (click)="nextPage()" [disabled]="notificationsState.currentPage >= notificationsState.totalPages">
-      <i
-        class="bi bi-caret-right-fill"
-        [ngClass]="{
-          'disabled-icon': notificationsState.currentPage >= notificationsState.totalPages,
-        }"
-      ></i>
-    </button>
-  </div>
 </div>
