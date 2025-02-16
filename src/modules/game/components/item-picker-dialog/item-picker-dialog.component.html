@@ -1,0 +1,122 @@
+<div id="confirm-modal">
+  <div class="row">
+    <p class="text-third" urTitle>Select item</p>
+  </div>
+  <div class="row">
+    <div class="inventory">
+      <tabset>
+        <tab id="tab1" *ngIf="config.display.itemPicking">
+          <ng-template tabHeading>
+            <span>⚔️</span>
+          </ng-template>
+          <ng-container *ngIf="currentInventory$ | async as inventory">
+            <app-item-inventory
+              [items]="
+                config?.filters?.item
+                  ? config.filters.item(inventory)
+                  : inventory
+              "
+              [sockets]="currentSize$ | async"
+              [showContextualMenu]="false"
+              [disableDND]="false"
+              [(selectedItems)]="selectedItems"
+              [multipleSelection]="!!config?.multipleSelection?.itemPicking"
+              (selectedItemsChange)="
+                selectedMaterials = [];
+                selectedConsumables = [];
+                selectedtableMisc = []
+              "
+            >
+            </app-item-inventory>
+          </ng-container>
+        </tab>
+        <tab *ngIf="config.display.materialPicking">
+          <ng-template tabHeading>
+            <span>🧱</span>
+          </ng-template>
+          <app-materials-inventory
+            [items]="
+              config?.filters?.material
+                ? config.filters.material(currentMaterials$ | async)
+                : (currentMaterials$ | async)
+            "
+            [sockets]="currentSize$ | async"
+            [(selectedItems)]="selectedMaterials"
+            [multipleSelection]="!!config?.multipleSelection?.materialPicking"
+            (selectedItemsChange)="
+              selectedItems = [];
+              selectedConsumables = [];
+              selectedtableMisc = []
+            "
+          >
+          </app-materials-inventory
+        ></tab>
+        <tab *ngIf="config.display.consumablePicking">
+          <ng-template tabHeading>
+            <span>⚗️</span>
+          </ng-template>
+          <app-consumables-inventory
+            [items]="
+              config?.filters?.consumable
+                ? config.filters.consumable(
+                    currentConsumableInventory$
+                      | async
+                      | stack: 'consumableData.name'
+                  )
+                : (currentConsumableInventory$
+                  | async
+                  | stack: 'consumableData.name')
+            "
+            [sockets]="currentSize$ | async"
+            [(selectedItems)]="selectedConsumables"
+            [multipleSelection]="!!config?.multipleSelection?.consumablePicking"
+            (selectedItemsChange)="
+              selectedItems = []; selectedMaterials = []; selectedtableMisc = []
+            "
+          >
+          </app-consumables-inventory>
+        </tab>
+        <tab *ngIf="config.display.miscPicking">
+          <ng-template tabHeading>
+            <span>📜</span>
+          </ng-template>
+          <app-misc-inventory
+            [items]="
+              config?.filters?.misc
+                ? config.filters.misc(
+                    currentMiscInventory$
+                      | async
+                      | stack: 'miscellanyItemData.name'
+                  )
+                : (currentMiscInventory$
+                  | async
+                  | stack: 'miscellanyItemData.name')
+            "
+            [sockets]="currentSize$ | async"
+            [(selectedItems)]="selectedtableMisc"
+            [multipleSelection]="!!config?.multipleSelection?.miscPicking"
+            (selectedItemsChange)="
+              selectedConsumables = [];
+              selectedMaterials = [];
+              selectedItems = []
+            "
+          >
+          </app-misc-inventory>
+        </tab>
+      </tabset>
+    </div>
+  </div>
+
+  <div class="d-flex w-100 justify-content-end pt-3">
+    <button class="btn btn-secondary btn-transparent" (click)="modalRef.hide()">
+      Cancel
+    </button>
+    <button
+      class="btn btn-secondary"
+      [disabled]="!hasSomethingSelected()"
+      (click)="accept()"
+    >
+      Accept
+    </button>
+  </div>
+</div>

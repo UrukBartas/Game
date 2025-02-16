@@ -696,3 +696,30 @@ app-rooms-list {
   background-color: #9d44b5 !important;
   color: #9d44b5 !important;
 }
+
+.modal-dialog {
+  background: #00000091;
+}
+
+.list-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-height: 14rem;
+  gap: 1rem;
+}
+.divider-vertical {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px; /* Ancho del área del divider */
+}
+
+.divider-vertical::after {
+  content: '';
+  width: 2px; /* Grosor de la línea */
+  height: 100%; /* Que ocupe toda la altura */
+  background-color: rgba(255, 255, 255, 0.2); /* Color */
+  display: block;
+}

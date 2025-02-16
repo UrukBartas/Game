@@ -8,14 +8,14 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import {
-    BehaviorSubject,
-    catchError,
-    from,
-    interval,
-    map,
-    startWith,
-    switchMap,
-    tap,
+  BehaviorSubject,
+  catchError,
+  from,
+  interval,
+  map,
+  startWith,
+  switchMap,
+  tap,
 } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Rarity } from 'src/modules/core/models/items.model';

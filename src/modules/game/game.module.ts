@@ -12,6 +12,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { TimeAgoPipe } from 'src/app/time-ago.pipe';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
+import { ItemPickerComponent } from 'src/modules/game/components/item-picker/item-picker.component';
 import { BalanceSelectorComponent } from 'src/standalone/balance-selector/balance-selector.component';
 import { BlacksmithContextMenuComponent } from 'src/standalone/context-menu/blacksmith-context-menu/blacksmith-context-menu.component';
 import { ContextMenuInventoryOptionsComponent } from 'src/standalone/context-menu/context-menu-inventory-options/context-menu-inventory-options.component';
@@ -91,6 +92,7 @@ import { FightHistoricComponent } from './components/fight-historic/fight-histor
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { InventoryTopbarComponent } from './components/inventory-topbar/inventory-topbar.component';
 import { ItemInventoryComponent } from './components/item-inventory/item-inventory.component';
+import { ItemPickerDialogComponent } from './components/item-picker-dialog/item-picker-dialog.component';
 import { MaterialsInventoryComponent } from './components/materials-inventory/materials-inventory.component';
 import { MiscInventoryComponent } from './components/misc-inventory/misc-inventory.component';
 import { NamePlayerComponent } from './components/name-player/name-player.component';
@@ -137,7 +139,7 @@ const components = [
   BaseFightComponent,
   FighterStatusComponent,
   FighterStatsTooltipComponent,
-  FightLogsModalComponent
+  FightLogsModalComponent,
 ];
 
 const pipes = [
@@ -182,6 +184,8 @@ const pipes = [
     RoomsListComponent,
     CryptPlayerStateComponent,
     ShoppingComponent,
+    ItemPickerComponent,
+    ItemPickerDialogComponent,
   ],
   imports: [
     ...directives,
@@ -220,7 +224,15 @@ const pipes = [
     MinMaxComboSelectorComponent,
     UruksDisplayerComponent,
   ],
-  exports: [GameLayoutComponent],
+  exports: [
+    GameLayoutComponent,
+    ItemInventoryComponent,
+    MaterialsInventoryComponent,
+    ConsumablesInventoryComponent,
+    MiscInventoryComponent,
+    ItemPickerComponent,
+    ItemPickerDialogComponent,
+  ],
   providers: [DecimalPipe, AsyncPipe, StackPipe, ...pipes],
 })
 export class GameModule {}

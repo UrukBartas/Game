@@ -37,17 +37,35 @@ export class ItemRouletteComponent {
   interval: any;
   store = inject(Store);
   sound = inject(SoundService);
- public prefix = ViewportService.getPreffixImg();
+  public prefix = ViewportService.getPreffixImg();
   @Output() spinEnded = new EventEmitter<void>();
   public spinRunning = false;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!!changes['items'].currentValue) {
-      this.displayedItems = this.repeatItems(
-        this.items,
-        this.duplicateItemsSize
-      ); // Repetir ítems para simular infinitos
+      const lengthRouletteItems = changes['items'].currentValue.length;
+      let factor = 1;
+      if (changes['items'].currentValue.length < 5) factor = 5;
+
+      // Mezcla los ítems antes de repetirlos
+      const shuffledItems = this.shuffleArray(this.items);
+
+      if (lengthRouletteItems < 50) {
+        this.displayedItems = this.repeatItems(
+          shuffledItems,
+          this.duplicateItemsSize * factor
+        );
+      } else {
+        this.displayedItems = this.repeatItems(shuffledItems, 2);
+      }
     }
+  }
+
+  shuffleArray(array: any[]): any[] {
+    return array
+      .map((item) => ({ item, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ item }) => item);
   }
 
   repeatItems(items: any[], times: number): any[] {

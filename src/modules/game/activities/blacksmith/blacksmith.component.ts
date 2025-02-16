@@ -1,10 +1,10 @@
 import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    inject,
-    ViewChild,
-    ViewEncapsulation,
+  AfterViewInit,
+  Component,
+  ElementRef,
+  inject,
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl } from '@angular/forms';
@@ -17,9 +17,9 @@ import { TemplatePage } from 'src/modules/core/components/template-page.componen
 import { Item } from 'src/modules/core/models/items.model';
 import { Material } from 'src/modules/core/models/material.model';
 import {
-    animateElement,
-    durabilityIsEnough,
-    globalCalculatedStackRule
+  animateElement,
+  durabilityIsEnough,
+  globalCalculatedStackRule
 } from 'src/modules/utils';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';

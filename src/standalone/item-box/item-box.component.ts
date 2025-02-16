@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import {
-    Component,
-    HostBinding,
-    inject,
-    Input,
-    TemplateRef,
+  Component,
+  HostBinding,
+  inject,
+  Input,
+  TemplateRef,
 } from '@angular/core';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { memoize } from 'lodash-decorators';
@@ -29,6 +29,7 @@ export class ItemBoxComponent {
   @Input() item: any;
   @Input() image: string = null;
   @Input() text: string = null;
+  @Input() icon: string = null;
   @Input() active = false;
   @Input() displayTooltip = true;
   @Input() stack: any = 0;

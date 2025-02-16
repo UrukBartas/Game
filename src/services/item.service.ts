@@ -45,12 +45,19 @@ export class ItemService extends ApiBaseService {
     ) as Observable<Item>;
   }
 
-  public upgradeItem(itemId: number, useMagicDust: boolean) {
-    return this.get('/' + itemId + '/upgrade-item/' + useMagicDust);
+  public upgradeItem(itemId: number, selectedMaterialIds: Array<string>) {
+    return this.post('/' + itemId + '/upgrade-item/', {
+      selectedMaterialIds,
+    });
   }
 
-  public getUpgradeItemPreview(itemId: number) {
-    return this.get('/' + itemId + '/upgrade-item-preview/');
+  public getUpgradeItemPreview(
+    itemId: number,
+    selectedMaterialIds: Array<string>
+  ) {
+    return this.post('/' + itemId + '/upgrade-item-preview/', {
+      selectedMaterialIds,
+    });
   }
 
   public recycleItems(itemIds: Array<number>) {

@@ -52,7 +52,18 @@
           [height]="getPossibleDropsSize() * 2"
           [width]="getPossibleDropsSize() * 2"
           [image]="item ? item?.miscellanyItemData.imageLocal : null"
-        ></app-item-box>
+        >
+          <div tooltip class="tooltip-uruk">
+            @if (!!item?.itemData) {
+              <app-item-tooltip [item]="item"></app-item-tooltip>
+            } @else {
+              <app-generic-item-tooltip
+                [item]="getGenericItemItemData(item)"
+                [souldBound]="item.souldBound"
+              ></app-generic-item-tooltip>
+            }
+          </div>
+        </app-item-box>
       </div>
     </div>
     <button
@@ -91,10 +102,6 @@
       </app-item-box>
     </div>
     <div class="final-result-wrapper px-3 text-center">
-      <!-- <span urTitle class="text-secondary mt-3"
-        >✨ Congratulations on
-        {{ getGenericItemItemData(roll?.resultItem)?.name }}</span
-      >-->
       <span urTitle class="text-third mt-3"> Possible drops </span>
       <div class="d-flex justify-content-center gap-2 possible-drops">
         <app-item-box
@@ -171,13 +178,25 @@
           [height]="getPossibleDropsSize() * 2"
           [width]="getPossibleDropsSize() * 2"
           [image]="item ? item?.miscellanyItemData.imageLocal : null"
-        ></app-item-box>
+        >
+          <div tooltip class="tooltip-uruk">
+            @if (!!item?.itemData) {
+              <app-item-tooltip [item]="item"></app-item-tooltip>
+            } @else {
+              <app-generic-item-tooltip
+                [item]="getGenericItemItemData(item)"
+                [souldBound]="item.souldBound"
+              ></app-generic-item-tooltip>
+            }
+          </div>
+        </app-item-box>
       </div>
     </div>
     <ng-container *ngTemplateOutlet="statsLootbox"></ng-container>
     <div class="quantity">
       <p class="mb-0 bonus-items text-third w-100" urText>
-        How many to open? Open {{ quantityOpen.value }} boxes
+        How many to open? Open {{ quantityOpen.value }} units of
+        {{ item.miscellanyItemData.name }}
       </p>
       <input
         type="range"
@@ -221,27 +240,27 @@
           (click)="endPhases()"
         ></i>
         <div class="list-boxes">
-          @for (roll of rolls; track roll) {
+          @for (resultItem of getGroupedItems(rolls); track resultItem) {
             <app-item-box
               #itemResult
               #result
               [height]="getPossibleDropsSize() * 2"
               [width]="getPossibleDropsSize() * 2"
-              [stack]="roll?.resultItem?.quantity | compressNumber"
-              [image]="getGenericItemItemData(roll?.resultItem)?.imageLocal"
+              [stack]="resultItem?.quantity | compressNumber"
+              [image]="getGenericItemItemData(resultItem)?.imageLocal"
             >
-              <div tooltip class="tooltip-uruk" *ngIf="!!roll?.resultItem">
-                @if (!!roll?.resultItem && roll.resultItem.itemData) {
+              <div tooltip class="tooltip-uruk" *ngIf="!!resultItem">
+                @if (!!resultItem && resultItem.itemData) {
                   <app-item-tooltip
-                    [item]="roll?.resultItem"
+                    [item]="resultItem"
                     [compareWith]="
-                      getItem$(roll.resultItem.itemData.itemType) | async
+                      getItem$(resultItem.itemData.itemType) | async
                     "
                   ></app-item-tooltip>
                   <app-item-tooltip
                     *ngIf="
                       getShowItemCompare() &&
-                        getItem$(roll.resultItem.itemData.itemType)
+                        getItem$(resultItem.itemData.itemType)
                         | async as comparedItem
                     "
                     [item]="comparedItem"
@@ -249,8 +268,8 @@
                   ></app-item-tooltip>
                 } @else {
                   <app-generic-item-tooltip
-                    [item]="getGenericItemItemData(roll?.resultItem)"
-                    [souldBound]="roll?.resultItem?.souldBound"
+                    [item]="getGenericItemItemData(resultItem)"
+                    [souldBound]="resultItem?.souldBound"
                   ></app-generic-item-tooltip>
                 }
               </div>
@@ -260,14 +279,10 @@
       </div>
       <div
         class="final-result-wrapper px-3 text-center"
-        style="
-          display: inline-block;
-          overflow-wrap: break-word;
-          max-width: 100%;
-        "
+        style="overflow-wrap: break-word; max-width: 100%"
       >
         <span urSubtext class="text-secondary mt-3"
-          >✨ Congratulations on {{ getGenericItemsItemData(rolls) }}</span
+          >✨ Congratulations on {{ getGroupedItemsText(rolls) }}</span
         >
         @for (roll of rolls; track roll; let index = $index) {
           @if (roll?.bonusDrops?.length > 0) {
@@ -277,46 +292,38 @@
           }
         }
         <div class="d-flex justify-content-center gap-2 list-boxes">
-          @for (roll of rolls; track roll; let index = $index) {
-            <app-item-box
-              *ngFor="
-                let bonusDrop of roll.bonusDrops | stack: 'miscellanyItemDataId'
-              "
-              #itemResult
-              #result
-              [height]="getPossibleDropsSize()"
-              [width]="getPossibleDropsSize()"
-              [stack]="
-                bonusDrop['stack'] ?? bonusDrop?.quantity | compressNumber
-              "
-              [image]="getGenericItemItemData(bonusDrop)?.imageLocal"
-            >
-              <div tooltip class="tooltip-uruk" *ngIf="!!bonusDrop">
-                @if (!!bonusDrop && bonusDrop.itemData) {
-                  <app-item-tooltip
-                    [item]="bonusDrop"
-                    [compareWith]="
-                      getItem$(bonusDrop.itemData.itemType) | async
-                    "
-                  ></app-item-tooltip>
-                  <app-item-tooltip
-                    *ngIf="
-                      getShowItemCompare() &&
-                        getItem$(bonusDrop.itemData.itemType)
-                        | async as comparedItem
-                    "
-                    [item]="comparedItem"
-                    [isBeingCompared]="true"
-                  ></app-item-tooltip>
-                } @else {
-                  <app-generic-item-tooltip
-                    [item]="getGenericItemItemData(bonusDrop)"
-                    [souldBound]="bonusDrop?.souldBound"
-                  ></app-generic-item-tooltip>
-                }
-              </div>
-            </app-item-box>
-          }
+          <app-item-box
+            *ngFor="let bonusDrop of getBonusGroupedItems(rolls)"
+            #itemResult
+            #result
+            [height]="getPossibleDropsSize()"
+            [width]="getPossibleDropsSize()"
+            [stack]="bonusDrop['stack'] ?? bonusDrop?.quantity | compressNumber"
+            [image]="getGenericItemItemData(bonusDrop)?.imageLocal"
+          >
+            <div tooltip class="tooltip-uruk" *ngIf="!!bonusDrop">
+              @if (!!bonusDrop && bonusDrop.itemData) {
+                <app-item-tooltip
+                  [item]="bonusDrop"
+                  [compareWith]="getItem$(bonusDrop.itemData.itemType) | async"
+                ></app-item-tooltip>
+                <app-item-tooltip
+                  *ngIf="
+                    getShowItemCompare() &&
+                      getItem$(bonusDrop.itemData.itemType)
+                      | async as comparedItem
+                  "
+                  [item]="comparedItem"
+                  [isBeingCompared]="true"
+                ></app-item-tooltip>
+              } @else {
+                <app-generic-item-tooltip
+                  [item]="getGenericItemItemData(bonusDrop)"
+                  [souldBound]="bonusDrop?.souldBound"
+                ></app-generic-item-tooltip>
+              }
+            </div>
+          </app-item-box>
         </div>
       </div>
     </div>

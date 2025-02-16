@@ -1,0 +1,16 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/mixins';
+
+:host ::ng-deep {
+  .picker {
+    color: white;
+    .box {
+      align-items: center;
+      font-size: 4rem;
+      @include media-breakpoint-down(sm) {
+        font-size: 2rem;
+      }
+    }
+  }
+}

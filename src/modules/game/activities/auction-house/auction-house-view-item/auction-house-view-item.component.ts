@@ -1,7 +1,7 @@
 import { Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { filter, firstValueFrom, map, of, tap } from 'rxjs';
 import { TimeAgoPipe } from 'src/app/time-ago.pipe';
@@ -45,7 +45,6 @@ export class AuctionHouseViewItemComponent {
   private _listing: MarketListing;
   viewportService = inject(ViewportService);
   auctionService = inject(AuctionHouseService);
-  private modalService = inject(BsModalService);
   public offerPrice = new FormControl(0);
   public addingOffer = false;
   toast = inject(ToastrService);

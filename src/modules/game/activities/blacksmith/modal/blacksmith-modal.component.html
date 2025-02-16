@@ -305,7 +305,7 @@
     </p>
     <p *ngIf="action == 'upgrade'" class="text-white" urText>
       Current chance of <span class="text-warning">failing</span>
-      {{ (items[0]?.upgradeLevel + 1) * 5 }} %
+      {{ preview?.failing ?? 0 }} %
       <i
         class="fa-solid fa-circle-info text-warning fa-sm px-1"
         [ngbTooltip]="failExplanation"
@@ -314,7 +314,24 @@
     <p class="text-white" urText>Do you wish to continue?</p>
   </div>
   <div class="col-12 col-sm-6" *ngIf="action == 'upgrade'">
-    <div class="text-secondary pb-2" urText>Avoid upgrade failure with:</div>
+    <div class="text-secondary pb-2" urText>Select items to apply:</div>
+    <app-item-picker
+      [itemPickerDialogConfig]="{
+        display: {
+          itemPicking: false,
+          materialPicking: true,
+          consumablePicking: false,
+          miscPicking: false,
+        },
+        multipleSelection: { materialPicking: true },
+        filters: {
+          material: externalMaterialFilter.bind(this),
+        },
+      }"
+      (confirmSelection)="confirmSelection($event.selectedMaterials)"
+    ></app-item-picker>
+
+    <!-- <div class="text-secondary pb-2" urText>Avoid upgrade failure with:</div>
     <div class="wrapper-magic-dust">
       <app-item-box
         [height]="getItemBoxSize()"
@@ -337,7 +354,7 @@
           >Use magic dust?
         </label>
       </div>
-    </div>
+    </div> -->
   </div>
 </ng-template>
 

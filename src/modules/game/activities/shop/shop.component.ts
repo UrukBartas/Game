@@ -1,9 +1,9 @@
 import { DecimalPipe } from '@angular/common';
 import {
-    AfterViewInit,
-    Component,
-    inject,
-    ViewEncapsulation,
+  AfterViewInit,
+  Component,
+  inject,
+  ViewEncapsulation,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';

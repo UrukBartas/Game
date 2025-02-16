@@ -193,7 +193,10 @@ export class BaseFightComponent
         },
       },
     };
-    const modalRef = this.modalService.show(ConsumableModalComponent, config);
+    const modalRef = this.modalService.show(
+      ConsumableModalComponent,
+      config
+    );
   }
 
   getIRIRarityColor(iri: number) {

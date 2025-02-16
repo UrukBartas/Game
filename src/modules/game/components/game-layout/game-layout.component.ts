@@ -14,9 +14,9 @@ import { QuestTimerService } from 'src/services/quest-timer.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import {
-    DisconnectWallet,
-    MainState,
-    MainStateModel,
+  DisconnectWallet,
+  MainState,
+  MainStateModel,
 } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../confirm-modal/confirm.modal.component';
 import { InboxModalComponent } from '../inbox-modal/inbox-modal.component';
@@ -92,7 +92,13 @@ export class GameLayoutComponent {
   public accountService = inject(PlayerService);
   public viewportService = inject(ViewportService);
   public store = inject(Store);
-  public modalService = inject(BsModalService);
+  private _modalService = inject(BsModalService);
+  public get modalService() {
+    return this._modalService;
+  }
+  public set modalService(value) {
+    this._modalService = value;
+  }
   public questTimerService = inject(QuestTimerService);
   public decimalPipe = inject(DecimalPipe);
   public compressNumber = inject(CompressNumberPipe);

@@ -1,0 +1,39 @@
+<ng-template #picker>
+  <div class="p-2">
+    <span class="text-white bg-black">Click to choose an item</span>
+  </div>
+</ng-template>
+
+<div class="list-boxes justify-content-start">
+  <app-item-box
+    [height]="getItemBoxSize()"
+    [width]="getItemBoxSize()"
+    [icon]="'fa-regular fa-hand-pointer'"
+    class="picker"
+    (click)="pick()"
+  >
+    <div tooltip class="tooltip-uruk">
+      <ng-container *ngTemplateOutlet="picker"></ng-container>
+    </div>
+  </app-item-box>
+
+  <div class="divider-vertical" *ngIf="hasSomethingSelected()"></div>
+
+  <app-item-box
+    *ngFor="let item of getAll()"
+    [image]="getImage(item)"
+    [height]="getItemBoxSize()"
+    [width]="getItemBoxSize()"
+  >
+    <div tooltip class="tooltip-uruk">
+      @if (!!item?.itemData) {
+        <app-item-tooltip [item]="item"></app-item-tooltip>
+      } @else {
+        <app-generic-item-tooltip
+          [item]="getGenericITemData(item)"
+          [souldBound]="item.souldBound"
+        ></app-generic-item-tooltip>
+      }
+    </div>
+  </app-item-box>
+</div>

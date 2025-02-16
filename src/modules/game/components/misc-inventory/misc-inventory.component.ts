@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
+import { flatten } from 'lodash';
 import { Memoize } from 'lodash-decorators';
 import { camelCase } from 'lodash-es';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
@@ -201,6 +202,18 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
           count: party.variation.range(20, 40),
         });
       }, 500);
+      this.informDestruction();
+      this.updateInventory.emit();
+    }
+  }
+
+  private informDestruction() {
+    if (
+      this.ratiosOpen.opened != this.ratiosOpen.received &&
+      this.ratiosOpen.opened > this.ratiosOpen.received
+    ) {
+      const destroyed = this.ratiosOpen.opened - this.ratiosOpen.received;
+      this.toast.warning(`${destroyed} items were destroyed in the process!`);
       this.updateInventory.emit();
     }
   }
@@ -395,24 +408,41 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
     this.updateInventory.emit();
   }
 
+  public ratiosOpen = {
+    opened: 0,
+    received: 0,
+  };
+
   public async runRoulette(idLootbox: number) {
     this.currentPhase = 1;
     try {
+      this.ratiosOpen.opened = this.quantityOpen.value;
       const result = await firstValueFrom(
         this.miscelanyService.openLootbox(idLootbox, this.quantityOpen.value)
       );
-      this.rolls = result;
-      this.cd.detectChanges();
-      this.quantityOpen.reset(1);
-      setTimeout(() => {
-        this.itemRoulettes.forEach((roulette, index) => {
-          setTimeout(() => {
-            roulette.startRoulette();
-          }, 100 * index);
-        });
-      }, 0);
+      this.ratiosOpen.received = result.length;
+      if (result.length == 0) {
+        this.currentPhase = 0;
+        this.focuserService.close();
+        this.informDestruction();
+      } else {
+        this.rolls = result;
+        this.cd.detectChanges();
+        this.quantityOpen.reset(1);
+        setTimeout(() => {
+          this.itemRoulettes.forEach((roulette, index) => {
+            setTimeout(() => {
+              roulette.startRoulette();
+            }, 100 * index);
+          });
+        }, 0);
+      }
     } catch (error) {
       this.currentPhase = 0;
+      this.ratiosOpen = {
+        opened: 0,
+        received: 0,
+      };
     }
   }
 
@@ -426,6 +456,19 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   public getGenericItemItemData(item: any) {
     return getGenericItemItemData(item);
   }
+  @Memoize()
+  public getGroupedItemsText(rolls: Array<any>) {
+    if (!rolls) return [];
+    const itemCounts = rolls.reduce((acc, roll) => {
+      const itemName = getGenericItemItemData(roll.resultItem).name;
+      acc[itemName] = (acc[itemName] || 0) + (roll?.resultItem?.quantity ?? 1);
+      return acc;
+    }, {});
+
+    return Object.entries(itemCounts)
+      .map(([name, quantity]) => `${name} x${quantity}`)
+      .join(', ');
+  }
 
   @Memoize()
   public getGenericItemsItemData(rolls: Array<any> = []) {
@@ -433,6 +476,39 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
       (entry) => getGenericItemItemData(entry.resultItem).name
     );
     return itemsData.join(', ');
+  }
+  @Memoize()
+  public getGroupedItems(rolls: Array<any>) {
+    if (!rolls) return [];
+    const allResultItems = rolls.map((e) => e.resultItem).filter((e) => !!e);
+    return this.groupRolls(allResultItems);
+  }
+  @Memoize()
+  public getBonusGroupedItems(rolls: Array<any>) {
+    if (!rolls) return [];
+    const allBonusDrops = flatten(
+      rolls.map((e) => e.bonusDrops).filter((e) => !!e)
+    );
+    return this.groupRolls(allBonusDrops);
+  }
+
+  private groupRolls(rolls: Array<any>) {
+    const groupedItems = rolls.reduce((acc, resultItem) => {
+      const existingItem = acc.find((item) => {
+        const data = getGenericItemItemData(item);
+        const data2 = getGenericItemItemData(resultItem);
+        return data.id == data2.id;
+      });
+
+      if (existingItem) {
+        existingItem.quantity += resultItem.quantity || 1;
+      } else {
+        acc.push({ ...resultItem, quantity: resultItem.quantity || 1 });
+      }
+
+      return acc;
+    }, []);
+    return groupedItems;
   }
 
   getResponsiveButtonSize() {

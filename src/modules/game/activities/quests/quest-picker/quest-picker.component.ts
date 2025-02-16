@@ -1,11 +1,11 @@
 import {
-    Component,
-    computed,
-    EventEmitter,
-    inject,
-    Input,
-    Output,
-    signal,
+  Component,
+  computed,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+  signal,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Store } from '@ngxs/store';
@@ -14,8 +14,8 @@ import { firstValueFrom, map, take, tap } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Rarity } from 'src/modules/core/models/items.model';
 import {
-    MonsterType,
-    QuestDataModel,
+  MonsterType,
+  QuestDataModel,
 } from 'src/modules/core/models/quest-data.model';
 import { QuestModel } from 'src/modules/core/models/quest.model';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';

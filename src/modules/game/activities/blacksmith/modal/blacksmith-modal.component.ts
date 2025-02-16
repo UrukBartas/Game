@@ -1,19 +1,21 @@
 import {
-    Component,
-    computed,
-    EventEmitter,
-    inject,
-    OnInit,
-    Output,
-    signal,
+  Component,
+  computed,
+  EventEmitter,
+  inject,
+  OnInit,
+  Output,
+  signal,
+  ViewChild,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
+import { Memoize } from 'lodash-decorators';
 import { camelCase } from 'lodash-es';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { catchError, firstValueFrom, of, take, throwError } from 'rxjs';
+import { catchError, firstValueFrom, of, take, tap, throwError } from 'rxjs';
 import { Item, Rarity } from 'src/modules/core/models/items.model';
 import { Material, MaterialData } from 'src/modules/core/models/material.model';
+import { ItemPickerComponent } from 'src/modules/game/components/item-picker/item-picker.component';
 import { durabilityIsEnough, getRarityColor } from 'src/modules/utils';
 import { ItemService } from 'src/services/item.service';
 import { PlayerService } from 'src/services/player.service';
@@ -35,14 +37,13 @@ export class BlacksmithModalComponent implements OnInit {
   onJobDone: (result) => void;
   preview;
   public currentMaterials: Array<Material> = [];
-  public useMagicDust = new FormControl(false);
   public activeRecipe = signal(null);
   public getRarityColor = getRarityColor;
   public camelCase = camelCase;
   public objectKeys = Object.keys;
 
   public prefix = ViewportService.getPreffixImg();
-
+  @ViewChild(ItemPickerComponent) itemPicker: ItemPickerComponent;
   @Output() tellQuote = new EventEmitter<string>();
 
   public getItemImageBasedOnRarity = (rarity: Rarity | any) => {
@@ -68,12 +69,26 @@ export class BlacksmithModalComponent implements OnInit {
       this.activeRecipe().id
     );
   });
-  ngOnInit() {
+  ngOnInit() {}
+  ngAfterViewInit(): void {
+    this.updatePreview();
+  }
+
+  public confirmSelection(selectedMaterials: Array<Material>) {
+    setTimeout(() => {
+      this.updatePreview();
+    }, 0);
+  }
+
+  public updatePreview() {
     if (this.items) {
       this.getCurrentUserMaterials();
       let observable = of(null);
       if (this.action == 'upgrade') {
-        observable = this.itemService.getUpgradeItemPreview(this.items[0].id);
+        observable = this.itemService.getUpgradeItemPreview(
+          this.items[0].id,
+          this.itemPicker.selectedMaterials.map((e) => e.materialDataId)
+        );
       } else if (this.action == 'melt') {
         observable = this.itemService.getRecycleItemsPreview(
           this.items.map((entry) => entry.id)
@@ -89,13 +104,21 @@ export class BlacksmithModalComponent implements OnInit {
           this.items.map((entry) => entry.id)
         );
       }
-      observable.pipe(take(1)).subscribe((preview) => {
-        this.preview = preview;
-      });
+      firstValueFrom(observable.pipe(tap((e) => (this.preview = e))));
     }
-    setTimeout(() => {
-      console.warn(this.items);
-    }, 1000);
+  }
+  @Memoize()
+  public externalMaterialFilter(materials: Array<Material>) {
+    //Only showing materials that the blacksmith is interested on
+    return (materials ?? []).filter((entry) =>
+      [
+        'MagicDust',
+        'GoddessAegis',
+        'BlessingOfTheAncients',
+        'ShardOfTheGoldenUruk',
+        'BlacksmithCodex',
+      ].includes(entry.materialDataId)
+    );
   }
 
   getPossibleDropsSize() {
@@ -143,7 +166,10 @@ export class BlacksmithModalComponent implements OnInit {
           this.itemService.getRepairItems(this.items.map((e) => e.id)),
         upgrade: () =>
           this.itemService
-            .upgradeItem(this.items[0].id, this.useMagicDust.value)
+            .upgradeItem(
+              this.items[0].id,
+              this.itemPicker.selectedMaterials.map((e) => e.materialDataId)
+            )
             .pipe(this.handleDurabilityError(this.items[0])),
         melt: () =>
           this.itemService.recycleItems(this.items.map((entry) => entry.id)),
@@ -203,16 +229,6 @@ export class BlacksmithModalComponent implements OnInit {
     this.currentMaterials = (
       await firstValueFrom(this.playerService.getItemsMaterial())
     ).filter((entry) => !!entry);
-
-    this.userHasMagicDust()
-      ? this.useMagicDust.enable()
-      : this.useMagicDust.disable();
-  }
-
-  private userHasMagicDust() {
-    return !!this.currentMaterials.find(
-      (userMaterial) => userMaterial.materialDataId == 'MagicDust'
-    );
   }
 
   public userHasThisMaterial(param: {

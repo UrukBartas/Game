@@ -132,7 +132,7 @@ export class InventoryTopbarComponent {
       Rarity.LEGENDARY,
       Rarity.MYTHIC,
     ];
-    const sortedItems = items.sort((a, b) => {
+    const sortedItems = (items ?? []).sort((a, b) => {
       let comparison = 0;
       if (!a || !b) return 0;
       if (this.sortType === 'level') {

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
 import { Preferences } from '@capacitor/preferences';
 import { map, Observable, of, switchMap } from 'rxjs';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
@@ -10,8 +11,8 @@ import { AUTH_TOKEN_KEY } from './http-uruk.interceptor';
 })
 export class AuthService extends ApiBaseService {
   //Disabled for now to test if web3 can be deployed
-  //public nativePlatform = Capacitor.isNativePlatform();
-  public nativePlatform = false;
+  public nativePlatform = Capacitor.isNativePlatform();
+  //public nativePlatform = true;
   constructor(private http: HttpClient) {
     super(http);
     this.controllerPrefix = '/auth';

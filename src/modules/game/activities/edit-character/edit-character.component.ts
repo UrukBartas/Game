@@ -1,11 +1,11 @@
 import { Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
-    AbstractControl,
-    FormBuilder,
-    FormGroup,
-    ValidatorFn,
-    Validators,
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ValidatorFn,
+  Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
@@ -15,9 +15,9 @@ import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import {
-    PlayerClass,
-    PlayerConfiguration,
-    PlayerModel,
+  PlayerClass,
+  PlayerConfiguration,
+  PlayerModel,
 } from 'src/modules/core/models/player.model';
 import { truncateEthereumAddress } from 'src/modules/utils';
 import { AuthService } from 'src/services/auth.service';
@@ -26,10 +26,10 @@ import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import {
-    DisconnectWallet,
-    LoginPlayer,
-    MainState,
-    RefreshPlayer,
+  DisconnectWallet,
+  LoginPlayer,
+  MainState,
+  RefreshPlayer,
 } from 'src/store/main.store';
 import { ClassSelectorComponent } from './components/character-selector/character-selector.component';
 

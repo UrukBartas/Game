@@ -1,11 +1,11 @@
 import {
-    Component,
-    computed,
-    effect,
-    inject,
-    signal,
-    TemplateRef,
-    WritableSignal,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+  TemplateRef,
+  WritableSignal,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
@@ -17,15 +17,15 @@ import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { MarketListing } from 'src/modules/core/models/market-listing.model';
 import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
 import {
-    getGenericItemItemData,
-    getRarityBasedOnIRI,
-    getRarityColor,
-    getShowItemCompare,
+  getGenericItemItemData,
+  getRarityBasedOnIRI,
+  getRarityColor,
+  getShowItemCompare,
 } from 'src/modules/utils';
 import {
-    AuctionHouseService,
-    MarketItemType,
-    MarketListingPayload,
+  AuctionHouseService,
+  MarketItemType,
+  MarketListingPayload,
 } from 'src/services/auction-house.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
