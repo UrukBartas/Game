@@ -46,6 +46,7 @@ export class BlacksmithModalComponent implements OnInit {
   @ViewChild(ItemPickerComponent) itemPicker: ItemPickerComponent;
   @Output() tellQuote = new EventEmitter<string>();
 
+
   public getItemImageBasedOnRarity = (rarity: Rarity | any) => {
     switch (rarity) {
       case Rarity.COMMON:

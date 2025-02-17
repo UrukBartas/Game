@@ -3,7 +3,7 @@ import { MiscellanyItemData, MiscellanyItemIdentifier } from './misc.model';
 import { QuestModel } from './quest.model';
 import { SessionModel } from './session.model';
 
-export type BoostType = 'EXP' | 'URUKS' | 'TRAVEL';
+export type BoostType = 'EXP' | 'URUKS' | 'TRAVEL' | 'BLACKSMITH';
 
 export interface PlayerModel {
   id: string;

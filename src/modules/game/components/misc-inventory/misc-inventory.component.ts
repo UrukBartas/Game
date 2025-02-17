@@ -332,6 +332,7 @@ export class MiscInventoryComponent extends BaseInventoryComponent {
   private getActiveBootType(
     boostIdentifier: MiscellanyItemIdentifier
   ): BoostType {
+    if (boostIdentifier == 'EmberforgedElixir') return 'BLACKSMITH';
     return boostIdentifier.split('_')[1].toUpperCase() as BoostType;
   }
 

@@ -58,6 +58,7 @@ export enum MiscellanyItemIdentifier {
   PortraitWarlockWest = 'Portrait_Warlock_West',
   PortraitRogueWest = 'Portrait_Rogue_West',
   PortraitWarriorWest = 'Portrait_Warrior_West',
+  EmberforgedElixir = 'EmberforgedElixir',
 }
 
 export const MiscellanyItemIdentifierDisplay: Record<
@@ -109,6 +110,7 @@ export const MiscellanyItemIdentifierDisplay: Record<
   [MiscellanyItemIdentifier.PortraitWarlockWest]: 'Orgok West',
   [MiscellanyItemIdentifier.PortraitRogueWest]: 'Nyx West',
   [MiscellanyItemIdentifier.PortraitWarriorWest]: 'Tulkas West',
+  [MiscellanyItemIdentifier.EmberforgedElixir]: 'Emberforged Elixir',
 };
 
 // Interfaces
