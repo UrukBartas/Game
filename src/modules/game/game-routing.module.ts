@@ -18,6 +18,15 @@ import { TheCryptComponent } from './activities/the-crypt/the-crypt.component';
 import { TheMineComponent } from './activities/the-mine/the-mine.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
+import { AuctionHouseTutorialComponent } from './components/tutorials/auction-house-tutorial/auction-house-tutorial.component';
+import { BlacksmithTutorialComponent } from './components/tutorials/blacksmith-tutorial/blacksmith-tutorial.component';
+import { BridgeTutorialComponent } from './components/tutorials/bridge-tutorial/bridge-tutorial.component';
+import { CryptTutorialComponent } from './components/tutorials/crypt-tutorial/crypt-tutorial.component';
+import { InventoryTutorialComponent } from './components/tutorials/inventory-tutorial/inventory-tutorial.component';
+import { LeaderboardTutorialComponent } from './components/tutorials/leaderboard-tutorial/leaderboard-tutorial.component';
+import { MineTutorialComponent } from './components/tutorials/mine-tutorial/mine-tutorial.component';
+import { QuestTutorialComponent } from './components/tutorials/quest-tutorial/quest-tutorial.component';
+import { ShopTutorialComponent } from './components/tutorials/shop-tutorial/shop-tutorial.component';
 
 const routes: Routes = [
   {
@@ -34,12 +43,18 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         component: AuctionHouseComponent,
         title: 'Auction house',
+        data: {
+          tutorial: AuctionHouseTutorialComponent,
+        },
       },
       {
         path: 'inventory',
         canActivate: [AuthGuard],
         component: InventoryComponent,
         title: 'Inventory',
+        data: {
+          tutorial: InventoryTutorialComponent,
+        },
       },
       {
         path: 'view-player/:id',
@@ -69,18 +84,27 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         component: QuestRouterComponent,
         title: 'Quests',
+        data: {
+          tutorial: QuestTutorialComponent,
+        },
       },
       {
         path: 'shop',
         canActivate: [AuthGuard],
         component: ShopComponent,
         title: 'Shop',
+        data: {
+          tutorial: ShopTutorialComponent,
+        },
       },
       {
         path: 'blacksmith',
         canActivate: [AuthGuard],
         component: BlacksmithComponent,
         title: 'Blacksmith',
+        data: {
+          tutorial: BlacksmithTutorialComponent,
+        },
       },
       {
         path: 'edit',
@@ -98,24 +122,36 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         component: ExportImportNftComponent,
         title: 'Bridge',
+        data: {
+          tutorial: BridgeTutorialComponent,
+        },
       },
       {
         path: 'the-mine',
         canActivate: [AuthGuard],
         component: TheMineComponent,
         title: 'The Mine',
+        data: {
+          tutorial: MineTutorialComponent,
+        },
       },
       {
         path: 'the-crypt',
         canActivate: [AuthGuard],
         component: TheCryptComponent,
         title: 'The Crypt',
+        data: {
+          tutorial: CryptTutorialComponent,
+        },
       },
       {
         path: 'leaderboard',
         canActivate: [AuthGuard],
         component: LeadeboardComponent,
         title: 'Leaderboard',
+        data: {
+          tutorial: LeaderboardTutorialComponent,
+        },
       },
       {
         path: 'arena/pvp',

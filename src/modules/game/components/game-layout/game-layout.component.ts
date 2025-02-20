@@ -1,6 +1,7 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, TemplateRef, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Preferences } from '@capacitor/preferences';
 import { Select, Store } from '@ngxs/store';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs';
@@ -172,5 +173,37 @@ export class GameLayoutComponent {
       return 40;
     }
     return 50;
+  }
+
+  ngAfterViewInit(): void {
+    const tutorial = this.getTutorial();
+    if (tutorial) {
+      const routePath =
+        this.activeRoute.firstChild?.snapshot.routeConfig?.path || 'default';
+      const tutorialKey = `tutorialShown_${routePath}`;
+
+      Preferences.get({ key: tutorialKey }).then((result) => {
+        if (!result.value) {
+          this.displayTutorial();
+          Preferences.set({ key: tutorialKey, value: 'true' });
+        }
+      });
+    }
+  }
+
+  private getTutorial() {
+    const childRoute = this.activeRoute.firstChild;
+    const tutorial = (childRoute?.snapshot?.data as any)?.tutorial;
+    return tutorial;
+  }
+
+  public hasTutorial() {
+    const tutorial = this.getTutorial();
+    return tutorial;
+  }
+
+  public displayTutorial() {
+    const tutorial = this.getTutorial();
+    this.modalService.show(tutorial);
   }
 }

@@ -3,6 +3,13 @@
 @import 'node_modules/bootstrap/scss/mixins';
 @import '../../../../variables.scss';
 
+.tutorial {
+  color: white;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+}
+
 .wrapper {
   background-color: $black;
 }

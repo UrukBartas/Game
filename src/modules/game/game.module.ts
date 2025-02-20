@@ -102,6 +102,16 @@ import { PercentStatsComponent } from './components/stats-detail/only-stats/only
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { TitleGeneratorModalComponent } from './components/title-generator-modal/title-generator-modal.component';
 import { GameRoutingModule } from './game-routing.module';
+import { InventoryTutorialComponent } from './components/tutorials/inventory-tutorial/inventory-tutorial.component';
+import { BaseTutorialComponent } from './components/tutorials/base-tutorial/base-tutorial.component';
+import { AuctionHouseTutorialComponent } from './components/tutorials/auction-house-tutorial/auction-house-tutorial.component';
+import { QuestTutorialComponent } from './components/tutorials/quest-tutorial/quest-tutorial.component';
+import { ShopTutorialComponent } from './components/tutorials/shop-tutorial/shop-tutorial.component';
+import { CryptTutorialComponent } from './components/tutorials/crypt-tutorial/crypt-tutorial.component';
+import { BlacksmithTutorialComponent } from './components/tutorials/blacksmith-tutorial/blacksmith-tutorial.component';
+import { MineTutorialComponent } from './components/tutorials/mine-tutorial/mine-tutorial.component';
+import { BridgeTutorialComponent } from './components/tutorials/bridge-tutorial/bridge-tutorial.component';
+import { LeaderboardTutorialComponent } from './components/tutorials/leaderboard-tutorial/leaderboard-tutorial.component';
 
 const directives = [
   ValidInputDirective,
@@ -186,6 +196,16 @@ const pipes = [
     ShoppingComponent,
     ItemPickerComponent,
     ItemPickerDialogComponent,
+    InventoryTutorialComponent,
+    BaseTutorialComponent,
+    AuctionHouseTutorialComponent,
+    QuestTutorialComponent,
+    ShopTutorialComponent,
+    CryptTutorialComponent,
+    BlacksmithTutorialComponent,
+    MineTutorialComponent,
+    BridgeTutorialComponent,
+    LeaderboardTutorialComponent,
   ],
   imports: [
     ...directives,

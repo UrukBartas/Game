@@ -1,0 +1,28 @@
+@import '../../../../../variables.scss';
+@import 'node_modules/bootstrap/scss/mixins';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+.base-tutorial {
+  padding: 20px 40px;
+  background: $black-300;
+  border-radius: 10px;
+  height: 45rem;
+  width: 80%;
+  @include media-breakpoint-down(sm) {
+    width: 100%;
+  }
+  display: block;
+  position: relative;
+  overflow: auto;
+  text-wrap: wrap;
+  color: white;
+}
+
+:host ::ng-deep {
+  strong {
+    color: $third;
+  }
+  img {
+    width: 100%;
+  }
+}

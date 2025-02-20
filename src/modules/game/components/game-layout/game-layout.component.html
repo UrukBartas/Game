@@ -53,107 +53,114 @@
           "
         ></ng-container>
       </div>
-
-      <div class="player-dropdown">
-        <div
-          class="player-portrait position-relative"
-          data-bs-toggle="dropdown"
-        >
-          <app-item-box
-            class="rounded"
-            [height]="getPlayerImageSize()"
-            [width]="getPlayerImageSize()"
-            [image]="'/' + player.image"
-          >
-          </app-item-box>
+      <div class="tutorial" *ngIf="hasTutorial()">
+        <i
+          class="fa-regular fa-circle-question hoverable-text"
+          (click)="displayTutorial()"
+        ></i>
+      </div>
+      <div class="right d-flex align-items-center gap-2">
+        <div class="player-dropdown">
           <div
-            *ngIf="(notifications$ | async)?.newNotificationsCount > 0"
-            class="notifications notifications-player"
+            class="player-portrait position-relative"
+            data-bs-toggle="dropdown"
           >
-            {{ (notifications$ | async)?.newNotificationsCount }}
-          </div>
-          <div
-            *ngIf="questTimerService.time() as questInProgress"
-            class="notifications notification-quest-in-progress"
-          >
-            @if (questInProgress === 'Ready') {
-              ⚔️
-            } @else {
-              ⌛
-            }
-          </div>
-        </div>
-
-        <ul class="dropdown-menu">
-          <li class="player-info text-white pt-2 mb-2">
             <app-item-box
               class="rounded"
-              [height]="getPlayerImageSize() * 2"
-              [width]="getPlayerImageSize() * 2"
+              [height]="getPlayerImageSize()"
+              [width]="getPlayerImageSize()"
               [image]="'/' + player.image"
             >
             </app-item-box>
-            <strong>{{ player.name }}</strong>
-            Level {{ player.level }}
-          </li>
-          <hr />
-          <li
-            (click)="
-              router.navigate(['/inventory'], {
-                queryParams: { tab: 1 },
-                replaceUrl: true,
-              })
-            "
-          >
-            <a class="dropdown-item px-2 py-1">
-              <div class="d-flex align-items-center">
-                <div class="fa-solid fa-skull mr-1"></div>
-                <span>{{ 'Character' }}</span>
-              </div>
-            </a>
-          </li>
-          <hr />
-          <li (click)="router.navigateByUrl('/quests')">
-            <a class="dropdown-item px-2 py-1">
-              <div class="d-flex align-items-center">
-                <div class="fa-sword mr-1"></div>
-                <span>{{ questTimerService.time() ?? 'Quests' }}</span>
-              </div>
-            </a>
-          </li>
-          <hr />
-          <li (click)="openInbox()" class="position-relative">
-            <a class="dropdown-item">
-              <div>
-                <i class="fa-solid fa-envelope pr-2"></i>
-                <span>Inbox</span>
-              </div>
-              <div
-                *ngIf="(notifications$ | async)?.newNotificationsCount > 0"
-                class="notifications notifications-link"
+            <div
+              *ngIf="(notifications$ | async)?.newNotificationsCount > 0"
+              class="notifications notifications-player"
+            >
+              {{ (notifications$ | async)?.newNotificationsCount }}
+            </div>
+            <div
+              *ngIf="questTimerService.time() as questInProgress"
+              class="notifications notification-quest-in-progress"
+            >
+              @if (questInProgress === 'Ready') {
+                ⚔️
+              } @else {
+                ⌛
+              }
+            </div>
+          </div>
+
+          <ul class="dropdown-menu">
+            <li class="player-info text-white pt-2 mb-2">
+              <app-item-box
+                class="rounded"
+                [height]="getPlayerImageSize() * 2"
+                [width]="getPlayerImageSize() * 2"
+                [image]="'/' + player.image"
               >
-                {{ (notifications$ | async)?.newNotificationsCount }}
-              </div>
-            </a>
-          </li>
-          <hr />
-          <li (click)="router.navigateByUrl('/edit')">
-            <a class="dropdown-item">
-              <div>
-                <i class="fa-solid fa-gear pr-2"></i> <span>Settings</span>
-              </div>
-            </a>
-          </li>
-          <hr />
-          <li (click)="logout()">
-            <a class="dropdown-item">
-              <div>
-                <i class="fa-solid fa-right-from-bracket pr-2"></i>
-                <span>Log out</span>
-              </div>
-            </a>
-          </li>
-        </ul>
+              </app-item-box>
+              <strong>{{ player.name }}</strong>
+              Level {{ player.level }}
+            </li>
+            <hr />
+            <li
+              (click)="
+                router.navigate(['/inventory'], {
+                  queryParams: { tab: 1 },
+                  replaceUrl: true,
+                })
+              "
+            >
+              <a class="dropdown-item px-2 py-1">
+                <div class="d-flex align-items-center">
+                  <div class="fa-solid fa-skull mr-1"></div>
+                  <span>{{ 'Character' }}</span>
+                </div>
+              </a>
+            </li>
+            <hr />
+            <li (click)="router.navigateByUrl('/quests')">
+              <a class="dropdown-item px-2 py-1">
+                <div class="d-flex align-items-center">
+                  <div class="fa-sword mr-1"></div>
+                  <span>{{ questTimerService.time() ?? 'Quests' }}</span>
+                </div>
+              </a>
+            </li>
+            <hr />
+            <li (click)="openInbox()" class="position-relative">
+              <a class="dropdown-item">
+                <div>
+                  <i class="fa-solid fa-envelope pr-2"></i>
+                  <span>Inbox</span>
+                </div>
+                <div
+                  *ngIf="(notifications$ | async)?.newNotificationsCount > 0"
+                  class="notifications notifications-link"
+                >
+                  {{ (notifications$ | async)?.newNotificationsCount }}
+                </div>
+              </a>
+            </li>
+            <hr />
+            <li (click)="router.navigateByUrl('/edit')">
+              <a class="dropdown-item">
+                <div>
+                  <i class="fa-solid fa-gear pr-2"></i> <span>Settings</span>
+                </div>
+              </a>
+            </li>
+            <hr />
+            <li (click)="logout()">
+              <a class="dropdown-item">
+                <div>
+                  <i class="fa-solid fa-right-from-bracket pr-2"></i>
+                  <span>Log out</span>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <!-- <span urText class="level text-white px-4">Level {{ player.level }}</span> -->
