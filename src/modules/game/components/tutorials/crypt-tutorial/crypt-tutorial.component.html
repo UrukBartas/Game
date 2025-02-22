@@ -1,80 +1,117 @@
 <app-base-tutorial>
   <div class="tutorial-crypt p-4">
-    <div class="tutorial-header mb-3">
-      <h2 class="text-center">Welcome to The Crypt!</h2>
+    <div class="tutorial-header mb-4">
+      <h2 class="text-center text-third">Welcome to The Crypt!</h2>
+      <p class="text-center text-white">A rogue-like dungeon where only the bravest dare to venture</p>
     </div>
+
     <div class="tutorial-content">
-      <p>
-        The Crypt is a challenging, rogue-like PvE adventure where you face
-        instant encounters and battle increasingly tougher enemies. As you delve
-        deeper, you'll fight for survival and glory—earning powerful upgrades,
-        Golden Uruks, and rare rewards!
-      </p>
-      <ol>
-        <li class="mb-3">
-          <strong>Entering the Crypt:</strong>
-          <p>
-            Once you step into the Crypt, there's no turning back. Your current
-            state is saved, and you cannot trade or equip new items. You must
-            rely solely on your existing gear to survive the horrors below.
+      <div class="overview-section mb-4">
+        <div class="d-flex align-items-center gap-3">
+          <img class="tutorial-image-small" src="{{ prefix + '/assets/tutorials/10.png' }}" alt="Crypt Entrance" />
+          <p class="text-white m-0">
+            Enter a challenging PvE adventure where you'll face increasingly difficult enemies,
+            earn powerful upgrades, and fight for glory and rare rewards!
           </p>
-          <!-- Optional Image: A depiction of the Crypt entrance -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/10.png' }}"
-            alt="Crypt Entrance"
-          />
-        </li>
-        <li class="mb-3">
-          <strong>Instant Encounters:</strong>
-          <p>
-            In this rogue-like experience, encounters occur instantly as you
-            progress from one room to the next. Be prepared for sudden battles
-            where every moment counts.
-          </p>
-          <!-- Optional Image: Illustration of an instant encounter -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/11.png' }}"
-            alt="Instant Encounter"
-          />
-        </li>
-        <li class="mb-3">
-          <strong>Reward Selection:</strong>
-          <p>
-            After each battle, you'll have the opportunity to choose a reward
-            that will enhance your abilities for the next fight. These upgrades
-            can boost your stats, provide new abilities, or offer other powerful
-            enhancements.
-          </p>
-          <!-- Optional Image: Screenshot of the reward selection screen -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/12.png' }}"
-            alt="Reward Selection"
-          />
-        </li>
-        <li class="mb-3">
-          <strong>Progressive Difficulty & Weekly Rewards:</strong>
-          <p>
-            Each subsequent battle grows tougher than the previous one. The
-            enemies become stronger, and strategic combat is essential.
-            Moreover, the Crypt resets every week, and rewards are distributed
-            based on how deep you manage to descend.
-          </p>
-          <!-- Optional Image: Display of progression and weekly rewards -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/13.png' }}"
-            alt="Progression & Weekly Rewards"
-          />
-        </li>
-      </ol>
-      <p class="mt-3">
-        Equip your best gear and stock up on consumables—prepare to face the
-        Crypt’s relentless challenges. Prove your worth, conquer your fears, and
-        reap the rewards that await in the depths!
-      </p>
+        </div>
+      </div>
+
+      <div class="mechanics-section mb-5">
+        <h4 class="text-third mb-3">Core Mechanics</h4>
+        <div class="mechanics-grid">
+          <div class="mechanic-item">
+            <div class="mechanic-icon">
+              <i class="fas fa-dungeon text-third"></i>
+            </div>
+            <h6 class="text-white">Point of No Return</h6>
+            <p>Once you enter, your state is locked. No trading or equipment changes allowed!</p>
+            <img class="mechanic-preview" src="{{ prefix + '/assets/tutorials/10.png' }}" alt="Crypt Entry" />
+          </div>
+
+          <div class="mechanic-item">
+            <div class="mechanic-icon">
+              <i class="fas fa-skull text-third"></i>
+            </div>
+            <h6 class="text-white">Instant Combat</h6>
+            <p>Face immediate battles as you progress through rooms</p>
+            <img class="mechanic-preview" src="{{ prefix + '/assets/tutorials/11.png' }}" alt="Combat" />
+          </div>
+
+          <div class="mechanic-item">
+            <div class="mechanic-icon">
+              <i class="fas fa-gift text-third"></i>
+            </div>
+            <h6 class="text-white">Strategic Rewards</h6>
+            <p>Choose powerful upgrades after each victory</p>
+            <img class="mechanic-preview" src="{{ prefix + '/assets/tutorials/12.png' }}" alt="Rewards" />
+          </div>
+
+          <div class="mechanic-item">
+            <div class="mechanic-icon">
+              <i class="fas fa-chart-line text-third"></i>
+            </div>
+            <h6 class="text-white">Progressive Challenge</h6>
+            <p>Face tougher enemies as you descend deeper</p>
+            <img class="mechanic-preview" src="{{ prefix + '/assets/tutorials/13.png' }}" alt="Progression" />
+          </div>
+        </div>
+      </div>
+
+      <div class="rewards-section mb-5">
+        <h4 class="text-third mb-3">Weekly Rewards System</h4>
+        <div class="reward-card">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <i class="fas fa-trophy text-third fa-2x"></i>
+            <div>
+              <h5 class="text-white m-0">Weekly Reset & Rewards</h5>
+              <p class="text-white-50 m-0">Compete for glory and earn rewards based on your progress</p>
+            </div>
+          </div>
+          <div class="rewards-list">
+            <div class="reward-tier">
+              <div class="tier-marker legendary"></div>
+              <span>Golden Uruks</span>
+            </div>
+            <div class="reward-tier">
+              <div class="tier-marker epic"></div>
+              <span>Rare Equipment</span>
+            </div>
+            <div class="reward-tier">
+              <div class="tier-marker rare"></div>
+              <span>Valuable Resources</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tips-section mb-4">
+        <h4 class="text-third mb-3">Survival Tips</h4>
+        <div class="tips-grid">
+          <div class="tip-card">
+            <i class="fas fa-shield-alt text-third"></i>
+            <p>Equip your best gear before entering</p>
+          </div>
+          <div class="tip-card">
+            <i class="fas fa-flask text-third"></i>
+            <p>Stock up on consumables</p>
+          </div>
+          <div class="tip-card">
+            <i class="fas fa-brain text-third"></i>
+            <p>Choose upgrades wisely</p>
+          </div>
+          <div class="tip-card">
+            <i class="fas fa-heart text-third"></i>
+            <p>Monitor your health closely</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="conclusion text-center mt-4">
+        <p class="text-white">
+          Are you ready to face the challenges that await in the depths?
+          Enter the Crypt, prove your worth, and claim your rewards! ⚔️
+        </p>
+      </div>
     </div>
   </div>
 </app-base-tutorial>

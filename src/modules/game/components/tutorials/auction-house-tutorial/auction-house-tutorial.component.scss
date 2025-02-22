@@ -1,0 +1,163 @@
+@import '../../../../../variables.scss';
+
+.tutorial-auctionhouse {
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1.5rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .feature-icon {
+        font-size: 2rem;
+        color: $third;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      h3 {
+        color: $white-100;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .feature-content {
+        color: rgba(255, 255, 255, 0.7);
+
+        .feature-preview {
+          width: 100%;
+          border-radius: 6px;
+          margin: 1rem 0;
+          opacity: 0.8;
+          transition: all 0.3s ease;
+
+          &:hover {
+            opacity: 1;
+          }
+        }
+
+        .quick-tips {
+          .tip {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+
+            i {
+              color: $third;
+              font-size: 0.8rem;
+            }
+          }
+        }
+
+        .filter-options, .sort-options {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin-bottom: 1rem;
+
+          .filter-tag, .sort-option {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+
+            &:hover {
+              background: rgba(0, 0, 0, 0.3);
+              color: $third;
+            }
+          }
+        }
+
+        .detail-points {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          margin-top: 1rem;
+
+          span {
+            color: rgba(255, 255, 255, 0.8);
+          }
+        }
+
+        .pagination-preview {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
+          margin-top: 1rem;
+          padding: 0.5rem;
+          background: rgba(0, 0, 0, 0.2);
+          border-radius: 6px;
+
+          i {
+            color: $third;
+          }
+        }
+      }
+    }
+  }
+
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+
+    .tip-card {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      i {
+        font-size: 1.5rem;
+        color: $third;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.8);
+        margin: 0;
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  h4 {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 2rem;
+
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: -0.5rem;
+      left: 0;
+      width: 50%;
+      height: 2px;
+      background: $third;
+    }
+  }
+}

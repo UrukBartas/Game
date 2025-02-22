@@ -104,12 +104,17 @@ export class EditCharacterComponent extends TemplatePage {
         disableSound: [false, []],
         disableEmailNotifications: [false, []],
         ignoreMine: [false, []],
+        referralCode: ['', []],
       },
       this.editing ? {} : { validator: passwordMatchingValidator() }
     );
 
     if (this.editing) {
       this.loadPlayer();
+    } else {
+      this.form.patchValue({
+        referralCode: this.route.snapshot.queryParams['referral'] ?? '',
+      });
     }
   }
 
@@ -244,6 +249,7 @@ export class EditCharacterComponent extends TemplatePage {
       disableSound,
       disableEmailNotifications,
       ignoreMine,
+      referralCode,
     } = this.form.value;
     const configuration: PlayerConfiguration = {
       disablePVP,
@@ -254,14 +260,30 @@ export class EditCharacterComponent extends TemplatePage {
     const state = this.store.selectSnapshot(MainState.getState);
     if (!state.web3) {
       this.playerService
-        .createByEmail(email, name, clazz, image, password, configuration)
+        .createByEmail(
+          email,
+          name,
+          clazz,
+          image,
+          password,
+          configuration,
+          referralCode
+        )
         .pipe(take(1))
         .subscribe(() => {
           this.store.dispatch(new LoginPlayer({ email, password }));
         });
     } else {
       this.playerService
-        .create(email, name, clazz, image, password, configuration)
+        .create(
+          email,
+          name,
+          clazz,
+          image,
+          password,
+          configuration,
+          referralCode
+        )
         .pipe(take(1))
         .subscribe(() => {
           this.store.dispatch(new LoginPlayer());

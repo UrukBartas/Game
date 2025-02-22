@@ -4,13 +4,11 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { PlayerModel } from 'src/modules/core/models/player.model';
-import { getRarityColor } from 'src/modules/utils';
+import { getPvpTier, getQuestTier, getRarityColor } from 'src/modules/utils';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ClassSelectorComponent } from '../../activities/edit-character/components/character-selector/character-selector.component';
-import { pvpTiers } from '../../activities/leadeboard/const/pvp-tiers';
-import { questTiers } from '../../activities/leadeboard/const/quest-tiers';
 
 @Component({
   selector: 'app-stats-detail',
@@ -39,19 +37,11 @@ export class StatsDetailComponent extends TemplatePage {
   }
 
   public getPvpTier(pvpIndex: number) {
-    return pvpTiers.find(
-      (tier) => pvpIndex >= tier.range[0] && pvpIndex <= tier.range[1]
-    );
+    return getPvpTier(pvpIndex);
   }
 
   public getQuestTier(questCount: number) {
-    for (let i = questTiers.length - 1; i >= 0; i--) {
-      if (questCount >= questTiers[i].maxQuests) {
-        return questTiers[i];
-      }
-    }
-
-    return questTiers[0];
+    return getQuestTier(questCount);
   }
 
   public openSkinSelector() {

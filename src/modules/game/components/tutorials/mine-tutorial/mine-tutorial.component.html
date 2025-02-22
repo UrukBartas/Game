@@ -1,82 +1,92 @@
 <app-base-tutorial>
   <div class="tutorial-mine p-4">
-    <div class="tutorial-header mb-3">
-      <h2 class="text-center">Welcome to The Mine!</h2>
+    <div class="tutorial-header mb-4">
+      <h2 class="text-center text-third">Welcome to The Mine!</h2>
+      <p class="text-center text-white">Your gateway to passive rewards and goblin workforce</p>
     </div>
+
     <div class="tutorial-content">
-      <p>
-        The Mine is our unique staking system where you invest your tokens to
-        earn exclusive rewards. By staking, you increase your workforce and
-        unlock higher tiers that provide better benefits such as more materials
-        per hour, higher treasure chances, enhanced experience and Golden Uruks
-        boosts, and increased export limits.
-      </p>
-      <ol>
-        <li class="mb-3">
-          <strong>Staking Tokens:</strong>
-          <p>
-            In The Mine, you stake your tokens to hire goblin workers and build
-            your mining infrastructure. Your staked amount determines your tier
-            and the rewards you receive.
+      <div class="overview-section mb-4">
+        <p class="text-white">
+          The Mine is our unique staking system where you invest your Golden Uruks to earn exclusive rewards.
+          By staking, you increase your workforce and unlock higher tiers that provide better benefits.
+        </p>
+      </div>
+
+      <div class="setup-guide mb-5">
+        <h4 class="text-third mb-3">Getting Started: How to Stake</h4>
+        <div class="setup-steps">
+          <div class="step mb-4">
+            <div class="step-header d-flex align-items-center gap-2 mb-2">
+              <div class="step-number">1</div>
+              <h5 class="text-white m-0">Bridge Your Uruks</h5>
+            </div>
+            <p class="text-white">Go to the "Bridge" tab to export your Golden Uruks to your wallet.</p>
+            <img class="tutorial-image" src="{{ prefix + '/assets/misc/bridge.png' }}" alt="Bridge tab" />
+          </div>
+
+          <div class="step mb-4">
+            <div class="step-header d-flex align-items-center gap-2 mb-2">
+              <div class="step-number">2</div>
+              <h5 class="text-white m-0">Connect to Network</h5>
+            </div>
+            <p class="text-white">Ensure you are connected to a valid network (e.g., IOTA) by selecting it from the network options.</p>
+            <img class="tutorial-image" src="{{ prefix + '/assets/misc/valid-chain.png' }}" alt="Network selection" />
+          </div>
+
+          <div class="step mb-4">
+            <div class="step-header d-flex align-items-center gap-2 mb-2">
+              <div class="step-number">3</div>
+              <h5 class="text-white m-0">Stake Your Uruks</h5>
+            </div>
+            <p class="text-white">Once your Uruks are in your wallet and you're connected, enter the amount you want to stake.</p>
+            <img class="tutorial-image" src="{{ prefix + '/assets/tutorials/19.png' }}" alt="Staking process" />
+          </div>
+        </div>
+      </div>
+
+      <div class="benefits-section mb-5">
+        <h4 class="text-third mb-3">Tier Benefits</h4>
+        <div class="benefits-grid">
+          <div class="benefit-item">
+            <i class="fas fa-hammer text-third mb-2"></i>
+            <h6 class="text-white">Materials per Hour</h6>
+            <p>Increase resource extraction rate</p>
+          </div>
+          <div class="benefit-item">
+            <i class="fas fa-gem text-third mb-2"></i>
+            <h6 class="text-white">Treasure Chance</h6>
+            <p>Higher odds of rare items</p>
+          </div>
+          <div class="benefit-item">
+            <i class="fas fa-star text-third mb-2"></i>
+            <h6 class="text-white">Experience Boost</h6>
+            <p>Level up faster</p>
+          </div>
+          <div class="benefit-item">
+            <i class="fas fa-coins text-third mb-2"></i>
+            <h6 class="text-white">Uruks Boost</h6>
+            <p>Enhanced token earnings</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="rewards-section mb-4">
+        <h4 class="text-third mb-3">Daily Rewards & Resets</h4>
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <img class="tutorial-image-small" src="{{ prefix + '/assets/tutorials/20.png' }}" alt="Rewards timer" />
+          <p class="text-white m-0">
+            Keep track of the daily rewards distribution and plan your mining strategy accordingly!
           </p>
-          <!-- Optional Image: A visual representation of staking tokens -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/19.png' }}"
-            alt="Staking Tokens"
-          />
-        </li>
-        <li class="mb-3">
-          <strong>Reward Benefits:</strong>
-          <p>Each tier offers multiple benefits:</p>
-          <ul>
-            <li>
-              <strong>Materials per Hour:</strong> Increase your resource
-              extraction with a higher matFactor.
-            </li>
-            <li>
-              <strong>Treasure Chance:</strong> A greater lootbox chance
-              improves your odds of finding rare items.
-            </li>
-            <li>
-              <strong>Experience Boost:</strong> Earn extra experience to level
-              up faster.
-            </li>
-            <li>
-              <strong>Golden Uruks Boost:</strong> Enjoy higher Uruks gain per
-              hour.
-            </li>
-            <li>
-              <strong>Travel Time Reduction:</strong> Shorter travel times help
-              you collect rewards more efficiently.
-            </li>
-            <li>
-              <strong>Export Limits:</strong> Higher tiers allow you to export
-              more Golden Uruks each day.
-            </li>
-          </ul>
-        </li>
-        <li class="mb-3">
-          <strong>Weekly Reset & Extra Attempts:</strong>
-          <p>
-            The Mine resets its rewards periodically. Your overall performance
-            is measured by your total staked amount, and certain tiers grant
-            extra crypt attempts each week—giving you even more opportunities to
-            earn additional rewards.
-          </p>
-          <!-- Optional Image: A countdown timer or reset notification -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/20.png' }}"
-            alt="Weekly Reset"
-          />
-        </li>
-      </ol>
-      <p class="mt-3">
-        Maximize your rewards by staking wisely and upgrading your tier. Keep an
-        eye on the countdown to the next rewards distribution and become the
-        ultimate miner!
-      </p>
+        </div>
+      </div>
+
+      <div class="conclusion text-center mt-4">
+        <p class="text-white">
+          Start your mining journey today and become the ultimate miner!
+          The more you stake, the better your rewards will be.
+        </p>
+      </div>
     </div>
   </div>
 </app-base-tutorial>

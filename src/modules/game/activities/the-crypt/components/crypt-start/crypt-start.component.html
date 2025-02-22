@@ -16,57 +16,93 @@
 </ng-template>
 
 <ng-template #cryptmsg>
-  <div class="crypt-welcome" style="position: relative">
-    <i
-      class="fa-regular fa-circle-xmark close-icon pointer"
-      (click)="hideModal()"
-    ></i>
+  <div class="crypt-welcome">
+    <i class="fa-regular fa-circle-xmark close-icon pointer" (click)="hideModal()"></i>
     <div class="content">
-      <!-- Título Épico -->
-      <h1 urTitle>💀 Welcome to the Crypt ⚔️</h1>
-
-      <!-- Introducción Narrativa -->
-      <p class="crypt-intro">
-        Once you step into the Crypt, <strong>there is no turning back.</strong>
-        Trapped beneath the earth, your fate will be sealed by your decisions.
-        You cannot trade, equip new items, or escape. You fight or you perish.
-      </p>
-
-      <!-- Normas y Funcionamiento -->
-      <div class="crypt-rules">
-        <h2 urText>🛡️ The Rules of the Crypt 🗡️</h2>
-        <ul>
-          <li>
-            Your current state will be <strong>saved</strong> at the start.
-          </li>
-          <li>
-            After each battle, you can <strong>choose upgrades</strong> to aid
-            your survival.
-          </li>
-          <li>
-            With each room, the
-            <strong>difficulty increases exponentially</strong>. Enemies become
-            stronger and deadlier. Choose your rewards wisely.
-          </li>
-          <li>
-            The Crypt resets <strong>every week</strong>. Your rewards will
-            depend on how deep you go.
-          </li>
-          <li>
-            The deeper you descend, the
-            <strong>greater the treasures</strong> at the end of the week!
-          </li>
-        </ul>
+      <div class="welcome-header">
+        <div class="skull-icon">💀</div>
+        <h1 urTitle>Welcome to the Crypt</h1>
+        <div class="sword-icon">⚔️</div>
       </div>
 
-      <!-- Mensaje de Preparación -->
-      <div class="crypt-preparation">
-        <h3 urText>⚔️ Prepare Yourself, Adventurer! ⚔️</h3>
-        <p>
-          Equip your <strong>best items</strong>, stock up on
-          <strong>consumables</strong>, and steel your resolve. You will need
-          everything you have to survive the Crypt’s horrors.
+      <div class="intro-section">
+        <p class="crypt-intro text-white">
+          Once you step into the Crypt, <strong class="text-danger">there is no turning back.</strong>
+          Trapped beneath the earth, your fate will be sealed by your decisions.
+          You cannot trade, equip new items, or escape. You fight or you perish.
         </p>
+      </div>
+
+      <div class="rules-section">
+        <div class="rules-header">
+          <span class="rule-icon">🛡️</span>
+          <h2 urText>Rules of the Crypt</h2>
+          <span class="rule-icon">🗡️</span>
+        </div>
+
+        <div class="rules-grid">
+          <div class="rule-card">
+            <div class="rule-icon">
+              <i class="fas fa-save"></i>
+            </div>
+            <h3>State Lock</h3>
+            <p>Your current state will be <strong>saved</strong> at the start</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-icon">
+              <i class="fas fa-level-up-alt"></i>
+            </div>
+            <h3>Upgrades</h3>
+            <p>Choose <strong>powerful upgrades</strong> after each victory</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-icon">
+              <i class="fas fa-skull"></i>
+            </div>
+            <h3>Difficulty</h3>
+            <p>Enemies become <strong>stronger</strong> with each room</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-icon">
+              <i class="fas fa-sync-alt"></i>
+            </div>
+            <h3>Weekly Reset</h3>
+            <p>The Crypt resets <strong>every week</strong></p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-icon">
+              <i class="fas fa-gem"></i>
+            </div>
+            <h3>Rewards</h3>
+            <p>Greater <strong>treasures</strong> await in deeper levels</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="preparation-section">
+        <div class="preparation-header">
+          <h3 urText>⚔️ Prepare Yourself, Adventurer! ⚔️</h3>
+        </div>
+        <div class="preparation-content">
+          <div class="preparation-tips">
+            <div class="tip">
+              <i class="fas fa-shield-alt"></i>
+              <span>Equip your <strong>best items</strong></span>
+            </div>
+            <div class="tip">
+              <i class="fas fa-flask"></i>
+              <span>Stock up on <strong>consumables</strong></span>
+            </div>
+            <div class="tip">
+              <i class="fas fa-heart"></i>
+              <span>Steel your <strong>resolve</strong></span>
+            </div>
+          </div>
+        </div>
         <ng-container *ngTemplateOutlet="actions"></ng-container>
       </div>
     </div>
@@ -146,10 +182,23 @@
         </p>
       </div>
       <div class="crypt-challenge">
-        <ng-container *ngTemplateOutlet="actions"></ng-container>
+        @if ((lastLoadedStats?.remainingAttempts ?? 0) <= 0) {
+          <p class="challenge-text">You don't have more tries for this week!</p>
+          <button
+            class="crypt-button crypt-button-secondary animate__animated animate__pulse animate__infinite"
+            (click)="getMoreCryptTries.emit()"
+          >
+            Get more!
+          </button>
+        } @else {
+          <p class="challenge-text">Are you ready to face death?</p>
+          <button class="crypt-button crypt-button-primary" (click)="startCrypt.emit()">
+            <i class="fas fa-skull"></i> Enter the Crypt
+          </button>
+        }
 
-        <button class="read-rules-button" (click)="openModal(cryptmsg)">
-          📜 Read the rules
+        <button class="crypt-button crypt-button-secondary" (click)="openModal(cryptmsg)">
+          <i class="fas fa-scroll"></i> Read the rules
         </button>
       </div>
     </div>

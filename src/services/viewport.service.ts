@@ -90,4 +90,8 @@ export class ViewportService {
         return [100, 90];
     }
   }
+
+  public isMobile() {
+    return this.screenWidth === 'xs' || this.screenWidth === 'sm';
+  }
 }

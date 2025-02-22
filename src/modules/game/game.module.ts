@@ -2,6 +2,7 @@ import { AsyncPipe, CommonModule, DecimalPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { QRCodeModule } from 'angularx-qrcode';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
@@ -68,6 +69,7 @@ import { QuestPickerComponent } from './activities/quests/quest-picker/quest-pic
 import { QuestProgressComponent } from './activities/quests/quest-progress/quest-progress.component';
 import { QuestResultComponent } from './activities/quests/quest-result/quest-result.component';
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
+import { ReferralsComponent } from './activities/referrals/referrals.component';
 import { DailyRollButtonComponent } from './activities/shop/components/daily-roll-button.component';
 import { ShopComponent } from './activities/shop/shop.component';
 import { ShoppingComponent } from './activities/shopping/shopping.component';
@@ -82,7 +84,6 @@ import { CryptoFailedComponent } from './activities/the-crypt/components/crypto-
 import { RoomsListComponent } from './activities/the-crypt/components/rooms-list/rooms-list.component';
 import { TheCryptComponent } from './activities/the-crypt/the-crypt.component';
 import { StakeRemoveRequestModalComponent } from './activities/the-mine/stake-remove-request-modal/stake-remove-request-modal.component';
-import { TheMineInfoModalComponent } from './activities/the-mine/the-mine-help/the-mine-info-modal.component';
 import { TheMineComponent } from './activities/the-mine/the-mine.component';
 import { BaseInventoryComponent } from './components/base-inventory/base-inventory.component';
 import { ChallengeModalComponent } from './components/challenge-modal/challenge-modal.component';
@@ -101,17 +102,17 @@ import { OnlyStatsComponent } from './components/stats-detail/only-stats/only-st
 import { PercentStatsComponent } from './components/stats-detail/only-stats/only-stats/percent-stats/percent-stats.component';
 import { StatsDetailComponent } from './components/stats-detail/stats-detail.component';
 import { TitleGeneratorModalComponent } from './components/title-generator-modal/title-generator-modal.component';
-import { GameRoutingModule } from './game-routing.module';
-import { InventoryTutorialComponent } from './components/tutorials/inventory-tutorial/inventory-tutorial.component';
-import { BaseTutorialComponent } from './components/tutorials/base-tutorial/base-tutorial.component';
 import { AuctionHouseTutorialComponent } from './components/tutorials/auction-house-tutorial/auction-house-tutorial.component';
+import { BaseTutorialComponent } from './components/tutorials/base-tutorial/base-tutorial.component';
+import { BlacksmithTutorialComponent } from './components/tutorials/blacksmith-tutorial/blacksmith-tutorial.component';
+import { BridgeTutorialComponent } from './components/tutorials/bridge-tutorial/bridge-tutorial.component';
+import { CryptTutorialComponent } from './components/tutorials/crypt-tutorial/crypt-tutorial.component';
+import { InventoryTutorialComponent } from './components/tutorials/inventory-tutorial/inventory-tutorial.component';
+import { LeaderboardTutorialComponent } from './components/tutorials/leaderboard-tutorial/leaderboard-tutorial.component';
+import { MineTutorialComponent } from './components/tutorials/mine-tutorial/mine-tutorial.component';
 import { QuestTutorialComponent } from './components/tutorials/quest-tutorial/quest-tutorial.component';
 import { ShopTutorialComponent } from './components/tutorials/shop-tutorial/shop-tutorial.component';
-import { CryptTutorialComponent } from './components/tutorials/crypt-tutorial/crypt-tutorial.component';
-import { BlacksmithTutorialComponent } from './components/tutorials/blacksmith-tutorial/blacksmith-tutorial.component';
-import { MineTutorialComponent } from './components/tutorials/mine-tutorial/mine-tutorial.component';
-import { BridgeTutorialComponent } from './components/tutorials/bridge-tutorial/bridge-tutorial.component';
-import { LeaderboardTutorialComponent } from './components/tutorials/leaderboard-tutorial/leaderboard-tutorial.component';
+import { GameRoutingModule } from './game-routing.module';
 
 const directives = [
   ValidInputDirective,
@@ -206,6 +207,7 @@ const pipes = [
     MineTutorialComponent,
     BridgeTutorialComponent,
     LeaderboardTutorialComponent,
+    ReferralsComponent,
   ],
   imports: [
     ...directives,
@@ -236,13 +238,13 @@ const pipes = [
     TierizedProgressBarComponent,
     BalanceSelectorComponent,
     ChainSwitcherComponent,
-    TheMineInfoModalComponent,
     SwiperModule,
     ChanceDisplayerComponent,
     LootboxStatsDisplayerComponent,
     NgxEchartsModule,
     MinMaxComboSelectorComponent,
     UruksDisplayerComponent,
+    QRCodeModule,
   ],
   exports: [
     GameLayoutComponent,

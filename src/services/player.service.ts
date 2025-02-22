@@ -73,7 +73,8 @@ export class PlayerService extends ApiBaseService {
     clazz: PlayerClass,
     image: string,
     password: string,
-    configuration: PlayerConfiguration
+    configuration: PlayerConfiguration,
+    referralCode?: string
   ): Observable<PlayerModel> {
     return this.post('/create', {
       email,
@@ -82,6 +83,7 @@ export class PlayerService extends ApiBaseService {
       image,
       password,
       configuration,
+      referralCode,
     });
   }
 
@@ -91,7 +93,8 @@ export class PlayerService extends ApiBaseService {
     clazz: PlayerClass,
     image: string,
     password: string,
-    configuration: PlayerConfiguration
+    configuration: PlayerConfiguration,
+    referralCode?: string
   ): Observable<PlayerModel> {
     return this.post('/create-by-email', {
       email,
@@ -100,6 +103,7 @@ export class PlayerService extends ApiBaseService {
       image,
       password,
       configuration,
+      referralCode,
     });
   }
 

@@ -1,0 +1,276 @@
+<div class="referrals-container">
+  <div class="description">
+    <span urText>Referrals</span>
+  </div>
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active"
+        data-bs-toggle="tab"
+        data-bs-target="#recruiter"
+        type="button"
+        role="tab"
+      >
+        My Referral Code
+      </button>
+    </li>
+    <li class="nav-item" role="presentation" *ngIf="!!recruiter">
+      <button
+        class="nav-link"
+        data-bs-toggle="tab"
+        data-bs-target="#recruited"
+        type="button"
+        role="tab"
+      >
+        My Recruiter
+      </button>
+    </li>
+  </ul>
+
+  <div class="tab-content p-3">
+    <!-- Recruiter Tab -->
+    <div class="tab-pane fade show active" id="recruiter" role="tabpanel">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card bg-secondary">
+            <div class="card-body">
+              <div class="referral-header mb-4">
+                <img
+                  src="{{ prefix }}/assets/misc/goblin_referrals.png"
+                  alt="Goblin Rewards"
+                  class="goblin-mascot mb-3"
+                  width="150"
+                  height="150"
+                />
+                <h4 class="text-white mb-2">
+                  Invite Friends and Earn Epic Rewards!
+                </h4>
+                <p class="text-third mb-3">
+                  Your friends will receive 3x XP Boosts, and you'll unlock
+                  amazing rewards as you climb through the referral tiers! 🎉
+                </p>
+              </div>
+              <h5 class="card-title text-center text-white">
+                Your Referral Code
+              </h5>
+              <div class="d-flex align-items-center gap-2">
+                <input
+                  type="text"
+                  class="form-control"
+                  [value]="referralCode"
+                  readonly
+                />
+                <button class="btn btn-primary" (click)="copyCode()">
+                  <i class="fa-regular fa-copy"></i>
+                </button>
+              </div>
+              <div class="qr-code mt-4 text-center" *ngIf="referralUrl">
+                <qrcode
+                  [qrdata]="referralUrl"
+                  [width]="200"
+                  [margin]="2"
+                  [colorDark]="'#ffffff'"
+                  [colorLight]="'#00000000'"
+                ></qrcode>
+
+                <div class="share-buttons mt-4">
+                  <p class="text-third mb-2">Share with friends via:</p>
+                  <div class="d-flex justify-content-center gap-3">
+                    <a [href]="'https://wa.me/?text=' + encodedShareMessage"
+                       target="_blank"
+                       class="btn btn-share whatsapp">
+                      <i class="fab fa-whatsapp"></i>
+                    </a>
+
+                    <a [href]="'https://t.me/share/url?url=' + encodedReferralUrl + '&text=' + encodedShareMessage"
+                       target="_blank"
+                       class="btn btn-share telegram">
+                      <i class="fab fa-telegram"></i>
+                    </a>
+
+                    <a [href]="'https://twitter.com/intent/tweet?text=' + encodedShareMessage"
+                       target="_blank"
+                       class="btn btn-share twitter">
+                      <i class="fab fa-twitter"></i>
+                    </a>
+
+                    <a [href]="'https://discord.com/share?url=' + encodedReferralUrl"
+                       target="_blank"
+                       class="btn btn-share discord">
+                      <i class="fab fa-discord"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6" *ngIf="currentRewards$ | async as currentRewards">
+          <div class="card bg-secondary">
+            <div class="card-body">
+              <h5 class="card-title text-center text-white">Your Rewards</h5>
+              <div class="rewards-list-container">
+                <div class="rewards-list">
+                  <div class="row g-3">
+                    <div
+                      class="col-12"
+                      *ngFor="let reward of currentRewards.rewards"
+                    >
+                      <div
+                        class="reward-card"
+                        [class.reward-available]="reward.available"
+                        [class.reward-locked]="!reward.available"
+                      >
+                        <div
+                          class="d-flex align-items-center gap-3 p-3 bg-dark rounded"
+                        >
+                          <div class="reward-image">
+                            <img
+                              [src]="prefix + reward.image"
+                              [alt]="reward.name"
+                              class="img-fluid rounded"
+                            />
+                            <div class="reward-tier">
+                              Tier {{ reward.tier }}
+                            </div>
+                            <div
+                              class="locked-overlay"
+                              *ngIf="!reward.available"
+                            >
+                              <i class="fas fa-lock"></i>
+                            </div>
+                          </div>
+                          <div class="reward-info flex-grow-1">
+                            <h6 class="reward-name mb-1">{{ reward.name }}</h6>
+                            <p class="reward-description mb-2">
+                              {{ reward.description }}
+                            </p>
+                            <div class="progress" style="height: 10px">
+                              <div
+                                class="progress-bar"
+                                role="progressbar"
+                                [style.width]="reward.progress * 100 + '%'"
+                                [attr.aria-valuenow]="reward.progress * 100"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                              ></div>
+                            </div>
+                            <small class="text-third">
+                              {{ reward.currentCount }}/{{ reward.required }}
+                              recruits needed
+                            </small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recruited Tab -->
+    <div
+      class="tab-pane fade"
+      id="recruited"
+      role="tabpanel"
+      *ngIf="!!recruiter"
+    >
+      <div class="card bg-secondary">
+        <div class="card-body">
+          <div class="recruiter-header text-center mb-4">
+            <h4 class="text-white">Your Mentor</h4>
+            <p class="text-third">The player who introduced you to the game</p>
+          </div>
+
+          <div class="recruiter-info">
+            <div class="row g-4">
+              <!-- Recruiter Profile Card -->
+              <div class="col-md-6">
+                <div class="profile-section bg-dark rounded p-4">
+                  <div class="d-flex align-items-center gap-3 mb-4">
+                    <app-item-box
+                      [height]="getPlayerImageSize()"
+                      [width]="getPlayerImageSize()"
+                      [image]="recruiter.image"
+                      class="recruiter-avatar"
+                    ></app-item-box>
+                    <div>
+                      <app-name-player
+                        [player]="recruiter"
+                        [disabledTrigger]="true"
+                      ></app-name-player>
+                      <span class="text-third">Member since {{ recruiter.createdAt | date:'mediumDate' }}</span>
+                    </div>
+                  </div>
+
+                  <div class="achievements-showcase">
+                    <h6 class="text-white mb-3">Achievements</h6>
+                    <div class="d-flex justify-content-around text-center">
+                      <div class="achievement">
+                        <div class="achievement-value">{{ recruiter.level }}</div>
+                        <div class="text-third">Level</div>
+                      </div>
+                      <div class="achievement">
+                        <div class="achievement-value">{{ recruiter.finishedQuestsCount }}</div>
+                        <div class="text-third">Quests</div>
+                      </div>
+                      <div class="achievement">
+                        <div class="achievement-value">{{ recruiter.mmr }}</div>
+                        <div class="text-third">Arena Points</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recruiter Ranks Card -->
+              <div class="col-md-6">
+                <div class="ranks-section bg-dark rounded p-4">
+                  <h6 class="text-white mb-3">Ranks & Titles</h6>
+
+                  <div class="rank-item mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="text-third">Arena Rank</span>
+                      <span [ngStyle]="{ color: getRarityColor(getPvpTier(recruiter.pvpIndex).rarity) }">
+                        {{ getPvpTier(recruiter.pvpIndex).title }}
+                      </span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                      <div class="progress-bar"
+                           [ngStyle]="{
+                             'background-color': getRarityColor(getPvpTier(recruiter.pvpIndex).rarity),
+                             'width': (recruiter.pvpIndex % 100) + '%'
+                           }">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="rank-item">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <span class="text-third">Quest Rank</span>
+                      <span [ngStyle]="{ color: getRarityColor(getQuestTier(recruiter.finishedQuestsCount).rarity) }">
+                        {{ getQuestTier(recruiter.finishedQuestsCount).title }}
+                      </span>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                      <div class="progress-bar"
+                           [ngStyle]="{
+                             'background-color': getRarityColor(getQuestTier(recruiter.finishedQuestsCount).rarity),
+                             'width': ((recruiter.finishedQuestsCount % 100) / 100 * 100) + '%'
+                           }">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

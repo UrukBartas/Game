@@ -1,91 +1,111 @@
 <app-base-tutorial>
   <div class="tutorial-inventory p-4">
-    <div class="tutorial-header mb-3">
-      <h2 class="text-center">Welcome to Your Inventory!</h2>
+    <div class="tutorial-header mb-4">
+      <h2 class="text-center text-third">Welcome to Your Inventory!</h2>
+      <p class="text-center text-white">Manage your equipment, resources, and track your progress</p>
     </div>
+
     <div class="tutorial-content">
-      <p>
-        In this section, you can manage all your items including equipment,
-        materials, consumables, and miscellaneous items. Here, you can equip
-        items, view your statistics, check your verification status (via the
-        detailed statistics section accessed by clicking the arrow at the upper
-        right), and review your PvP battle history.
-      </p>
-      <ol>
-        <li class="mb-3">
-          <strong>Expanding Your Inventory:</strong>
-          <p>
-            When you have available capacity and meet the level requirements,
-            you’ll see an icon with the image
-            <strong>
-              <img
-                class="uruks-icon pb-1"
-                src="{{ prefix + '/assets/inventory-expand.jpg' }}"
-              />
-            </strong>
-            and the label <strong>"+2O"</strong>. Clicking this icon shows a
-            tooltip with the cost to expand your inventory. Confirm the purchase
-            to add extra slots.
+      <div class="overview-section mb-4">
+        <div class="d-flex align-items-center gap-3">
+          <i class="fas fa-backpack fa-2x text-third"></i>
+          <p class="text-white m-0">
+            Your inventory is the central hub for managing all your items, checking statistics,
+            and reviewing your battle history.
           </p>
-        </li>
-        <li class="mb-3">
-          <strong>Inventory Tabs:</strong>
-          <p>Use the tabs to navigate between different types of items:</p>
-          <ul>
-            <li>
-              <strong>⚔️ Items:</strong> View and equip weapons, armor, and
-              other gear.
-            </li>
-            <li>
-              <strong>🧱 Materials:</strong> Check your collected raw materials.
-            </li>
-            <li>
-              <strong>⚗️ Consumables:</strong> Manage potions and consumable
-              items.
-            </li>
-            <li>
-              <strong>📜 Miscellaneous:</strong> Browse other assorted items.
-            </li>
-          </ul>
-        </li>
-        <li class="mb-3">
-          <strong>Detailed Statistics & Verification:</strong>
-          <p>
-            Click the arrow located at the upper right in the details slide to
-            open a detailed statistics view. Here, you can verify your status
-            and view in-depth information about your character.
-          </p>
-          <img class="pb-1" src="{{ prefix + '/assets/tutorials/2.png' }}" />
-        </li>
-        <li class="mb-3">
-          <strong>PvP Battle History:</strong>
-          <p>
-            Navigate to the PvP Battle History slide to review your past PvP
-            matches, including outcomes and performance stats.
-          </p>
-        </li>
-        <li class="mb-3">
-          <strong>Character Equipment:</strong>
-          <p>
-            In the right-hand panel, you can see your character’s equipped
-            items. Equip new items by dragging them to the corresponding slot or
-            by double-clicking an item to unequip it. This panel also displays
-            your boosts and current mount.
-          </p>
-          <img class="pb-1" src="{{ prefix + '/assets/tutorials/1.png' }}" />
-        </li>
-        <li class="mb-3">
-          <strong>Navigating the Carousel:</strong>
-          <p>
-            Use the left and right arrows at the top of each slide to switch
-            between the Inventory, Details, and PvP Battle History views.
-          </p>
-        </li>
-      </ol>
-      <p class="mt-3">
-        Explore your inventory to optimize your gameplay and gain an edge in
-        your adventures!
-      </p>
+        </div>
+      </div>
+
+      <div class="features-section mb-5">
+        <h4 class="text-third mb-3">Key Features</h4>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-expand"></i>
+            </div>
+            <h3>Inventory Expansion</h3>
+            <div class="feature-content">
+              <p>Increase your storage capacity when you see:</p>
+              <div class="expansion-example">
+                <img class="uruks-icon" src="{{ prefix + '/assets/inventory-expand.jpg' }}" alt="Expand Icon"/>
+                <span class="expansion-text">+20</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-folder-tree"></i>
+            </div>
+            <h3>Item Categories</h3>
+            <div class="category-tabs">
+              <div class="tab">
+                <i class="fas fa-sword"></i>
+                <span>Items</span>
+              </div>
+              <div class="tab">
+                <i class="fas fa-cube"></i>
+                <span>Materials</span>
+              </div>
+              <div class="tab">
+                <i class="fas fa-flask"></i>
+                <span>Consumables</span>
+              </div>
+              <div class="tab">
+                <i class="fas fa-scroll"></i>
+                <span>Miscellaneous</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h3>Statistics & Verification</h3>
+            <div class="feature-content">
+              <p>Access detailed stats and verify your status</p>
+              <img class="feature-preview" src="{{ prefix + '/assets/tutorials/2.png' }}" alt="Statistics View"/>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Equipment Management</h3>
+            <div class="feature-content">
+              <p>Drag & drop or double-click to equip items</p>
+              <img class="feature-preview" src="{{ prefix + '/assets/tutorials/1.png' }}" alt="Equipment View"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="navigation-section mb-4">
+        <h4 class="text-third mb-3">Quick Navigation</h4>
+        <div class="nav-tips">
+          <div class="nav-tip">
+            <i class="fas fa-arrows-left-right"></i>
+            <p>Use arrows to switch between views</p>
+          </div>
+          <div class="nav-tip">
+            <i class="fas fa-clock-rotate-left"></i>
+            <p>Check PvP Battle History</p>
+          </div>
+          <div class="nav-tip">
+            <i class="fas fa-horse"></i>
+            <p>Manage mounts and boosts</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="conclusion text-center mt-4">
+        <p class="text-white">
+          Master your inventory management to become a more efficient adventurer!
+          Keep your equipment organized and your resources ready! 🎒
+        </p>
+      </div>
     </div>
   </div>
 </app-base-tutorial>

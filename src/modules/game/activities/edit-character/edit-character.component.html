@@ -75,7 +75,10 @@
             placeholder="Enter email"
             validInput
           />
-          <small *ngIf="!editing" class="form-text text-secondary">
+          <small
+            *ngIf="!editing && !viewportService.isMobile()"
+            class="form-text text-secondary"
+          >
             Email used to receive in-game notifications.
           </small>
         </div>
@@ -106,7 +109,7 @@
               placeholder="Repeat password"
             />
           </div>
-          <div class="col-12" *ngIf="!editing">
+          <div class="col-12" *ngIf="!editing && !viewportService.isMobile()">
             <small class="form-text text-secondary">
               Password is necessary if you want to log in with Web2 (without
               Web3 wallet).
@@ -135,6 +138,21 @@
             character.</span
           >
         </div>
+
+        <div class="row" *ngIf="!editing">
+          <div class="form-group col-12 col-md-6 pb-3">
+            <label for="referralCode" class="text-third">Referral Code:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="referralCode"
+              formControlName="referralCode"
+              name="referralCode"
+              placeholder="Enter referral code"
+            />
+          </div>
+        </div>
+
         <div class="form-group py-3 action-buttons gap-2">
           <button (click)="location.back()" class="btn btn-dark btn-lg">
             Back

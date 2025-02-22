@@ -1,90 +1,139 @@
 <app-base-tutorial>
   <div class="tutorial-blacksmith p-4">
-    <div class="tutorial-header mb-3">
-      <h2 class="text-center">Welcome to the Blacksmith!</h2>
+    <div class="tutorial-header mb-4">
+      <h2 class="text-center text-third">Welcome to the Blacksmith!</h2>
+      <p class="text-center text-white">Master the art of item enhancement and crafting</p>
     </div>
+
     <div class="tutorial-content">
-      <p>
-        In the Blacksmith, you can work on your items in various ways to improve
-        or recycle them. Here are the main functions available:
-      </p>
-      <ol>
-        <li class="mb-3">
-          <strong>Melt:</strong>
-          <p>
-            Break down unwanted items into magical dust, which can then be used
-            as a resource for enhancements or upgrades. Use this option when you
-            want to recycle items that no longer serve you.
+      <div class="overview-section mb-4">
+        <div class="d-flex align-items-center gap-3">
+          <i class="fas fa-hammer fa-2x text-third"></i>
+          <p class="text-white m-0">
+            Enhance, repair, and transform your items through various crafting techniques.
+            Each process offers unique ways to improve your gear!
           </p>
-          <!-- Optional Image: A screenshot or illustration of the melting process -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/14.png' }}"
-            alt="Melt Items"
-          />
-        </li>
-        <li class="mb-3">
-          <strong>Repair:</strong>
-          <p>
-            Restore the durability of your items so they can perform optimally
-            in battle. Repairing is crucial when your gear has been worn down by
-            repeated combat.
-          </p>
-          <!-- Optional Image: A screenshot or illustration showing the repair process -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/15.png' }}"
-            alt="Repair Items"
-          />
-        </li>
-        <li class="mb-3">
-          <strong>Combine:</strong>
-          <p>
-            Fuse two or more items together in hopes of creating a more powerful
-            or rare item. This option requires selecting at least two items to
-            combine.
-          </p>
-          <!-- Optional Image: A visual example of items being combined -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/16.png' }}"
-            alt="Combine Items"
-          />
-        </li>
-        <li class="mb-3">
-          <strong>Upgrade:</strong>
-          <p>
-            Enhance an item's stats or quality by investing valuable resources.
-            However, be cautious—if the item's durability is too low, it may
-            break during the upgrade process.
-          </p>
-          <!-- Optional Image: A screenshot or graphic depicting an upgrade in progress -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/17.png' }}"
-            alt="Upgrade Items"
-          />
-        </li>
-        <li class="mb-3">
-          <strong>Enchant:</strong>
-          <p>
-            Apply unique enchantments to your items to boost their performance,
-            attributes, or abilities. Enchanting adds special effects that can
-            give you an edge in battle.
-          </p>
-          <!-- Optional Image: A visual showing the enchantment process -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/18.png' }}"
-            alt="Enchant Items"
-          />
-        </li>
-      </ol>
-      <p class="mt-3">
-        <strong>Note:</strong> Upgrading items carries a risk—if an item’s
-        durability is insufficient, it may break during the process. Always
-        check your item's condition before attempting an upgrade.
-      </p>
+        </div>
+      </div>
+
+      <div class="crafting-section mb-5">
+        <h4 class="text-third mb-3">Crafting Techniques</h4>
+        <div class="crafting-grid">
+          <div class="craft-card">
+            <div class="craft-icon">
+              <i class="fas fa-fire-alt"></i>
+            </div>
+            <h3>Melt Items</h3>
+            <div class="craft-content">
+              <p>Transform unwanted items into valuable magical dust</p>
+              <div class="process-preview">
+                <img class="craft-preview" src="{{ prefix + '/assets/tutorials/14.png' }}" alt="Melting Process"/>
+                <div class="benefits">
+                  <span><i class="fas fa-check"></i> Recycle unused gear</span>
+                  <span><i class="fas fa-check"></i> Obtain crafting resources</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="craft-card">
+            <div class="craft-icon">
+              <i class="fas fa-wrench"></i>
+            </div>
+            <h3>Repair Equipment</h3>
+            <div class="craft-content">
+              <p>Restore your gear's durability to peak condition</p>
+              <div class="process-preview">
+                <img class="craft-preview" src="{{ prefix + '/assets/tutorials/15.png' }}" alt="Repair Process"/>
+                <div class="benefits">
+                  <span><i class="fas fa-check"></i> Maintain item performance</span>
+                  <span><i class="fas fa-check"></i> Prevent breakage</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="craft-card">
+            <div class="craft-icon">
+              <i class="fas fa-compress-arrows-alt"></i>
+            </div>
+            <h3>Combine Items</h3>
+            <div class="craft-content">
+              <p>Fuse items together for potentially better gear</p>
+              <div class="process-preview">
+                <img class="craft-preview" src="{{ prefix + '/assets/tutorials/16.png' }}" alt="Combination Process"/>
+                <div class="benefits">
+                  <span><i class="fas fa-check"></i> Create stronger items</span>
+                  <span><i class="fas fa-check"></i> Chance for rare results</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="craft-card">
+            <div class="craft-icon">
+              <i class="fas fa-level-up-alt"></i>
+            </div>
+            <h3>Upgrade Gear</h3>
+            <div class="craft-content">
+              <p>Enhance item stats with valuable resources</p>
+              <div class="process-preview">
+                <img class="craft-preview" src="{{ prefix + '/assets/tutorials/17.png' }}" alt="Upgrade Process"/>
+                <div class="warning">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  <span>Low durability items may break during upgrade</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="craft-card">
+            <div class="craft-icon">
+              <i class="fas fa-magic"></i>
+            </div>
+            <h3>Enchant Items</h3>
+            <div class="craft-content">
+              <p>Add magical properties to your equipment</p>
+              <div class="process-preview">
+                <img class="craft-preview" src="{{ prefix + '/assets/tutorials/18.png' }}" alt="Enchantment Process"/>
+                <div class="benefits">
+                  <span><i class="fas fa-check"></i> Add special effects</span>
+                  <span><i class="fas fa-check"></i> Enhance attributes</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="safety-tips mb-4">
+        <h4 class="text-third mb-3">Safety Guidelines</h4>
+        <div class="tips-grid">
+          <div class="tip-card">
+            <i class="fas fa-shield-alt"></i>
+            <p>Always check item durability before upgrading</p>
+          </div>
+          <div class="tip-card">
+            <i class="fas fa-coins"></i>
+            <p>Keep enough resources for repairs</p>
+          </div>
+          <div class="tip-card">
+            <i class="fas fa-gem"></i>
+            <p>Prioritize enhancing rare items</p>
+          </div>
+          <div class="tip-card">
+            <i class="fas fa-balance-scale"></i>
+            <p>Consider cost vs benefit before crafting</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="conclusion text-center mt-4">
+        <p class="text-white">
+          Visit the Blacksmith regularly to maintain and improve your equipment.
+          A well-maintained arsenal is key to victory! ⚒️
+        </p>
+      </div>
     </div>
   </div>
 </app-base-tutorial>

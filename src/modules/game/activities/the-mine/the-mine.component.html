@@ -98,7 +98,7 @@
         <li *ngIf="tier.id === 'BLAST_FURNACE'" class="mt-2 text-light">
           For every
           <strong [ngStyle]="{ color: getRarityColor(RarityEnum.MYTHIC) }"
-            >2000</strong
+            >5000</strong
           >
           additional Uruks staked in the mine, gain an extra
           <strong [ngStyle]="{ color: getRarityColor(RarityEnum.MYTHIC) }"
@@ -322,7 +322,10 @@
             >
           </div>
           <ng-container *ngIf="subphase == 0">
-            <app-chain-switcher></app-chain-switcher>
+            <app-chain-switcher
+              [height]="100"
+              [width]="100"
+            ></app-chain-switcher>
             <app-balance-selector
               [type]="stakeType"
               [player$]="player$"
@@ -358,20 +361,7 @@
                 }
               </button>
             </div>
-            <div class="uruk-helper w-100 d-flex justify-content-center">
-              <div class="right">
-                <span urSubtext class="text-light">
-                  Do you need some help?👀
-                </span>
-                <span
-                  urSubtext
-                  class="text-light pointer hoverable-text"
-                  (click)="displayHelpMine()"
-                  >Check this out!</span
-                >
-              </div>
-            </div></ng-container
-          >
+          </ng-container>
         </div>
       }
 

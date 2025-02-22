@@ -1,0 +1,144 @@
+@import '../../../../../variables.scss';
+
+.tutorial-blacksmith {
+  .crafting-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+
+    .craft-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1.5rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .craft-icon {
+        font-size: 2rem;
+        color: $third;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      h3 {
+        color: $white-100;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .craft-content {
+        color: rgba(255, 255, 255, 0.7);
+
+        p {
+          margin-bottom: 1rem;
+        }
+
+        .process-preview {
+          .craft-preview {
+            width: 100%;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+
+            &:hover {
+              opacity: 1;
+            }
+          }
+
+          .benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            span {
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+              font-size: 0.9rem;
+
+              i {
+                color: $third;
+                font-size: 0.8rem;
+              }
+            }
+          }
+
+          .warning {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 68, 68, 0.1);
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 68, 68, 0.2);
+
+            i {
+              color: #ff4444;
+            }
+
+            span {
+              font-size: 0.9rem;
+              color: #ff4444;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+
+    .tip-card {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      i {
+        font-size: 1.5rem;
+        color: $third;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.8);
+        margin: 0;
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  h4 {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 2rem;
+
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: -0.5rem;
+      left: 0;
+      width: 50%;
+      height: 2px;
+      background: $third;
+    }
+  }
+}

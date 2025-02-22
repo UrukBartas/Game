@@ -12,6 +12,7 @@ import { AutoPvpFightComponent } from './activities/pvp/pvp-autofight/pvp-autofi
 import { PvPFightComponent } from './activities/pvp/pvp-fight/pvp-fight.component';
 import { PvPResultComponent } from './activities/pvp/pvp-result/pvp-result.component';
 import { QuestRouterComponent } from './activities/quests/quest-router.component';
+import { ReferralsComponent } from './activities/referrals/referrals.component';
 import { ShopComponent } from './activities/shop/shop.component';
 import { ShoppingComponent } from './activities/shopping/shopping.component';
 import { TheCryptComponent } from './activities/the-crypt/the-crypt.component';
@@ -170,6 +171,12 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         component: PvPResultComponent,
         title: 'Arena result',
+      },
+      {
+        path: 'referrals',
+        canActivate: [AuthGuard],
+        component: ReferralsComponent,
+        title: 'Referrals',
       },
     ],
   },

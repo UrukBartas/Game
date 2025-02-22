@@ -1,65 +1,129 @@
 <app-base-tutorial>
   <div class="tutorial-bridge p-4">
-    <div class="tutorial-header mb-3">
-      <h2 class="text-center">Welcome to the Bridge!</h2>
+    <div class="tutorial-header mb-4">
+      <h2 class="text-center text-third">Welcome to the Bridge!</h2>
+      <p class="text-center text-white">Your gateway between game and blockchain</p>
     </div>
+
     <div class="tutorial-content">
-      <p>
-        In the Bridge section, you can seamlessly export your in-game rewards to
-        your external wallet. Golden Uruks earned during gameplay are
-        automatically converted into ERC20 tokens and sent to your wallet, while
-        your items are minted and exported as NFTs.
-      </p>
-      <ol>
-        <li class="mb-3">
-          <strong>Exporting Golden Uruks:</strong>
-          <p>
-            When you select the "Export" mode, your Golden Uruks are converted
-            into ERC20 tokens. These tokens are transferred directly to your
-            connected wallet, allowing you to manage, trade, or use them outside
-            the game.
+      <div class="overview-section mb-4">
+        <div class="d-flex align-items-center gap-3">
+          <i class="fas fa-bridge fa-2x text-third"></i>
+          <p class="text-white m-0">
+            Transfer your in-game rewards to the blockchain seamlessly. Convert Golden Uruks
+            to tokens and items to NFTs with ease!
           </p>
-          <!-- Optional Image: A screenshot illustrating the Golden Uruks export process -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/21.png' }}"
-            alt="Exporting Golden Uruks"
-          />
-        </li>
-        <li class="mb-3">
-          <strong>Exporting Items as NFTs:</strong>
-          <p>
-            Choose the NFT export type to automatically mint your valuable
-            in-game items as NFTs. This process creates a unique, on-chain
-            record of your items, ensuring secure ownership and easy
-            tradability.
-          </p>
-          <!-- Optional Image: A screenshot or graphic showing items being exported as NFTs -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/22.png' }}"
-            alt="Exporting Items as NFTs"
-          />
-        </li>
-        <li class="mb-3">
-          <strong>Import Mode:</strong>
-          <p>
-            You can toggle between Export and Import modes using the switch at
-            the top. In Import mode, items or tokens are brought back into your
-            game inventory automatically.
-          </p>
-          <!-- Optional Image: A screenshot showing the toggle between Export and Import modes -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/23.png' }}"
-            alt="Import Mode"
-          />
-        </li>
-      </ol>
-      <p class="mt-3">
-        Manage your rewards efficiently by exporting your Golden Uruks as tokens
-        and your items as NFTs with just a few clicks!
-      </p>
+        </div>
+      </div>
+
+      <div class="bridge-section mb-5">
+        <h4 class="text-third mb-3">Bridge Operations</h4>
+        <div class="bridge-grid">
+          <div class="bridge-card">
+            <div class="bridge-icon">
+              <i class="fas fa-coins"></i>
+            </div>
+            <h3>Export Golden Uruks</h3>
+            <div class="bridge-content">
+              <div class="process-flow">
+                <div class="flow-step">
+                  <i class="fas fa-gamepad"></i>
+                  <span>Game Uruks</span>
+                </div>
+                <i class="fas fa-arrow-right"></i>
+                <div class="flow-step">
+                  <i class="fas fa-wallet"></i>
+                  <span>ERC20 Tokens</span>
+                </div>
+              </div>
+              <img class="bridge-preview" src="{{ prefix + '/assets/tutorials/21.png' }}" alt="Uruk Export"/>
+              <div class="benefits">
+                <span><i class="fas fa-check"></i> Instant conversion</span>
+                <span><i class="fas fa-check"></i> Direct wallet transfer</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bridge-card">
+            <div class="bridge-icon">
+              <i class="fas fa-cube"></i>
+            </div>
+            <h3>Export Items as NFTs</h3>
+            <div class="bridge-content">
+              <div class="process-flow">
+                <div class="flow-step">
+                  <i class="fas fa-sword"></i>
+                  <span>Game Items</span>
+                </div>
+                <i class="fas fa-arrow-right"></i>
+                <div class="flow-step">
+                  <i class="fas fa-certificate"></i>
+                  <span>NFTs</span>
+                </div>
+              </div>
+              <img class="bridge-preview" src="{{ prefix + '/assets/tutorials/22.png' }}" alt="NFT Export"/>
+              <div class="benefits">
+                <span><i class="fas fa-check"></i> Automatic minting</span>
+                <span><i class="fas fa-check"></i> Secure ownership</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bridge-card">
+            <div class="bridge-icon">
+              <i class="fas fa-exchange-alt"></i>
+            </div>
+            <h3>Import Assets</h3>
+            <div class="bridge-content">
+              <div class="process-flow">
+                <div class="flow-step">
+                  <i class="fas fa-wallet"></i>
+                  <span>Blockchain</span>
+                </div>
+                <i class="fas fa-arrow-right"></i>
+                <div class="flow-step">
+                  <i class="fas fa-gamepad"></i>
+                  <span>Game</span>
+                </div>
+              </div>
+              <img class="bridge-preview" src="{{ prefix + '/assets/tutorials/23.png' }}" alt="Import Mode"/>
+              <div class="benefits">
+                <span><i class="fas fa-check"></i> Easy toggle</span>
+                <span><i class="fas fa-check"></i> Automatic import</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bridge-tips mb-4">
+        <h4 class="text-third mb-3">Bridge Tips</h4>
+        <div class="tips-grid">
+          <div class="tip-card">
+            <i class="fas fa-gas-pump"></i>
+            <p>Check gas fees before bridging</p>
+          </div>
+          <div class="tip-card">
+            <i class="fas fa-shield-alt"></i>
+            <p>Verify wallet connection</p>
+          </div>
+          <div class="tip-card">
+            <i class="fas fa-clock"></i>
+            <p>Wait for confirmations</p>
+          </div>
+          <div class="tip-card">
+            <i class="fas fa-sync"></i>
+            <p>Keep assets synced</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="conclusion text-center mt-4">
+        <p class="text-white">
+          Bridge your assets securely and take full ownership of your rewards!
+          Your achievements, now on the blockchain! 🌉
+        </p>
+      </div>
     </div>
   </div>
 </app-base-tutorial>

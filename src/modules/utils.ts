@@ -3,6 +3,8 @@ import { AnimateSettingsModel } from './core/models/animate-callback.model';
 import { Item, Rarity } from './core/models/items.model';
 import { PlayerModel } from './core/models/player.model';
 import { ItemTypeSC } from './game/activities/export-import-nft/enums/ItemTypesSC';
+import { pvpTiers } from './game/activities/leadeboard/const/pvp-tiers';
+import { questTiers } from './game/activities/leadeboard/const/quest-tiers';
 
 export const getShowItemCompare = (viewportService: ViewportService) => {
   switch (viewportService.screenHeight) {
@@ -95,6 +97,22 @@ export function getDurabilityTier(durability: number, rarity: Rarity): number {
   }
 
   return 0; // Valor por defecto si no entra en ningún rango
+}
+
+export function getPvpTier(pvpIndex: number) {
+  return pvpTiers.find(
+    (tier) => pvpIndex >= tier.range[0] && pvpIndex <= tier.range[1]
+  );
+}
+
+export function getQuestTier(questCount: number) {
+  for (let i = questTiers.length - 1; i >= 0; i--) {
+    if (questCount >= questTiers[i].maxQuests) {
+      return questTiers[i];
+    }
+  }
+
+  return questTiers[0];
 }
 
 export function getRarityColor(rarity: Rarity, percent = 0): string {

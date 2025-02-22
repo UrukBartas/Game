@@ -28,7 +28,6 @@ import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { StakeRemoveRequestModalComponent } from './stake-remove-request-modal/stake-remove-request-modal.component';
-import { TheMineInfoModalComponent } from './the-mine-help/the-mine-info-modal.component';
 export interface MineTier {
   start: number;
   end: number;
@@ -250,7 +249,7 @@ export class TheMineComponent extends TemplatePage {
 
   getCurrentTierImageSize() {
     const screenSize = this.viewportService.screenSize;
-    const imageSize = ['xxl', 'xl', 'lg'].includes(screenSize) ? 200 : 100;
+    const imageSize = ['xxl', 'xl', 'lg'].includes(screenSize) ? 150 : 100;
 
     return imageSize;
   }
@@ -290,9 +289,5 @@ export class TheMineComponent extends TemplatePage {
   pad(value: number) {
     const paddedValue = value.toString().padStart(2, '0');
     return paddedValue;
-  }
-
-  public displayHelpMine() {
-    this.modalService.show(TheMineInfoModalComponent);
   }
 }

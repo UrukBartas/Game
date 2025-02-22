@@ -1,80 +1,125 @@
 <app-base-tutorial>
   <div class="tutorial-auctionhouse p-4">
-    <div class="tutorial-header mb-3">
-      <h2 class="text-center">Welcome to the Auction House!</h2>
+    <div class="tutorial-header mb-4">
+      <h2 class="text-center text-third">Welcome to the Auction House!</h2>
+      <p class="text-center text-white">Your marketplace for trading valuable items</p>
     </div>
+
     <div class="tutorial-content">
-      <p>
-        The Auction House is your in-game marketplace for trading items. Here,
-        you can create new trades, view detailed listing information, filter and
-        sort listings, and check bids. Let’s walk through the main functions:
-      </p>
-      <ol>
-        <li class="mb-3">
-          <strong>Creating a New Trade:</strong>
-          <p>
-            Click the <strong>"New Trade"</strong> button to open a modal where
-            you can list your item for sale. This is your starting point for
-            selling items in the marketplace.
+      <div class="overview-section mb-4">
+        <div class="d-flex align-items-center gap-3">
+          <i class="fas fa-gavel fa-2x text-third"></i>
+          <p class="text-white m-0">
+            Trade, bid, and sell items in our dynamic marketplace.
+            Find rare treasures or make profit from your valuable items!
           </p>
-          <!-- Relevant Image: A screenshot of the "New Trade" button and modal -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/3.png' }}"
-            alt="New Trade Modal"
-          />
-        </li>
-        <li class="mb-3">
-          <strong>Viewing Listings:</strong>
-          <p>
-            Browse the market listings and click on any listing to view more
-            details. This opens a modal displaying the item’s information,
-            seller details, and current bid status.
-          </p>
-          <!-- Relevant Image: A screenshot of the listing details modal -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/4.png' }}"
-            alt="Listing Details"
-          />
-        </li>
-        <li class="mb-3">
-          <strong>Filtering and Searching:</strong>
-          <p>
-            Use the search box to find listings by name and apply filters such
-            as minimum/maximum level, rarity, and status (e.g., Active, Sold,
-            With bids, Bought). The left sidebar also offers preset filters for
-            various item categories and subtypes.
-          </p>
-          <!-- Optional Image: A screenshot showing the filtering options -->
-          <img
-            class="pb-1"
-            src="{{ prefix + '/assets/tutorials/5.png' }}"
-            alt="Auction Filters"
-          />
-        </li>
-        <li class="mb-3">
-          <strong>Sorting Listings:</strong>
-          <p>
-            Toggle between sorting by <strong>recent</strong> or
-            <strong>price</strong> using the sort icon and label at the top of
-            the listings. You can also change the sort order
-            (ascending/descending) with a simple click.
-          </p>
-        </li>
-        <li class="mb-3">
-          <strong>Pagination:</strong>
-          <p>
-            Navigate through the pages of listings using the pagination controls
-            at the bottom. This helps you quickly browse through a large number
-            of items available in the market.
-          </p>
-        </li>
-      </ol>
-      <p class="mt-3">
-        Explore the Auction House to buy, sell, or bid on items, and take full
-        advantage of the marketplace to enhance your gameplay!
-      </p>
+        </div>
+      </div>
+
+      <div class="features-section mb-5">
+        <h4 class="text-third mb-3">Trading Features</h4>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-plus-circle"></i>
+            </div>
+            <h3>Create Trades</h3>
+            <div class="feature-content">
+              <p>List your items for sale in just a few clicks</p>
+              <img class="feature-preview" src="{{ prefix + '/assets/tutorials/3.png' }}" alt="New Trade"/>
+              <div class="quick-tips">
+                <div class="tip"><i class="fas fa-check"></i> Set competitive prices</div>
+                <div class="tip"><i class="fas fa-check"></i> Choose listing duration</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-search"></i>
+            </div>
+            <h3>Browse & Filter</h3>
+            <div class="feature-content">
+              <div class="filter-options">
+                <div class="filter-tag">Level Range</div>
+                <div class="filter-tag">Rarity</div>
+                <div class="filter-tag">Item Type</div>
+                <div class="filter-tag">Status</div>
+              </div>
+              <img class="feature-preview" src="{{ prefix + '/assets/tutorials/5.png' }}" alt="Filters"/>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-info-circle"></i>
+            </div>
+            <h3>Listing Details</h3>
+            <div class="feature-content">
+              <p>View comprehensive item information</p>
+              <img class="feature-preview" src="{{ prefix + '/assets/tutorials/4.png' }}" alt="Item Details"/>
+              <div class="detail-points">
+                <span>• Seller Info</span>
+                <span>• Current Bids</span>
+                <span>• Item Stats</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-sort"></i>
+            </div>
+            <h3>Sort & Navigate</h3>
+            <div class="feature-content">
+              <div class="sort-options">
+                <div class="sort-option">
+                  <i class="fas fa-clock"></i>
+                  <span>By Recent</span>
+                </div>
+                <div class="sort-option">
+                  <i class="fas fa-coins"></i>
+                  <span>By Price</span>
+                </div>
+              </div>
+              <div class="pagination-preview">
+                <i class="fas fa-chevron-left"></i>
+                <span>Page Navigation</span>
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="trading-tips mb-4">
+        <h4 class="text-third mb-3">Trading Tips</h4>
+        <div class="tips-grid">
+          <div class="tip-card">
+            <i class="fas fa-chart-line"></i>
+            <p>Monitor market prices before selling</p>
+          </div>
+          <div class="tip-card">
+            <i class="fas fa-hourglass-half"></i>
+            <p>Check listings regularly for good deals</p>
+          </div>
+          <div class="tip-card">
+            <i class="fas fa-shield-alt"></i>
+            <p>Verify item details before bidding</p>
+          </div>
+          <div class="tip-card">
+            <i class="fas fa-gem"></i>
+            <p>Rare items often sell for premium prices</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="conclusion text-center mt-4">
+        <p class="text-white">
+          Ready to start trading? Enter the Auction House and discover
+          a world of opportunities! 💰
+        </p>
+      </div>
     </div>
   </div>
 </app-base-tutorial>
