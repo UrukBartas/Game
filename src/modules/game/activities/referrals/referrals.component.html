@@ -109,6 +109,9 @@
           <div class="card bg-secondary">
             <div class="card-body">
               <h5 class="card-title text-center text-white">Your Rewards</h5>
+              <p class="text-center text-third mb-3">
+                Total Recruits: {{ currentRewards.totalRecruits }}
+              </p>
               <div class="rewards-list-container">
                 <div class="rewards-list">
                   <div class="row g-3">
@@ -149,14 +152,14 @@
                               <div
                                 class="progress-bar"
                                 role="progressbar"
-                                [style.width]="reward.progress * 100 + '%'"
-                                [attr.aria-valuenow]="reward.progress * 100"
+                                [style.width]="(reward.currentCount >= reward.required ? 100 : (reward.currentCount / reward.required * 100)) + '%'"
+                                [attr.aria-valuenow]="(reward.currentCount >= reward.required ? 100 : (reward.currentCount / reward.required * 100))"
                                 aria-valuemin="0"
                                 aria-valuemax="100"
                               ></div>
                             </div>
                             <small class="text-third">
-                              {{ reward.currentCount }}/{{ reward.required }}
+                              {{ reward.currentCount >= reward.required ? reward.required : reward.currentCount }}/{{ reward.required }}
                               recruits needed
                             </small>
                           </div>
