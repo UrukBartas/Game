@@ -228,7 +228,7 @@
 
 <ng-template #menu>
   <ul class="list-group flex-grow-1">
-    @for (route of routesNavigation; track route.path) {
+    @for (route of filteredRoutes(routesNavigation); track route.path) {
       <li
         class="list-group-item bg-primary d-flex justify-content-{{
           !isSidebarOpened() ? 'between' : 'center'

@@ -3,6 +3,7 @@ import { Component, TemplateRef, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
 import { Select, Store } from '@ngxs/store';
+import { Memoize } from 'lodash-decorators';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs';
 import { NotificationResponseModel } from 'src/modules/core/models/notifications.model';
@@ -34,6 +35,15 @@ export class GameLayoutComponent {
     return this.routesNavigation.find((entry) => entry.path == this.router.url);
   };
   public prefix = ViewportService.getPreffixImg();
+  @Memoize()
+  public filteredRoutes(routesNavigation: any[]) {
+    return routesNavigation.filter((route) => {
+      if (route.onlyWeb3 && this.loggedWithemail()) {
+        return false;
+      }
+      return true;
+    });
+  }
   public routesNavigation: any[] = [
     {
       path: '/presale',
