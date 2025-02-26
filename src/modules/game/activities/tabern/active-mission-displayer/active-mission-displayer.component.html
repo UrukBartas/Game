@@ -1,0 +1,26 @@
+<div class="active-mission-banner" *ngIf="activeMission">
+  <div class="banner-content">
+    <i class="fas fa-exclamation-circle" *ngIf="!smaller"></i>
+    <div class="banner-text">
+      <h4 *ngIf="!smaller">Active Mission in Progress</h4>
+      <p>{{ activeMission.mission.title }}</p>
+      <div class="progress-bar">
+        <div
+          class="progress"
+          [style.width.%]="
+            (activeMission.progress / activeMission.mission.killCount ||
+              activeMission.mission.gatherCount) * 100
+          "
+        ></div>
+        <span class="progress-text">
+          {{ activeMission.progress }}/{{
+            activeMission.mission.killCount || activeMission.mission.gatherCount
+          }}
+        </span>
+      </div>
+    </div>
+    <button class="cancel-mission-btn text-danger" *ngIf="!smaller" (click)="cancelMission()">
+      <i class="fas fa-times text-danger"></i>
+    </button>
+  </div>
+</div>

@@ -73,6 +73,7 @@ import { ReferralsComponent } from './activities/referrals/referrals.component';
 import { DailyRollButtonComponent } from './activities/shop/components/daily-roll-button.component';
 import { ShopComponent } from './activities/shop/shop.component';
 import { ShoppingComponent } from './activities/shopping/shopping.component';
+import { TabernComponent } from './activities/tabern/tabern.component';
 import { CryptFightComponent } from './activities/the-crypt/components/crypt-fight/crypt-fight.component';
 import { CryptFinishedComponent } from './activities/the-crypt/components/crypt-finished/crypt-finished.component';
 import { CryptPlayerStateComponent } from './activities/the-crypt/components/crypt-player-state/crypt-player-state.component';
@@ -112,7 +113,9 @@ import { LeaderboardTutorialComponent } from './components/tutorials/leaderboard
 import { MineTutorialComponent } from './components/tutorials/mine-tutorial/mine-tutorial.component';
 import { QuestTutorialComponent } from './components/tutorials/quest-tutorial/quest-tutorial.component';
 import { ShopTutorialComponent } from './components/tutorials/shop-tutorial/shop-tutorial.component';
+import { TabernTutorialComponent } from './components/tutorials/tabern-tutorial/tabern-tutorial.component';
 import { GameRoutingModule } from './game-routing.module';
+import { ActiveMissionDisplayerComponent } from './activities/tabern/active-mission-displayer/active-mission-displayer.component';
 
 const directives = [
   ValidInputDirective,
@@ -151,6 +154,8 @@ const components = [
   FighterStatusComponent,
   FighterStatsTooltipComponent,
   FightLogsModalComponent,
+  TabernTutorialComponent,
+  TabernComponent
 ];
 
 const pipes = [
@@ -207,7 +212,9 @@ const pipes = [
     MineTutorialComponent,
     BridgeTutorialComponent,
     LeaderboardTutorialComponent,
+    TabernTutorialComponent,
     ReferralsComponent,
+    ActiveMissionDisplayerComponent,
   ],
   imports: [
     ...directives,

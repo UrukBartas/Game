@@ -11,6 +11,7 @@ import { PlayerModel } from 'src/modules/core/models/player.model';
 import { CompressNumberPipe } from 'src/modules/core/pipes/compress-number.pipe';
 import { calculateXPForLevel } from 'src/modules/utils';
 import { AuthService } from 'src/services/auth.service';
+import { BoardMissionService } from 'src/services/board-mission.service';
 import { PlayerService } from 'src/services/player.service';
 import { QuestTimerService } from 'src/services/quest-timer.service';
 import { ViewportService } from 'src/services/viewport.service';
@@ -31,10 +32,12 @@ import { InboxModalComponent } from '../inbox-modal/inbox-modal.component';
 export class GameLayoutComponent {
   @Select(MainState.getState) state$: Observable<MainStateModel>;
   public walletService = inject(WalletService);
+  boardService = inject(BoardMissionService);
   public getActiveRoute = () => {
     return this.routesNavigation.find((entry) => entry.path == this.router.url);
   };
   public prefix = ViewportService.getPreffixImg();
+  public playerActiveMission$ = this.boardService.getPlayerActiveMission();
   @Memoize()
   public filteredRoutes(routesNavigation: any[]) {
     return routesNavigation.filter((route) => {
@@ -64,6 +67,11 @@ export class GameLayoutComponent {
       path: '/shopping',
       displayText: 'Shopping',
       icon: 'fa fa-shop',
+    },
+    {
+      path: '/tavern',
+      displayText: 'Tavern',
+      icon: 'fa fa-beer-mug-empty',
     },
     {
       path: '/blacksmith',

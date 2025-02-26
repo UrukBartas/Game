@@ -1,0 +1,115 @@
+<div id="tavern" class="tavern-container">
+
+
+  <!-- Mission Board Section -->
+  <div class="mission-board">
+    <div class="board-header">
+      <h2><i class="fas fa-scroll"></i> Mission Board</h2>
+      <div class="board-filters">
+        <button
+          class="filter-btn"
+          [class.active]="selectedFilter === 'ALL'"
+          (click)="filterMissions('ALL')"
+        >
+          All
+        </button>
+        <button
+          class="filter-btn"
+          [class.active]="selectedFilter === 'HUNT'"
+          (click)="filterMissions('HUNT')"
+        >
+          Hunt
+        </button>
+        <button
+          class="filter-btn"
+          [class.active]="selectedFilter === 'GATHER'"
+          (click)="filterMissions('GATHER')"
+        >
+          Gather
+        </button>
+      </div>
+    </div>
+
+    <!-- Mostrar banner de misión activa si existe -->
+    <app-active-mission-displayer
+      (updateMissions)="refreshMissions()"
+      [activeMission]="activeMission"
+    ></app-active-mission-displayer>
+
+    <div class="missions-container">
+      <ng-container *ngIf="!loading; else loadingTemplate">
+        <div
+          class="mission-card"
+          *ngFor="let mission of getFilteredMissions()"
+          [class.disabled]="!canAcceptMission(mission)"
+        >
+          <div
+            class="mission-difficulty"
+            [class]="getDifficultyClass(mission.difficulty)"
+          >
+            {{ mission.difficulty }}
+          </div>
+          <h3>{{ mission.title }}</h3>
+          <p>{{ mission.description }}</p>
+          <div class="mission-footer">
+            <div class="rewards">
+              <span class="reward" *ngIf="mission.rewardUruks">
+                <i class="fas fa-coins"></i> {{ mission.rewardUruks }}
+              </span>
+              <span class="reward" *ngIf="mission.rewardExperience">
+                <i class="fas fa-star"></i> {{ mission.rewardExperience }}
+              </span>
+            </div>
+            <button
+              class="accept-btn"
+              (click)="acceptMission(mission)"
+              [disabled]="!canAcceptMission(mission)"
+              [class.disabled]="!canAcceptMission(mission)"
+            >
+              {{ getButtonText(mission) }}
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <ng-template #loadingTemplate>
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i> Loading missions...
+    </div>
+  </ng-template>
+
+  <!-- UrukBox Chat Section -->
+  <div class="urukbox" [class.expanded]="isChatExpanded">
+    <div class="chat-header" (click)="toggleChat()">
+      <div class="header-content">
+        <i class="fas fa-comments"></i>
+        <span>UrukBox Chat</span>
+        <span class="online-count">42 online</span>
+      </div>
+      <i
+        class="fas"
+        [class.fa-chevron-up]="!isChatExpanded"
+        [class.fa-chevron-down]="isChatExpanded"
+      ></i>
+    </div>
+
+    <div class="chat-content" *ngIf="isChatExpanded">
+      <div class="messages-container">
+        <!-- Placeholder messages -->
+        <div class="message">
+          <span class="username">Warrior123:</span>
+          <span class="text">Anyone up for dragon hunting?</span>
+        </div>
+        <!-- Add more messages as needed -->
+      </div>
+
+      <div class="chat-input">
+        <input type="text" placeholder="Type your message..." />
+        <button><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+  <div class="tavern-bg"></div>
+</div>

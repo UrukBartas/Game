@@ -1,0 +1,371 @@
+@import '../../../../variables.scss';
+@import 'node_modules/bootstrap/scss/mixins';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
+#tavern {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  padding: 1rem;
+
+  .tavern-bg {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/tabern/tabern.webp');
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-x: 80%;
+
+    @include media-breakpoint-down(sm) {
+      background-position-x: 65%;
+      background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets_mobile/assets/tabern/tabern.webp');
+    }
+  }
+
+  // Mission Board Styles
+  .mission-board {
+    background: rgba(20, 20, 20, 0.9);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1rem;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+
+    // Estilo opcional para el scrollbar
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    .board-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+
+      @include media-breakpoint-down(sm) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      h2 {
+        color: $third;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0;
+      }
+
+      .board-filters {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+
+        .filter-btn {
+          background: rgba(255, 255, 255, 0.1);
+          border: none;
+          padding: 0.5rem 1rem;
+          color: $white-100;
+          border-radius: 20px;
+          transition: all 0.3s ease;
+
+          &:hover,
+          &.active {
+            background: $third;
+            color: $dark;
+          }
+        }
+      }
+    }
+
+    .missions-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+    }
+
+    .mission-card {
+      background: rgba(20, 20, 20, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 1.5rem;
+      position: relative;
+      transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      min-height: 280px;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      h3 {
+        margin: 1rem 0;
+        font-size: 1.2rem;
+        color: #a4d007;
+        text-shadow: 0 0 10px rgba(164, 208, 7, 0.3);
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 1.5rem;
+        flex-grow: 1;
+      }
+
+      .mission-difficulty {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-transform: uppercase;
+
+        &.easy {
+          background: rgba(76, 175, 80, 0.3);
+          color: #4caf50;
+          text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+
+        &.medium {
+          background: rgba(255, 152, 0, 0.3);
+          color: #ff9800;
+          text-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+        }
+
+        &.hard {
+          background: rgba(244, 67, 54, 0.3);
+          color: #f44336;
+          text-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
+        }
+      }
+
+      .mission-footer {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: auto;
+
+        .rewards {
+          display: flex;
+          gap: 1rem;
+          justify-content: center;
+
+          .reward {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+
+            i {
+              color: #a4d007;
+            }
+          }
+        }
+
+        .accept-btn {
+          width: 100%;
+          background: #4a5f0f;
+          color: white;
+          border: none;
+          padding: 0.75rem;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.2s;
+          text-transform: uppercase;
+          font-weight: bold;
+          letter-spacing: 0.5px;
+
+          &:hover:not(:disabled) {
+            background: #a4d007;
+            transform: translateY(-2px);
+          }
+
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #2a350a;
+          }
+        }
+      }
+
+      &.disabled {
+        opacity: 0.6;
+        filter: grayscale(50%);
+      }
+
+      .accept-btn {
+        &.disabled {
+          background: #2a350a;
+          cursor: not-allowed;
+
+          &:hover {
+            transform: none;
+          }
+        }
+      }
+    }
+  }
+
+  // UrukBox Chat Styles
+  .urukbox {
+    position: fixed;
+    bottom: 0;
+    right: 1rem;
+    width: 350px;
+    background: rgba(20, 20, 20, 0.95);
+    border-radius: 12px 12px 0 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+
+    @include media-breakpoint-down(sm) {
+      width: calc(100% - 2rem);
+      right: 1rem;
+    }
+
+    .chat-header {
+      padding: 1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: $third;
+
+        .online-count {
+          font-size: 0.8rem;
+          color: rgba(255, 255, 255, 0.6);
+          margin-left: 0.5rem;
+        }
+      }
+
+      i.fas {
+        color: rgba(255, 255, 255, 0.6);
+        transition: transform 0.3s ease;
+      }
+    }
+
+    .chat-content {
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+
+      .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem;
+
+        .message {
+          margin-bottom: 0.5rem;
+
+          .username {
+            color: $third;
+            font-weight: bold;
+            margin-right: 0.5rem;
+          }
+
+          .text {
+            color: rgba(255, 255, 255, 0.8);
+          }
+        }
+      }
+
+      .chat-input {
+        padding: 1rem;
+        display: flex;
+        gap: 0.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+        input {
+          flex: 1;
+          background: rgba(255, 255, 255, 0.1);
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          color: $white-100;
+
+          &::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+          }
+        }
+
+        button {
+          background: $third;
+          border: none;
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: $dark;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: darken($third, 10%);
+          }
+        }
+      }
+    }
+
+    &.expanded {
+      transform: translateY(0);
+    }
+
+    &:not(.expanded) {
+      transform: translateY(calc(100% - 56px));
+    }
+  }
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: $third;
+  font-size: 1.2rem;
+
+  i {
+    margin-right: 0.5rem;
+  }
+
+
+
+
+}

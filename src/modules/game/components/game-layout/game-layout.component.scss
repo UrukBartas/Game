@@ -247,3 +247,19 @@ nav a {
     color: white;
   }
 }
+
+.mission-status {
+  color: white;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+
+  i {
+    color: #4CAF50;
+
+    &:hover {
+      color: lighten(#4CAF50, 10%);
+    }
+  }
+}
