@@ -8,8 +8,10 @@
         <div
           class="progress"
           [style.width.%]="
-            (activeMission.progress / activeMission.mission.killCount ||
-              activeMission.mission.gatherCount) * 100
+            (activeMission.progress /
+              (activeMission.mission.killCount ||
+                activeMission.mission.gatherCount)) *
+            100
           "
         ></div>
         <span class="progress-text">
@@ -19,7 +21,11 @@
         </span>
       </div>
     </div>
-    <button class="cancel-mission-btn text-danger" *ngIf="!smaller" (click)="cancelMission()">
+    <button
+      class="cancel-mission-btn text-danger"
+      *ngIf="!smaller"
+      (click)="cancelMission()"
+    >
       <i class="fas fa-times text-danger"></i>
     </button>
   </div>

@@ -1,11 +1,11 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, TemplateRef, inject, signal } from '@angular/core';
+import { Component, inject, signal, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
 import { Select, Store } from '@ngxs/store';
 import { Memoize } from 'lodash-decorators';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Observable } from 'rxjs';
+import { map, Observable, switchMap } from 'rxjs';
 import { NotificationResponseModel } from 'src/modules/core/models/notifications.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { CompressNumberPipe } from 'src/modules/core/pipes/compress-number.pipe';
@@ -37,7 +37,11 @@ export class GameLayoutComponent {
     return this.routesNavigation.find((entry) => entry.path == this.router.url);
   };
   public prefix = ViewportService.getPreffixImg();
-  public playerActiveMission$ = this.boardService.getPlayerActiveMission();
+  store = inject(Store);
+  player$ = this.store
+    .select(MainState.getState)
+    .pipe(map((entry) => entry.player));
+  public playerActiveMission$ = this.player$.pipe(switchMap(() => this.boardService.getPlayerActiveMission()));
   @Memoize()
   public filteredRoutes(routesNavigation: any[]) {
     return routesNavigation.filter((route) => {
@@ -110,7 +114,6 @@ export class GameLayoutComponent {
   public authService = inject(AuthService);
   public accountService = inject(PlayerService);
   public viewportService = inject(ViewportService);
-  public store = inject(Store);
   private _modalService = inject(BsModalService);
   public get modalService() {
     return this._modalService;

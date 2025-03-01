@@ -1,0 +1,15 @@
+<ng-container *ngIf="getItem$ | async as item">
+  <app-item-box
+    [image]="item.imageLocal"
+    [stack]="amount"
+    [rarity]="item.rarity"
+  >
+    @if (!!item) {
+      <div tooltip class="tooltip-uruk">
+        <app-generic-item-tooltip
+          [item]="item"
+        ></app-generic-item-tooltip>
+      </div>
+    }
+  </app-item-box>
+</ng-container>

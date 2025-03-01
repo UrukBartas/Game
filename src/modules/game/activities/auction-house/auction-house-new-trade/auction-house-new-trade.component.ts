@@ -57,7 +57,7 @@ export class AuctionHouseNewTradeComponent {
 
   public currentSize$ = this.store.select(MainState.getState).pipe(
     filter((player) => !!player),
-    map((entry) => entry.player.sockets)
+    map((entry) => entry?.player?.sockets)
   );
   currentConsumableInventory$ = this.playerService.getItemsConsumable();
   currentMaterials$ = this.playerService.getItemsMaterial();

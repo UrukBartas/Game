@@ -1,3 +1,4 @@
+import { BoardMission } from 'src/services/board-mission.service';
 import { Consumable } from './consumable.model';
 import { Item } from './items.model';
 import { Material } from './material.model';
@@ -57,6 +58,7 @@ export interface FightResultModel {
   completedAdventure?: boolean;
   ganked?: GankMonsters;
   isCrypt?: boolean;
+  completedMissions?: Array<BoardMission>
 }
 
 export enum GankMonsters {

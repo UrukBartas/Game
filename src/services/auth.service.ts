@@ -20,7 +20,7 @@ export class AuthService extends ApiBaseService {
 
   public loggedWithEmail = () => {
     const storeState = this.store.selectSnapshot(MainState.getState);
-    return !!storeState.session.loginWithMail;
+    return !!storeState?.session?.loginWithMail;
   };
 
   loginPlayer(email: string, password: string) {

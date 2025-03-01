@@ -1,30 +1,96 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Store } from '@ngxs/store';
+import { Subscription } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
+import { PlayerModel } from 'src/modules/core/models/player.model';
 import { BoardMission, BoardMissionService, PlayerBoardMission } from 'src/services/board-mission.service';
+import { ViewportService } from 'src/services/viewport.service';
+import { ChatMessage, WebSocketService } from 'src/services/websocket.service';
+import { MainState, RefreshPlayer } from 'src/store/main.store';
 
 @Component({
   selector: 'app-tabern',
   templateUrl: './tabern.component.html',
   styleUrl: './tabern.component.scss'
 })
-export class TabernComponent extends TemplatePage implements OnInit {
+export class TabernComponent extends TemplatePage implements OnInit, OnDestroy {
   isChatExpanded = false;
   missions: BoardMission[] = [];
   playerMissions: PlayerBoardMission[] = [];
   selectedFilter: 'ALL' | 'HUNT' | 'GATHER' = 'ALL';
   loading = false;
   activeMission: PlayerBoardMission = null;
+  store = inject(Store)
+  prefix = ViewportService.getPreffixImg();
 
-  constructor(private boardMissionService: BoardMissionService) {
+  @ViewChild('chatContainer') chatContainer: ElementRef;
+
+  messages: ChatMessage[] = [];
+  messageInput = new FormControl('');
+  private chatSubscription: Subscription;
+  public onlinePlayers$ = this.webSocketService.onlineChatPlayers$;
+  constructor(
+    private boardMissionService: BoardMissionService,
+    private webSocketService: WebSocketService
+  ) {
     super();
+  }
+
+  getUrukIcons(rewardLevel: number): number[] {
+    // Convertir 2->1, 3->2, 4->3 iconos
+    return Array(rewardLevel - 1).fill(0);
   }
 
   ngOnInit() {
     this.refreshMissions();
+
+    // Suscripción al chat
+    this.chatSubscription = this.webSocketService.chatMessages$.subscribe(
+      messages => {
+        this.messages = messages;
+        this.scrollToBottom();
+      }
+    );
+
+
+    // Solicitar lista de jugadores en línea
+    this.webSocketService.requestOnlinePlayers();
+
+    // Unirse al chat global
+    this.webSocketService.joinGlobalChat();
+    this.webSocketService.getChatHistory();
+  }
+
+  ngOnDestroy() {
+    if (this.chatSubscription) {
+      this.chatSubscription.unsubscribe();
+    }
+    this.webSocketService.leaveGlobalChat();
+  }
+
+  sendMessage() {
+    const message = this.messageInput.value?.trim();
+    if (message) {
+      this.webSocketService.sendMessage(message);
+      this.messageInput.reset();
+    }
   }
 
   toggleChat() {
     this.isChatExpanded = !this.isChatExpanded;
+    if (this.isChatExpanded) {
+      this.scrollToBottom();
+    }
+  }
+
+  private scrollToBottom(): void {
+    setTimeout(() => {
+      if (this.chatContainer) {
+        const element = this.chatContainer.nativeElement;
+        element.scrollTop = element.scrollHeight;
+      }
+    });
   }
 
   private loadMissions() {
@@ -65,6 +131,7 @@ export class TabernComponent extends TemplatePage implements OnInit {
   refreshMissions() {
     this.loadMissions();
     this.loadPlayerMissions();
+    this.store.dispatch(new RefreshPlayer())
   }
 
   async acceptMission(mission: BoardMission) {
@@ -105,5 +172,26 @@ export class TabernComponent extends TemplatePage implements OnInit {
       return 'Complete Active Mission First';
     }
     return 'Accept Mission';
+  }
+
+  getCurrentUsername(): string {
+    return ((this.store.selectSnapshot(MainState.getState))?.player as PlayerModel)?.name || '';
+  }
+
+  getPlayerNameColor(username: string): { color: string } {
+    // Genera un color basado en el nombre de usuario
+    let hash = 0;
+    for (let i = 0; i < username.length; i++) {
+      hash = username.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    // Genera un tono de azul/verde para que sea legible
+    const h = hash % 50 + 180; // Rango de 180-230 (tonos de azul/verde)
+    const s = 70; // Saturación fija al 70%
+    const l = 60; // Luminosidad fija al 60%
+
+    return {
+      color: `hsl(${h}, ${s}%, ${l}%)`
+    };
   }
 }

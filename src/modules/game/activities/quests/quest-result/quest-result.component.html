@@ -263,6 +263,25 @@
 
       <div
         class="row pb-4"
+        *ngIf="fightResult.completedMissions?.length > 0"
+      >
+        <div class="col-12 d-flex flex-column gap-2">
+          <span urSubtitle class="text-success text-center">Mission Complete!</span>
+          @for (mission of fightResult.completedMissions; track mission.id) {
+            <div class="d-flex flex-column align-items-center">
+              <span urText class="text-white text-center">
+                ⭐ {{ mission.title }}
+              </span>
+            </div>
+          }
+          <span urText class="text-secondary text-center">
+            Check your Inbox to claim your rewards! 📬
+          </span>
+        </div>
+      </div>
+
+      <div
+        class="row pb-4"
         *ngIf="
           (!fightResult.isCrypt && fightResult.player?.level > player.level) ||
           thereIsLoot(fightResult)

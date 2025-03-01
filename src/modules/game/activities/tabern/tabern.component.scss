@@ -179,15 +179,20 @@
           display: flex;
           gap: 1rem;
           justify-content: center;
-
+          .materials {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+          }
           .reward {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             color: rgba(255, 255, 255, 0.9);
 
-            i {
-              color: #a4d007;
+            .uruks-icon {
+              width: 20px;
+              height: 20px;
             }
           }
         }
@@ -240,115 +245,177 @@
   .urukbox {
     position: fixed;
     bottom: 0;
-    right: 1rem;
+    right: 20px;
     width: 350px;
     background: rgba(20, 20, 20, 0.95);
-    border-radius: 12px 12px 0 0;
-    transition: all 0.3s ease;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid $third;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
     z-index: 1000;
+    transition: height 0.3s ease;
+    box-shadow: 0 0 15px rgba(164, 208, 7, 0.2);
 
-    @include media-breakpoint-down(sm) {
-      width: calc(100% - 2rem);
-      right: 1rem;
+    &.expanded {
+      height: 500px;
     }
 
     .chat-header {
-      padding: 1rem;
+      padding: 12px;
+      background: rgba(74, 95, 15, 0.95);
+      border-bottom: 1px solid $third;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px 8px 0 0;
+
+      &:hover {
+        background: rgba(164, 208, 7, 0.3);
+      }
 
       .header-content {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        color: $third;
+        gap: 10px;
+
+        i {
+          color: $third;
+        }
+
+        span {
+          color: $white-100;
+          text-shadow: 0 0 10px rgba(164, 208, 7, 0.3);
+        }
 
         .online-count {
-          font-size: 0.8rem;
-          color: rgba(255, 255, 255, 0.6);
-          margin-left: 0.5rem;
+          font-size: 0.8em;
+          color: rgba(164, 208, 7, 0.7);
         }
-      }
-
-      i.fas {
-        color: rgba(255, 255, 255, 0.6);
-        transition: transform 0.3s ease;
       }
     }
 
     .chat-content {
-      height: 300px;
+      height: calc(100% - 45px);
       display: flex;
       flex-direction: column;
 
       .messages-container {
         flex: 1;
         overflow-y: auto;
-        padding: 1rem;
+        padding: 10px;
+        scrollbar-width: thin;
+        scrollbar-color: $third #222;
+
+        &::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: rgba(20, 20, 20, 0.95);
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background-color: rgba(164, 208, 7, 0.3);
+          border-radius: 3px;
+
+          &:hover {
+            background-color: rgba(164, 208, 7, 0.5);
+          }
+        }
 
         .message {
-          margin-bottom: 0.5rem;
+          margin-bottom: 8px;
+          padding: 8px 12px;
+          border-radius: 4px;
+          background: rgba(20, 20, 20, 0.85);
+          border: 1px solid rgba(164, 208, 7, 0.1);
+          transition: all 0.2s ease;
 
-          .username {
-            color: $third;
-            font-weight: bold;
-            margin-right: 0.5rem;
+          &:hover {
+            background: rgba(20, 20, 20, 0.95);
+            border-color: rgba(164, 208, 7, 0.3);
+            transform: translateX(2px);
           }
 
-          .text {
-            color: rgba(255, 255, 255, 0.8);
+          &.own-message {
+            background: rgba(74, 95, 15, 0.2);
+            border-color: rgba(164, 208, 7, 0.3);
+
+            .username {
+              color: $third;
+              text-shadow: 0 0 10px rgba(164, 208, 7, 0.3);
+            }
+          }
+
+          .message-header {
+            margin-bottom: 4px;
+            font-size: 0.9em;
+
+            .timestamp {
+              color: rgba(255, 255, 255, 0.5);
+              margin-right: 8px;
+            }
+
+            .username {
+              font-weight: bold;
+              color: rgba(164, 208, 7, 0.9);
+            }
+          }
+
+          .message-content {
+            color: $white-100;
+            word-break: break-word;
           }
         }
       }
 
       .chat-input {
-        padding: 1rem;
+        padding: 10px;
         display: flex;
-        gap: 0.5rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        gap: 8px;
+        background: rgba(20, 20, 20, 0.95);
+        border-top: 1px solid rgba(164, 208, 7, 0.3);
 
         input {
           flex: 1;
-          background: rgba(255, 255, 255, 0.1);
-          border: none;
-          padding: 0.5rem 1rem;
-          border-radius: 20px;
+          padding: 8px 12px;
+          background: rgba(20, 20, 20, 0.95);
+          border: 1px solid rgba(164, 208, 7, 0.3);
+          border-radius: 4px;
           color: $white-100;
+          font-size: 0.9em;
 
           &::placeholder {
             color: rgba(255, 255, 255, 0.4);
           }
+
+          &:focus {
+            outline: none;
+            border-color: $third;
+            box-shadow: 0 0 5px rgba(164, 208, 7, 0.2);
+          }
         }
 
         button {
-          background: $third;
+          padding: 8px 16px;
+          background: #4a5f0f;
           border: none;
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: $dark;
-          transition: all 0.3s ease;
+          border-radius: 4px;
+          color: white;
+          cursor: pointer;
+          transition: all 0.2s;
 
-          &:hover {
-            background: darken($third, 10%);
+          &:hover:not(:disabled) {
+            background: $third;
+            transform: translateY(-2px);
+          }
+
+          &:disabled {
+            background: rgba(74, 95, 15, 0.3);
+            cursor: not-allowed;
           }
         }
       }
-    }
-
-    &.expanded {
-      transform: translateY(0);
-    }
-
-    &:not(.expanded) {
-      transform: translateY(calc(100% - 56px));
     }
   }
 }
@@ -364,8 +431,24 @@
   i {
     margin-right: 0.5rem;
   }
-
-
-
-
 }
+
+.uruks-indicator {
+  display: inline-flex;
+}
+
+.uruks-icon {
+  width: 20px;
+  height: 20px;
+  margin-left: -8px; /* Hace que los iconos se superpongan */
+}
+
+.uruks-icon:first-child {
+  margin-left: 0; /* El primer icono no necesita margen negativo */
+}
+
+// Asegúrate de que el chat no interfiera con otros elementos
+.tavern-container {
+  padding-bottom: 60px; // Espacio para el chat
+}
+

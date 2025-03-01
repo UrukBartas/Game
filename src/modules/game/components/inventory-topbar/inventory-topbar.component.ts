@@ -89,7 +89,7 @@ export class InventoryTopbarComponent {
   store = inject(Store);
   public currentSize$ = this.store.select(MainState.getState).pipe(
     filter((player) => !!player),
-    map((entry) => entry.player.sockets)
+    map((entry) => entry?.player?.sockets)
   );
   private _inventory: Array<any> = [];
   @Output() inventoryChange = new EventEmitter<any[]>();

@@ -178,7 +178,7 @@ export class ExportImportNftComponent extends TemplatePage {
 
   public currentSize$ = this.store.select(MainState.getState).pipe(
     filter((player) => !!player),
-    map((entry) => entry.player.sockets)
+    map((entry) => entry?.player?.sockets)
   );
 
   public whiteListedItems$ = new BehaviorSubject([]);

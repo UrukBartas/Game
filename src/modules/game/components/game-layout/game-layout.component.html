@@ -34,7 +34,22 @@
       }}"
     >
       <app-uruks-displayer [goldenUruks]="player.uruks"></app-uruks-displayer>
+      <div
+        class="mission-status"
+        *ngIf="playerActiveMission$ | async as activeMission"
+      >
+        <ng-template #activeMissionDisplayer>
+          <app-active-mission-displayer
+            [smaller]="true"
+            [activeMission]="activeMission"
+          ></app-active-mission-displayer>
+        </ng-template>
 
+        <i
+          class="fa-solid fa-sword hoverable-text"
+          [ngbTooltip]="activeMissionDisplayer"
+        ></i>
+      </div>
       <app-progress-bar
         class="px-2"
         barClass="shadow"
@@ -59,22 +74,7 @@
           (click)="displayTutorial()"
         ></i>
       </div>
-      <div
-        class="mission-status"
-        *ngIf="playerActiveMission$ | async as activeMission"
-      >
-        <ng-template #activeMissionDisplayer>
-          <app-active-mission-displayer
-            [smaller]="true"
-            [activeMission]="activeMission"
-          ></app-active-mission-displayer>
-        </ng-template>
 
-        <i
-          class="fa-solid fa-sword hoverable-text"
-          [ngbTooltip]="activeMissionDisplayer"
-        ></i>
-      </div>
       <div class="right d-flex align-items-center gap-2">
         <div class="player-dropdown">
           <div

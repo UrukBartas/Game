@@ -73,7 +73,7 @@ export class InventoryComponent extends TemplatePage {
   calculatedStackRule = globalCalculatedStackRule;
   public currentSize$ = this.store.select(MainState.getState).pipe(
     filter((player) => !!player),
-    map((entry) => entry.player.sockets)
+    map((entry) => entry?.player?.sockets)
   );
   public selectedItemSet!: ItemSet;
   containerExpanded = false;

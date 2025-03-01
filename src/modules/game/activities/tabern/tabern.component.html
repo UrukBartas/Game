@@ -1,6 +1,4 @@
 <div id="tavern" class="tavern-container">
-
-
   <!-- Mission Board Section -->
   <div class="mission-board">
     <div class="board-header">
@@ -14,21 +12,38 @@
           All
         </button>
         <button
+          [ngbTooltip]="tooltipHunt"
           class="filter-btn"
           [class.active]="selectedFilter === 'HUNT'"
           (click)="filterMissions('HUNT')"
         >
-          Hunt
+          <i class="fas fa-skull"></i>
         </button>
         <button
+          [ngbTooltip]="tooltipGather"
           class="filter-btn"
           [class.active]="selectedFilter === 'GATHER'"
           (click)="filterMissions('GATHER')"
         >
-          Gather
+          <i class="fas fa-hand"></i>
         </button>
       </div>
     </div>
+
+    <!-- Tooltip Templates -->
+    <ng-template #tooltipHunt>
+      <div class="tooltip-content py-3">
+        <strong>Hunt Missions</strong>
+        <p>Combat missions to defeat monsters and earn rewards</p>
+      </div>
+    </ng-template>
+
+    <ng-template #tooltipGather>
+      <div class="tooltip-content py-3">
+        <strong>Gather Missions</strong>
+        <p>Collect resources and materials from the world</p>
+      </div>
+    </ng-template>
 
     <!-- Mostrar banner de misión activa si existe -->
     <app-active-mission-displayer
@@ -54,10 +69,32 @@
           <div class="mission-footer">
             <div class="rewards">
               <span class="reward" *ngIf="mission.rewardUruks">
-                <i class="fas fa-coins"></i> {{ mission.rewardUruks }}
+                <ng-container [ngSwitch]="mission.rewardUruks">
+                  <span
+                    class="uruks-indicator"
+                    [ngbTooltip]="'Potential Uruk Reward'"
+                  >
+                    <img
+                      class="uruks-icon"
+                      src="{{ prefix + '/assets/goldenuruks.png' }}"
+                      *ngFor="let i of getUrukIcons(mission.rewardUruks)"
+                    />
+                  </span>
+                </ng-container>
               </span>
               <span class="reward" *ngIf="mission.rewardExperience">
-                <i class="fas fa-star"></i> {{ mission.rewardExperience }}
+                <i class="fas fa-star"></i> {{ mission.rewardExperience }}% EXP
+              </span>
+              <span
+                class="reward materials"
+                *ngIf="mission.rewardMaterials?.length"
+              >
+                <app-remote-item-box
+                  *ngFor="let material of mission.rewardMaterials"
+                  [itemId]="material.materialId"
+                  [amount]="material.amount"
+                  itemType="MATERIAL"
+                ></app-remote-item-box>
               </span>
             </div>
             <button
@@ -86,7 +123,9 @@
       <div class="header-content">
         <i class="fas fa-comments"></i>
         <span>UrukBox Chat</span>
-        <span class="online-count">42 online</span>
+        <span class="online-count"
+          >{{ (onlinePlayers$ | async) || 0 }} online</span
+        >
       </div>
       <i
         class="fas"
@@ -96,19 +135,41 @@
     </div>
 
     <div class="chat-content" *ngIf="isChatExpanded">
-      <div class="messages-container">
-        <!-- Placeholder messages -->
-        <div class="message">
-          <span class="username">Warrior123:</span>
-          <span class="text">Anyone up for dragon hunting?</span>
+      <div #chatContainer class="messages-container">
+        <div
+          class="message"
+          *ngFor="let message of messages"
+          [class.own-message]="message.username === getCurrentUsername()"
+        >
+          <div class="message-header">
+            <span class="timestamp">{{
+              message.timestamp | date: 'HH:mm'
+            }}</span>
+            <span
+              class="username"
+              [ngStyle]="getPlayerNameColor(message.username)"
+            >
+              {{ message.username }}
+            </span>
+          </div>
+          <div class="message-content">
+            {{ message.message }}
+          </div>
         </div>
-        <!-- Add more messages as needed -->
       </div>
 
-      <div class="chat-input">
-        <input type="text" placeholder="Type your message..." />
-        <button><i class="fas fa-paper-plane"></i></button>
-      </div>
+      <form class="chat-input" (ngSubmit)="sendMessage()">
+        <input
+          type="text"
+          [formControl]="messageInput"
+          placeholder="Type your message..."
+          maxlength="200"
+          (keydown.enter)="$event.preventDefault(); sendMessage()"
+        />
+        <button type="submit" [disabled]="!messageInput.value?.trim()">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
     </div>
   </div>
   <div class="tavern-bg"></div>
