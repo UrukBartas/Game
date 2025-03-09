@@ -1,0 +1,40 @@
+<ng-template #detailMonsterTooltip>
+  <div
+    class="tooltip-info-monster"
+    *ngIf="infoEffectiveness$() | async as infoEffectiveness"
+  >
+    <span>{{ getNameBasedOnType(monsterType) }}</span>
+    <img
+      [src]="getPathMonsterType(monsterType)"
+      alt="Monster type image"
+      style="width: 128px; height: 128px"
+    />
+    <ul class="list-monster my-2" *ngIf="infoEffectiveness.weakTo.length > 0">
+      Weak to:
+      <li class="text-third" *ngFor="let item of infoEffectiveness.weakTo">
+        {{ item }}
+      </li>
+    </ul>
+    <ul
+      class="list-monster my-2"
+      *ngIf="infoEffectiveness.strongAgainst.length > 0"
+    >
+      Strong to:
+      <li
+        class="text-danger"
+        *ngFor="let item of infoEffectiveness.strongAgainst"
+      >
+        {{ item }}
+      </li>
+    </ul>
+    Depending of the type of creature you face, your weapons and spells may be
+    stronger or weaker.
+  </div>
+</ng-template>
+
+<div class="monster-type" [ngbTooltip]="detailMonsterTooltip">
+  <img [src]="getPathMonsterType(monsterType)" alt="Monster type image" />
+  @if (showText) {
+    <span class="d-none d-sm-block">{{ getNameBasedOnType(monsterType) }}</span>
+  }
+</div>

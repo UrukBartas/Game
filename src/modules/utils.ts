@@ -7,7 +7,7 @@ import { pvpTiers } from './game/activities/leadeboard/const/pvp-tiers';
 import { questTiers } from './game/activities/leadeboard/const/quest-tiers';
 
 export const getShowItemCompare = (viewportService: ViewportService) => {
-  switch (viewportService.screenHeight) {
+  switch (viewportService.screenWidth) {
     case 'xxl':
     case 'xl':
     case 'lg':

@@ -217,6 +217,7 @@ ngb-tooltip-window {
   }
 }
 .item-tooltip-wrapper {
+
   div {
     @include media-breakpoint-down(sm) {
       display: flex;
@@ -653,6 +654,7 @@ app-item-tooltip {
 
 .tooltip-uruk {
   display: flex;
+  flex-direction: row !important;
 }
 app-rooms-list {
   width: 100%;

@@ -4,29 +4,115 @@
   background-color: $black;
   padding: 15px;
   border-radius: 3px;
-  ul {
-    min-width: 180px;
-    padding-left: 0;
-    li {
-      list-style-type: none;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      text-align: left;
-      gap: 2px;
+  min-width: 300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+
+  // Header section
+  .description {
+    margin-bottom: 0.5rem;
+
+    .h6 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
     }
   }
 
-  img {
-    border-radius: 10px;
-    height: 150px;
-    width: 150px;
-    max-width: 25vw;
-    max-height: 25vw;
+  // Content section
+  .d-flex {
+    &.flex-row {
+      display: flex;
+      gap: 1rem;
+
+      img {
+        border-radius: 10px;
+        height: 150px;
+        width: 150px;
+        max-width: 25vw;
+        max-height: 25vw;
+        object-fit: contain;
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+
+      .description {
+        ul {
+          min-width: 180px;
+          padding-left: 0;
+          margin-bottom: 0.5rem;
+
+          li {
+            list-style-type: none;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            gap: 2px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+          }
+        }
+      }
+    }
+  }
+
+  // Footer section
+  p {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+
+    &.text-white {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    &.edition {
+      font-size: 0.8rem;
+      color: #ffd700;
+    }
   }
 
   .uruks-icon {
-    max-width: 30px;
-    max-height: 30px;
+    max-width: 24px;
+    max-height: 24px;
+    margin-right: 4px;
+  }
+
+  // Price section
+  .d-flex.justify-content-start {
+    margin-top: 0.5rem;
+
+    .h6 {
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+
+      .text-white {
+        font-weight: 600;
+      }
+    }
+  }
+
+  // Glowing effects for different rarities
+  &.glowing-common {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  &.glowing-uncommon {
+    border: 1px solid rgba(30, 255, 0, 0.3);
+    box-shadow: 0 0 10px rgba(30, 255, 0, 0.1);
+  }
+
+  &.glowing-epic {
+    border: 1px solid rgba(170, 0, 255, 0.3);
+    box-shadow: 0 0 10px rgba(170, 0, 255, 0.1);
+  }
+
+  &.glowing-legendary {
+    border: 1px solid rgba(255, 165, 0, 0.3);
+    box-shadow: 0 0 15px rgba(255, 165, 0, 0.15);
+  }
+
+  &.glowing-mythic {
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.15);
   }
 }

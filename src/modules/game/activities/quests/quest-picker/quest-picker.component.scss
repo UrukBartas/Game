@@ -81,30 +81,3 @@
     }
   }
 }
-
-.monster-type {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  img {
-    width: 32px;
-    height: 32px;
-  }
-}
-
-.tooltip-info-monster {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 10px;
-  padding: 10px;
-}
-
-.list-monster {
-  padding: 0;
-  width: 140px;
-  text-align: center;
-  li {
-    list-style: none;
-  }
-}

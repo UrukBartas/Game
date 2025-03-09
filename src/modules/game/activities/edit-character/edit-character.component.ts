@@ -31,6 +31,7 @@ import {
   MainState,
   RefreshPlayer,
 } from 'src/store/main.store';
+import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
 import { ClassSelectorComponent } from './components/character-selector/character-selector.component';
 
 export function passwordMatchingValidator(): ValidatorFn {
@@ -84,10 +85,10 @@ export class EditCharacterComponent extends TemplatePage {
           this.editing
             ? []
             : [
-                Validators.required,
-                Validators.maxLength(20),
-                Validators.minLength(3),
-              ],
+              Validators.required,
+              Validators.maxLength(20),
+              Validators.minLength(3),
+            ],
         ],
         email: [
           '',
@@ -116,6 +117,7 @@ export class EditCharacterComponent extends TemplatePage {
         referralCode: this.route.snapshot.queryParams['referral'] ?? '',
       });
     }
+
   }
 
   public getClassBackground(className: PlayerClass) {
@@ -226,6 +228,8 @@ export class EditCharacterComponent extends TemplatePage {
     }
   }
 
+
+  // Actualizar el método save para resetear el valor inicial después de guardar
   save() {
     if (this.form.valid) {
       if (this.editing) {
@@ -271,6 +275,7 @@ export class EditCharacterComponent extends TemplatePage {
         )
         .pipe(take(1))
         .subscribe(() => {
+          this.form.markAsPristine();
           this.store.dispatch(new LoginPlayer({ email, password }));
         });
     } else {
@@ -286,6 +291,7 @@ export class EditCharacterComponent extends TemplatePage {
         )
         .pipe(take(1))
         .subscribe(() => {
+          this.form.markAsPristine();
           this.store.dispatch(new LoginPlayer());
         });
     }
@@ -311,8 +317,35 @@ export class EditCharacterComponent extends TemplatePage {
       .update(email, password, configuration)
       .pipe(take(1))
       .subscribe(() => {
+        this.form.markAsPristine();
         this.toastService.success('Settings updated');
         this.store.dispatch(new RefreshPlayer());
       });
+  }
+
+  public isEmailVerified() {
+    const player = this.store.selectSnapshot(MainState.getState).player;
+    return player?.emailVerified;
+  }
+
+  public startEmailVerification() {
+    const player = this.store.selectSnapshot(MainState.getState).player;
+    const ref = this.modalService.show(ConfirmModalComponent, {
+      initialState: {
+        title: 'Start Email Verification',
+        description:
+          `You are about to begin the verification process for the email: ${player.email}.\n\n Please check your inbox and click on the verification link to complete the process. Once verified, you will earn the Verified Badge!`,
+        accept: async () => {
+          try {
+            firstValueFrom(this.authService.requestEmailVerification()).then(
+              () => this.toastService.success('Mail sent! Check your inbox!')
+            );
+            ref.hide();
+          } catch (error) {
+            this.toastService.error('Some error happened, try again!');
+          }
+        },
+      },
+    });
   }
 }

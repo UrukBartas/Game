@@ -2,12 +2,12 @@ import { Component, inject, Input } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Debounce } from 'lodash-decorators';
 import { ToastrService } from 'ngx-toastr';
-import { firstValueFrom, shareReplay, switchMap, tap } from 'rxjs';
+import { filter, firstValueFrom, map, shareReplay, switchMap, tap } from 'rxjs';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { getPercentage } from 'src/standalone/item-tooltip/item-tooltip.component';
-import { RefreshPlayer } from 'src/store/main.store';
+import { MainState, RefreshPlayer } from 'src/store/main.store';
 @Component({
   selector: 'app-generic-stats',
   templateUrl: './generic-stats.component.html',
@@ -21,6 +21,11 @@ export class GenericStatsComponent {
   playerService = inject(PlayerService);
   toastService = inject(ToastrService);
   store = inject(Store);
+
+  public currentPlayer$ = this.store.select(MainState.getState).pipe(
+    filter((player) => !!player),
+    map((entry) => entry?.player)
+  );
 
   public prefix = ViewportService.getPreffixImg();
   allowedStatsToUpgrade = [

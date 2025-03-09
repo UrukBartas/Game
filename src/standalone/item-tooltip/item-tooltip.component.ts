@@ -8,19 +8,19 @@ import { map } from 'rxjs';
 import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
 import {
-    calculatedDurabilityRule,
-    getDurabilityPercentage,
-    getDurabilityTier,
-    getRarityBasedOnIRI,
-    getRarityColor,
-    getRarityText,
+  calculatedDurabilityRule,
+  getDurabilityPercentage,
+  getDurabilityTier,
+  getRarityBasedOnIRI,
+  getRarityColor,
+  getRarityText,
 } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
 import { MainState } from 'src/store/main.store';
 import { ItemBoxComponent } from '../item-box/item-box.component';
 import {
-    Tier,
-    TierizedProgressBarComponent,
+  Tier,
+  TierizedProgressBarComponent,
 } from '../tierized-progress-bar/tierized-progress-bar.component';
 export const avoidableStats = [
   'id',
@@ -243,5 +243,82 @@ export class ItemTooltipComponent {
 
   formatNumber(value) {
     return this.abs(value % 1 === 0 ? value : parseFloat(value.toFixed(2)));
+  }
+
+  // Categorize stats into primary, secondary, and percentage
+  public getPrimaryStats(): string[] {
+    const [nonPercentualStats, _] = getLoopableStatsKeys(this.item);
+    // Primary stats are the most important ones like damage, health, armor
+    return nonPercentualStats.filter(stat =>
+      ['damage', 'health', 'armor', 'energy'].includes(stat)
+    );
+  }
+
+  public getSecondaryStats(): string[] {
+    const [nonPercentualStats, _] = getLoopableStatsKeys(this.item);
+    const primaryStats = this.getPrimaryStats();
+    // Secondary stats are all non-percentage stats that aren't primary
+    return nonPercentualStats.filter(stat => !primaryStats.includes(stat));
+  }
+
+  public getPercentageStats(): string[] {
+    const [_, percentualStats] = getLoopableStatsKeys(this.item);
+    return percentualStats;
+  }
+
+  // Get appropriate icon for each stat type
+  public getStatIcon(stat: string): string {
+    const iconMap = {
+      // Primary stats
+      'damage': this.prefix + '/assets/icons/biceps.png',
+      'health': this.prefix + '/assets/icons/health-normal.png',
+      'armor': this.prefix + '/assets/icons/armor-vest.png',
+      'energy': this.prefix + '/assets/icons/embrassed-energy.png',
+
+      // Secondary stats
+      'speed': this.prefix + '/assets/icons/sprint.png',
+      'dodge': this.prefix + '/assets/icons/dodging.png',
+      'crit': this.prefix + '/assets/icons/explosion-rays.png',
+      'block': this.prefix + '/assets/icons/shield-bounces.png',
+      'accuracy': this.prefix + '/assets/icons/bullseye.png',
+      'penetration': this.prefix + '/assets/icons/cracked-shield.png',
+
+      // Percentage stats
+      'per_health': this.prefix + '/assets/icons/health-normal.png',
+      'per_damage': this.prefix + '/assets/icons/biceps.png',
+      'per_armor': this.prefix + '/assets/icons/armor-vest.png',
+      'per_speed': this.prefix + '/assets/icons/sprint.png',
+      'per_energy': this.prefix + '/assets/icons/embrassed-energy.png',
+      'per_dodge': this.prefix + '/assets/icons/dodging.png',
+      'per_crit': this.prefix + '/assets/icons/explosion-rays.png',
+      'per_block': this.prefix + '/assets/icons/shield-bounces.png',
+      'per_accuracy': this.prefix + '/assets/icons/bullseye.png',
+      'per_penetration': this.prefix + '/assets/icons/cracked-shield.png'
+    };
+
+    return iconMap[stat] || this.prefix + '/assets/icons/biceps.png';
+  }
+
+  public getStatIconClass(stat: string): string {
+    // Different background colors for different stat types
+    if (['damage', 'health', 'armor', 'energy'].includes(stat)) {
+      return 'primary-stat';
+    } else if (stat.startsWith('per_')) {
+      return 'percentage-stat';
+    } else {
+      return 'secondary-stat';
+    }
+  }
+
+  public getDurabilityBarClass(durability: number, rarity: Rarity): string {
+    const percentage = this.getDurabilityPercentage(durability, rarity);
+
+    if (percentage > 66) {
+      return 'durability-high';
+    } else if (percentage > 33) {
+      return 'durability-medium';
+    } else {
+      return 'durability-low';
+    }
   }
 }

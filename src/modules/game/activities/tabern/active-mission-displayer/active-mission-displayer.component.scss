@@ -1,3 +1,9 @@
+@import '../../../../../variables.scss';
+@import 'node_modules/bootstrap/scss/mixins';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
+
 .active-mission-banner {
   background: rgba(164, 208, 7, 0.1);
   border: 1px solid rgba(164, 208, 7, 0.3);
@@ -79,5 +85,61 @@
 
   i {
     font-size: 14px;
+  }
+}
+
+.mission-objective {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(164, 208, 7, 0.2);
+
+  .objective-display {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .objective-label {
+      font-weight: bold;
+      color: $third;
+      min-width: 60px;
+    }
+
+    .objective-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .monster-count {
+        font-weight: bold;
+        color: white;
+      }
+    }
+  }
+}
+
+.banner-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    i {
+      font-size: 1.2rem;
+    }
+  }
+
+  .hint-btn i {
+    color: $third;
   }
 }

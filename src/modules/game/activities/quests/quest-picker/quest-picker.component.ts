@@ -1,11 +1,10 @@
 import {
   Component,
-  computed,
   EventEmitter,
   inject,
   Input,
   Output,
-  signal,
+  signal
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Store } from '@ngxs/store';
@@ -60,13 +59,6 @@ export class QuestPickerComponent extends TemplatePage {
     .select(MainState.getState)
     .pipe(map((entry) => entry.player.sockets));
 
-  public infoEffectiveness$ = computed(() => {
-    const activeQuest = this.quests[this.activeSlideIndex()];
-    const type = activeQuest.data.monsterType;
-    return this.statService
-      .getMonsterWeakness()
-      .pipe(map((entry) => entry[type]));
-  });
 
   public getApproxTimeOfQuestBasedOnRarity = (rarity: Rarity) => {
     switch (rarity) {

@@ -5,12 +5,13 @@
 
 :host ::ng-deep {
   app-tierized-progress-bar {
-    max-width: 6rem;
+    max-width: 100%;
     width: 100%;
     height: 100%;
-    max-height: 1rem;
+    max-height: 0.5rem;
     .rpg-progress-bar-horizontal {
-      height: 1rem;
+      height: 0.5rem;
+      border-radius: 4px;
     }
   }
   .durability-display {
@@ -36,70 +37,427 @@
 }
 
 #item-tooltip-wrapper {
-  background-color: $black;
-  padding: 15px;
-  border-radius: 3px;
+  background-color: rgba(15, 15, 20, 0.95);
+  padding: 1.25rem;
+  border-radius: 8px;
   height: 100%;
-  .description {
-    align-items: center;
-    @include media-breakpoint-down(sm) {
-      flex-wrap: wrap;
-      gap: 5px;
-      align-items: center;
-      justify-content: center;
-    }
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 20rem;
+  // Rarity-based glow effects
+  &.glowing-common {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
   }
-  .wrapper-tooltip {
-    @include media-breakpoint-down(sm) {
-      flex-direction: column !important;
+
+  &.glowing-uncommon {
+    box-shadow: 0 0 15px rgba(30, 255, 0, 0.2);
+  }
+
+  &.glowing-epic {
+    box-shadow: 0 0 15px rgba(170, 0, 255, 0.3);
+  }
+
+  &.glowing-legendary {
+    box-shadow: 0 0 15px rgba(255, 165, 0, 0.4);
+  }
+
+  &.glowing-mythic {
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+  }
+
+  // Header Section
+  .tooltip-header {
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+
+    .item-name-section {
+      margin-bottom: 0.75rem;
+
+      .item-name {
+        font-size: 1.5rem;
+        margin: 0;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        letter-spacing: 0.5px;
+
+        .upgrade-level {
+          font-size: 1rem;
+          opacity: 0.9;
+        }
+
+        .equipped-badge {
+          font-size: 0.8rem;
+          background: rgba(255, 255, 255, 0.2);
+          padding: 0.2rem 0.5rem;
+          border-radius: 4px;
+          color: white;
+          font-weight: normal;
+        }
+      }
+
+      .item-meta {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+
+        .item-level {
+          font-size: 0.9rem;
+          font-weight: 600;
+          padding: 2px 8px;
+          background-color: rgba(0, 0, 0, 0.2);
+          border-radius: 4px;
+          display: inline-block;
+
+          &.locked-level {
+            color: $red;
+            animation: pulse-warning 2s infinite;
+          }
+        }
+
+        .item-type {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.85rem;
+          color: rgba(255, 255, 255, 0.7);
+
+          .damage-type-icon {
+            width: 18px;
+            height: 18px;
+          }
+
+          .separator {
+            opacity: 0.5;
+          }
+
+          .rarity-text {
+            font-weight: 600;
+          }
+        }
+      }
+    }
+
+    .durability-section {
+      margin-top: 0.75rem;
+
+      .durability-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.25rem;
+        font-size: 0.85rem;
+
+        .durability-icon {
+          color: $third;
+        }
+
+        .durability-percentage {
+          color: rgba(255, 255, 255, 0.8);
+        }
+      }
     }
   }
 
-  ul {
-    min-width: 180px;
-    @include media-breakpoint-down(sm) {
-      min-width: unset;
-    }
-    padding-left: 0;
-    li {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      list-style-type: none;
-      display: block;
-      text-align: start;
-    }
-  }
-  .item-image {
-    border-radius: 10px;
-    height: 150px;
-    width: 150px;
-    max-width: 25vw;
-    max-height: 25vw;
-  }
-
-  .uruks-icon {
-    max-width: 30px;
-    max-height: 30px;
-  }
-
-  .edition {
-    font-size: 11px;
-  }
-
-  .list-item-stat {
+  // Main Content Section
+  .tooltip-content {
     display: flex;
-    flex-direction: row;
-    gap: 5px;
+    gap: 1.5rem;
+
+    @include media-breakpoint-down(sm) {
+      flex-direction: column;
+    }
+
+    &.locked {
+      filter: grayscale(100%);
+      opacity: 0.7;
+    }
+
+    // Item Visual Section
+    .item-visual-section {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+
+      .item-image-container {
+        position: relative;
+
+        .item-image {
+          border-radius: 8px;
+          height: 150px;
+          width: 150px;
+          object-fit: contain;
+          background: rgba(0, 0, 0, 0.3);
+          padding: 0.5rem;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          transition: transform 0.2s ease;
+
+          &:hover {
+            transform: scale(1.05);
+          }
+
+          @include media-breakpoint-down(sm) {
+            height: 120px;
+            width: 120px;
+          }
+        }
+
+        .item-rarity-indicator {
+          position: absolute;
+          bottom: -10px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(0, 0, 0, 0.7);
+          padding: 0.25rem 0.75rem;
+          border-radius: 12px;
+          font-size: 0.8rem;
+          white-space: nowrap;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+      }
+
+      .enchants-section {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+
+    // Stats Section
+    .stats-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+
+      .stats-category {
+        .stats-category-title {
+          font-size: 1rem;
+          color: $third;
+          margin-bottom: 0.75rem;
+          font-weight: 600;
+          border-bottom: 1px solid rgba(164, 208, 7, 0.3);
+          padding-bottom: 0.25rem;
+        }
+
+        .stats-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.03);
+            transition: background 0.2s ease;
+
+            @include media-breakpoint-down(sm) {
+              padding: 0;
+            }
+
+            &:hover {
+              background: rgba(255, 255, 255, 0.07);
+            }
+
+            .stat-icon {
+              width: 30px;
+              height: 30px;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+
+              &.primary-stat {
+                background: rgba(164, 208, 7, 0.2);
+              }
+
+              &.secondary-stat {
+                background: rgba(0, 150, 255, 0.2);
+              }
+
+              &.percentage-stat {
+                background: rgba(255, 215, 0, 0.2);
+              }
+
+              i {
+                font-size: 0.9rem;
+              }
+
+              .stat-icon-img {
+                width: 18px;
+                height: 18px;
+                object-fit: contain;
+              }
+            }
+
+            .stat-details {
+              flex: 1;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              width: 100%;
+
+              .stat-name {
+                font-size: 0.9rem;
+                color: rgba(255, 255, 255, 0.9);
+                margin-right: 10px;
+                flex: 1;
+              }
+
+              .stat-value-container {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                min-width: 70px;
+                text-align: right;
+
+                .stat-value {
+                  font-weight: 600;
+                  font-size: 0.9rem;
+
+                  &.positive-rarity-bonus {
+                    color: rgba(255, 215, 0, 1);
+                    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+                  }
+
+                  &.negative-rarity-bonus {
+                    color: $red;
+                    text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+                  }
+                }
+
+                .comparison-value {
+                  font-size: 0.8rem;
+                  margin-top: 0.1rem;
+
+                  &.positive {
+                    color: #4caf50;
+                  }
+
+                  &.negative {
+                    color: #f44336;
+                  }
+
+                  &.neutral {
+                    color: #9e9e9e;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
-  .positive-rarity-bonus {
-    color: rgba(255, 215, 0, 1);
+  // Footer Section
+  .tooltip-footer {
+    margin-top: 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1rem;
+
+    .item-description {
+      font-style: italic;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+      line-height: 1.4;
+      opacity: 0.9;
+    }
+
+    .tooltip-footer-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .edition-info {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0;
+      }
+
+      .price-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0;
+
+        .uruks-icon {
+          width: 20px;
+          height: 20px;
+        }
+
+        .price-value {
+          color: #ffd700;
+          font-weight: 600;
+        }
+      }
+    }
   }
-  .negative-rarity-bonus {
-    color: $red;
+}
+
+// Animation for locked level warning
+@keyframes pulse-warning {
+  0% {
+    opacity: 0.7;
   }
-  .locked-level {
-    @extend .negative-rarity-bonus;
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+
+// Responsive adjustments
+@include media-breakpoint-down(sm) {
+  #item-tooltip-wrapper {
+    padding: 1rem;
+
+    .tooltip-header {
+      .item-name-section {
+        .item-name {
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+}
+
+// Estilos para la barra de progreso de durabilidad
+.durability-progress {
+  height: 0.5rem;
+  background-color: rgba(50, 50, 50, 0.5);
+  border-radius: 4px;
+  overflow: hidden;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  .progress-bar {
+    transition: width 0.3s ease;
+
+    &.durability-high {
+      background: linear-gradient(90deg, $success, lighten($success, 10%));
+    }
+
+    &.durability-medium {
+      background: linear-gradient(90deg, $warning, lighten($warning, 10%));
+    }
+
+    &.durability-low {
+      background: linear-gradient(90deg, $danger, lighten($danger, 10%));
+    }
   }
 }

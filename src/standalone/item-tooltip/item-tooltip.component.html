@@ -40,98 +40,111 @@
     'glowing-mythic': item.itemData.rarity === rarityEnum.MYTHIC,
   }"
 >
-  <div class="d-flex flex-column align-items-start gap-1">
-    <div class="description w-100">
-      <p
-        class="h6 m-0"
+  <!-- Header Section -->
+  <div class="tooltip-header">
+    <div class="item-name-section">
+      <h3
+        class="item-name"
         [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }"
       >
         {{ item.itemData.name }}
-        {{ item.upgradeLevel ? '+' + item.upgradeLevel : null }}
-        <span class="text-light" *ngIf="isBeingCompared">(equipped)</span>
-      </p>
-      <p
-        urTitle
-        class="m-0"
-        [ngClass]="{
-          'locked-level':
-            !isViewingPlayer && (player$ | async).level < item.level,
-          'text-white':
-            !isViewingPlayer && (player$ | async).level >= item.level,
-        }"
-      >
-        Level {{ item.level }}
-      </p>
-    </div>
-    <div class="description w-100">
-      <p
-        [ngStyle]="{
-          color: getRarityColor(item.itemData.rarity, 0.7),
-          fontSize: '13px',
-        }"
-        class="m-0"
-      >
-        @if (
-          item.itemData.itemType == itemType.Weapon1H ||
-          item.itemData.itemType == itemType.Weapon2H
-        ) {
-          <img
-            [ngStyle]="{ width: '20px' }"
-            src="{{
-              prefix +
-                '/assets/dmgtypes/' +
-                item.itemData.damageType.toLowerCase() +
-                '.webp'
-            }}"
-          />
-          {{ camelToe(item.itemData.damageType) }} -
-        }
+        <span class="upgrade-level" *ngIf="item.upgradeLevel"
+          >+{{ item.upgradeLevel }}</span
+        >
+        <span class="equipped-badge" *ngIf="isBeingCompared">equipped</span>
+      </h3>
 
-        {{ mapItemType(item.itemData.itemType) }} -
-        {{ getRarityText(item.itemData.rarity) }}
-      </p>
-      <div class="durability-display d-flex gap-2">
-        <span>{{ durabilityIndicator(item) }}</span>
-        <span class="text-light">
+      <div class="item-meta">
+        <span
+          class="item-level"
+          [ngClass]="{
+            'locked-level':
+              !isViewingPlayer && (player$ | async).level < item.level,
+            'text-white':
+              !isViewingPlayer && (player$ | async).level >= item.level,
+          }"
+        >
+          Level {{ item.level }}
+        </span>
+
+        <div class="item-type">
+          @if (
+            item.itemData.itemType == itemType.Weapon1H ||
+            item.itemData.itemType == itemType.Weapon2H
+          ) {
+            <img
+              class="damage-type-icon"
+              src="{{
+                prefix +
+                  '/assets/dmgtypes/' +
+                  item.itemData.damageType.toLowerCase() +
+                  '.webp'
+              }}"
+            />
+            <span>{{ camelToe(item.itemData.damageType) }}</span>
+            <span class="separator">•</span>
+          }
+          <span>{{ mapItemType(item.itemData.itemType) }}</span>
+          <span class="separator">•</span>
+          <span
+            class="rarity-text"
+            [ngStyle]="{ color: getRarityColor(item.itemData.rarity, 0.9) }"
+          >
+            {{ getRarityText(item.itemData.rarity) }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Durability Bar -->
+    <div class="durability-section">
+      <div class="durability-label">
+        <span class="durability-icon">{{ durabilityIndicator(item) }}</span>
+        <span class="durability-percentage">
           {{
             getDurabilityPercentage(
               item.durability,
               item.itemData.rarity
-            ).toFixed(2)
-          }}%</span
-        >
-        -
-        <app-tierized-progress-bar
-          [tiers]="durabilityTiers"
-          [currentValue]="
-            durabilityTierValue(item.durability, item.itemData.rarity)
-          "
-          [mode]="'durability'"
-        ></app-tierized-progress-bar>
+            ).toFixed(1)
+          }}%
+        </span>
+      </div>
+      <div class="progress durability-progress">
+        <div class="progress-bar"
+             [ngClass]="getDurabilityBarClass(item.durability, item.itemData.rarity)"
+             [style.width.%]="getDurabilityPercentage(item.durability, item.itemData.rarity)">
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Main Content Section -->
   <div
-    class="d-flex flex-row pt-2 wrapper-tooltip"
+    class="tooltip-content"
     [ngClass]="{
       locked: !isViewingPlayer && (player$ | async).level < item.level,
     }"
   >
-    <div class="d-flex flex-column align-items-center">
-      <img
-        class="item-image d-none d-sm-block"
-        [src]="prefix + item.itemData?.imageLocal"
-        priority
-      />
-      <span
-        [ngStyle]="{
-          color: getRarityColor(getRarityBasedOnIRI(item.item_rarity_stat)),
-        }"
-        class="mt-2"
-        *ngIf="item.item_rarity_stat"
-        ><strong>IRI</strong> {{ item.item_rarity_stat.toFixed(2) }}</span
-      >
-      <div class="enchants-applied pb-2">
+    <!-- Item Image and Enchants -->
+    <div class="item-visual-section">
+      <div class="item-image-container">
+        <img
+          class="item-image"
+          [src]="prefix + item.itemData?.imageLocal"
+          priority
+        />
+        <div class="item-rarity-indicator" *ngIf="item.item_rarity_stat">
+          <span
+            [ngStyle]="{
+              color: getRarityColor(getRarityBasedOnIRI(item.item_rarity_stat)),
+            }"
+          >
+            <strong>IRI</strong> {{ item.item_rarity_stat.toFixed(2) }}
+          </span>
+        </div>
+      </div>
+
+      <div class="enchants-section">
         <ng-container *ngFor="let enchantKey of keys(mapEnchantsImgs)">
           <app-item-box
             *ngIf="!!item[enchantKey]"
@@ -149,67 +162,195 @@
         </ng-container>
       </div>
     </div>
-    <div class="description stat px-3">
-      <ul>
-        @for (key of getLoopableStatsKeys(); track key; let i = $index) {
-          @if (isRarityBonus(key) && i == nonPorcentualStatsLength) {
-            <li class="list-item-stat">
-              <span class="text-light" style="font-size: 12px"
-                >Rarity bonuses</span
-              >
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+      <!-- Primary Stats -->
+      <div class="stats-category" *ngIf="getPrimaryStats().length > 0">
+        <h4 class="stats-category-title">Primary Stats</h4>
+        <ul class="stats-list">
+          @for (key of getPrimaryStats(); track key) {
+            <li class="stat-item">
+              <div class="stat-icon" [ngClass]="getStatIconClass(key)">
+                <img [src]="getStatIcon(key)" alt="{{ parseKeyPascalCase(key) }}" class="stat-icon-img">
+              </div>
+              <div class="stat-details">
+                <span class="stat-name">{{ parseKeyPascalCase(key) }}</span>
+                <div class="stat-value-container">
+                  <span
+                    class="stat-value"
+                    [ngClass]="{
+                      'positive-rarity-bonus':
+                        isRarityBonus(key) && item[key] >= 0,
+                      'negative-rarity-bonus':
+                        isRarityBonus(key) && item[key] < 0,
+                    }"
+                  >
+                    {{ item[key] >= 0 ? '+' : '' }}{{ formatNumberFn(item[key])
+                    }}{{ getPercentage(key) }}
+                  </span>
+
+                  @if (compareWith) {
+                    <span
+                      class="comparison-value"
+                      [ngClass]="{
+                        negative:
+                          (item | compareItem: compareWith : key).charAt(0) ==
+                          '-',
+                        neutral:
+                          (item | compareItem: compareWith : key).charAt(0) ==
+                          '0',
+                        positive:
+                          (item | compareItem: compareWith : key).charAt(0) ==
+                          '+',
+                      }"
+                    >
+                      {{
+                        (item | compareItem: compareWith : key) +
+                          getPercentage(key)
+                      }}
+                    </span>
+                  }
+                </div>
+              </div>
             </li>
           }
-          <li class="list-item-stat">
-            <ng-container
-              *ngTemplateOutlet="
-                stat;
-                context: {
-                  key,
-                  avoidIndicator: false,
-                  index: i,
-                }
-              "
-            ></ng-container>
-            @if (compareWith) {
-              <span
-                class="value"
-                [ngClass]="{
-                  negative:
-                    (item | compareItem: compareWith : key).charAt(0) == '-',
-                  neutral:
-                    (item | compareItem: compareWith : key).charAt(0) == '0',
-                }"
-              >
-                {{
-                  (item | compareItem: compareWith : key) + getPercentage(key)
-                }}</span
-              >
-            }
-          </li>
-        }
-      </ul>
+        </ul>
+      </div>
+
+      <!-- Secondary Stats -->
+      <div class="stats-category" *ngIf="getSecondaryStats().length > 0">
+        <h4 class="stats-category-title">Secondary Stats</h4>
+        <ul class="stats-list">
+          @for (key of getSecondaryStats(); track key) {
+            <li class="stat-item">
+              <div class="stat-icon" [ngClass]="getStatIconClass(key)">
+                <img [src]="getStatIcon(key)" alt="{{ parseKeyPascalCase(key) }}" class="stat-icon-img">
+              </div>
+              <div class="stat-details">
+                <span class="stat-name">{{ parseKeyPascalCase(key) }}</span>
+                <div class="stat-value-container">
+                  <span
+                    class="stat-value"
+                    [ngClass]="{
+                      'positive-rarity-bonus':
+                        isRarityBonus(key) && item[key] >= 0,
+                      'negative-rarity-bonus':
+                        isRarityBonus(key) && item[key] < 0,
+                    }"
+                  >
+                    {{ item[key] >= 0 ? '+' : '' }}{{ formatNumberFn(item[key])
+                    }}{{ getPercentage(key) }}
+                  </span>
+
+                  @if (compareWith) {
+                    <span
+                      class="comparison-value"
+                      [ngClass]="{
+                        negative:
+                          (item | compareItem: compareWith : key).charAt(0) ==
+                          '-',
+                        neutral:
+                          (item | compareItem: compareWith : key).charAt(0) ==
+                          '0',
+                        positive:
+                          (item | compareItem: compareWith : key).charAt(0) ==
+                          '+',
+                      }"
+                    >
+                      {{
+                        (item | compareItem: compareWith : key) +
+                          getPercentage(key)
+                      }}
+                    </span>
+                  }
+                </div>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <!-- Percentage Bonuses -->
+      <div class="stats-category" *ngIf="getPercentageStats().length > 0">
+        <h4 class="stats-category-title">Rarity Bonuses</h4>
+        <ul class="stats-list">
+          @for (key of getPercentageStats(); track key) {
+            <li class="stat-item">
+              <div class="stat-icon" [ngClass]="getStatIconClass(key)">
+                <img [src]="getStatIcon(key)" alt="{{ parseKeyPascalCase(key) }}" class="stat-icon-img">
+              </div>
+              <div class="stat-details">
+                <span class="stat-name">{{ parseKeyPascalCase(key) }}</span>
+                <div class="stat-value-container">
+                  <span
+                    class="stat-value"
+                    [ngClass]="{
+                      'positive-rarity-bonus':
+                        isRarityBonus(key) && item[key] >= 0,
+                      'negative-rarity-bonus':
+                        isRarityBonus(key) && item[key] < 0,
+                    }"
+                  >
+                    {{ item[key] >= 0 ? '+' : '' }}{{ formatNumberFn(item[key])
+                    }}{{ getPercentage(key) }}
+                  </span>
+
+                  @if (compareWith) {
+                    <span
+                      class="comparison-value"
+                      [ngClass]="{
+                        negative:
+                          (item | compareItem: compareWith : key).charAt(0) ==
+                          '-',
+                        neutral:
+                          (item | compareItem: compareWith : key).charAt(0) ==
+                          '0',
+                        positive:
+                          (item | compareItem: compareWith : key).charAt(0) ==
+                          '+',
+                      }"
+                    >
+                      {{
+                        (item | compareItem: compareWith : key) +
+                          getPercentage(key)
+                      }}
+                    </span>
+                  }
+                </div>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
     </div>
   </div>
-  <p
-    class="mt-3"
-    [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }"
-    *ngIf="
-      item.itemData?.description?.length > 0 &&
-      viewportService.screenWidth != 'xs'
-    "
-  >
-    {{ item.itemData.description }}
-  </p>
-  <p class="mb-0 text-white edition" *ngIf="getExtraData() as extraData">
-    ⭐{{ extraData?.edition }}
-  </p>
-  <div class="d-flex align-items-center justify-content-start">
-    <p *ngIf="item.price" class="h6 mb-0 mt-3 d-flex align-items-center gap-1">
-      <img
-        class="uruks-icon pb-1"
-        src="{{ prefix + '/assets/goldenuruks.png' }}"
-      />
-      <span urText class="text-white">{{ item.price | number: '1.0-2' }}</span>
+
+  <!-- Footer Section -->
+  <div class="tooltip-footer">
+    <p
+      class="item-description"
+      [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }"
+      *ngIf="
+        item.itemData?.description?.length > 0 &&
+        viewportService.screenWidth != 'xs'
+      "
+    >
+      {{ item.itemData.description }}
     </p>
+
+    <div class="tooltip-footer-meta">
+      <p class="edition-info" *ngIf="getExtraData() as extraData">
+        ⭐{{ extraData?.edition }}
+      </p>
+
+      <p *ngIf="item.price" class="price-info">
+        <img
+          class="uruks-icon"
+          src="{{ prefix + '/assets/goldenuruks.png' }}"
+        />
+        <span class="price-value">{{ item.price | number: '1.0-2' }}</span>
+      </p>
+    </div>
   </div>
 </div>

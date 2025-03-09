@@ -1,6 +1,7 @@
 import { Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { PlayerModel } from 'src/modules/core/models/player.model';
@@ -30,6 +31,10 @@ export class TabernComponent extends TemplatePage implements OnInit, OnDestroy {
   messageInput = new FormControl('');
   private chatSubscription: Subscription;
   public onlinePlayers$ = this.webSocketService.onlineChatPlayers$;
+  toast = inject(ToastrService);
+  private showedAdBlockerWarning = false;
+  currentTavernSection: 'missions' | 'games' | 'shop' = 'missions';
+
   constructor(
     private boardMissionService: BoardMissionService,
     private webSocketService: WebSocketService
@@ -53,7 +58,6 @@ export class TabernComponent extends TemplatePage implements OnInit, OnDestroy {
       }
     );
 
-
     // Solicitar lista de jugadores en línea
     this.webSocketService.requestOnlinePlayers();
 
@@ -61,6 +65,8 @@ export class TabernComponent extends TemplatePage implements OnInit, OnDestroy {
     this.webSocketService.joinGlobalChat();
     this.webSocketService.getChatHistory();
   }
+
+
 
   ngOnDestroy() {
     if (this.chatSubscription) {
@@ -193,5 +199,13 @@ export class TabernComponent extends TemplatePage implements OnInit, OnDestroy {
     return {
       color: `hsl(${h}, ${s}%, ${l}%)`
     };
+  }
+
+  switchTavernSection(section: 'missions' | 'games' | 'shop'): void {
+    this.currentTavernSection = section;
+
+    if (section === 'missions') {
+      this.refreshMissions();
+    }
   }
 }

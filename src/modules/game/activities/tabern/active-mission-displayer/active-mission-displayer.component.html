@@ -4,6 +4,39 @@
     <div class="banner-text">
       <h4 *ngIf="!smaller">Active Mission in Progress</h4>
       <p>{{ activeMission.mission.title }}</p>
+
+      <!-- Visual mission objective indicator -->
+      <div class="mission-objective">
+        @switch (activeMission.mission.type) {
+          @case ('GATHER') {
+            <div class="objective-display">
+              <span class="objective-label">Gather:</span>
+              <div class="objective-item">
+                <app-remote-item-box
+                  [itemId]="activeMission.mission.materialId"
+                  [amount]="activeMission.mission.gatherCount"
+                  itemType="MATERIAL"
+                ></app-remote-item-box>
+              </div>
+            </div>
+          }
+          @case ('HUNT') {
+            <div class="objective-display">
+              <span class="objective-label">Hunt:</span>
+              <div class="objective-item">
+                <app-monster-type-avatar
+                  [monsterType]="activeMission.mission.monsterType"
+                  [showText]="false"
+                ></app-monster-type-avatar>
+                <span class="monster-count"
+                  >x{{ activeMission.mission.killCount }}</span
+                >
+              </div>
+            </div>
+          }
+        }
+      </div>
+
       <div class="progress-bar">
         <div
           class="progress"
@@ -21,12 +54,18 @@
         </span>
       </div>
     </div>
-    <button
-      class="cancel-mission-btn text-danger"
-      *ngIf="!smaller"
-      (click)="cancelMission()"
-    >
-      <i class="fas fa-times text-danger"></i>
-    </button>
+    <div class="banner-actions">
+      <button
+        class="cancel-mission-btn text-danger"
+        *ngIf="!smaller"
+        (click)="cancelMission()"
+        [ngbTooltip]="'Cancel Mission'"
+      >
+        <i class="fas fa-times text-danger"></i>
+      </button>
+      <button class="hint-btn" *ngIf="!smaller" [ngbTooltip]="getMissionHint()">
+        <i class="fas fa-question-circle"></i>
+      </button>
+    </div>
   </div>
 </div>

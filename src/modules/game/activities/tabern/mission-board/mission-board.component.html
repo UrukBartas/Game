@@ -1,0 +1,146 @@
+<div class="mission-board">
+  <div class="board-header">
+    <h2><i class="fas fa-scroll"></i> Mission Board</h2>
+    <div class="board-filters">
+      <button
+        class="filter-btn"
+        [class.active]="selectedFilter === 'ALL'"
+        (click)="filterMissions('ALL')"
+      >
+        All
+      </button>
+      <button
+        [ngbTooltip]="tooltipHunt"
+        class="filter-btn"
+        [class.active]="selectedFilter === 'HUNT'"
+        (click)="filterMissions('HUNT')"
+      >
+        <i class="fas fa-skull"></i>
+      </button>
+      <button
+        [ngbTooltip]="tooltipGather"
+        class="filter-btn"
+        [class.active]="selectedFilter === 'GATHER'"
+        (click)="filterMissions('GATHER')"
+      >
+        <i class="fas fa-hand"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tooltip Templates -->
+  <ng-template #tooltipHunt>
+    <div class="tooltip-content py-3">
+      <strong>Hunt Missions</strong>
+      <p>Combat missions to defeat monsters and earn rewards</p>
+    </div>
+  </ng-template>
+
+  <ng-template #tooltipGather>
+    <div class="tooltip-content py-3">
+      <strong>Gather Missions</strong>
+      <p>Collect resources and materials from the world</p>
+    </div>
+  </ng-template>
+
+  <!-- Mostrar banner de misión activa si existe -->
+  <app-active-mission-displayer
+    (updateMissions)="refreshMissions()"
+    [activeMission]="activeMission"
+  ></app-active-mission-displayer>
+
+  <div class="missions-container">
+    <ng-container *ngIf="!loading; else loadingTemplate">
+      <div
+        class="mission-card"
+        *ngFor="let mission of getFilteredMissions()"
+        [class.disabled]="!canAcceptMission(mission)"
+      >
+        <div
+          class="mission-difficulty"
+          [class]="getDifficultyClass(mission.difficulty)"
+        >
+          {{ mission.difficulty }}
+        </div>
+        <h3>{{ mission.title }}</h3>
+        <p class="mb-1">{{ mission.description }}</p>
+        <div
+          class="mission-type-indicator"
+          [class.gather-mission]="mission.type === 'GATHER'"
+          [class.hunt-mission]="mission.type === 'HUNT'"
+        >
+          @switch (mission.type) {
+            @case ('GATHER') {
+              Gather x{{ mission.gatherCount }}
+              <app-remote-item-box
+                [itemId]="mission.materialId"
+                [amount]="mission.gatherCount"
+                itemType="MATERIAL"
+              ></app-remote-item-box>
+            }
+            @case ('HUNT') {
+              Hunt x{{ mission.killCount }}
+              <app-monster-type-avatar
+                [monsterType]="mission.monsterType"
+                [showText]="false"
+              ></app-monster-type-avatar>
+            }
+          }
+        </div>
+        <div class="mission-footer">
+          <div class="rewards">
+            <div class="rewards-label">Rewards:</div>
+            <div class="rewards-separator"></div>
+            <div
+              class="rewards-line justify-content-between align-items-center d-flex gap-2"
+            >
+              <span class="reward" *ngIf="mission.rewardUruks">
+                <ng-container [ngSwitch]="mission.rewardUruks">
+                  <span
+                    class="uruks-indicator"
+                    [ngbTooltip]="'Potential Uruk Reward'"
+                  >
+                    <img
+                      class="uruks-icon"
+                      src="{{ prefix + '/assets/goldenuruks.png' }}"
+                      *ngFor="let i of getUrukIcons(mission.rewardUruks)"
+                    />
+                  </span>
+                </ng-container>
+              </span>
+              <span class="reward" *ngIf="mission.rewardExperience">
+                <i class="fas fa-star"></i> {{ mission.rewardExperience }}% EXP
+              </span>
+              <span
+                class="reward materials"
+                *ngIf="mission.rewardMaterials?.length"
+              >
+                <app-remote-item-box
+                  *ngFor="let material of mission.rewardMaterials"
+                  [itemId]="material.materialId"
+                  [amount]="material.amount"
+                  itemType="MATERIAL"
+                ></app-remote-item-box>
+              </span>
+            </div>
+          </div>
+          <button
+            class="accept-btn"
+            (click)="acceptMission(mission)"
+            [disabled]="!canAcceptMission(mission)"
+            [class.disabled]="!canAcceptMission(mission)"
+          >
+            {{ getButtonText(mission) }}
+          </button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<!-- Loading Template -->
+<ng-template #loadingTemplate>
+  <div class="loading-spinner">
+    <i class="fas fa-spinner fa-spin"></i> Loading...
+  </div>
+</ng-template>

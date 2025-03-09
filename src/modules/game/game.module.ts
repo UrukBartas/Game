@@ -23,6 +23,7 @@ import { GenericItemTooltipComponent } from 'src/standalone/generic-item-tooltip
 import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulette.component';
 import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
 import { MinMaxComboSelectorComponent } from 'src/standalone/min-max-combo-selector/min-max-combo-selector.component';
+import { MonsterTypeAvatarComponent } from 'src/standalone/monster-type-avatar/monster-type-avatar.component';
 import { RemoteItemBoxComponent } from 'src/standalone/remote-item-box/remote-item-box.component';
 import { SpinnerComponent } from 'src/standalone/spinner/spinner.component';
 import { TierizedProgressBarComponent } from 'src/standalone/tierized-progress-bar/tierized-progress-bar.component';
@@ -117,6 +118,7 @@ import { QuestTutorialComponent } from './components/tutorials/quest-tutorial/qu
 import { ShopTutorialComponent } from './components/tutorials/shop-tutorial/shop-tutorial.component';
 import { TabernTutorialComponent } from './components/tutorials/tabern-tutorial/tabern-tutorial.component';
 import { GameRoutingModule } from './game-routing.module';
+import { MissionBoardComponent } from './activities/tabern/mission-board/mission-board.component';
 
 const directives = [
   ValidInputDirective,
@@ -216,6 +218,7 @@ const pipes = [
     TabernTutorialComponent,
     ReferralsComponent,
     ActiveMissionDisplayerComponent,
+    MissionBoardComponent,
   ],
   imports: [
     ...directives,
@@ -254,6 +257,7 @@ const pipes = [
     UruksDisplayerComponent,
     RemoteItemBoxComponent,
     QRCodeModule,
+    MonsterTypeAvatarComponent,
   ],
   exports: [
     GameLayoutComponent,

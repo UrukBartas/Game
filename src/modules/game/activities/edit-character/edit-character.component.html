@@ -153,114 +153,202 @@
           </div>
         </div>
 
-        <div class="form-group py-3 action-buttons gap-2">
-          <button (click)="location.back()" class="btn btn-dark btn-lg">
-            Back
-          </button>
-          <button
-            [disabled]="form.invalid"
-            (click)="save()"
-            class="btn btn-secondary btn-lg"
-          >
-            Save
-          </button>
-        </div>
         <div class="description pt-3" *ngIf="!!editing">
           <span urText>Settings</span>
         </div>
 
-        <div class="row">
-          <div class="col-12 col-sm-6 py-2" *ngIf="!!editing">
-            <div class="form-check form-switch">
-              <input
-                formControlName="disablePVP"
-                class="form-check-input"
-                type="checkbox"
-                role="switch"
-                id="flexSwitchCheckDefault"
-              />
-              <label class="form-check-label" for="flexSwitchCheckDefault"
-                >Disable PVP notifications</label
-              >
+        <div class="settings-container" *ngIf="!!editing">
+          <!-- Game Settings Section -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <i class="bi bi-gear-fill me-2"></i>
+              <span urText>Game Settings</span>
+            </div>
+            <div class="settings-card-body">
+              <div class="settings-toggle-grid">
+                <div class="toggle-item">
+                  <div class="toggle-label">
+                    <i class="bi bi-shield-fill me-2"></i>
+                    <span>PVP Notifications</span>
+                  </div>
+                  <div class="form-check form-switch">
+                    <input
+                      formControlName="disablePVP"
+                      class="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      id="togglePVP"
+                    />
+                  </div>
+                </div>
+
+                <div class="toggle-item">
+                  <div class="toggle-label">
+                    <i class="bi bi-volume-up-fill me-2"></i>
+                    <span>Sound Effects</span>
+                  </div>
+                  <div class="form-check form-switch">
+                    <input
+                      formControlName="disableSound"
+                      class="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      id="toggleSound"
+                    />
+                  </div>
+                </div>
+
+                <div class="toggle-item">
+                  <div class="toggle-label">
+                    <i class="bi bi-envelope-fill me-2"></i>
+                    <span>Email Notifications</span>
+                  </div>
+                  <div class="form-check form-switch">
+                    <input
+                      formControlName="disableEmailNotifications"
+                      class="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      id="toggleEmail"
+                    />
+                  </div>
+                </div>
+
+                <div class="toggle-item">
+                  <div class="toggle-label">
+                    <i class="bi bi-gem me-2"></i>
+                    <span>Mine Notifications</span>
+                  </div>
+                  <div class="form-check form-switch">
+                    <input
+                      formControlName="ignoreMine"
+                      class="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      id="toggleMine"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="col-12 col-sm-6 py-2" *ngIf="!!editing">
-            <div class="form-check form-switch">
-              <input
-                formControlName="disableSound"
-                class="form-check-input"
-                type="checkbox"
-                role="switch"
-                id="flexSwitchCheckDefault"
-              />
-              <label class="form-check-label" for="flexSwitchCheckDefault"
-                >Disable sound effects</label
-              >
+          <!-- Email verification section -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <i class="bi bi-check-circle-fill me-2"></i>
+              <span urText>Email Verification</span>
             </div>
-          </div>
-          <div class="col-12 col-sm-6 py-2" *ngIf="!!editing">
-            <div class="form-check form-switch">
-              <input
-                formControlName="disableEmailNotifications"
-                class="form-check-input"
-                type="checkbox"
-                role="switch"
-                id="flexSwitchCheckDefault"
-              />
-              <label class="form-check-label" for="flexSwitchCheckDefault"
-                >Disable email notifications</label
-              >
+            <div class="settings-card-body">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                  <div
+                    class="verification-status-icon"
+                    [class.verified]="isEmailVerified()"
+                  >
+                    <i
+                      class="bi"
+                      [ngClass]="
+                        isEmailVerified()
+                          ? 'bi-check-circle-fill'
+                          : 'bi-x-circle-fill'
+                      "
+                    ></i>
+                  </div>
+                  <div>
+                    <div class="email-address">{{ form.value.email }}</div>
+                    <div
+                      class="verification-status"
+                      [class.verified]="isEmailVerified()"
+                    >
+                      {{ isEmailVerified() ? 'Verified' : 'Not verified' }}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  *ngIf="!isEmailVerified()"
+                  class="btn btn-verify"
+                  (click)="startEmailVerification()"
+                >
+                  <i class="bi bi-envelope-check me-2"></i>
+                  Verify Email
+                </button>
+                <div *ngIf="isEmailVerified()" class="verified-badge">
+                  <i class="bi bi-check-circle-fill me-2"></i>
+                  Verified
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="col-12 col-sm-6 py-2" *ngIf="!!editing">
-            <div class="form-check form-switch">
-              <input
-                formControlName="ignoreMine"
-                class="form-check-input"
-                type="checkbox"
-                role="switch"
-                id="flexSwitchCheckDefault"
-              />
-              <label class="form-check-label" for="flexSwitchCheckDefault"
-                >Disable mine notifications</label
-              >
+          <!-- Account Links Section -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <i class="bi bi-link-45deg me-2"></i>
+              <span urText>Account Links</span>
             </div>
-          </div>
+            <div class="settings-card-body">
+              <div class="account-links">
+                <div class="account-link-item">
+                  <div class="link-info">
+                    <i class="bi bi-wallet2 me-2"></i>
+                    <div>
+                      <div class="link-title">Wallet Address</div>
+                      <div class="link-status">
+                        @if (userHasLinkedAddress()) {
+                          <span class="text-success">
+                            {{ truncateAddress(getPlayerAddress()) }}
+                          </span>
+                        } @else {
+                          <span class="text-warning">Not linked</span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    *ngIf="!userHasLinkedAddress()"
+                    class="btn btn-link-wallet"
+                    (click)="linkWeb3WalletAddressToThisAccount()"
+                  >
+                    {{
+                      this.hasWalletConnected()
+                        ? 'Verify ownership'
+                        : 'Link Web3 Wallet'
+                    }}
+                  </button>
+                </div>
 
-          <div class="col-12 col-sm-6 py-2" *ngIf="!!editing">
-            @if (!userHasLinkedAddress()) {
-              <a
-                class="btn btn-lg btn-primary save-button w-100"
-                (click)="linkWeb3WalletAddressToThisAccount()"
-              >
-                {{
-                  this.hasWalletConnected()
-                    ? 'Verify ownership'
-                    : 'Link Web3 Wallet'
-                }}
-              </a>
-            } @else {
-              <span class="text-secondary"
-                >Wallet address linked:
-                {{ truncateAddress(getPlayerAddress()) }}</span
-              >
-            }
-          </div>
-          <div class="col-12 col-sm-6 py-2" *ngIf="!!editing">
-            <a
-              type="submit"
-              class="btn btn-lg btn-primary save-button w-100"
-              href="https://github.com/UrukBartas/Game/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Give feedback or report an issue
-              <i class="fa-brands fa-github pl-2 text-white"></i>
-            </a>
+                <div class="account-link-item">
+                  <div class="link-info">
+                    <i class="fa-brands fa-github me-2"></i>
+                    <div>
+                      <div class="link-title">Feedback & Support</div>
+                      <div class="link-status">
+                        Report issues or suggest improvements
+                      </div>
+                    </div>
+                  </div>
+                  <a
+                    class="btn btn-feedback"
+                    href="https://github.com/UrukBartas/Game/issues"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i class="fa-brands fa-github me-2"></i>
+                    GitHub
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+      <!-- Agregar el nuevo botón flotante -->
+      <div class="floating-save-button" *ngIf="!form.pristine">
+        <button (click)="save()" class="btn btn-save" [disabled]="form.invalid">
+          <i class="bi bi-check2-circle me-2"></i>
+          Save changes
+        </button>
       </div>
     </div>
   </div>

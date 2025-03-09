@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { MonsterType } from 'src/modules/core/models/quest-data.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 export enum BoardMissionType {
   HUNT = 'HUNT',
@@ -25,7 +26,7 @@ export interface BoardMission {
   difficulty: string;
   timeLimit: number;
   expiresAt: Date;
-  monsterType?: string;
+  monsterType?: MonsterType;
   materialId?: string;
   killCount?: number;
   gatherCount?: number;
