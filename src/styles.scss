@@ -128,20 +128,22 @@ app-item-box {
   border: none !important;
   display: flex !important;
   justify-content: center;
-  align-items: center;
   overflow: auto;
-  height: 100%;
   width: 100%;
   margin: 0;
   max-height: 100%;
   max-width: 100%;
-
+  top: 20%;
+  @include media-breakpoint-down(sm) {
+    top: 0%;
+  }
   .modal-content {
     background: transparent !important;
     width: fit-content;
     justify-content: center;
     align-items: center;
     height: 100%;
+    padding: 3rem 0;
     @include media-breakpoint-down(sm) {
       width: 90%;
     }
@@ -217,7 +219,6 @@ ngb-tooltip-window {
   }
 }
 .item-tooltip-wrapper {
-
   div {
     @include media-breakpoint-down(sm) {
       display: flex;
@@ -699,10 +700,6 @@ app-rooms-list {
   color: #9d44b5 !important;
 }
 
-.modal-dialog {
-  background: #00000091;
-}
-
 .list-boxes {
   display: flex;
   flex-wrap: wrap;
@@ -730,3 +727,9 @@ app-base-tutorial {
   display: flex;
   justify-content: center;
 }
+
+// modal-container {
+//   display: flex !important;
+//   align-items: center;
+//   justify-content: center;
+// }

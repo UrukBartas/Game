@@ -1,0 +1,196 @@
+<div class="fortune-wheel-container">
+  <div class="wheel-header">
+    <h2><i class="fas fa-dharmachakra"></i> Wheel of Fortune</h2>
+    <p class="wheel-description">
+      Test your luck on the Wheel of Fortune! Choose a multiplier, place your
+      bet, and spin to win!
+    </p>
+  </div>
+
+  <div class="wheel-game-area">
+    <div class="wheel-section">
+      <div class="wheel-container">
+        <canvas #wheel class="fortune-wheel"></canvas>
+        <div #marker class="wheel-marker">
+          <i class="fas fa-caret-down"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-section">
+      <div class="player-balance">
+        <img
+          class="uruks-icon"
+          [src]="prefix + '/assets/goldenuruks.png'"
+          alt="Uruks"
+        />
+        <span>{{ playerBalance | number: '1.0-0' }}</span>
+      </div>
+
+      <div class="multiplier-selection">
+        <h3>Choose your multiplier</h3>
+        <div class="multiplier-buttons">
+          <button
+            *ngFor="
+              let segment of [
+                { multiplier: 2, color: '#3498db' },
+                { multiplier: 3, color: '#2ecc71' },
+                { multiplier: 5, color: '#f39c12' },
+                { multiplier: 10, color: '#9b59b6' },
+              ]
+            "
+            class="multiplier-btn"
+            [style.background-color]="segment.color"
+            [class.selected]="isMultiplierSelected(segment.multiplier)"
+            (click)="selectMultiplier(segment.multiplier)"
+            [disabled]="isSpinning"
+          >
+            x{{ segment.multiplier }}
+          </button>
+        </div>
+      </div>
+
+      <div class="bet-controls">
+        <div class="bet-amount">
+          <label for="betAmount">Bet Amount:</label>
+          <div class="bet-input-group">
+            <input
+              id="betAmount"
+              type="number"
+              [formControl]="betAmount"
+              [disabled]="isSpinning"
+              min="1"
+              max="1000"
+            />
+            <div class="bet-buttons">
+              <button
+                (click)="
+                  betAmount.setValue(Math.max(1, (betAmount.value || 0) / 2))
+                "
+                [disabled]="isSpinning"
+              >
+                ½
+              </button>
+              <button
+                (click)="
+                  betAmount.setValue(Math.min(1000, (betAmount.value || 0) * 2))
+                "
+                [disabled]="isSpinning"
+              >
+                2x
+              </button>
+              <button
+                (click)="
+                  betAmount.setValue(Math.min(playerBalance, playerBalance))
+                "
+                [disabled]="isSpinning"
+              >
+                Max
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button
+          class="spin-button"
+          (click)="spinWheel()"
+          [disabled]="isSpinning || !betAmount.valid || !selectedMultiplier"
+        >
+        {{betAmount.valid }} {{selectedMultiplier}} {{isSpinning}}
+          <i class="fas fa-sync-alt" [class.fa-spin]="isSpinning"></i>
+          {{ isSpinning ? 'Spinning...' : 'Spin the Wheel' }}
+        </button>
+      </div>
+
+      <div class="result-display" *ngIf="lastResult">
+        <div class="result-header">Last Spin Result:</div>
+        <div
+          class="result-content"
+          [ngClass]="{
+            win: lastResult.multiplier > 0 && lastResult.winAmount > 0,
+            lose: lastResult.multiplier === 0,
+          }"
+        >
+          <div class="result-multiplier">x{{ lastResult.multiplier }}</div>
+          <div class="result-amount">
+            <img
+              class="uruks-icon-small"
+              [src]="prefix + '/assets/goldenuruks.png'"
+              alt="Uruks"
+            />
+            {{ lastResult.winAmount | number: '1.0-0' }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spin History Section -->
+  <div class="spin-history-section">
+    <h3>Recent Spins</h3>
+    <div class="history-loading" *ngIf="isLoadingHistory">
+      <i class="fas fa-spinner fa-spin"></i> Loading history...
+    </div>
+    <div class="history-table-container" *ngIf="!isLoadingHistory && spinHistory.length > 0">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Bet</th>
+            <th>Selected</th>
+            <th>Result</th>
+            <th>Outcome</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let spin of spinHistory" [ngClass]="{'win-row': spin.winAmount > 0, 'lose-row': spin.winAmount <= 0}">
+            <td>{{ formatDate(spin.createdAt) }}</td>
+            <td>
+              <img class="uruks-icon-tiny" [src]="prefix + '/assets/goldenuruks.png'" alt="Uruks">
+              {{ spin.betAmount | number:'1.0-0' }}
+            </td>
+            <td>x{{ spin.selectedMultiplier }}</td>
+            <td>x{{ spin.resultMultiplier }}</td>
+            <td>
+              <span [ngClass]="{'win-text': spin.winAmount > 0, 'lose-text': spin.winAmount <= 0}">
+                {{ spin.winAmount > 0 ? '+' : '' }}{{ spin.winAmount | number:'1.0-0' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="no-history" *ngIf="!isLoadingHistory && spinHistory.length === 0">
+      No spin history yet. Make your first bet!
+    </div>
+  </div>
+
+  <div class="wheel-rules">
+    <h3>How to Play</h3>
+    <ol>
+      <li>Choose a multiplier (x2, x3, x5, or x10) to bet on</li>
+      <li>Enter your bet amount</li>
+      <li>Spin the wheel and test your luck!</li>
+      <li>
+        If the wheel lands on your chosen multiplier, you win your bet
+        multiplied by that value
+      </li>
+      <li>
+        If the wheel lands on x0 or a different multiplier, you lose your bet
+      </li>
+    </ol>
+
+    <div class="odds-table">
+      <h4>Wheel Segments</h4>
+      <div class="segment-row">
+        <div class="segment-cell" style="background-color: #e74c3c">
+          x0 (Lose)
+        </div>
+        <div class="segment-cell" style="background-color: #3498db">x2</div>
+        <div class="segment-cell" style="background-color: #2ecc71">x3</div>
+        <div class="segment-cell" style="background-color: #f39c12">x5</div>
+        <div class="segment-cell" style="background-color: #9b59b6">x10</div>
+      </div>
+    </div>
+  </div>
+</div>

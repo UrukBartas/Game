@@ -119,6 +119,7 @@ import { ShopTutorialComponent } from './components/tutorials/shop-tutorial/shop
 import { TabernTutorialComponent } from './components/tutorials/tabern-tutorial/tabern-tutorial.component';
 import { GameRoutingModule } from './game-routing.module';
 import { MissionBoardComponent } from './activities/tabern/mission-board/mission-board.component';
+import { FortuneWheelComponent } from './activities/tabern/fortune-wheel/fortune-wheel.component';
 
 const directives = [
   ValidInputDirective,
@@ -219,6 +220,7 @@ const pipes = [
     ReferralsComponent,
     ActiveMissionDisplayerComponent,
     MissionBoardComponent,
+    FortuneWheelComponent,
   ],
   imports: [
     ...directives,

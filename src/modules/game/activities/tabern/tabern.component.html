@@ -44,24 +44,26 @@
         <h2><i class="fas fa-dice"></i> Tavern Games</h2>
       </div>
 
-      <div class="games-container">
+      <div class="games-container" *ngIf="!selectedGame">
+        <!-- Wheel of Fortune Game Card -->
+        <div class="game-card" (click)="selectGame('fortune-wheel')">
+          <div class="game-icon">
+            <i class="fas fa-dharmachakra"></i>
+          </div>
+          <h3>Wheel of Fortune</h3>
+          <p>Spin the wheel and test your luck! Bet on a multiplier and win big rewards!</p>
+          <button class="play-btn">
+            <i class="fas fa-play"></i> Play Now
+          </button>
+        </div>
+
+        <!-- Other game cards (coming soon) -->
         <div class="game-card">
           <div class="game-icon">
             <i class="fas fa-sync-alt"></i>
           </div>
           <h3>Coin Flip</h3>
           <p>Test your luck with a simple coin flip. Double your uruks or lose it all!</p>
-          <button class="play-btn" disabled>
-            <i class="fas fa-lock"></i> Coming Soon
-          </button>
-        </div>
-
-        <div class="game-card">
-          <div class="game-icon">
-            <i class="fas fa-dharmachakra"></i>
-          </div>
-          <h3>Lucky Wheel</h3>
-          <p>Spin the wheel for a chance to win various rewards and rare items!</p>
           <button class="play-btn" disabled>
             <i class="fas fa-lock"></i> Coming Soon
           </button>
@@ -77,6 +79,18 @@
             <i class="fas fa-lock"></i> Coming Soon
           </button>
         </div>
+      </div>
+
+      <!-- Selected Game Container -->
+      <div class="selected-game-container" *ngIf="selectedGame">
+        <div class="game-header">
+          <button class="back-btn" (click)="closeGame()">
+            <i class="fas fa-arrow-left"></i> Back to Games
+          </button>
+        </div>
+
+        <!-- Fortune Wheel Game -->
+        <app-fortune-wheel *ngIf="selectedGame === 'fortune-wheel'"></app-fortune-wheel>
       </div>
     </div>
   </div>

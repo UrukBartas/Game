@@ -1,0 +1,543 @@
+@import '../../../../../variables.scss';
+@import 'node_modules/bootstrap/scss/mixins';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
+.fortune-wheel-container {
+  background: rgba(20, 20, 20, 0.9);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+
+  .wheel-header {
+    margin-bottom: 2rem;
+    text-align: center;
+
+    h2 {
+      color: $third;
+      font-size: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+
+      i {
+        animation: spin 10s linear infinite;
+      }
+    }
+
+    .wheel-description {
+      color: rgba(255, 255, 255, 0.8);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  .wheel-game-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 2rem;
+
+    @include media-breakpoint-down(md) {
+      flex-direction: column;
+    }
+
+    .wheel-section {
+      flex: 1;
+      min-width: 300px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .wheel-container {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+        aspect-ratio: 1;
+
+        .fortune-wheel {
+          width: 100%;
+          height: 100%;
+          filter: drop-shadow(0 0 10px rgba(164, 208, 7, 0.3));
+        }
+
+        .wheel-marker {
+          position: absolute;
+          top: -10px;
+          left: 50%;
+          transform: translateX(-50%);
+          color: $third;
+          font-size: 2.5rem;
+          filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.7));
+          z-index: 10;
+        }
+      }
+    }
+
+    .controls-section {
+      flex: 1;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+
+      .player-balance {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #ffd700;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+
+        .uruks-icon {
+          width: 30px;
+          height: 30px;
+        }
+      }
+
+      .multiplier-selection {
+        h3 {
+          color: $white-100;
+          margin-bottom: 1rem;
+          font-size: 1.2rem;
+        }
+
+        .multiplier-buttons {
+          display: flex;
+          gap: 1rem;
+          flex-wrap: wrap;
+
+          .multiplier-btn {
+            flex: 1;
+            min-width: 60px;
+            padding: 1rem 0.5rem;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+
+            &:hover:not(:disabled) {
+              transform: translateY(-3px);
+              box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+            }
+
+            &:active:not(:disabled) {
+              transform: translateY(-1px);
+            }
+
+            &.selected {
+              box-shadow: 0 0 0 3px white, 0 0 0 6px $third;
+            }
+
+            &:disabled {
+              opacity: 0.5;
+              cursor: not-allowed;
+            }
+          }
+        }
+      }
+
+      .bet-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .bet-amount {
+          label {
+            display: block;
+            color: $white-100;
+            margin-bottom: 0.5rem;
+          }
+
+          .bet-input-group {
+            display: flex;
+            gap: 0.5rem;
+
+            input {
+              flex: 1;
+              padding: 0.75rem;
+              background: rgba(20, 20, 20, 0.8);
+              border: 1px solid rgba(164, 208, 7, 0.3);
+              border-radius: 4px;
+              color: $white-100;
+              font-size: 1.1rem;
+
+              &:focus {
+                outline: none;
+                border-color: $third;
+              }
+
+              &:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+              }
+            }
+
+            .bet-buttons {
+              display: flex;
+              gap: 0.25rem;
+
+              button {
+                padding: 0.5rem;
+                background: rgba(74, 95, 15, 0.5);
+                border: 1px solid rgba(164, 208, 7, 0.3);
+                border-radius: 4px;
+                color: $white-100;
+                cursor: pointer;
+                transition: all 0.2s;
+
+                &:hover:not(:disabled) {
+                  background: rgba(164, 208, 7, 0.3);
+                }
+
+                &:disabled {
+                  opacity: 0.5;
+                  cursor: not-allowed;
+                }
+              }
+            }
+          }
+        }
+
+        .spin-button {
+          padding: 1rem;
+          background: linear-gradient(to bottom, #4a5f0f, #3a4a0c);
+          border: none;
+          border-radius: 8px;
+          color: white;
+          font-size: 1.2rem;
+          font-weight: bold;
+          cursor: pointer;
+          transition: all 0.3s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.75rem;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+
+          i {
+            font-size: 1.1rem;
+          }
+
+          &:hover:not(:disabled) {
+            background: linear-gradient(to bottom, #5a730f, #4a5f0f);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+          }
+
+          &:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          }
+
+          &:disabled {
+            background: #2a350a;
+            cursor: not-allowed;
+            opacity: 0.7;
+          }
+        }
+      }
+
+      .result-display {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        padding: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+
+        .result-header {
+          color: $white-100;
+          font-size: 1rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .result-content {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          &.win {
+            color: #2ecc71;
+          }
+
+          &.lose {
+            color: #e74c3c;
+          }
+
+          .result-multiplier {
+            font-size: 1.5rem;
+            font-weight: bold;
+          }
+
+          .result-amount {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+
+            .uruks-icon-small {
+              width: 20px;
+              height: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .wheel-rules {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 1.5rem;
+
+    h3 {
+      color: $third;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+
+    ol {
+      color: $white-100;
+      padding-left: 1.5rem;
+      margin-bottom: 1.5rem;
+
+      li {
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    .odds-table {
+      h4 {
+        color: $white-100;
+        margin-bottom: 0.75rem;
+        font-size: 1.1rem;
+      }
+
+      .segment-row {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+
+        .segment-cell {
+          flex: 1;
+          min-width: 80px;
+          padding: 0.75rem;
+          text-align: center;
+          border-radius: 4px;
+          color: white;
+          font-weight: bold;
+          text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Responsive adjustments
+@include media-breakpoint-down(sm) {
+  .fortune-wheel-container {
+    padding: 1rem;
+
+    .wheel-header {
+      margin-bottom: 1.5rem;
+
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    .wheel-game-area {
+      gap: 1.5rem;
+
+      .wheel-section {
+        min-width: 250px;
+      }
+
+      .controls-section {
+        min-width: 250px;
+
+        .player-balance {
+          font-size: 1.2rem;
+
+          .uruks-icon {
+            width: 24px;
+            height: 24px;
+          }
+        }
+
+        .multiplier-selection {
+          h3 {
+            font-size: 1.1rem;
+          }
+
+          .multiplier-buttons {
+            gap: 0.5rem;
+
+            .multiplier-btn {
+              padding: 0.75rem 0.5rem;
+              font-size: 1rem;
+            }
+          }
+        }
+
+        .bet-controls {
+          .bet-amount {
+            .bet-input-group {
+              input {
+                padding: 0.5rem;
+                font-size: 1rem;
+              }
+            }
+          }
+
+          .spin-button {
+            padding: 0.75rem;
+            font-size: 1.1rem;
+          }
+        }
+      }
+    }
+
+    .wheel-rules {
+      padding: 1rem;
+
+      h3 {
+        font-size: 1.2rem;
+      }
+
+      .odds-table {
+        .segment-row {
+          .segment-cell {
+            min-width: 60px;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Spin History Section
+.spin-history-section {
+  margin-top: 2rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  h3 {
+    color: $third;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .history-loading {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 1rem;
+
+    i {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .history-table-container {
+    overflow-x: auto;
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th, td {
+        padding: 0.75rem;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      th {
+        color: $white-100;
+        font-weight: bold;
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      td {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .win-row {
+        background: rgba(46, 204, 113, 0.1);
+      }
+
+      .lose-row {
+        background: rgba(231, 76, 60, 0.1);
+      }
+
+      .win-text {
+        color: #2ecc71;
+        font-weight: bold;
+      }
+
+      .lose-text {
+        color: #e74c3c;
+        font-weight: bold;
+      }
+
+      .uruks-icon-tiny {
+        width: 14px;
+        height: 14px;
+        vertical-align: middle;
+        margin-right: 3px;
+      }
+    }
+  }
+
+  .no-history {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 1.5rem;
+    font-style: italic;
+  }
+}
+
+// Responsive adjustments for history section
+@include media-breakpoint-down(sm) {
+  .spin-history-section {
+    padding: 1rem;
+
+    h3 {
+      font-size: 1.1rem;
+    }
+
+    .history-table-container {
+      .history-table {
+        th, td {
+          padding: 0.5rem;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}

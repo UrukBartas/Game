@@ -144,13 +144,13 @@
         </div>
       </div>
 
-      <div class="enchants-section">
+      <div class="enchants-section" [class.mobile-enchants]="viewportService.isMobile">
         <ng-container *ngFor="let enchantKey of keys(mapEnchantsImgs)">
           <app-item-box
             *ngIf="!!item[enchantKey]"
             [image]="mapEnchantsImgs[enchantKey].image"
-            [height]="32"
-            [width]="32"
+            [height]="viewportService.isMobile ? 24 : 32"
+            [width]="viewportService.isMobile ? 24 : 32"
             [stack]="item[enchantKey]"
           >
             <div tooltip class="tooltip-uruk">
@@ -333,7 +333,7 @@
       [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }"
       *ngIf="
         item.itemData?.description?.length > 0 &&
-        viewportService.screenWidth != 'xs'
+        !viewportService.isMobile
       "
     >
       {{ item.itemData.description }}

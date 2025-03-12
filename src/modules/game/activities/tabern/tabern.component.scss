@@ -129,6 +129,10 @@
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 2rem;
       padding: 1rem;
+
+      @include media-breakpoint-down(sm) {
+        grid-template-columns: 1fr;
+      }
     }
 
     .game-card {
@@ -140,24 +144,34 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      transition:
-        transform 0.2s,
-        box-shadow 0.2s;
+      transition: all 0.3s ease;
+      cursor: pointer;
 
-      &:hover {
+      &:hover:not(:has(.play-btn:disabled)) {
         transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        border-color: rgba(164, 208, 7, 0.5);
+
+        .game-icon {
+          background: rgba(164, 208, 7, 0.2);
+        }
+
+        .play-btn {
+          background: $third;
+          color: $dark;
+        }
       }
 
       .game-icon {
         width: 80px;
         height: 80px;
-        background: rgba(74, 95, 15, 0.2);
+        background: rgba(255, 255, 255, 0.1);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         margin-bottom: 1rem;
+        transition: all 0.3s ease;
 
         i {
           font-size: 2rem;
@@ -166,36 +180,29 @@
       }
 
       h3 {
-        color: $third;
-        margin-bottom: 1rem;
+        color: $white-100;
+        margin-bottom: 0.75rem;
+        font-size: 1.3rem;
       }
 
       p {
-        color: rgba(255, 255, 255, 0.8);
+        color: rgba(255, 255, 255, 0.7);
         margin-bottom: 1.5rem;
         flex-grow: 1;
       }
 
       .play-btn {
-        width: 100%;
-        background: #4a5f0f;
-        color: white;
+        background: rgba(164, 208, 7, 0.3);
+        color: $white-100;
         border: none;
-        padding: 0.75rem;
+        padding: 0.75rem 1.5rem;
         border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.2s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-
-        &:hover:not(:disabled) {
-          background: $third;
-        }
+        font-weight: bold;
+        transition: all 0.3s ease;
+        width: 100%;
 
         &:disabled {
-          background: #2a350a;
+          opacity: 0.5;
           cursor: not-allowed;
         }
       }
@@ -412,4 +419,36 @@
 // Asegúrate de que el chat no interfiera con otros elementos
 .tavern-container {
   padding-bottom: 60px; // Espacio para el chat
+}
+
+.selected-game-container {
+  margin-top: 2rem;
+
+  .game-header {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 1.5rem;
+
+    .back-btn {
+      background: rgba(20, 20, 20, 0.85);
+      border: 1px solid rgba(164, 208, 7, 0.3);
+      color: $white-100;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      i {
+        color: $third;
+      }
+
+      &:hover {
+        background: rgba(74, 95, 15, 0.3);
+        transform: translateX(-2px);
+      }
+    }
+  }
 }

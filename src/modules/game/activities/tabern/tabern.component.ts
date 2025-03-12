@@ -24,6 +24,7 @@ export class TabernComponent extends TemplatePage implements OnInit, OnDestroy {
   activeMission: PlayerBoardMission = null;
   store = inject(Store)
   prefix = ViewportService.getPreffixImg();
+  selectedGame: string | null = null;
 
   @ViewChild('chatContainer') chatContainer: ElementRef;
 
@@ -65,8 +66,6 @@ export class TabernComponent extends TemplatePage implements OnInit, OnDestroy {
     this.webSocketService.joinGlobalChat();
     this.webSocketService.getChatHistory();
   }
-
-
 
   ngOnDestroy() {
     if (this.chatSubscription) {
@@ -203,9 +202,18 @@ export class TabernComponent extends TemplatePage implements OnInit, OnDestroy {
 
   switchTavernSection(section: 'missions' | 'games' | 'shop'): void {
     this.currentTavernSection = section;
+    this.selectedGame = null; // Reset selected game when switching sections
 
     if (section === 'missions') {
       this.refreshMissions();
     }
+  }
+
+  selectGame(game: string): void {
+    this.selectedGame = game;
+  }
+
+  closeGame(): void {
+    this.selectedGame = null;
   }
 }

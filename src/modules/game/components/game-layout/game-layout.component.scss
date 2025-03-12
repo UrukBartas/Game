@@ -93,6 +93,7 @@ nav a {
   overflow-y: auto;
   @include media-breakpoint-down(sm) {
     align-items: center;
+    justify-content: center;
   }
 }
 
@@ -113,6 +114,11 @@ nav a {
     span {
       font-size: 20px;
     }
+  }
+  a > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -256,10 +262,10 @@ nav a {
   margin-left: 10px;
 
   i {
-    color: #4CAF50;
+    color: #4caf50;
 
     &:hover {
-      color: lighten(#4CAF50, 10%);
+      color: lighten(#4caf50, 10%);
     }
   }
 }

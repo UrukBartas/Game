@@ -71,10 +71,7 @@ export const mapTotalPercentLabels = {
   totalPerAccuracy: 'per_accuracy',
   totalPerPenetration: 'per_penetration',
 };
-const mapTypeOfWeapon = {
-  Weapon1H: 'One handed',
-  Weapon2H: 'Two handed',
-};
+
 
 export const getLoopableStatsKeys = (item: Item): Array<string[]> => {
   if (!item) return [];
@@ -219,9 +216,14 @@ export class ItemTooltipComponent {
 
   public isRarityBonus = (stat) => Object.keys(mapPercentLabels).includes(stat);
 
+
+
   public mapItemType = (itemType: ItemType) => {
     if ([ItemType.Weapon1H, ItemType.Weapon2H].includes(itemType)) {
-      return mapTypeOfWeapon[itemType];
+      return {
+        Weapon1H: this.viewportService.isMobile() ? '1H' : 'One-handed',
+        Weapon2H: this.viewportService.isMobile() ? '2H' : 'Two-handed',
+      }[itemType];
     }
     return camelCase(itemType);
   };
