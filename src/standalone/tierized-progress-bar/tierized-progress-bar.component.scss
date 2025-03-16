@@ -1,22 +1,73 @@
 @import '../../variables.scss';
+@import 'node_modules/bootstrap/scss/mixins';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
+.tierized-progress-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.rpg-progress-bar-container {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch; /* Para mejor scroll en iOS */
+  scrollbar-width: thin; /* Para Firefox */
+  padding: 5px 0 10px; /* Espacio para los indicadores superiores */
+
+  /* Ocultar scrollbar en Chrome/Safari pero mantener funcionalidad */
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $third;
+    border-radius: 4px;
+  }
+
+  /* Scroll suave */
+  scroll-behavior: smooth;
+}
+
 .rpg-progress-bar-horizontal {
   display: flex;
   position: relative;
-  width: 100%;
+  min-width: 100%;
   height: 60px;
   border: 2px solid $gray-400;
   border-radius: 5px;
   background-color: $black-400;
   z-index: 1;
+
+  @include media-breakpoint-down(sm) {
+    height: 50px; // Altura reducida en móviles
+  }
 }
 
 .tier {
   position: relative;
-  flex-grow: 1;
+  flex: 1;
   border-right: 2px solid $light-brown;
   height: 100%;
   z-index: 2;
   cursor: pointer;
+  min-width: 80px; // Ancho mínimo para cada tier
+
+  @include media-breakpoint-down(sm) {
+    min-width: 60px; // Ancho mínimo más pequeño en móviles
+  }
+
+  &.active {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
 }
 
 .tier:last-child {
@@ -30,40 +81,59 @@
   height: 100%;
   background-color: $third;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
+  border-radius: 3px;
   transition: width 0.5s ease;
   z-index: 1;
+
   &:hover {
-    opacity: 0.5;
+    opacity: 0.8;
   }
 }
 
 .tier-image {
   position: absolute;
-  top: 5px; /* Ajusta este valor para cambiar la distancia vertical de la imagen sobre el tier */
+  top: 5px;
   left: 50%;
   transform: translateX(-50%);
-  width: 40px; /* Puedes ajustar el tamaño de la imagen */
+  width: 40px;
   height: auto;
   opacity: 0.8;
-  z-index: 3; /* Asegura que la imagen esté por encima del progreso y tier */
+  z-index: 3;
+
+  @include media-breakpoint-down(sm) {
+    width: 30px; // Imágenes más pequeñas en móviles
+    top: 3px;
+  }
 }
 
 .tier-indicator {
   position: absolute;
-  z-index: 2;
+  z-index: 4; /* Aumentado para asegurar visibilidad */
   width: 20px;
   height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
   top: -40px;
-  right: -10px;
   flex-direction: column;
+
+  @include media-breakpoint-down(sm) {
+    height: 30px;
+    top: -30px;
+    width: 15px;
+  }
 }
 
 .start-indicator {
   left: 0;
+}
+
+.end-indicator {
+  right: -10px;
+
+  @include media-breakpoint-down(sm) {
+    right: -7px;
+  }
 }
 
 .indicator {
@@ -71,6 +141,11 @@
   height: 40px;
   background-color: $light-brown;
   box-shadow: 0 0 5px $light-brown;
+
+  @include media-breakpoint-down(sm) {
+    height: 30px;
+    width: 3px;
+  }
 }
 
 .indicator-value {
@@ -78,4 +153,99 @@
   font-size: 14px;
   color: $white-300;
   text-shadow: 0 0 5px $black;
+  white-space: nowrap;
+
+  @include media-breakpoint-down(sm) {
+    font-size: 10px;
+    margin-top: 3px;
+  }
+}
+
+/* Estilos para los botones de scroll */
+.scroll-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 1px solid $light-brown;
+  border-radius: 50%;
+  color: $third;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+  margin: 0 5px;
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: $white-100;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  @include media-breakpoint-down(sm) {
+    width: 25px;
+    height: 25px;
+    font-size: 12px;
+  }
+}
+
+/* Estilos para la información de progreso */
+.progress-info-container {
+  margin-top: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.progress-info {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+  color: $white-300;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 15px;
+
+  @include media-breakpoint-down(md) {
+    flex-direction: column;
+    gap: 5px;
+    font-size: 12px;
+    width: 100%;
+  }
+
+  @include media-breakpoint-up(md) {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .label {
+    color: $third;
+    margin-right: 5px;
+    font-weight: bold;
+  }
+
+  .value {
+    color: $white-100;
+  }
+
+  .percentage {
+    margin-left: 5px;
+    color: $light-brown;
+    font-size: 0.9em;
+  }
+
+  .progress-current, .progress-range, .progress-remaining {
+    display: flex;
+    align-items: center;
+
+    @include media-breakpoint-down(sm) {
+      justify-content: space-between;
+    }
+  }
 }

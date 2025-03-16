@@ -27,6 +27,33 @@ export interface WheelStats {
   houseEdge: number;
 }
 
+export interface WinStreakEntry {
+  playerId: string;
+  playerName: string;
+  winStreak: number;
+}
+
+export interface TopBetEntry {
+  playerId: string;
+  playerName: string;
+  betAmount: number;
+  winAmount: number;
+  multiplier: number;
+  date: string;
+}
+
+export interface TopWinnerEntry {
+  playerId: string;
+  playerName: string;
+  totalWinnings: number;
+}
+
+export interface FortuneWheelLeaderboard {
+  topWinStreaks: WinStreakEntry[];
+  topBets: TopBetEntry[];
+  topWinners: TopWinnerEntry[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -66,5 +93,13 @@ export class FortuneWheelService extends ApiBaseService {
    */
   getWheelStats(): Observable<WheelStats> {
     return this.get('/stats');
+  }
+
+  /**
+   * Obtiene el leaderboard de la ruleta con las mejores rachas, apuestas y ganadores
+   * @returns Observable con los datos del leaderboard
+   */
+  getLeaderboard(): Observable<FortuneWheelLeaderboard> {
+    return this.get('/leaderboard');
   }
 }

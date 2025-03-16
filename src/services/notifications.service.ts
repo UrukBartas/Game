@@ -2,9 +2,16 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
+  MessageResponseModel,
   NotificationResponseModel
 } from 'src/modules/core/models/notifications.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
+
+export interface SendMessageRequest {
+  recipientName: string;
+  subject: string;
+  content: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -51,4 +58,31 @@ export class NotificationsService extends ApiBaseService {
   setSelectionToRead(notificationIds: number[]): Observable<void> {
     return this.post('/set-read', { notificationIds });
   }
+
+  deleteMultiple(notificationIds: number[]): Observable<void> {
+    return this.post('/delete', { notificationIds });
+  }
+
+  // Nuevos métodos para la mensajería
+
+  // Enviar un mensaje a otro jugador
+  sendMessage(message: SendMessageRequest): Observable<any> {
+    return this.post('/messages/send', message);
+  }
+
+  // Obtener mensajes recibidos (bandeja de entrada)
+  getReceivedMessages(page = 1, pageSize = 10): Observable<MessageResponseModel> {
+    return this.get(`/messages/inbox?page=${page}&pageSize=${pageSize}`);
+  }
+
+  // Obtener mensajes enviados
+  getSentMessages(page = 1, pageSize = 10): Observable<MessageResponseModel> {
+    return this.get(`/messages/sent?page=${page}&pageSize=${pageSize}`);
+  }
+
+  // Obtener el número de mensajes restantes para hoy
+  getRemainingMessages(): Observable<{ remaining: number }> {
+    return this.get('/messages/remaining');
+  }
+
 }

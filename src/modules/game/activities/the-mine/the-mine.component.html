@@ -17,7 +17,7 @@
   let-showAction="showAction"
   let-usedAs="usedAs"
 >
-  <div class="p-2">
+  <div class="p-2 container-tier">
     <div>
       <strong class="text-third">{{
         tier?.name ?? 'Awaiting contract with goblins'
@@ -95,7 +95,7 @@
           </strong>
           extra crypt attempts per week
         </li>
-        <li *ngIf="tier.id === 'BLAST_FURNACE'" class="mt-2 text-light">
+        <li *ngIf="tier.id === 'ASTRAL_EXTRACTOR'" class="mt-2 text-light">
           For every
           <strong [ngStyle]="{ color: getRarityColor(RarityEnum.MYTHIC) }"
             >5000</strong
@@ -189,7 +189,7 @@
         }
       </div>
     </div>
-    <div class="flex-row justify-content-center">
+    <div class="flex-row justify-content-center align-items-center">
       <div
         class="col-12 d-flex justify-content-center align-items-center text-center"
         *ngIf="phase == 0"
@@ -224,107 +224,90 @@
       </div>
       @if (phase == 1) {
         <div
-          class="amount-selector uruk-card d-flex flex-column justify-content-center align-items-center p-2 px-md-5 gap-3"
+          class="amount-selector uruk-card d-flex flex-column justify-content-center align-items-center p-3 px-md-5 gap-3"
         >
           <div
             class="w-100 px-2 d-flex align-items-center justify-content-end gap-2"
           >
-            <div class="actions d-flex gap-2">
-              <div class="remove-circle 5" *ngIf="phase == 1">
-                <i
-                  (click)="phase = 0; subphase = 0"
-                  urSubtitle
-                  class="fa-solid fa-arrow-left text-third pointer"
-                ></i>
-              </div>
-              <div class="remove-circle">
-                <i
-                  (click)="phase = 1; subphase = 1"
-                  urSubtitle
-                  class="fa-solid fa-clock-rotate-left text-third pointer"
-                ></i>
-              </div>
-              <div class="remove-circle">
-                <i
-                  (click)="removeStaked()"
-                  *ngIf="!!(stakeInfo | async)"
-                  urSubtitle
-                  class="fa-solid fa-circle-minus text-third pointer"
-                ></i>
-              </div>
+            <div class="actions-panel d-flex gap-2">
+              <button
+                class="action-button back-button"
+                *ngIf="phase == 1"
+                (click)="phase = 0; subphase = 0"
+                urSubtitle
+              >
+                <i class="fa-solid fa-arrow-left"></i>
+                <span class="button-text">Back</span>
+              </button>
+
+              <button
+                class="action-button history-button"
+                (click)="phase = 1; subphase = 1"
+                urSubtitle
+              >
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span class="button-text">Unstake History</span>
+              </button>
+
+              <button
+                class="action-button remove-button"
+                *ngIf="!!(stakeInfo | async)"
+                (click)="removeStaked()"
+                urSubtitle
+              >
+                <i class="fa-solid fa-circle-minus"></i>
+                <span class="button-text">Remove Stake</span>
+              </button>
             </div>
           </div>
 
-          <div *ngIf="subphase == 1" class="unstakes px-1 px-md-5 col-12">
+          <div *ngIf="subphase == 1" class="unstakes-container px-1 px-md-5 col-12">
             <ng-container *ngIf="stakeInfo | async as stakeInfoVar">
-              <span class="w-100 text-third d-block"> Ongoing unstakes</span>
-              <span
-                class="w-100 text-light d-block"
-                *ngIf="stakeInfoVar.requests.length == 0"
-                >You are not unstaking anything right now.</span
-              >
-              <ng-container>
-                <div
-                  class="table-responsive stat-table"
-                  style="max-height: 240px; overflow: auto; min-width: 100%"
-                >
-                  <table class="table table-dark">
-                    <tbody>
-                      <ng-container>
-                        <tr
-                          *ngFor="
-                            let request of stakeInfoVar.requests;
-                            let i = index
-                          "
-                          class="d-flex align-items-center"
-                        >
-                          <td>
-                            <button
-                              type="button"
-                              class="btn btn-secondary"
-                              [disabled]="request?.remainingTime > today"
-                              (click)="claimTokens(i)"
-                            >
-                              Claim
-                            </button>
-                          </td>
+              <div class="unstakes-header">
+                <h4 class="text-third mb-3">Ongoing Unstakes</h4>
+                <p class="text-light" *ngIf="stakeInfoVar.requests.length == 0">
+                  You are not unstaking anything right now.
+                </p>
+              </div>
 
-                          <td urSubtext>
-                            <div
-                              class="price text-white text-center"
-                              [ngbTooltip]="uruks"
-                              [tooltipContext]="{
-                                uruks: request?.amount ?? 0,
-                              }"
-                            >
-                              {{ request?.amount ?? 0 | number }}
-                              <img
-                                class="uruks-icon pb-1"
-                                src="{{ prefix + '/assets/goldenuruks.png' }}"
-                                style="width: 20px"
-                              />
-                            </div>
-                          </td>
-                          <td urSubtext>
-                            @if (request.remainingTime < today) {
-                              Claimable!
-                            } @else {
-                              Claimable in
-                              {{ request?.remainingTime | timeAgo }}
-                            }
-                          </td>
-                        </tr>
-                      </ng-container>
-                    </tbody>
-                  </table>
+              <ng-container *ngIf="stakeInfoVar.requests.length > 0">
+                <div class="unstakes-list">
+                  <div
+                    *ngFor="let request of stakeInfoVar.requests; let i = index"
+                    class="unstake-item"
+                    [ngClass]="{'claimable': request?.remainingTime <= today}"
+                  >
+                    <div class="unstake-amount">
+                      <img class="uruks-icon" src="{{ prefix + '/assets/goldenuruks.png' }}" alt="Golden Uruks">
+                      <span class="amount-value" [ngbTooltip]="uruks" [tooltipContext]="{ uruks: request?.amount ?? 0 }">
+                        {{ request?.amount ?? 0 | number }}
+                      </span>
+                    </div>
+
+                    <div class="unstake-status" urSubtext>
+                      <div class="status-indicator" [ngClass]="{'ready': request.remainingTime <= today}"></div>
+                      <span *ngIf="request.remainingTime <= today">Ready to claim!</span>
+                      <span *ngIf="request.remainingTime > today">Claimable in {{ request?.remainingTime | timeAgo }}</span>
+                    </div>
+
+                    <button
+                      type="button"
+                      class="btn-claim"
+                      [disabled]="request?.remainingTime > today"
+                      (click)="claimTokens(i)"
+                    >
+                      <i class="fa-solid fa-hand-holding-dollar"></i>
+                      Claim
+                    </button>
+                  </div>
                 </div>
-              </ng-container></ng-container
-            >
+              </ng-container>
+            </ng-container>
           </div>
           <ng-container *ngIf="subphase == 0">
             <app-chain-switcher
-              [height]="100"
-              [width]="100"
+              [height]="getChainSwitcherHeight()"
+              [width]="getChainSwitcherHeight()"
             ></app-chain-switcher>
             <app-balance-selector
               [type]="stakeType"
@@ -426,15 +409,11 @@
 
     <div class="col-12">
       <div class="px-1 px-md-5 tier-list-wrapper">
-        <ng-container
-          *ngIf="totalMultichainWorkforce$ | async as totalWorkforce"
-        >
-          <app-tierized-progress-bar
-            [currentValue]="totalWorkforce"
-            [tooltipTemplate]="tooltipTier"
-            [tiers]="tiers$ | async"
-          ></app-tierized-progress-bar
-        ></ng-container>
+        <app-tierized-progress-bar
+          [currentValue]="totalMultichainWorkforce$ | async"
+          [tooltipTemplate]="tooltipTier"
+          [tiers]="tiers$ | async"
+        ></app-tierized-progress-bar>
       </div>
     </div>
   </div>

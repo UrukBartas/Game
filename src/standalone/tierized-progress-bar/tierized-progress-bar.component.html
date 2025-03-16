@@ -1,36 +1,85 @@
-<div class="rpg-progress-bar-horizontal">
-  <div
-    class="tier"
-    *ngFor="let tier of tiers; let i = index"
-    [ngbTooltip]="tooltipTemplate"
-    [tooltipContext]="{ tier: tier, usedAs: true }"
+<div class="tierized-progress-wrapper">
+  <!-- Botones de scroll (solo visibles cuando es necesario) -->
+  <button
+    *ngIf="showScrollButtons"
+    class="scroll-button scroll-left"
+    (click)="scrollLeft()"
+    aria-label="Scroll left"
   >
-    <img
-      *ngIf="tier.image"
-      [src]="prefix + tier.image"
-      class="tier-image"
-      alt="Tier Image"
-    />
+    <i class="fas fa-chevron-left"></i>
+  </button>
 
-    <!-- Barra de progreso individual por tier -->
-    <div
-      class="progress {{ tier.class ? tier.class(getActiveTier()) : '' }}"
-      [style.width]="getTierProgress(tier) + '%'"
-    ></div>
+  <!-- Contenedor con scroll horizontal -->
+  <div #progressContainer class="rpg-progress-bar-container">
+    <div class="rpg-progress-bar-horizontal">
+      <div
+        class="tier"
+        *ngFor="let tier of tiers; let i = index"
+        [ngClass]="{'active': isTierActive(tier)}"
+        [ngbTooltip]="tooltipTemplate"
+        [tooltipContext]="{ tier: tier, usedAs: true }"
+      >
+        <img
+          *ngIf="tier.image"
+          [src]="prefix + tier.image"
+          class="tier-image"
+          alt="Tier Image"
+        />
 
-    <!-- Indicador de inicio del tier -->
-    <div
-      class="tier-indicator start-indicator"
-      *ngIf="i === 0 && mode == 'default'"
-    >
-      <div class="indicator-value">{{ tier.start | compressNumber }}</div>
-      <span class="indicator"></span>
+        <!-- Barra de progreso individual por tier -->
+        <div
+          class="progress"
+          [ngClass]="tier.class ? tier.class(getActiveTier()) : ''"
+          [style.width.%]="getTierProgress(tier)"
+        ></div>
+
+        <!-- Indicador de inicio del tier -->
+        <div
+          class="tier-indicator start-indicator"
+          *ngIf="isFirstTier(tier) && mode == 'default'"
+        >
+          <div class="indicator-value">{{ tier.start | compressNumber }}</div>
+          <span class="indicator"></span>
+        </div>
+
+        <!-- Indicador de fin del tier -->
+        <div
+          class="tier-indicator end-indicator"
+          *ngIf="(isLastTier(tier) || mode == 'default')"
+        >
+          <div class="indicator-value">{{ tier.end | compressNumber }}</div>
+          <span class="indicator"></span>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Indicador de fin del tier -->
-    <div class="tier-indicator end-indicator" *ngIf="mode == 'default'">
-      <div class="indicator-value">{{ tier.end | compressNumber }}</div>
-      <span class="indicator"></span>
+  <!-- Botón de scroll derecho -->
+  <button
+    *ngIf="showScrollButtons"
+    class="scroll-button scroll-right"
+    (click)="scrollRight()"
+    aria-label="Scroll right"
+  >
+    <i class="fas fa-chevron-right"></i>
+  </button>
+</div>
+
+<!-- Información de progreso actual -->
+<div class="progress-info-container" *ngIf="getActiveTier()">
+  <div class="progress-info">
+    <div class="progress-current">
+      <span class="label">Current:</span>
+      <span class="value">{{ progressInfo.current | compressNumber }}</span>
+    </div>
+    <div class="progress-range">
+      <span class="label">Range:</span>
+      <span class="value">{{ progressInfo.tierStart | compressNumber }} - {{ progressInfo.tierEnd | compressNumber }}</span>
+    </div>
+    <div class="progress-remaining">
+      <span class="label">Remaining:</span>
+      <span class="value">{{ progressInfo.remaining | compressNumber }}</span>
+      <span class="percentage">({{ progressInfo.percentage | number:'1.0-0' }}%)</span>
     </div>
   </div>
 </div>

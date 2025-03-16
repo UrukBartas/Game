@@ -2,16 +2,18 @@ import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild }
 import { FormControl, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
-import { finalize } from 'rxjs/operators';
-import { FortuneWheelService, SpinHistory } from 'src/services/fortune-wheel.service';
+import { firstValueFrom } from 'rxjs';
+import { finalize, map } from 'rxjs/operators';
+import { FortuneWheelLeaderboard, FortuneWheelService, SpinHistory } from 'src/services/fortune-wheel.service';
 import { ViewportService } from 'src/services/viewport.service';
+import { WebSocketService } from 'src/services/websocket.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 
 interface WheelSegment {
   multiplier: number;
-  probability: number;
   color: string;
   label: string;
+  image?: string;
 }
 
 @Component({
@@ -24,22 +26,18 @@ export class FortuneWheelComponent implements OnInit, AfterViewInit {
   @ViewChild('marker') marker: ElementRef;
 
   public prefix = ViewportService.getPreffixImg();
-  public betAmount = new FormControl(10, [Validators.required, Validators.min(1), Validators.max(9999999)]);
+  public betAmount = new FormControl(10, [Validators.required, Validators.min(1)]);
   public isSpinning = false;
   public lastResult: { multiplier: number, winAmount: number } | null = null;
-  public playerBalance = 0;
+  public playerBalance$ = this.store.select(MainState.getPlayer).pipe(map(player => player.uruks || 0));
   public selectedMultiplier: number | null = null;
   public spinHistory: SpinHistory[] = [];
   public isLoadingHistory = false;
+  public leaderboard: FortuneWheelLeaderboard | null = null;
+  public isLoadingLeaderboard = false;
 
-  // Configuración de la ruleta (debe coincidir con el backend)
-  private segments: WheelSegment[] = [
-    { multiplier: 0, probability: 0.25, color: '#e74c3c', label: 'x0' },
-    { multiplier: 2, probability: 0.35, color: '#3498db', label: 'x2' },
-    { multiplier: 3, probability: 0.25, color: '#2ecc71', label: 'x3' },
-    { multiplier: 5, probability: 0.10, color: '#f39c12', label: 'x5' },
-    { multiplier: 10, probability: 0.05, color: '#9b59b6', label: 'x10' }
-  ];
+  // Configuración de la ruleta con segmentos mezclados aleatoriamente
+  private segments: WheelSegment[] = this.generateRandomizedSegments();
 
   private ctx: CanvasRenderingContext2D;
   private wheelRadius: number;
@@ -50,40 +48,111 @@ export class FortuneWheelComponent implements OnInit, AfterViewInit {
   private animationId: number;
   private segmentAngles: { start: number, end: number, multiplier: number }[] = [];
   public Math = Math;
+
+  private segmentImages: Map<number, HTMLImageElement> = new Map();
+
+  // Añadir esta propiedad para el timeout de redimensionamiento
+  private resizeTimeout: any;
+
   constructor(
     private toastr: ToastrService,
     private viewportService: ViewportService,
     private fortuneWheelService: FortuneWheelService,
-    private store: Store
-  ) { }
+    private store: Store,
+    private websocket: WebSocketService
+  ) {
+    this.websocket.connect();
+    this.listenForFOMOWheel();
+  }
+
+  ngOnDestroy(): void {
+    this.websocket.socket.off('winStreakFortuneWheel');
+  }
+
+  private async listenForFOMOWheel() {
+    const currentPlayer = await firstValueFrom(this.store.select(MainState.getPlayer));
+    this.websocket.socket.on('winStreakFortuneWheel', (data: any) => {
+      if (data.playerId != currentPlayer.id) this.showFomoToast(data.message);
+    });
+  }
+
+  showFomoToast(message: string) {
+    this.toastr.success(`🔥 ${message} 🔥`, 'Wow! ⏳', {
+      timeOut: 4000,
+      positionClass: 'toast-top-right',
+      closeButton: true,
+      progressBar: true,
+      progressAnimation: 'increasing',
+      tapToDismiss: false,
+      newestOnTop: true,
+    });
+  }
+
+  // Método para generar segmentos mezclados aleatoriamente
+  private generateRandomizedSegments(): WheelSegment[] {
+    // Crear los segmentos según las probabilidades deseadas
+    const segmentsToCreate: WheelSegment[] = [
+      // x0 (5 segmentos = 25%)
+      ...Array(5).fill({ multiplier: 0, color: '#e74c3c', label: 'x0' }),
+
+      // x2 (7 segmentos = 35%)
+      ...Array(7).fill({ multiplier: 2, color: '#3498db', label: 'x2' }),
+
+      // x3 (5 segmentos = 25%)
+      ...Array(5).fill({ multiplier: 3, color: '#2ecc71', label: 'x3' }),
+
+      // x5 (2 segmentos = 10%)
+      ...Array(2).fill({ multiplier: 5, color: '#f39c12', label: 'x5' }),
+
+      // x10 (1 segmento = 5%)
+      ...Array(1).fill({ multiplier: 10, color: '#9b59b6', label: 'x10', image: ViewportService.getPreffixImg() + '/assets/misc/stickers/goblin.webp' })
+    ];
+
+    // Mezclar los segmentos aleatoriamente (algoritmo de Fisher-Yates)
+    for (let i = segmentsToCreate.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [segmentsToCreate[i], segmentsToCreate[j]] = [segmentsToCreate[j], segmentsToCreate[i]];
+    }
+
+    return segmentsToCreate;
+  }
 
   ngOnInit(): void {
     this.calculateSegmentAngles();
-    this.loadPlayerBalance();
     this.loadSpinHistory();
+    this.loadLeaderboard();
+    this.preloadImages();
   }
 
   ngAfterViewInit(): void {
     this.initCanvas();
-    this.drawWheel();
+
+    // Observar cambios en el tamaño del contenedor
+    if (typeof ResizeObserver !== 'undefined') {
+      const resizeObserver = new ResizeObserver(() => {
+        this.initCanvas();
+      });
+
+      const container = this.wheelCanvas.nativeElement.parentElement;
+      resizeObserver.observe(container);
+    }
   }
 
   @HostListener('window:resize')
   onResize(): void {
-    this.initCanvas();
-    this.drawWheel();
-  }
-
-  private loadPlayerBalance(): void {
-    const player = this.store.selectSnapshot(MainState.getPlayer);
-    if (player) {
-      this.playerBalance = player.uruks || 0;
+    // Usar setTimeout para evitar demasiadas actualizaciones durante el redimensionamiento
+    if (this.resizeTimeout) {
+      clearTimeout(this.resizeTimeout);
     }
+
+    this.resizeTimeout = setTimeout(() => {
+      this.initCanvas();
+    }, 100);
   }
 
   private loadSpinHistory(): void {
     this.isLoadingHistory = true;
-    this.fortuneWheelService.getSpinHistory(5)
+    this.fortuneWheelService.getSpinHistory(10)
       .pipe(finalize(() => this.isLoadingHistory = false))
       .subscribe({
         next: (history) => {
@@ -91,134 +160,197 @@ export class FortuneWheelComponent implements OnInit, AfterViewInit {
         },
         error: (error) => {
           console.error('Error loading spin history:', error);
-          this.toastr.error('Could not load spin history');
         }
       });
+  }
+
+  private loadLeaderboard(): void {
+    this.isLoadingLeaderboard = true;
+    this.fortuneWheelService.getLeaderboard().subscribe({
+      next: (data) => {
+        this.leaderboard = data;
+        this.isLoadingLeaderboard = false;
+      },
+      error: (error) => {
+        console.error('Error loading leaderboard:', error);
+        this.isLoadingLeaderboard = false;
+      }
+    });
   }
 
   private initCanvas(): void {
     const canvas = this.wheelCanvas.nativeElement;
     const container = canvas.parentElement;
 
-    // Hacer el canvas responsive
-    const size = Math.min(container.clientWidth, 400);
-    canvas.width = size;
-    canvas.height = size;
+    // Ajustar el tamaño del canvas al contenedor
+    canvas.width = container.clientWidth;
+    canvas.height = container.clientHeight;
 
     this.ctx = canvas.getContext('2d');
-    this.wheelRadius = size / 2;
 
-    // Centrar el canvas
-    this.ctx.translate(this.wheelRadius, this.wheelRadius);
+    // Calcular el radio de la rueda basado en el tamaño del contenedor
+    // y asegurarse de que sea responsive
+    this.wheelRadius = Math.min(canvas.width, canvas.height) / 2 * 0.9; // 90% del radio máximo
+
+    // Redibujar la rueda cuando cambia el tamaño
+    this.drawWheel();
   }
 
   private calculateSegmentAngles(): void {
-    this.segmentAngles = [];
-    let startAngle = 0;
-
-    // Convertir probabilidades en ángulos
-    for (const segment of this.segments) {
-      const angle = segment.probability * 2 * Math.PI;
-      this.segmentAngles.push({
+    const segmentAngle = (2 * Math.PI) / this.segments.length;
+    this.segmentAngles = this.segments.map((segment, index) => {
+      const startAngle = index * segmentAngle;
+      const endAngle = (index + 1) * segmentAngle;
+      return {
         start: startAngle,
-        end: startAngle + angle,
+        end: endAngle,
         multiplier: segment.multiplier
-      });
-      startAngle += angle;
-    }
+      };
+    });
+  }
+
+  private preloadImages(): void {
+    // Precargar todas las imágenes de los segmentos
+    this.segments.forEach(segment => {
+      if (segment.image) {
+        const img = new Image();
+        img.src = segment.image;
+        this.segmentImages.set(segment.multiplier, img);
+      }
+    });
   }
 
   private drawWheel(): void {
     if (!this.ctx) return;
 
-    this.ctx.save();
-    this.ctx.clearRect(-this.wheelRadius, -this.wheelRadius, this.wheelRadius * 2, this.wheelRadius * 2);
+    const canvas = this.wheelCanvas.nativeElement;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
 
-    // Rotar el canvas según el ángulo actual
-    this.ctx.rotate(this.rotationAngle);
+    // Limpiar el canvas
+    this.ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Dibujar segmentos
-    let startAngle = 0;
-    for (let i = 0; i < this.segments.length; i++) {
-      const segment = this.segments[i];
-      const angle = segment.probability * 2 * Math.PI;
+    // Dibujar los segmentos
+    const segmentAngle = (2 * Math.PI) / this.segments.length;
 
+    this.segments.forEach((segment, index) => {
+      const startAngle = index * segmentAngle + this.rotationAngle;
+      const endAngle = (index + 1) * segmentAngle + this.rotationAngle;
+
+      // Dibujar el segmento
       this.ctx.beginPath();
-      this.ctx.moveTo(0, 0);
-      this.ctx.arc(0, 0, this.wheelRadius - 10, startAngle, startAngle + angle);
+      this.ctx.moveTo(centerX, centerY);
+      this.ctx.arc(centerX, centerY, this.wheelRadius, startAngle, endAngle);
       this.ctx.closePath();
 
-      // Rellenar segmento
+      // Rellenar el segmento
       this.ctx.fillStyle = segment.color;
       this.ctx.fill();
 
-      // Dibujar borde
-      this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+      // Dibujar el borde
+      this.ctx.strokeStyle = '#000';
       this.ctx.lineWidth = 2;
       this.ctx.stroke();
 
-      // Dibujar texto
+      // Dibujar el texto del multiplicador o la imagen
       this.ctx.save();
-      this.ctx.rotate(startAngle + angle / 2);
-      this.ctx.textAlign = 'center';
-      this.ctx.textBaseline = 'middle';
-      this.ctx.fillStyle = 'white';
-      this.ctx.font = 'bold 20px Arial';
-      this.ctx.fillText(segment.label, this.wheelRadius * 0.75, 0);
+      this.ctx.translate(centerX, centerY);
+      this.ctx.rotate(startAngle + segmentAngle / 2);
+
+      if (segment.image && this.segmentImages.has(segment.multiplier)) {
+        // Si el segmento tiene una imagen y está precargada, la dibujamos
+        const img = this.segmentImages.get(segment.multiplier);
+
+        // Calcular el tamaño de la imagen basado en el tamaño de la rueda
+        const imgSize = Math.max(24, Math.min(48, this.wheelRadius * 0.2));
+        const imgOffset = imgSize / 2;
+
+        // Posicionar la imagen proporcionalmente al tamaño de la rueda
+        const imgPosition = this.wheelRadius * 0.7;
+
+        // Dibujamos la imagen con tamaño adaptativo
+        this.ctx.drawImage(img, imgPosition - imgOffset, -imgOffset, imgSize, imgSize);
+      } else {
+        // Si no hay imagen, solo dibujamos el texto
+        this.ctx.textAlign = 'right';
+        this.ctx.textBaseline = 'middle';
+        this.ctx.fillStyle = '#fff';
+
+        // Ajustar el tamaño de la fuente según el tamaño de la rueda
+        const fontSize = Math.max(12, Math.min(20, this.wheelRadius * 0.1));
+        this.ctx.font = `bold ${fontSize}px Arial`;
+
+        this.ctx.fillText(segment.label, this.wheelRadius * 0.85, 0);
+      }
+
       this.ctx.restore();
+    });
 
-      startAngle += angle;
-    }
-
-    // Dibujar círculo central
+    // Dibujar el círculo central
     this.ctx.beginPath();
-    this.ctx.arc(0, 0, this.wheelRadius * 0.15, 0, Math.PI * 2);
-    this.ctx.fillStyle = '#2c3e50';
+    this.ctx.arc(centerX, centerY, this.wheelRadius * 0.15, 0, 2 * Math.PI);
+    this.ctx.fillStyle = '#333';
     this.ctx.fill();
-    this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    this.ctx.strokeStyle = '#000';
     this.ctx.lineWidth = 3;
     this.ctx.stroke();
 
-    this.ctx.restore();
+    // Dibujar líneas divisorias
+    this.ctx.strokeStyle = '#000';
+    this.ctx.lineWidth = 2;
+
+    for (let i = 0; i < this.segments.length; i++) {
+      const angle = i * segmentAngle + this.rotationAngle;
+      this.ctx.beginPath();
+      this.ctx.moveTo(centerX, centerY);
+      this.ctx.lineTo(
+        centerX + Math.cos(angle) * this.wheelRadius,
+        centerY + Math.sin(angle) * this.wheelRadius
+      );
+      this.ctx.stroke();
+    }
   }
 
-  public spinWheel(): void {
-    if (this.isSpinning || !this.selectedMultiplier) return;
+  public async spinWheel(): Promise<void> {
+    if (this.isSpinning || !this.betAmount.valid || !this.selectedMultiplier) return;
 
-    const betValue = this.betAmount.value || 0;
-
-    if (betValue <= 0) {
-      this.toastr.error('Please enter a valid bet amount');
-      return;
-    }
-
-    if (betValue > this.playerBalance) {
-      this.toastr.error('Not enough uruks for this bet');
+    const betAmount = this.betAmount.value;
+    const playerBalance = await firstValueFrom(this.playerBalance$);
+    if (betAmount > playerBalance) {
+      this.toastr.error('Insufficient uruks for this bet');
       return;
     }
 
     this.isSpinning = true;
-    this.lastResult = null;
 
-    // Llamar al servicio para realizar el giro
-    this.fortuneWheelService.spin(betValue, this.selectedMultiplier)
+    this.fortuneWheelService.spin(betAmount, this.selectedMultiplier)
       .subscribe({
         next: (result) => {
-          // Actualizar el balance del jugador
-          this.playerBalance = result.newBalance;
+          // Encontrar todos los segmentos con el multiplicador resultante
+          const matchingSegments = this.segmentAngles.filter(
+            segment => segment.multiplier === result.resultMultiplier
+          );
 
-          // Determinar el ángulo objetivo para que el marcador apunte al resultado
-          const targetSegment = this.segmentAngles.find(s => s.multiplier === result.resultMultiplier);
-          if (!targetSegment) {
-            this.handleSpinError('Invalid result from server');
+          // Si no hay segmentos que coincidan, manejar el error
+          if (matchingSegments.length === 0) {
+            this.handleSpinError(`No matching segments found for multiplier ${result.resultMultiplier}`);
             return;
           }
 
-          // Calcular un ángulo aleatorio dentro del segmento ganador
-          const randomAngleWithinSegment = targetSegment.start + (Math.random() * (targetSegment.end - targetSegment.start));
+          // Elegir aleatoriamente uno de los segmentos con ese multiplicador
+          const targetSegment = matchingSegments[Math.floor(Math.random() * matchingSegments.length)];
 
-          // Añadir rotaciones completas (2π) para que gire varias veces antes de detenerse
-          this.targetAngle = randomAngleWithinSegment + (Math.PI * 4); // 2 vueltas completas + ángulo objetivo
+          // Calcular un ángulo aleatorio dentro del segmento elegido
+          const randomAngleWithinSegment = targetSegment.start +
+            Math.random() * (targetSegment.end - targetSegment.start);
+
+          // Calcular el ángulo final para que el marcador apunte al segmento correcto
+          // Necesitamos invertir el ángulo porque la rueda gira en sentido contrario al marcador
+          const markerPosition = Math.PI * 1.5; // El marcador está en la parte superior (270 grados)
+          this.targetAngle = (markerPosition - randomAngleWithinSegment) % (2 * Math.PI);
+
+          // Añadir rotaciones completas para que gire varias veces antes de detenerse
+          this.targetAngle += Math.PI * 4; // 2 vueltas completas + ángulo objetivo
 
           // Iniciar la animación
           this.spinningTime = 0;
@@ -229,6 +361,7 @@ export class FortuneWheelComponent implements OnInit, AfterViewInit {
             multiplier: result.resultMultiplier,
             winAmount: result.winAmount
           };
+
           this.store.dispatch(new RefreshPlayer());
           // Recargar el historial
           this.loadSpinHistory();
@@ -305,5 +438,11 @@ export class FortuneWheelComponent implements OnInit, AfterViewInit {
   public formatDate(dateString: string): string {
     const date = new Date(dateString);
     return date.toLocaleString();
+  }
+
+  // Método para formatear fechas en el leaderboard
+  formatLeaderboardDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 }

@@ -17,15 +17,10 @@
       </div>
     </div>
 
-    <div class="controls-section">
-      <div class="player-balance">
-        <img
-          class="uruks-icon"
-          [src]="prefix + '/assets/goldenuruks.png'"
-          alt="Uruks"
-        />
-        <span>{{ playerBalance | number: '1.0-0' }}</span>
-      </div>
+    <div
+      class="controls-section"
+      *ngIf="playerBalance$ | async as playerBalance"
+    >
 
       <div class="multiplier-selection">
         <h3>Choose your multiplier</h3>
@@ -60,7 +55,6 @@
               [formControl]="betAmount"
               [disabled]="isSpinning"
               min="1"
-              max="1000"
             />
             <div class="bet-buttons">
               <button
@@ -96,13 +90,12 @@
           (click)="spinWheel()"
           [disabled]="isSpinning || !betAmount.valid || !selectedMultiplier"
         >
-        {{betAmount.valid }} {{selectedMultiplier}} {{isSpinning}}
           <i class="fas fa-sync-alt" [class.fa-spin]="isSpinning"></i>
           {{ isSpinning ? 'Spinning...' : 'Spin the Wheel' }}
         </button>
       </div>
 
-      <div class="result-display" *ngIf="lastResult">
+      <div class="result-display" *ngIf="lastResult && !isSpinning">
         <div class="result-header">Last Spin Result:</div>
         <div
           class="result-content"
@@ -131,7 +124,10 @@
     <div class="history-loading" *ngIf="isLoadingHistory">
       <i class="fas fa-spinner fa-spin"></i> Loading history...
     </div>
-    <div class="history-table-container" *ngIf="!isLoadingHistory && spinHistory.length > 0">
+    <div
+      class="history-table-container"
+      *ngIf="!isLoadingHistory && spinHistory.length > 0 && !isSpinning"
+    >
       <table class="history-table">
         <thead>
           <tr>
@@ -143,25 +139,171 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let spin of spinHistory" [ngClass]="{'win-row': spin.winAmount > 0, 'lose-row': spin.winAmount <= 0}">
+          <tr
+            *ngFor="let spin of spinHistory"
+            [ngClass]="{
+              'win-row': spin.winAmount > 0,
+              'lose-row': spin.winAmount <= 0,
+            }"
+          >
             <td>{{ formatDate(spin.createdAt) }}</td>
             <td>
-              <img class="uruks-icon-tiny" [src]="prefix + '/assets/goldenuruks.png'" alt="Uruks">
-              {{ spin.betAmount | number:'1.0-0' }}
+              <img
+                class="uruks-icon-tiny"
+                [src]="prefix + '/assets/goldenuruks.png'"
+                alt="Uruks"
+              />
+              {{ spin.betAmount | number: '1.0-0' }}
             </td>
             <td>x{{ spin.selectedMultiplier }}</td>
             <td>x{{ spin.resultMultiplier }}</td>
             <td>
-              <span [ngClass]="{'win-text': spin.winAmount > 0, 'lose-text': spin.winAmount <= 0}">
-                {{ spin.winAmount > 0 ? '+' : '' }}{{ spin.winAmount | number:'1.0-0' }}
+              <span
+                [ngClass]="{
+                  'win-text': spin.winAmount > 0,
+                  'lose-text': spin.winAmount <= 0,
+                }"
+              >
+                {{ spin.winAmount > 0 ? '+' : ''
+                }}{{ spin.winAmount | number: '1.0-0' }}
               </span>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <div class="no-history" *ngIf="!isLoadingHistory && spinHistory.length === 0">
+    <div
+      class="no-history"
+      *ngIf="!isLoadingHistory && spinHistory.length === 0"
+    >
       No spin history yet. Make your first bet!
+    </div>
+  </div>
+
+  <div class="leaderboard-section">
+    <h3>Leaderboard</h3>
+
+    <div class="leaderboard-loading" *ngIf="isLoadingLeaderboard">
+      <i class="fas fa-spinner fa-spin"></i> Loading leaderboard...
+    </div>
+
+    <div class="leaderboard-tabs" *ngIf="!isLoadingLeaderboard && leaderboard">
+      <ul class="nav nav-tabs" id="leaderboardTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="win-streaks-tab" data-bs-toggle="tab" data-bs-target="#win-streaks"
+                  type="button" role="tab" aria-controls="win-streaks" aria-selected="true">
+            <i class="fas fa-fire"></i> Win Streaks
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="top-bets-tab" data-bs-toggle="tab" data-bs-target="#top-bets"
+                  type="button" role="tab" aria-controls="top-bets" aria-selected="false">
+            <i class="fas fa-coins"></i> Top Bets
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="top-winners-tab" data-bs-toggle="tab" data-bs-target="#top-winners"
+                  type="button" role="tab" aria-controls="top-winners" aria-selected="false">
+            <i class="fas fa-trophy"></i> Top Winners
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="leaderboardTabContent">
+        <!-- Win Streaks Tab -->
+        <div class="tab-pane fade show active" id="win-streaks" role="tabpanel" aria-labelledby="win-streaks-tab">
+          <div class="leaderboard-table-container">
+            <table class="leaderboard-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Player</th>
+                  <th>Win Streak</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let entry of leaderboard.topWinStreaks; let i = index">
+                  <td class="rank">{{ i + 1 }}</td>
+                  <td class="player-name">{{ entry.playerName }}</td>
+                  <td class="streak">{{ entry.winStreak }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="no-data" *ngIf="leaderboard.topWinStreaks.length === 0">
+            No win streaks recorded this week.
+          </div>
+        </div>
+
+        <!-- Top Bets Tab -->
+        <div class="tab-pane fade" id="top-bets" role="tabpanel" aria-labelledby="top-bets-tab">
+          <div class="leaderboard-table-container">
+            <table class="leaderboard-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Player</th>
+                  <th>Bet Amount</th>
+                  <th>Multiplier</th>
+                  <th>Win Amount</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let entry of leaderboard.topBets; let i = index">
+                  <td class="rank">{{ i + 1 }}</td>
+                  <td class="player-name">{{ entry.playerName }}</td>
+                  <td class="bet-amount">
+                    <img class="uruks-icon-tiny" [src]="prefix + '/assets/goldenuruks.png'" alt="Uruks" />
+                    {{ entry.betAmount | number: '1.0-0' }}
+                  </td>
+                  <td class="multiplier">x{{ entry.multiplier }}</td>
+                  <td class="win-amount">
+                    <img class="uruks-icon-tiny" [src]="prefix + '/assets/goldenuruks.png'" alt="Uruks" />
+                    {{ entry.winAmount | number: '1.0-0' }}
+                  </td>
+                  <td class="date">{{ formatLeaderboardDate(entry.date) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="no-data" *ngIf="leaderboard.topBets.length === 0">
+            No winning bets recorded this week.
+          </div>
+        </div>
+
+        <!-- Top Winners Tab -->
+        <div class="tab-pane fade" id="top-winners" role="tabpanel" aria-labelledby="top-winners-tab">
+          <div class="leaderboard-table-container">
+            <table class="leaderboard-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Player</th>
+                  <th>Total Winnings</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let entry of leaderboard.topWinners; let i = index">
+                  <td class="rank">{{ i + 1 }}</td>
+                  <td class="player-name">{{ entry.playerName }}</td>
+                  <td class="total-winnings">
+                    <img class="uruks-icon-tiny" [src]="prefix + '/assets/goldenuruks.png'" alt="Uruks" />
+                    {{ entry.totalWinnings | number: '1.0-0' }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="no-data" *ngIf="leaderboard.topWinners.length === 0">
+            No winners recorded this week.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-leaderboard" *ngIf="!isLoadingLeaderboard && !leaderboard">
+      Leaderboard data is not available.
     </div>
   </div>
 

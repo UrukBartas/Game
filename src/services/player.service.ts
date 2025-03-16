@@ -209,4 +209,13 @@ export class PlayerService extends ApiBaseService {
   public equipMount(mountId: number) {
     return this.get('/equip-mount/' + mountId);
   }
+
+  /**
+   * Busca jugadores por nombre
+   * @param query Texto para buscar en los nombres de jugadores
+   * @returns Lista de jugadores que coinciden con la búsqueda
+   */
+  public searchPlayers(query: string): Observable<Array<{ id: string, name: string, image: string }>> {
+    return this.get(`/search?query=${encodeURIComponent(query)}`);
+  }
 }

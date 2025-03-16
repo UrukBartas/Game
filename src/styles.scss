@@ -133,7 +133,6 @@ app-item-box {
   margin: 0;
   max-height: 100%;
   max-width: 100%;
-  top: 20%;
   @include media-breakpoint-down(sm) {
     top: 0%;
   }
@@ -143,9 +142,10 @@ app-item-box {
     justify-content: center;
     align-items: center;
     height: 100%;
-    padding: 3rem 0;
+
     @include media-breakpoint-down(sm) {
       width: 90%;
+      padding: 3rem 0;
     }
     border: none !important;
     @include media-breakpoint-up(sm) {

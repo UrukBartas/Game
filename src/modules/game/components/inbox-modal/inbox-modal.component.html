@@ -1,187 +1,328 @@
 <div id="inbox-modal">
-  <div class="title d-flex justify-content-between">
-    <span urText class="text-third">
-      <i class="fa fa-envelope pr-2"></i> Inbox
-    </span>
-    <div class="btn btn-transparent text-white" (click)="modalRef.hide()">
-      <i class="fa fa-x"></i>
+  <div class="modal-header">
+    <div class="title d-flex align-items-center flex-wrap">
+      <i class="fa fa-envelope-scroll icon-primary"></i>
+      <span urText class="text-third">Messenger Raven</span>
+      <span class="remaining-messages ms-2 text-light d-block d-sm-inline mt-1 mt-sm-0" *ngIf="remainingMessages !== undefined">
+        ({{ remainingMessages }} messages remaining)
+      </span>
+    </div>
+    <div class="actions">
+      <button class="btn-action compose-btn" (click)="showComposeMessage()" *ngIf="!openedNotification && !composingMessage">
+        <i class="fa fa-feather"></i>
+        <span class="d-none d-md-inline">Send Raven</span>
+      </button>
+      <button class="btn-action close-btn" (click)="modalRef.hide()">
+        <i class="fa fa-x"></i>
+      </button>
     </div>
   </div>
 
-  @if (!openedNotification) {
-    <div class="form-check form-switch">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        id="toggleSelectionMode"
-        [(ngModel)]="selectionMode"
-      />
-      <label class="form-check-label text-light" for="toggleSelectionMode">
-        {{ selectionMode ? 'Multi-Select: ON' : 'Multi-Select: OFF' }}
-      </label>
+  <!-- Selector de tipo de mensajes (Recibidos/Enviados) -->
+  @if (!openedNotification && !composingMessage) {
+    <div class="message-type-selector">
+      <button
+        class="btn"
+        [ngClass]="{'btn-primary': messageType === 'inbox', 'btn-outline-secondary': messageType !== 'inbox'}"
+        (click)="toggleMessageType('inbox')"
+      >
+        <i class="fa fa-inbox"></i> Received
+      </button>
+      <button
+        class="btn"
+        [ngClass]="{'btn-primary': messageType === 'sent', 'btn-outline-secondary': messageType !== 'sent'}"
+        (click)="toggleMessageType('sent')"
+      >
+        <i class="fa fa-paper-plane"></i> Sent
+      </button>
+    </div>
+  }
+
+  <!-- Composición de nuevo mensaje -->
+  <div class="compose-container" *ngIf="composingMessage">
+    <div class="compose-header">
+      <h4 class="text-third">Send a Raven Message</h4>
+      <button class="btn-action back-btn" (click)="cancelComposeMessage()">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span class="d-none d-md-inline">Back</span>
+      </button>
     </div>
 
-    <div class="d-flex justify-content-start align-items-center mb-2">
-      <!-- ✅ Toggle para activar selección múltiple -->
-      <div class="d-flex align-items-center">
-        <!-- ✅ Botón "Select All" que solo aparece si el modo selección está activo -->
+    <div class="compose-form">
+      <div class="form-group">
+        <label for="recipient" class="text-light">Recipient:</label>
+        <div class="recipient-input">
+          <input
+            type="text"
+            id="recipient"
+            class="form-control"
+            [(ngModel)]="newMessage.recipientName"
+            (input)="onRecipientInput()"
+            placeholder="Enter player name"
+          />
+          <div class="recipient-suggestions" *ngIf="recipientSuggestions.length > 0">
+            <div
+              class="suggestion-item"
+              *ngFor="let player of recipientSuggestions"
+              (click)="selectRecipient(player)"
+            >
+              <img [src]="prefix + player.image" alt="Player avatar" class="avatar-small">
+              <span class="text-light">{{player.name}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="subject" class="text-light">Subject:</label>
+        <input
+          type="text"
+          id="subject"
+          class="form-control"
+          [(ngModel)]="newMessage.subject"
+          placeholder="Enter message subject"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="message" class="text-light">Message:</label>
+        <textarea
+          id="message"
+          class="form-control message-area"
+          [(ngModel)]="newMessage.content"
+          placeholder="Write your message here..."
+          rows="6"
+        ></textarea>
+        <small class="text-light">You can use markdown formatting</small>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-secondary" (click)="cancelComposeMessage()">
+          <i class="fa fa-times"></i> Cancel
+        </button>
+        <button class="btn btn-primary" (click)="sendMessage()" [disabled]="!canSendMessage()">
+          <i class="fa fa-paper-plane"></i> Send Raven
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de mensajes -->
+  @if (!openedNotification && !composingMessage) {
+    <div class="inbox-toolbar">
+      <div class="form-check form-switch">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="toggleSelectionMode"
+          [(ngModel)]="selectionMode"
+        />
+        <label class="form-check-label text-light" for="toggleSelectionMode">
+          {{ selectionMode ? 'Multi-Select: ON' : 'Multi-Select: OFF' }}
+        </label>
+      </div>
+
+      <div class="toolbar-actions">
         <button
           *ngIf="selectionMode"
-          class="btn btn-secondary ml-3"
+          class="btn btn-outline-secondary"
           (click)="toggleSelectAll()"
         >
           {{ allSelected ? 'Deselect All' : 'Select All' }}
         </button>
-      </div>
 
-      <!-- ✅ Botón "Set to Read" -->
-      <button
-        *ngIf="selectionMode && selectedNotifications.length > 0"
-        class="btn btn-primary"
-        (click)="markSelectedAsRead()"
-      >
-        <i class="fa fa-check"></i> Set to Read
-      </button>
+        <button
+          *ngIf="selectionMode && selectedNotifications.length > 0"
+          class="btn btn-primary"
+          (click)="markSelectedAsRead()"
+        >
+          <i class="fa fa-check"></i> Mark as Read
+        </button>
+      </div>
     </div>
 
     <div class="notification-container">
       @for (
         notification of (notifications$ | async).notifications;
-        track $index
+        track notification.id
       ) {
-        <div class="notification d-flex flex-row">
-          <!-- Checkbox solo si el modo selección está activo -->
+        <div class="notification" [ngClass]="{'unread': !notification.opened.includes(playerId)}">
+          <!-- Checkbox para selección múltiple -->
           @if (selectionMode) {
-            <input
-              type="checkbox"
-              class="form-check-input mx-2"
-              (change)="toggleSelection(notification)"
-              [checked]="selectedNotifications.includes(notification)"
-            />
+            <div class="notification-checkbox">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                (change)="toggleSelection(notification)"
+                [checked]="selectedNotifications.includes(notification)"
+              />
+            </div>
           }
 
           <div
-            class="d-flex flex-row flex-grow-1"
+            class="notification-content"
             (click)="!selectionMode ? openNotification(notification) : null"
           >
-            @if (!notification.opened.includes(playerId)) {
-              <div class="new-notification"></div>
-            }
-            @if (hasAttachments(notification)) {
-              <i class="fa fa-gift px-2"></i>
-            }
-            @if (notification.titleImage) {
-              <img
-                class="notification-image"
-                [src]="prefix + notification.titleImage"
-              />
-            }
-
-            <div class="notification-text px-2 d-flex flex-column">
-              <div class="d-flex justify-content-between">
-                <span urText class="text-secondary">{{
-                  notification.title
-                }}</span>
-              </div>
-              <span urSubtext class="text-white">{{
-                notification.description
-              }}</span>
+            <div class="notification-indicators">
+              @if (!notification.opened.includes(playerId)) {
+                <div class="indicator unread-indicator" title="Unread message"></div>
+              }
+              @if (hasAttachments(notification)) {
+                <div class="indicator attachment-indicator" title="Has attachments">
+                  <i class="fa fa-gift text-white"></i>
+                </div>
+              }
             </div>
 
-            <div class="notification-date">
-              <i urSubtext class="text-white pr-2">{{
-                notification.createdAt | date: 'shortDate'
-              }}</i>
+            <div class="notification-avatar">
+              @if (notification.titleImage) {
+                <img
+                  class="notification-image"
+                  [src]="prefix + notification.titleImage"
+                  alt="Notification image"
+                />
+              } @else {
+                <div class="default-avatar">
+                  <i class="fa fa-scroll"></i>
+                </div>
+              }
+            </div>
+
+            <div class="notification-text">
+              <div class="notification-header">
+                <span class="notification-title" [ngClass]="{'font-weight-bold': !notification.opened.includes(playerId)}">
+                  {{ notification.title }}
+                </span>
+                <span class="notification-date">
+                  {{ notification.createdAt | date: 'MMM d, y' }}
+                </span>
+              </div>
+              <div class="notification-preview">
+                {{ notification.description }}
+              </div>
             </div>
           </div>
         </div>
       } @empty {
-        <span class="text-white"
-          >You have not received any notification yet.</span
-        >
-      }
-    </div>
-  } @else {
-    <div class="notification-lector">
-      <div class="d-flex justify-content-between">
-        <span urText class="text-secondary">{{
-          openedNotification.title
-        }}</span>
-        <span urSubtext class="text-white">{{
-          openedNotification.createdAt | date: 'shortDate'
-        }}</span>
-      </div>
-      <markdown
-        class="markdown"
-        [data]="openedNotification.content"
-        [disableSanitizer]="true"
-      >
-      </markdown>
-    </div>
-
-    <div class="footer">
-      <button
-        (click)="openedNotification = null"
-        class="btn btn-primary back-btn"
-        style="height: fit-content"
-      >
-        <i class="fa-solid fa-arrow-left"></i> Back
-      </button>
-      @if (attachments?.length > 0) {
-        <div class="attachments">
-          <div class="d-flex gap-1 overflow-auto">
-            @for (attachment of attachments; track $index) {
-              <app-item-box
-                [height]="getItemBoxSize()"
-                [width]="getItemBoxSize()"
-                [image]="attachment.data.imageLocal"
-                [stack]="attachment.quantity"
-              >
-                <div tooltip class="tooltip-uruk">
-                  <app-generic-item-tooltip
-                    [item]="attachment.data"
-                  ></app-generic-item-tooltip>
-                </div>
-              </app-item-box>
-            }
-          </div>
-          <button
-            (click)="claimItems(openedNotification)"
-            [disabled]="openedNotification.claimed.includes(playerId)"
-            class="btn btn-secondary ml-2"
-          >
-            @if (openedNotification.claimed.includes(playerId)) {
-              <i class="fa-solid fa-check"></i> Claimed
-            } @else {
-              <i class="fa-solid fa-gift"></i> Claim
-            }
+        <div class="empty-state">
+          <i class="fa fa-inbox empty-icon"></i>
+          <span class="text-white">Your raven messenger is empty.</span>
+          <button class="btn btn-outline-primary mt-3" (click)="showComposeMessage()">
+            <i class="fa fa-feather"></i> Send Your First Raven
           </button>
         </div>
       }
     </div>
+  } @else if (openedNotification && !composingMessage) {
+    <div class="message-view">
+      <div class="message-header">
+        <h3 class="message-title text-third">{{ openedNotification.title }}</h3>
+        <div class="message-meta">
+          <span class="message-date text-light">
+            {{ openedNotification.createdAt | date: 'MMM d, y h:mm a' }}
+          </span>
+          @if (openedNotification.sender) {
+            <span class="message-sender text-light">
+              From: {{ openedNotification.sender.name }}
+            </span>
+          }
+        </div>
+      </div>
+
+      <div class="message-body">
+        <markdown
+          class="markdown"
+          [data]="openedNotification.content"
+          [disableSanitizer]="true"
+        >
+        </markdown>
+      </div>
+
+      <div class="message-footer">
+        <button
+          (click)="openedNotification = null"
+          class="btn btn-outline-secondary back-btn"
+        >
+          <i class="fa-solid fa-arrow-left"></i> Back to Messages
+        </button>
+
+        @if (openedNotification.sender) {
+          <button
+            class="btn btn-primary reply-btn"
+            (click)="replyToMessage(openedNotification)"
+          >
+            <i class="fa-solid fa-reply"></i> Reply
+          </button>
+        }
+
+        @if (attachments?.length > 0) {
+          <div class="attachments-container">
+            <h4 class="attachments-title text-third">
+              <i class="fa fa-gift"></i> Attachments
+            </h4>
+            <div class="attachments">
+              <div class="attachments-items">
+                @for (attachment of attachments; track $index) {
+                  <app-item-box
+                    [height]="getItemBoxSize()"
+                    [width]="getItemBoxSize()"
+                    [image]="attachment.data.imageLocal"
+                    [stack]="attachment.quantity"
+                  >
+                    <div tooltip class="tooltip-uruk">
+                      <app-generic-item-tooltip
+                        [item]="attachment.data"
+                      ></app-generic-item-tooltip>
+                    </div>
+                  </app-item-box>
+                }
+              </div>
+              <button
+                (click)="claimItems(openedNotification)"
+                [disabled]="openedNotification.claimed.includes(playerId)"
+                class="btn btn-claim"
+              >
+                @if (openedNotification.claimed.includes(playerId)) {
+                  <i class="fa-solid fa-check"></i> Claimed
+                } @else {
+                  <i class="fa-solid fa-gift"></i> Claim Items
+                }
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
   }
 
+  <!-- Paginación -->
   <div
-    *ngIf="notifications$ | async as notificationsState"
+    *ngIf="(notifications$ | async) as notificationsState"
     class="pagination-controls"
+    [ngClass]="{'d-none': openedNotification || composingMessage}"
   >
     <button
+      class="pagination-btn"
       (click)="prevPage()"
       [disabled]="notificationsState.currentPage === 1"
     >
       <i
-        class="bi bi-caret-left-fill"
+        class="fa fa-chevron-left"
         [ngClass]="{ 'disabled-icon': notificationsState.currentPage === 1 }"
       ></i>
     </button>
+    <span class="pagination-info">
+      Page {{ notificationsState.currentPage }} of {{ notificationsState.totalPages }}
+    </span>
     <button
+      class="pagination-btn"
       (click)="nextPage()"
       [disabled]="
         notificationsState.currentPage >= notificationsState.totalPages
       "
     >
       <i
-        class="bi bi-caret-right-fill"
+        class="fa fa-chevron-right"
         [ngClass]="{
           'disabled-icon':
             notificationsState.currentPage >= notificationsState.totalPages,

@@ -347,7 +347,7 @@
       <div class="floating-save-button" *ngIf="!form.pristine">
         <button (click)="save()" class="btn btn-save" [disabled]="form.invalid">
           <i class="bi bi-check2-circle me-2"></i>
-          Save changes
+          {{ !editing ? 'Create ' + form.value.clazz : 'Save changes' }}
         </button>
       </div>
     </div>

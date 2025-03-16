@@ -41,22 +41,29 @@
     flex-wrap: wrap;
     gap: 2rem;
     margin-bottom: 2rem;
+    justify-content: center;
 
     @include media-breakpoint-down(md) {
       flex-direction: column;
+      align-items: center;
     }
 
     .wheel-section {
       flex: 1;
-      min-width: 300px;
+      min-width: 280px;
+      max-width: 400px;
       display: flex;
       justify-content: center;
       align-items: center;
 
+      @include media-breakpoint-down(sm) {
+        min-width: 100%;
+        max-width: 100%;
+      }
+
       .wheel-container {
         position: relative;
         width: 100%;
-        max-width: 400px;
         aspect-ratio: 1;
 
         .fortune-wheel {
@@ -74,34 +81,28 @@
           font-size: 2.5rem;
           filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.7));
           z-index: 10;
+
+          @include media-breakpoint-down(sm) {
+            font-size: 2rem;
+            top: -8px;
+          }
         }
       }
     }
 
     .controls-section {
       flex: 1;
-      min-width: 300px;
+      min-width: 280px;
+      max-width: 400px;
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
 
-      .player-balance {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #ffd700;
-        background: rgba(0, 0, 0, 0.3);
-        padding: 0.75rem 1rem;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 215, 0, 0.3);
-
-        .uruks-icon {
-          width: 30px;
-          height: 30px;
-        }
+      @include media-breakpoint-down(sm) {
+        min-width: 100%;
+        max-width: 100%;
       }
+
 
       .multiplier-selection {
         h3 {
@@ -369,53 +370,55 @@
     }
 
     .wheel-game-area {
-      gap: 1.5rem;
+      gap: 1rem;
+    }
 
-      .wheel-section {
-        min-width: 250px;
+    .wheel-section {
+      min-width: 100%;
+      max-width: 100%;
+    }
+
+    .controls-section {
+      min-width: 100%;
+      max-width: 100%;
+
+      .player-balance {
+        font-size: 1.2rem;
+
+        .uruks-icon {
+          width: 24px;
+          height: 24px;
+        }
       }
 
-      .controls-section {
-        min-width: 250px;
-
-        .player-balance {
-          font-size: 1.2rem;
-
-          .uruks-icon {
-            width: 24px;
-            height: 24px;
-          }
+      .multiplier-selection {
+        h3 {
+          font-size: 1.1rem;
         }
 
-        .multiplier-selection {
-          h3 {
-            font-size: 1.1rem;
+        .multiplier-buttons {
+          gap: 0.5rem;
+
+          .multiplier-btn {
+            padding: 0.75rem 0.5rem;
+            font-size: 1rem;
           }
+        }
+      }
 
-          .multiplier-buttons {
-            gap: 0.5rem;
-
-            .multiplier-btn {
-              padding: 0.75rem 0.5rem;
+      .bet-controls {
+        .bet-amount {
+          .bet-input-group {
+            input {
+              padding: 0.5rem;
               font-size: 1rem;
             }
           }
         }
 
-        .bet-controls {
-          .bet-amount {
-            .bet-input-group {
-              input {
-                padding: 0.5rem;
-                font-size: 1rem;
-              }
-            }
-          }
-
-          .spin-button {
-            padding: 0.75rem;
-            font-size: 1.1rem;
-          }
+        .spin-button {
+          padding: 0.75rem;
+          font-size: 1.1rem;
         }
       }
     }
@@ -533,6 +536,169 @@
 
     .history-table-container {
       .history-table {
+        th, td {
+          padding: 0.5rem;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}
+
+// Leaderboard Section
+.leaderboard-section {
+  margin-top: 2rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  h3 {
+    color: $third;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .leaderboard-loading {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 1rem;
+
+    i {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .leaderboard-tabs {
+    .nav-tabs {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 1rem;
+
+      .nav-item {
+        margin-bottom: -1px;
+      }
+
+      .nav-link {
+        color: rgba(255, 255, 255, 0.7);
+        background-color: transparent;
+        border: 1px solid transparent;
+        border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+        padding: 0.5rem 1rem;
+        transition: all 0.2s;
+
+        &:hover {
+          color: $third;
+          border-color: transparent;
+        }
+
+        &.active {
+          color: $third;
+          background-color: rgba(0, 0, 0, 0.3);
+          border-color: rgba(255, 255, 255, 0.1);
+          border-bottom-color: transparent;
+        }
+
+        i {
+          margin-right: 0.5rem;
+        }
+      }
+    }
+
+    .tab-content {
+      padding: 1rem 0;
+    }
+  }
+
+  .leaderboard-table-container {
+    overflow-x: auto;
+
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th, td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      th {
+        color: $white-100;
+        font-weight: bold;
+        background: rgba(0, 0, 0, 0.3);
+      }
+
+      td {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .rank {
+        width: 40px;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .player-name {
+        font-weight: bold;
+      }
+
+      .streak, .multiplier {
+        text-align: center;
+        font-weight: bold;
+        color: $third;
+      }
+
+      .bet-amount, .win-amount, .total-winnings {
+        text-align: right;
+        font-weight: bold;
+        color: #ffd700;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.3rem;
+      }
+
+      .date {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .uruks-icon-tiny {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+
+  .no-data, .no-leaderboard {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 1.5rem;
+    font-style: italic;
+  }
+}
+
+// Responsive adjustments for leaderboard
+@include media-breakpoint-down(sm) {
+  .leaderboard-section {
+    padding: 1rem;
+
+    h3 {
+      font-size: 1.1rem;
+    }
+
+    .leaderboard-tabs {
+      .nav-tabs {
+        .nav-link {
+          padding: 0.4rem 0.6rem;
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .leaderboard-table-container {
+      .leaderboard-table {
         th, td {
           padding: 0.5rem;
           font-size: 0.9rem;

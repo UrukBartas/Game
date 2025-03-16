@@ -63,7 +63,6 @@ export class WebSocketService {
     });
 
     this.socket.on('chatOnlineUsers', (data: { count: number }) => {
-      console.log(data)
       this.onlineChatPlayersSubject.next(data.count);
     });
 

@@ -12,16 +12,29 @@ import { isEmpty } from 'lodash-es';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { MarkdownComponent, provideMarkdown } from 'ngx-markdown';
 import { ToastrService } from 'ngx-toastr';
-import { take } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, of, switchMap, take } from 'rxjs';
 import { SubtextSizeDirective } from 'src/modules/core/directives/subtext-size.directive';
 import { TextSizeDirective } from 'src/modules/core/directives/text-size.directive';
 import { NotificationModel } from 'src/modules/core/models/notifications.model';
 import { NotificationsService } from 'src/services/notifications.service';
+import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { GenericItemTooltipComponent } from 'src/standalone/generic-item-tooltip/generic-item-tooltip.component';
 import { ItemBoxComponent } from 'src/standalone/item-box/item-box.component';
 import { MainState, SetNotifications } from 'src/store/main.store';
 import { InventoryUpdateService } from '../../activities/inventory/services/inventory-update.service';
+
+interface PlayerSuggestion {
+  id: string;
+  name: string;
+  image: string;
+}
+
+interface NewMessage {
+  recipientName: string;
+  subject: string;
+  content: string;
+}
 
 @Component({
   selector: 'app-inbox-modal',
@@ -47,20 +60,51 @@ export class InboxModalComponent implements OnInit {
   notificationService = inject(NotificationsService);
   viewportService = inject(ViewportService);
   inventoryUpdateService = inject(InventoryUpdateService);
+  playerService = inject(PlayerService);
+
   notifications$ = this.store.select(MainState.getNotifications);
   playerId: string;
   openedNotification: NotificationModel;
   attachments: { data; quantity: number }[];
   public prefix = ViewportService.getPreffixImg();
 
-  // ✅ NUEVAS PROPIEDADES PARA SELECCIÓN MÚLTIPLE
-  selectionMode = false; // Estado del toggle switch
-  selectedNotifications: NotificationModel[] = []; // Lista de notificaciones seleccionadas
-  allSelected = false; // Indica si todas las notificaciones están seleccionadas
+  // Propiedades para selección múltiple
+  selectionMode = false;
+  selectedNotifications: NotificationModel[] = [];
+  allSelected = false;
+
+  // Propiedades para composición de mensajes
+  composingMessage = false;
+  newMessage: NewMessage = {
+    recipientName: '',
+    subject: '',
+    content: ''
+  };
+  recipientSuggestions: PlayerSuggestion[] = [];
+  searchingPlayers = false;
+
+  private searchTerms = new Subject<string>();
+  messageType: 'inbox' | 'sent' = 'inbox'; // Para alternar entre mensajes recibidos y enviados
+  remainingMessages: number = 0;
 
   ngOnInit(): void {
     this.playerId = this.store.selectSnapshot(MainState.getState).player?.id;
     this.refreshNotifications();
+    this.getRemainingMessages();
+
+    // Configurar la búsqueda con debounce
+    this.searchTerms.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(term => term.length >= 3 ? this.playerService.searchPlayers(term) : of([]))
+    ).subscribe(results => {
+      this.recipientSuggestions = results.map(player => ({
+        id: player.id,
+        name: player.name,
+        image: player.image || '/assets/default-avatar.png'
+      }));
+      this.searchingPlayers = false;
+    });
   }
 
   private refreshNotifications() {
@@ -157,11 +201,7 @@ export class InboxModalComponent implements OnInit {
     this.allSelected = !this.allSelected;
   }
 
-  // ✅ FUNCIONES PARA MANEJO DE SELECCIÓN MÚLTIPLE
-
-  /**
-   * Alterna el estado de selección de una notificación
-   */
+  // Funciones para manejo de selección múltiple
   toggleSelection(notification: NotificationModel) {
     const index = this.selectedNotifications.findIndex(
       (n) => n.id === notification.id
@@ -173,29 +213,156 @@ export class InboxModalComponent implements OnInit {
     }
   }
 
-  /**
-   * Marca todas las notificaciones seleccionadas como leídas
-   */
   markSelectedAsRead() {
     if (this.selectedNotifications.length === 0) return;
 
-    // Simular el cambio de estado en el frontend
-    this.selectedNotifications.forEach((notification) => {
-      if (!notification.opened.includes(this.playerId)) {
-        notification.opened.push(this.playerId);
-      }
-    });
+    const unreadNotifications = this.selectedNotifications.filter(
+      (notification) => !notification.opened.includes(this.playerId)
+    );
 
-    // Enviar la actualización al backend
+    if (unreadNotifications.length === 0) {
+      this.toast.info('All selected messages are already read');
+      return;
+    }
+
+    const notificationIds = unreadNotifications.map((n) => n.id);
     this.notificationService
-      .setSelectionToRead(this.selectedNotifications.map((n) => n.id))
+      .setSelectionToRead(notificationIds)
       .pipe(take(1))
-      .subscribe((msg: any) => {
+      .subscribe(() => {
+        this.refreshNotifications();
+        this.toast.success(
+          `Marked ${unreadNotifications.length} messages as read`
+        );
+        this.selectedNotifications = [];
         this.allSelected = false;
-        this.selectedNotifications = []; // Vaciar la selección
-        this.selectionMode = false; // Desactivar el modo selección
-        this.refreshNotifications(); // Actualizar el estado en el store
-        this.toast.success(msg.message);
+      });
+  }
+
+  deleteSelected() {
+    if (this.selectedNotifications.length === 0) return;
+
+    const notificationIds = this.selectedNotifications.map((n) => n.id);
+    this.notificationService
+      .deleteMultiple(notificationIds)
+      .pipe(take(1))
+      .subscribe(() => {
+        this.refreshNotifications();
+        this.toast.success(
+          `Deleted ${this.selectedNotifications.length} messages`
+        );
+        this.selectedNotifications = [];
+        this.allSelected = false;
+      });
+  }
+
+  // Funciones para composición de mensajes
+  showComposeMessage() {
+    this.composingMessage = true;
+    this.newMessage = {
+      recipientName: '',
+      subject: '',
+      content: ''
+    };
+    this.recipientSuggestions = [];
+  }
+
+  cancelComposeMessage() {
+    this.composingMessage = false;
+  }
+
+  onRecipientInput() {
+    if (this.newMessage.recipientName.length >= 3) {
+      this.searchingPlayers = true;
+      this.searchTerms.next(this.newMessage.recipientName);
+    } else {
+      this.recipientSuggestions = [];
+    }
+  }
+
+  selectRecipient(player: PlayerSuggestion) {
+    this.newMessage.recipientName = player.name;
+    this.recipientSuggestions = [];
+  }
+
+  canSendMessage(): boolean {
+    return (
+      !!this.newMessage.recipientName &&
+      !!this.newMessage.subject &&
+      !!this.newMessage.content &&
+      this.newMessage.subject.length > 0 &&
+      this.newMessage.content.length > 0
+    );
+  }
+
+  sendMessage() {
+    if (!this.canSendMessage()) {
+      return;
+    }
+
+    this.notificationService
+      .sendMessage({
+        recipientName: this.newMessage.recipientName,
+        subject: this.newMessage.subject,
+        content: this.newMessage.content
+      })
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.toast.success('Your raven has been sent successfully!');
+          this.composingMessage = false;
+          this.refreshNotifications();
+        },
+        error: (error) => {
+          this.toast.error(`Failed to send message: ${error.message || 'Unknown error'}`);
+        }
+      });
+  }
+
+  replyToMessage(notification: NotificationModel) {
+    this.composingMessage = true;
+    this.newMessage = {
+      recipientName: notification.sender.name,
+      subject: `Re: ${notification.title}`,
+      content: `\n\n---\n> Original message from ${notification.sender.name}:\n> ${notification.content.replace(/\n/g, '\n> ')}`
+    };
+  }
+
+  // Método para obtener mensajes restantes
+  getRemainingMessages() {
+    this.notificationService.getRemainingMessages()
+      .pipe(take(1))
+      .subscribe(response => {
+        this.remainingMessages = response.remaining;
+      });
+  }
+
+  // Método para cambiar entre mensajes recibidos y enviados
+  toggleMessageType(type: 'inbox' | 'sent') {
+    this.messageType = type;
+    if (type === 'inbox') {
+      this.loadInboxMessages();
+    } else {
+      this.loadSentMessages();
+    }
+  }
+
+  // Cargar mensajes recibidos
+  loadInboxMessages(page = 1) {
+    this.notificationService.getReceivedMessages(page)
+      .pipe(take(1))
+      .subscribe(response => {
+        // Actualizar la interfaz con los mensajes recibidos
+        // Puedes crear un nuevo estado en el store para esto o manejarlo localmente
+      });
+  }
+
+  // Cargar mensajes enviados
+  loadSentMessages(page = 1) {
+    this.notificationService.getSentMessages(page)
+      .pipe(take(1))
+      .subscribe(response => {
+        // Actualizar la interfaz con los mensajes enviados
       });
   }
 }

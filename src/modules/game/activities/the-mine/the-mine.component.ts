@@ -264,6 +264,11 @@ export class TheMineComponent extends TemplatePage {
     return highestTier;
   }
 
+  public getChainSwitcherHeight() {
+    const isBig = ['xxl', 'xl', 'lg'].includes(this.viewportService.screenSize);
+    return isBig ? 100 : 50;
+  }
+
   startCountdown() {
     interval(1000)
       .pipe(takeUntilDestroyed())
