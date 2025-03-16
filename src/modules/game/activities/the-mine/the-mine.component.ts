@@ -28,6 +28,7 @@ import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { StakeRemoveRequestModalComponent } from './stake-remove-request-modal/stake-remove-request-modal.component';
+
 export interface MineTier {
   start: number;
   end: number;
@@ -35,6 +36,20 @@ export interface MineTier {
   lootboxChance: number;
   uruksAllowed: number;
 }
+
+// Add this enum to match your backend
+export enum MineTierIdentifier {
+  BARE_HANDS = 'BARE_HANDS',
+  REINFORCEMENTS = 'REINFORCEMENTS',
+  PICKEAXE = 'PICKEAXE',
+  MINE_MACHINE = 'MINE_MACHINE',
+  DYNAMITE = 'DYNAMITE',
+  BLAST_FURNACE = 'BLAST_FURNACE',
+  ADVANCED_MACHINERY = 'ADVANCED_MACHINERY',
+  ENHANCED_EXPLOSIVES = 'ENHANCED_EXPLOSIVES',
+  ASTRAL_EXTRACTOR = 'ASTRAL_EXTRACTOR',
+}
+
 @Component({
   selector: 'app-the-mine',
   templateUrl: './the-mine.component.html',
@@ -53,7 +68,6 @@ export class TheMineComponent extends TemplatePage {
 
   public tiers$ = this.statsService.getMineTiers().pipe(
     tap((tiers) => {
-      console.debug('URUK BARTAS DEBUG: Fetched mine tiers', tiers);
       this.tiers = tiers;
     })
   );
@@ -145,6 +159,8 @@ export class TheMineComponent extends TemplatePage {
       );
     })
   );
+
+  public readonly MAX_EXTRA_CRYPT_ATTEMPS = 6;
 
   constructor() {
     super();
@@ -239,6 +255,7 @@ export class TheMineComponent extends TemplatePage {
   }
 
   getActiveTier(amount: number) {
+    if (!this.tiers || this.tiers.length === 0) return null;
     const activeTier = this.tiers.find(
       (tier) =>
         (amount >= tier.start && amount < tier.end) ||
@@ -294,5 +311,20 @@ export class TheMineComponent extends TemplatePage {
   pad(value: number) {
     const paddedValue = value.toString().padStart(2, '0');
     return paddedValue;
+  }
+
+  // Update this method to match your backend logic exactly
+  public calculateExtraAttempts(tier: any): number {
+    if (!tier) return 0;
+
+    // Find the index in the actual tiers array, not in the enum
+    const tierIndex = this.tiers.findIndex((t) => t.id === tier.id);
+    const pickaxeIndex = this.tiers.findIndex((t) => t.id === MineTierIdentifier.PICKEAXE);
+
+    // Only proceed if we found valid indices
+    if (tierIndex === -1 || pickaxeIndex === -1) return 0;
+
+    // Use the same formula as the backend
+    return Math.min(Math.max(tierIndex - pickaxeIndex, 0), this.MAX_EXTRA_CRYPT_ATTEMPS);
   }
 }

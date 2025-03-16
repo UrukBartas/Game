@@ -75,23 +75,10 @@
           Golden Uruks per day
         </li>
         <li
-          *ngIf="
-            tier.id === 'PICKEAXE' ||
-            tier.id === 'MINE_MACHINE' ||
-            tier.id === 'DYNAMITE' ||
-            tier.id === 'BLAST_FURNACE'
-          "
+          *ngIf="calculateExtraAttempts(tier) > 0"
         >
           <strong class="text-third">
-            {{
-              tier.id === 'PICKEAXE'
-                ? '+1'
-                : tier.id === 'MINE_MACHINE'
-                  ? '+2'
-                  : tier.id === 'DYNAMITE'
-                    ? '+3'
-                    : '+4'
-            }}
+            +{{ calculateExtraAttempts(tier) }}
           </strong>
           extra crypt attempts per week
         </li>

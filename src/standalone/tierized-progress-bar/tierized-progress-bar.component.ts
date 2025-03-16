@@ -153,6 +153,7 @@ export class TierizedProgressBarComponent implements OnInit, AfterViewInit {
   }
 
   public getActiveTier() {
+    if (!this.tiers || this.tiers.length === 0) return null;
     return this.tiers.find(
       (e) => this.currentValue >= e.start && this.currentValue <= e.end
     );
