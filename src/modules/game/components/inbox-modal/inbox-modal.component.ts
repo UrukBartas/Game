@@ -86,10 +86,11 @@ export class InboxModalComponent implements OnInit {
   private searchTerms = new Subject<string>();
   messageType: 'inbox' | 'sent' = 'inbox'; // Para alternar entre mensajes recibidos y enviados
   remainingMessages: number = 0;
+  currentNotifications: any = { notifications: [], totalPages: 1, currentPage: 1 };
 
   ngOnInit(): void {
     this.playerId = this.store.selectSnapshot(MainState.getState).player?.id;
-    this.refreshNotifications();
+    this.loadInboxMessages();
     this.getRemainingMessages();
 
     // Configurar la búsqueda con debounce
@@ -107,13 +108,24 @@ export class InboxModalComponent implements OnInit {
     });
   }
 
-  private refreshNotifications() {
+  private loadInboxMessages(page = 1, pageSize = 10) {
     this.notificationService
-      .getNotifications()
+      .getNotifications(page, pageSize)
       .pipe(take(1))
-      .subscribe((response) =>
-        this.store.dispatch(new SetNotifications(response))
-      );
+      .subscribe(response => {
+        this.currentNotifications = response;
+        this.store.dispatch(new SetNotifications(response));
+      });
+  }
+
+  private loadSentMessages(page = 1, pageSize = 10) {
+    this.notificationService
+      .getSentMessages(page, pageSize)
+      .pipe(take(1))
+      .subscribe(response => {
+        this.currentNotifications = response;
+        this.store.dispatch(new SetNotifications(response));
+      });
   }
 
   openNotification(notification: NotificationModel) {
@@ -124,7 +136,11 @@ export class InboxModalComponent implements OnInit {
         this.notificationService
           .openNotification(notification.id)
           .pipe(take(1))
-          .subscribe(() => this.refreshNotifications());
+          .subscribe(() => {
+            if (this.messageType === 'inbox') {
+              this.loadInboxMessages(this.currentNotifications.currentPage);
+            }
+          });
       }
       if (!isEmpty(notification.attachments)) {
         this.notificationService
@@ -171,32 +187,33 @@ export class InboxModalComponent implements OnInit {
   }
 
   prevPage() {
-    const notifications = this.store.selectSnapshot(MainState.getNotifications);
-    this.notificationService
-      .getNotifications(notifications.currentPage - 1)
-      .pipe(take(1))
-      .subscribe((response) =>
-        this.store.dispatch(new SetNotifications(response))
-      );
+    const currentPage = this.currentNotifications.currentPage;
+    if (currentPage > 1) {
+      if (this.messageType === 'inbox') {
+        this.loadInboxMessages(currentPage - 1);
+      } else {
+        this.loadSentMessages(currentPage - 1);
+      }
+    }
   }
 
   nextPage() {
-    const notifications = this.store.selectSnapshot(MainState.getNotifications);
-    this.notificationService
-      .getNotifications(notifications.currentPage + 1)
-      .pipe(take(1))
-      .subscribe((response) =>
-        this.store.dispatch(new SetNotifications(response))
-      );
+    const currentPage = this.currentNotifications.currentPage;
+    const totalPages = this.currentNotifications.totalPages;
+    if (currentPage < totalPages) {
+      if (this.messageType === 'inbox') {
+        this.loadInboxMessages(currentPage + 1);
+      } else {
+        this.loadSentMessages(currentPage + 1);
+      }
+    }
   }
 
   toggleSelectAll() {
     if (this.allSelected) {
       this.selectedNotifications = [];
     } else {
-      this.selectedNotifications = [
-        ...this.store.selectSnapshot(MainState.getNotifications).notifications,
-      ];
+      this.selectedNotifications = [...this.currentNotifications.notifications];
     }
     this.allSelected = !this.allSelected;
   }
@@ -230,7 +247,11 @@ export class InboxModalComponent implements OnInit {
       .setSelectionToRead(notificationIds)
       .pipe(take(1))
       .subscribe(() => {
-        this.refreshNotifications();
+        if (this.messageType === 'inbox') {
+          this.loadInboxMessages(this.currentNotifications.currentPage);
+        } else {
+          this.loadSentMessages(this.currentNotifications.currentPage);
+        }
         this.toast.success(
           `Marked ${unreadNotifications.length} messages as read`
         );
@@ -247,7 +268,11 @@ export class InboxModalComponent implements OnInit {
       .deleteMultiple(notificationIds)
       .pipe(take(1))
       .subscribe(() => {
-        this.refreshNotifications();
+        if (this.messageType === 'inbox') {
+          this.loadInboxMessages(this.currentNotifications.currentPage);
+        } else {
+          this.loadSentMessages(this.currentNotifications.currentPage);
+        }
         this.toast.success(
           `Deleted ${this.selectedNotifications.length} messages`
         );
@@ -311,7 +336,13 @@ export class InboxModalComponent implements OnInit {
         next: () => {
           this.toast.success('Your raven has been sent successfully!');
           this.composingMessage = false;
-          this.refreshNotifications();
+          this.getRemainingMessages();
+          // Cargar mensajes enviados después de enviar uno nuevo
+          if (this.messageType === 'sent') {
+            this.loadSentMessages();
+          } else {
+            this.loadInboxMessages();
+          }
         },
         error: (error) => {
           this.toast.error(`Failed to send message: ${error.message || 'Unknown error'}`);
@@ -322,9 +353,9 @@ export class InboxModalComponent implements OnInit {
   replyToMessage(notification: NotificationModel) {
     this.composingMessage = true;
     this.newMessage = {
-      recipientName: notification.sender.name,
+      recipientName: notification.sender?.name || '',
       subject: `Re: ${notification.title}`,
-      content: `\n\n---\n> Original message from ${notification.sender.name}:\n> ${notification.content.replace(/\n/g, '\n> ')}`
+      content: `\n\n---\n> Original message from ${notification.sender?.name || 'Unknown'}:\n> ${notification.content.replace(/\n/g, '\n> ')}`
     };
   }
 
@@ -339,30 +370,17 @@ export class InboxModalComponent implements OnInit {
 
   // Método para cambiar entre mensajes recibidos y enviados
   toggleMessageType(type: 'inbox' | 'sent') {
-    this.messageType = type;
-    if (type === 'inbox') {
-      this.loadInboxMessages();
-    } else {
-      this.loadSentMessages();
+    if (this.messageType !== type) {
+      this.messageType = type;
+      this.openedNotification = null;
+      this.selectedNotifications = [];
+      this.allSelected = false;
+
+      if (type === 'inbox') {
+        this.loadInboxMessages();
+      } else {
+        this.loadSentMessages();
+      }
     }
-  }
-
-  // Cargar mensajes recibidos
-  loadInboxMessages(page = 1) {
-    this.notificationService.getReceivedMessages(page)
-      .pipe(take(1))
-      .subscribe(response => {
-        // Actualizar la interfaz con los mensajes recibidos
-        // Puedes crear un nuevo estado en el store para esto o manejarlo localmente
-      });
-  }
-
-  // Cargar mensajes enviados
-  loadSentMessages(page = 1) {
-    this.notificationService.getSentMessages(page)
-      .pipe(take(1))
-      .subscribe(response => {
-        // Actualizar la interfaz con los mensajes enviados
-      });
   }
 }
