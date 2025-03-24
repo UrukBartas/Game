@@ -122,6 +122,17 @@ app-item-box {
 .tab-pane {
   overflow: auto;
 }
+
+.modal-dialog {
+  .modal-content {
+    background: transparent !important;
+  }
+}
+
+app-confirm-modal {
+  margin-top: 2rem;
+}
+
 @include media-breakpoint-up(sm) {
   .modal-dialog {
     position: absolute !important;
