@@ -119,16 +119,13 @@
   }
 
   &-item {
-    background: linear-gradient(
-      135deg,
-      rgba($primary, 0.9) 0%,
-      rgba(darken($primary, 10%), 0.9) 100%
-    );
-    padding: 15px;
-    border-radius: 12px;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.2);
+    transition: background 0.2s ease;
     display: flex;
     justify-content: space-between;
-    transition: all 0.3s ease;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.05);
     position: relative;
@@ -150,13 +147,11 @@
     }
 
     &:hover {
-      transform: translateY(-3px);
-      background: linear-gradient(
-        135deg,
-        rgba($third, 0.9) 0%,
-        rgba(darken($third, 10%), 0.9) 100%
-      );
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    &:last-child {
+      margin-bottom: 0;
     }
 
     &-left {
