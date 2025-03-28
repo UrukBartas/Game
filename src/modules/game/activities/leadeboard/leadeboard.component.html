@@ -1,48 +1,229 @@
-<div class="description">
-  <p urTitle>Hall of Uruks</p>
+<div class="leaderboard-header">
+  <h1 class="title">Champions of the Realm</h1>
+  <div class="subtitle">
+    Compete, conquer, and claim your place among legends
+  </div>
 </div>
+
 <div class="pb-3 wrapper-search">
-  <div class="form-group" [formGroup]="formGroup">
-    <div class="btn-filters d-flex">
-      <tabset>
-        <tab
-          heading="🌍 PvE"
-          id="tab1"
-          (selectTab)="setLevelLeaderboard()"
-        ></tab>
-        <tab heading="⚔️ PvP" id="tab2" (selectTab)="setPvpLeaderboard()"></tab>
-      </tabset>
-      <tabset>
-        <tab heading="Today" id="tab1" (selectTab)="filterAllTime()"></tab>
-        <tab heading="30d" id="tab2" (selectTab)="filterByMonth()"></tab>
-        <tab heading="7d" id="tab3" (selectTab)="filterCurrentWeek()"></tab>
-      </tabset>
+  <div class="filters-container">
+    <div class="tabs-row">
+      <div class="tab-container">
+        <button
+          class="tab-item"
+          [ngClass]="{ active: leaderboardType() === leaderboardTypes.PVE }"
+          (click)="setLevelLeaderboard()"
+        >
+          <i class="bi bi-trophy-fill tab-icon"></i>
+          {{ viewportService.isMobile() ? '' : 'Quest Champions' }}
+        </button>
+        <button
+          class="tab-item"
+          [ngClass]="{ active: leaderboardType() === leaderboardTypes.PVP }"
+          (click)="setPvpLeaderboard()"
+        >
+          <i class="bi bi-award-fill tab-icon"></i>
+          {{ viewportService.isMobile() ? '' : 'Arena Victories' }}
+        </button>
+        <button
+          class="tab-item"
+          [ngClass]="{ active: leaderboardType() === leaderboardTypes.TOP_PVP }"
+          (click)="setTopPvpLeaderboard()"
+        >
+          <i class="bi bi-star-fill tab-icon"></i>
+          {{ viewportService.isMobile() ? '' : 'Arena Rating' }}
+        </button>
+      </div>
     </div>
-    <input
-      type="text"
-      class="form-control"
-      placeholder="User or address"
-      formControlName="userOrWallet"
-    />
+
+    <div class="leaderboard-description">
+      @if (leaderboardType() === leaderboardTypes.PVE) {
+        <p>
+          <i class="bi bi-info-circle-fill me-2"></i>
+          This leaderboard ranks players by the total number of quests completed during the {{ periodType() === 'weekly' ? 'current week' : 'current month' }}.
+        </p>
+      } @else if (leaderboardType() === leaderboardTypes.PVP) {
+        <p>
+          <i class="bi bi-info-circle-fill me-2"></i>
+          This leaderboard ranks players by the total number of arena victories achieved during the {{ periodType() === 'weekly' ? 'current week' : 'current month' }}.
+        </p>
+      } @else if (leaderboardType() === leaderboardTypes.TOP_PVP) {
+        <p>
+          <i class="bi bi-info-circle-fill me-2"></i>
+          This leaderboard ranks players by their arena rating points earned during the {{ periodType() === 'weekly' ? 'current week' : 'current month' }}.
+        </p>
+      }
+    </div>
+
+    <div class="tabs-row">
+      <div class="tab-container">
+        <button
+          class="tab-item"
+          [ngClass]="{ active: periodType() === 'monthly' }"
+          (click)="filterByMonth()"
+        >
+          <i class="bi bi-calendar-month tab-icon"></i>
+          Monthly
+        </button>
+        <button
+          class="tab-item"
+          [ngClass]="{ active: periodType() === 'weekly' }"
+          (click)="filterCurrentWeek()"
+        >
+          <i class="bi bi-calendar-week tab-icon"></i>
+          Weekly
+        </button>
+      </div>
+
+      <div class="search-input">
+        <i class="bi bi-search search-icon"></i>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by name or address..."
+          [formControl]="userOrWallet"
+        />
+      </div>
+    </div>
   </div>
-  <div class="mover col d-flex align-items-center" style="align-self: flex-end">
-    <span urText class="text-white px-2 d-none d-md-flex"
-      >Page: {{ activePage() + 1 }}</span
-    >
-    <i
-      class="bi bi-caret-left-fill"
-      [ngClass]="{ 'disabled-icon': activePage() == 0 }"
+
+  <div class="pagination-controls">
+    <span class="page-info d-none d-md-block">Page {{ activePage() + 1 }}</span>
+    <button
+      class="page-button"
+      [ngClass]="{ disabled: activePage() == 0 }"
       (click)="activePage() == 0 ? null : prevPage()"
-    ></i>
-    <i
-      class="bi bi-caret-right-fill"
-      [ngClass]="{
-        'disabled-icon': lastPageSize < chunkSize(),
-      }"
+    >
+      <i class="bi bi-chevron-left"></i>
+    </button>
+    <button
+      class="page-button"
+      [ngClass]="{ disabled: lastPageSize < chunkSize() }"
       (click)="lastPageSize < chunkSize() ? null : nextPage()"
-    ></i>
+    >
+      <i class="bi bi-chevron-right"></i>
+    </button>
   </div>
 </div>
+
+<!-- Countdown Timer -->
+<div class="countdown-container">
+  <div class="countdown-icon">
+    <i class="bi bi-hourglass-split"></i>
+  </div>
+  <div class="countdown-info">
+    <div class="countdown-title">
+      {{ periodType() === 'weekly' ? 'Weekly' : 'Monthly' }} rewards
+      distribution in:
+    </div>
+    <div class="countdown-timer">
+      {{ getCountdownText() }}
+    </div>
+  </div>
+  <div class="countdown-note">
+    Rewards are automatically distributed at the end of each period
+  </div>
+</div>
+
+<!-- Podium Section -->
+<div class="podium-section" *ngIf="topThreePlayers().length > 0">
+  <div class="podium-container">
+    <!-- Iteramos sobre los jugadores del podio -->
+    @for (player of topThreePlayers(); track player.id; let position = $index) {
+      <div
+        class="podium-player"
+        [ngClass]="{
+          'first-place': position === 0,
+          'second-place': position === 1,
+          'third-place': position === 2,
+        }"
+      >
+        <!-- Corona solo para el primer lugar -->
+        @if (position === 0) {
+          <div class="crown-icon">
+            <i class="bi bi-crown-fill"></i>
+          </div>
+        }
+
+        <div class="player-avatar">
+          <img [src]="player.image" [alt]="'Place ' + (position + 1)" />
+          <div class="player-rank">{{ position + 1 }}</div>
+        </div>
+
+        <div class="player-info">
+          <div class="player-name">{{ player.name }}</div>
+          <div class="player-score">
+            @if (leaderboardType() === leaderboardTypes.PVE) {
+              <i class="bi bi-check-circle-fill"></i>
+              {{ player.finishedQuestsCount }} Quests
+            } @else if (leaderboardType() === leaderboardTypes.PVP) {
+              <i class="bi bi-trophy-fill"></i>
+              {{ player.winCount }} Victories
+            } @else {
+              <i class="bi bi-star-fill"></i> {{ player.mmr }} Rating
+            }
+          </div>
+        </div>
+
+        <div class="player-reward">
+          @if (leaderboardType() === leaderboardTypes.PVE) {
+            <app-remote-item-box
+              itemType="MISCELLANY"
+              [itemId]="getRewards()[position].lootbox"
+              [height]="position === 0 ? 50 : position === 1 ? 45 : 40"
+              [width]="position === 0 ? 50 : position === 1 ? 45 : 40"
+              [amount]="1"
+            ></app-remote-item-box>
+            @if (getRewards()[position].gold > 0) {
+              <app-uruks-displayer
+                [goldenUruks]="getRewards()[position].gold"
+              ></app-uruks-displayer>
+            }
+          } @else if (leaderboardType() === leaderboardTypes.PVP) {
+            @for (miscGroup of groupItemsByType(getRewards()[position].miscs); track miscGroup.id) {
+              <app-remote-item-box
+                itemType="MISCELLANY"
+                [itemId]="miscGroup.id"
+                [height]="position === 0 ? 50 : position === 1 ? 45 : 40"
+                [width]="position === 0 ? 50 : position === 1 ? 45 : 40"
+                [amount]="miscGroup.amount"
+              ></app-remote-item-box>
+            }
+            @if (getRewards()[position].gold > 0) {
+              <app-uruks-displayer
+                [goldenUruks]="getRewards()[position].gold"
+              ></app-uruks-displayer>
+            }
+          } @else {
+            @for (miscGroup of groupItemsByType(getRewards()[position].miscs); track miscGroup.id) {
+              <app-remote-item-box
+                itemType="MISCELLANY"
+                [itemId]="miscGroup.id"
+                [height]="position === 0 ? 50 : position === 1 ? 45 : 40"
+                [width]="position === 0 ? 50 : position === 1 ? 45 : 40"
+                [amount]="miscGroup.amount"
+              ></app-remote-item-box>
+            }
+            @if (getRewards()[position].consumables?.length > 0) {
+              @for (consumableGroup of groupItemsByType(getRewards()[position].consumables); track consumableGroup.id) {
+                <div class="reward-item consumable-reward">
+                  <app-remote-item-box
+                    itemType="CONSUMABLE"
+                    [itemId]="consumableGroup.id"
+                    [height]="position === 0 ? 40 : position === 1 ? 35 : 30"
+                    [width]="position === 0 ? 40 : position === 1 ? 35 : 30"
+                    [amount]="consumableGroup.amount"
+                  ></app-remote-item-box>
+                </div>
+              }
+            }
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
 <div class="list-leaderboard">
   @for (
     player of getLeaderboard$() | async;
@@ -50,9 +231,13 @@
     let index = $index
   ) {
     <div
-      class="list-leaderboard-item text-white"
+      class="list-leaderboard-item text-white position-relative"
       [ngClass]="{ active: player.id == actualAddress }"
     >
+      @if (player.id == actualAddress) {
+        <div class="you-indicator">YOU</div>
+      }
+
       <div class="list-leaderboard-item-left">
         <div class="rank">
           <div
@@ -72,104 +257,146 @@
             ></div>
           </div>
           <img
-            [src]="prefix + '/' + player.image"
+            [src]="player.image"
             class="list-leaderboard-item-left-image-ranking"
           />
 
           <div class="floating-rank">
             @if (!formGroup.value.userOrWallet) {
-              @if (index >= 0 && index <= 2 && activePage() == 0) {
-                <img
-                  [src]="prefix + '/' + getImgBasedOnRanking(index)"
-                  class="list-leaderboard-item-left-image-ranking"
-                />
-              } @else {
-                <div
-                  class="list-leaderboard-item-left-number-ranking d-flex align-items-center pl-1"
-                >
-                  {{ index + 1 + chunkSize() * activePage() }}
-                </div>
-              }
+              <div
+                class="list-leaderboard-item-left-number-ranking d-flex align-items-center justify-content-center"
+              >
+                {{ index + 1 + chunkSize() * activePage() }}
+              </div>
             }
           </div>
         </div>
 
         <div class="list-leaderboard-item-left-container">
-          <div class="list-leaderboard-item-name-container align-items-center">
+          <div class="player-title-row">
+            @if (player.title) {
+              <span class="player-title" [ngbTooltip]="'Player Title'">
+                {{ player.title }}
+              </span>
+            }
+          </div>
+
+          <div class="player-info-row">
             <app-name-player
               [player]="player"
               [disabledTrigger]="true"
             ></app-name-player>
-            <span
-              *ngIf="leaderboardType === leaderboardTypes.PVE"
-              [ngStyle]="{
-                color: getRarityColor(
-                  getTitleForQuestsCompleted(player.finishedQuestsCount).rarity
-                ),
-              }"
-              [ngbTooltip]="questsAchevementsTooltip"
-              [tooltipContext]="{
-                completedQuests: player.finishedQuestsCount,
-                currentTier: getTitleForQuestsCompleted(
-                  player.finishedQuestsCount
-                ),
-              }"
+
+            @if (leaderboardType() === leaderboardTypes.PVE) {
+              <div
+                class="tier-badge-small ms-2"
+                [ngStyle]="{
+                  background: getRarityColor(
+                    getTitleForQuestsCompleted(player.finishedQuestsCount)
+                      .rarity
+                  ),
+                }"
+                [ngbTooltip]="questsAchevementsTooltip"
+                [tooltipContext]="{
+                  completedQuests: player.finishedQuestsCount,
+                  currentTier: getTitleForQuestsCompleted(
+                    player.finishedQuestsCount
+                  ),
+                }"
+              >
+                <i
+                  class="bi {{
+                    getTitleForQuestsCompleted(player.finishedQuestsCount).badge
+                  }}"
+                ></i>
+              </div>
+            }
+
+            @if (
+              leaderboardType() === leaderboardTypes.PVP ||
+              leaderboardType() === leaderboardTypes.TOP_PVP
+            ) {
+              <div
+                class="tier-badge-small ms-2"
+                [ngStyle]="{ background: getRarityColor(player.pvp.rarity) }"
+                [ngbTooltip]="pvpAchievementsTooltip"
+                [tooltipContext]="{
+                  player: player,
+                  currentTier: player.pvp,
+                }"
+              >
+                <i class="bi {{ player.pvp.badge }}"></i>
+              </div>
+            }
+
+            <div
+              class="profile-button ms-2"
+              [routerLink]="['/view-player', player.id]"
+              [ngbTooltip]="'View player profile'"
             >
-              - {{ player.pve.title }}</span
-            >
-            <span
-              *ngIf="leaderboardType === leaderboardTypes.PVP"
-              [ngStyle]="{
-                color: getRarityColor(player.pvp.rarity),
-              }"
-            >
-              - {{ player.pvp.title }}</span
-            >
+              <i class="bi bi-person-badge"></i>
+              <span class="d-none d-md-inline">Profile</span>
+            </div>
           </div>
 
-          <div class="tags d-flex gap-2">
-            <span class="list-leaderboard-item-badge"
-              >Level {{ player.level }}</span
-            >
-            <div class="expander gap-2 d-none d-md-flex">
+          <div class="player-stats-row">
+            <span class="stat-badge">Level {{ player.level }}</span>
+
+            @if (leaderboardType() === leaderboardTypes.PVE) {
               <span
-                *ngIf="leaderboardType === leaderboardTypes.PVE"
-                class="list-leaderboard-item-badge pointer"
-                >Completed quests: {{ player.finishedQuestsCount }}</span
+                class="stat-badge"
+                [ngbTooltip]="'Total quests completed by this player'"
               >
-              <span
-                *ngIf="leaderboardType === leaderboardTypes.PVP"
-                class="list-leaderboard-item-badge pointer"
-                >Arena points: {{ player.mmr }}
+                <i class="bi bi-check-circle-fill stat-icon"></i>
+                {{ player.finishedQuestsCount }} Quests
               </span>
-            </div>
+            }
+
+            @if (leaderboardType() === leaderboardTypes.PVP) {
+              <span class="stat-badge" [ngbTooltip]="'Total PvP victories'">
+                <i class="bi bi-trophy-fill stat-icon"></i>
+                {{ player.winCount }} Victories
+              </span>
+            }
+
+            @if (leaderboardType() === leaderboardTypes.TOP_PVP) {
+              <span
+                class="stat-badge"
+                [ngbTooltip]="'Current arena rating points'"
+              >
+                <i class="bi bi-star-fill stat-icon"></i>
+                {{ player.mmr }} Rating
+              </span>
+            }
           </div>
         </div>
       </div>
       <div class="list-leaderboard-item-right">
-        <div
-          *ngIf="player.id !== actualAddress"
-          class="duel-btn"
-          [ngClass]="{
-            'auto-duel-btn': getPlayerState(player.id) === playerStates.OFFLINE,
-          }"
-          [ngbTooltip]="tooltipTemplate"
-          [tooltipContext]="{
-            text:
-              getPlayerState(player.id) === playerStates.OFFLINE
-                ? 'Autobattle player'
-                : 'Challenge player',
-          }"
-          (click)="challengePlayer(player)"
-          [attr.disabled]="player.configuration?.disablePVP ? true : null"
-        >
-          <div class="fa-sword"></div>
+        <div class="action-buttons d-flex align-items-center">
+          <div
+            *ngIf="player.id !== actualAddress"
+            class="auto-battle-btn"
+            [ngbTooltip]="tooltipTemplate"
+            [tooltipContext]="{ text: 'Autobattle player' }"
+            (click)="challengePlayerAuto(player)"
+            [attr.disabled]="player.configuration?.disablePVP ? true : null"
+          >
+            <i class="bi bi-robot"></i>
+          </div>
+          <div
+            *ngIf="
+              player.id !== actualAddress &&
+              getPlayerState(player.id) === playerStates.ONLINE
+            "
+            class="duel-btn"
+            [ngbTooltip]="tooltipTemplate"
+            [tooltipContext]="{ text: 'Challenge player' }"
+            (click)="challengePlayer(player)"
+            [attr.disabled]="player.configuration?.disablePVP ? true : null"
+          >
+            <div class="fa-sword"></div>
+          </div>
         </div>
-
-        <i
-          class="bi bi-eye-fill pointer view-player mx-2"
-          [routerLink]="['/view-player', player.id]"
-        ></i>
       </div>
     </div>
   }
@@ -186,19 +413,150 @@
   let-completedQuests="completedQuests"
   let-currentTier="currentTier"
 >
-  <div id="player-tooltip-wrapper">
-    <p>Completed quests {{ completedQuests }}</p>
-    <p>Possible achievements</p>
-    <ul>
-      <li
-        *ngFor="let questTier of questTiers"
-        [ngStyle]="{ color: getRarityColor(questTier.rarity) }"
+  <div id="player-tooltip-wrapper" class="achievement-tooltip">
+    <div class="achievement-header">
+      <i class="bi bi-trophy-fill achievement-icon"></i>
+      <div>
+        <h5 class="mb-0">Quest Achievement</h5>
+        <p class="mb-0 text-third">Completed quests: {{ completedQuests }}</p>
+      </div>
+    </div>
+
+    <div
+      class="current-tier"
+      [ngStyle]="{ borderColor: getRarityColor(currentTier.rarity) }"
+    >
+      <div
+        class="tier-icon"
+        [ngStyle]="{ background: getRarityColor(currentTier.rarity) }"
       >
-        @if (questTier.title == currentTier.title) {
-          X
+        <i class="bi {{ currentTier.badge }}"></i>
+      </div>
+      <div class="tier-info">
+        <h6 [ngStyle]="{ color: getRarityColor(currentTier.rarity) }">
+          {{ currentTier.title }}
+        </h6>
+        <p class="tier-description">{{ currentTier.description }}</p>
+        <div class="progress-container">
+          <div
+            class="progress-bar"
+            [ngStyle]="{
+              width: getProgressPercentage(completedQuests, currentTier) + '%',
+              background: getRarityColor(currentTier.rarity),
+            }"
+          ></div>
+        </div>
+        <p class="progress-text">
+          {{ completedQuests }} / {{ getNextTierQuests(currentTier) }} quests
+        </p>
+      </div>
+    </div>
+
+    <div class="tier-progression">
+      <h6 class="text-center mb-2">Achievement Progression</h6>
+      <div class="tier-list">
+        @for (tier of questTiers; track tier.title) {
+          <div
+            class="tier-item"
+            [ngClass]="{ achieved: completedQuests >= tier.maxQuests }"
+            [ngStyle]="{ borderColor: getRarityColor(tier.rarity) }"
+          >
+            <div
+              class="tier-badge"
+              [ngStyle]="{ background: getRarityColor(tier.rarity) }"
+            >
+              <i class="d-flex bi {{ tier.badge }}"></i>
+            </div>
+            <div
+              class="tier-name"
+              [ngStyle]="{ color: getRarityColor(tier.rarity) }"
+            >
+              {{ tier.title }}
+            </div>
+            <div class="tier-requirement">
+              {{ tier.maxQuests === Infinity ? '10000+' : tier.maxQuests }}
+              quests
+            </div>
+          </div>
         }
-        {{ questTier.title }} {{ questTier.maxQuests }} quests
-      </li>
-    </ul>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template
+  #pvpAchievementsTooltip
+  let-player="player"
+  let-currentTier="currentTier"
+>
+  <div id="player-tooltip-wrapper" class="achievement-tooltip">
+    <div class="achievement-header">
+      <i class="bi bi-award-fill achievement-icon"></i>
+      <div>
+        <h5 class="mb-0">Arena Rank</h5>
+        <p class="mb-0 text-third">
+          @if (leaderboardType() === leaderboardTypes.PVP) {
+            Victories: {{ player.winCount }}
+          } @else {
+            Rating: {{ player.mmr }}
+          }
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="current-tier"
+      [ngStyle]="{ borderColor: getRarityColor(currentTier.rarity) }"
+    >
+      <div
+        class="tier-icon"
+        [ngStyle]="{ background: getRarityColor(currentTier.rarity) }"
+      >
+        <i class="bi {{ currentTier.badge }}"></i>
+      </div>
+      <div class="tier-info">
+        <h6 [ngStyle]="{ color: getRarityColor(currentTier.rarity) }">
+          {{ currentTier.title }}
+        </h6>
+        <p class="tier-description">{{ currentTier.description }}</p>
+        @if (leaderboardType() === leaderboardTypes.TOP_PVP) {
+          <p class="rank-text">Current Rank: {{ player.pvpIndex }}</p>
+        }
+      </div>
+    </div>
+
+    <div class="tier-progression">
+      <h6 class="text-center mb-2">Arena Ranks</h6>
+      <div class="tier-list">
+        @for (tier of pvpTiers; track tier.title) {
+          <div
+            class="tier-item"
+            [ngClass]="{ achieved: isPvpTierAchieved(player, tier) }"
+            [ngStyle]="{ borderColor: getRarityColor(tier.rarity) }"
+          >
+            <div
+              class="tier-badge"
+              [ngStyle]="{ background: getRarityColor(tier.rarity) }"
+            >
+              <i class="bi {{ tier.badge }}"></i>
+            </div>
+            <div
+              class="tier-name"
+              [ngStyle]="{ color: getRarityColor(tier.rarity) }"
+            >
+              {{ tier.title }}
+            </div>
+            <div class="tier-requirement">
+              Rank {{ tier.range[0]
+              }}{{
+                tier.range[1] !== tier.range[0]
+                  ? ' - ' + (tier.range[1] === Infinity ? '∞' : tier.range[1])
+                  : ''
+              }}
+            </div>
+          </div>
+        }
+      </div>
+    </div>
   </div>
 </ng-template>

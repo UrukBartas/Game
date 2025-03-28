@@ -3,6 +3,7 @@ import {
   DestroyRef,
   inject,
   NgZone,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -18,6 +19,7 @@ import {
   takeWhile,
   tap,
 } from 'rxjs';
+import { BaseFightComponent } from 'src/modules/core/components/base-fight/base-fight.component';
 import {
   BaseFightModel,
   FightTypes,
@@ -63,12 +65,19 @@ export class PvPFightComponent {
   private boundHandleEnemyLose = this.handleEnemyLose.bind(this);
   private boundHandleLoseByTimeout = this.handleLoseByTimeout.bind(this);
 
+  @ViewChild('baseFight') baseFightComponent: BaseFightComponent;
+
+  fightId: string; // ID único para este combate
+
   constructor(
     private store: Store,
     private fightService: PvPFightService,
     private websocket: WebSocketService
   ) {
     this.setupFightSockets();
+
+    // Generar un ID único para este combate
+    this.fightId = `pvp_${Date.now()}`;
   }
 
   private setupFightSockets() {
@@ -92,6 +101,7 @@ export class PvPFightComponent {
           this.fight$.next(this.adaptFight(fight, true));
           this.store.dispatch(new StartFight(this.fightType));
           this.startTurnTimer();
+          this.loadBonusActionsRemaining();
         },
         error: () => {
           this.router.navigateByUrl('/leaderboard');
@@ -153,8 +163,9 @@ export class PvPFightComponent {
       },
       turns: fight.turns,
       result: fight.result,
+      fightId: fight.fightId,
     };
-    
+
     return adaptedFight;
   }
 
@@ -226,4 +237,36 @@ export class PvPFightComponent {
     this.websocket.socket.off('enemySurrender', this.boundHandleEnemyLose);
     this.websocket.socket.off('playerSurrender', this.boundHandleLoseByTimeout);
   }
+
+  // Cargar acciones adicionales disponibles
+  loadBonusActionsRemaining() {
+    this.fightService.getBonusActionsRemaining().subscribe(data => {
+      this.updateBonusActions(data);
+    });
+  }
+
+  // Actualizar el componente base con los datos de acciones adicionales
+  updateBonusActions(data: { used: number, remaining: number, total: number }) {
+    if (this.baseFightComponent) {
+      this.baseFightComponent.bonusActionsRemaining = data.remaining;
+      this.baseFightComponent.bonusActionsTotal = data.total;
+    }
+  }
+
+  // Método para usar una acción adicional
+  onBonusAction(consumableId: number): void {
+    this.fightService.usePotion(consumableId).subscribe(fight => {
+      // Emitir el resultado al websocket para sincronizar con el oponente
+      this.websocket.socket.emit('bonusAction', { consumableId });
+
+      // Marcar esta actualización como una actualización de buff solamente
+      const adaptedFight = this.adaptFight(fight, false);
+      adaptedFight.buffUpdateOnly = true;
+
+      // Actualizar inmediatamente el estado local
+      this.fight$.next(adaptedFight);
+      this.loadBonusActionsRemaining();
+    });
+  }
+
 }

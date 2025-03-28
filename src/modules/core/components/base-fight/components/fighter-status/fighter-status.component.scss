@@ -1,7 +1,7 @@
 #status-bar {
   position: relative;
   width: 80%;
-  height: 30px;
+  flex-direction: column;
   display: flex;
   gap: 5px;
 
@@ -17,13 +17,39 @@
     color: #fea520;
   }
 
+  .text-deep-blue {
+    color: #2979ff;
+  }
+
+  .text-sky-blue {
+    color: #80d8ff;
+  }
+
+  .text-turquoise {
+    color: #64ffda;
+  }
+
+  .text-green {
+    color: #69f0ae;
+  }
+
+  .text-orange {
+    color: #ffab40;
+  }
+
+  .text-gray {
+    color: #b0bec5;
+  }
+
+  .text-white {
+    color: #ffffff;
+  }
+
   .fa-flask {
     padding-right: 7px;
     padding-top: 3px;
     position: relative;
     span {
-      position: absolute;
-      bottom: 3px;
       color: white;
       font-size: 10px;
     }

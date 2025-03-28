@@ -1,4 +1,4 @@
-<div id="status-bar">
+<div id="status-bar" *ngIf="(fighterStatus.buffs | keyvalue).length > 0">
   <ng-container *ngFor="let buff of fighterStatus.buffs | keyvalue">
     <ng-container [ngSwitch]="+buff.key">
       <ng-container *ngSwitchCase="buffType.CHARGE">

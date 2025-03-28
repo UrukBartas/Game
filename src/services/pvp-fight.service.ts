@@ -17,6 +17,7 @@ export class PvPFightService extends ApiBaseService {
     this.controllerPrefix = '/pvp';
   }
 
+  // Métodos existentes
   getLastMatch(): Observable<PVPHistoricModel> {
     return this.get('/last-match');
   }
@@ -34,7 +35,6 @@ export class PvPFightService extends ApiBaseService {
   }
 
   /** AUTO */
-
   getAutoFight(): Observable<FightModel> {
     return this.get(`/auto`);
   }
@@ -60,5 +60,23 @@ export class PvPFightService extends ApiBaseService {
 
   surrender(): Observable<any> {
     return this.get(`/auto/surrender`);
+  }
+
+  // Nuevos métodos para acciones adicionales en PvP normal
+  usePotion(consumableId: number): Observable<FightModel> {
+    return this.get(`/additional-actions/use-potion/${consumableId}`);
+  }
+
+  getBonusActionsRemaining(): Observable<{ used: number, remaining: number, total: number }> {
+    return this.get(`/additional-actions/bonus-actions-remaining`);
+  }
+
+  // Nuevos métodos para acciones adicionales en Auto-PvP
+  useAutoPvPPotion(consumableId: number): Observable<FightModel> {
+    return this.get(`/auto/additional-actions/use-potion/${consumableId}`);
+  }
+
+  getAutoPvPBonusActionsRemaining(): Observable<{ used: number, remaining: number, total: number }> {
+    return this.get(`/auto/additional-actions/bonus-actions-remaining`);
   }
 }

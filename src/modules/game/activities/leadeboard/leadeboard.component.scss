@@ -3,53 +3,284 @@
 @import 'node_modules/bootstrap/scss/functions';
 @import 'node_modules/bootstrap/scss/variables';
 
-.list-leaderboard-item-left-container {
-  width: 100%;
+// Header y título
+.leaderboard-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+
+  .title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #c9a66b, #f3e5ab, #c9a66b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    color: $third;
+    opacity: 0.8;
+    font-size: 1.1rem;
+  }
 }
-.list-leaderboard-item-name-container {
-  flex-wrap: wrap;
-}
+
+// Filtros y búsqueda
 .wrapper-search {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  .form-group {
-    width: 100%;
-    @include media-breakpoint-up(sm) {
-      max-width: 70%;
-    }
-  }
-  .btn-filters {
-    @include media-breakpoint-down(sm) {
-      flex-direction: column;
-    }
-  }
-}
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 
-.expander {
-  display: flex;
-  flex-wrap: wrap;
-  ul {
+  @include media-breakpoint-down(md) {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-container {
     display: flex;
-    margin: 0;
-    padding: 0;
-    li {
-      list-style: none;
+    flex-direction: column;
+    gap: 10px;
+
+    .tabs-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+
+      @include media-breakpoint-down(sm) {
+        flex-direction: column;
+      }
+    }
+  }
+
+  .search-input {
+    position: relative;
+
+    input {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      border-radius: 8px;
+      padding: 10px 15px;
+      padding-left: 35px;
+      transition: all 0.3s ease;
+      width: 100%;
+
+      &:focus {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: $third;
+        box-shadow: 0 0 0 0.2rem rgba($third, 0.25);
+      }
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.5);
     }
   }
 }
 
+// Lista de jugadores
+.list-leaderboard {
+  display: flex;
+  max-height: 70vh;
+  gap: 12px;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto;
+  padding: 5px;
+  scrollbar-width: thin;
+  scrollbar-color: $third #1f1f1d;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #1f1f1d;
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $third;
+    border-radius: 8px;
+  }
+
+  &-item {
+    background: linear-gradient(
+      135deg,
+      rgba($primary, 0.9) 0%,
+      rgba(darken($primary, 10%), 0.9) 100%
+    );
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      pointer-events: none;
+    }
+
+    &:hover {
+      transform: translateY(-3px);
+      background: linear-gradient(
+        135deg,
+        rgba($third, 0.9) 0%,
+        rgba(darken($third, 10%), 0.9) 100%
+      );
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    &-left {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+
+      .rank {
+        position: relative;
+        min-width: 30px;
+        margin-right: 10px;
+
+        .rank-number {
+          font-size: 0.9rem;
+        }
+      }
+
+      .player-image {
+        margin-right: 10px;
+
+        img {
+          max-width: 100%;
+          height: auto;
+        }
+      }
+
+      .player-info {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+
+        .player-name {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 100%;
+          font-size: 0.95rem;
+        }
+
+        .player-level {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 5px;
+
+          .badge {
+            font-size: 0.75rem;
+            padding: 0.25em 0.5em;
+          }
+        }
+      }
+    }
+
+    &-right {
+      margin-left: 10px;
+
+      .player-actions {
+        display: flex;
+        align-items: center;
+
+        i {
+          font-size: 1.2rem;
+          margin: 0 5px;
+        }
+      }
+    }
+
+    &-name-container {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 5px;
+
+      app-name-player {
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+
+      span {
+        font-style: italic;
+      }
+    }
+
+    &-badge {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      width: fit-content;
+      font-size: 0.85rem;
+      background: rgba(0, 0, 0, 0.2);
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.3);
+        border-color: $third;
+      }
+
+      &.pointer {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .active {
+    border: 2px solid $third;
+    position: relative;
+  }
+}
+
+// Indicador de estado del jugador
 .connected-dot {
   position: absolute;
   top: -3px;
   right: -5px;
-  background: $gray-500;
-  width: 20px;
-  height: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 
   .dot {
     width: 14px;
@@ -79,6 +310,7 @@
   .online {
     background: radial-gradient(circle at 30% 30%, #00ff00, #006400 70%);
     box-shadow: 0 0 8px rgba(0, 255, 0, 0.7);
+    animation: pulse-green 2s infinite;
   }
 
   .offline {
@@ -89,110 +321,22 @@
   .fighting {
     background: radial-gradient(circle at 30% 30%, #ffae00, #c28501 70%);
     box-shadow: 0 0 8px rgba(255, 196, 0, 0.7);
+    animation: pulse-orange 2s infinite;
   }
 }
 
-.list-leaderboard {
-  display: flex;
-  max-height: 70vh;
-  gap: 10px;
-  flex-direction: column;
-  height: 100%;
-  overflow: auto;
-
-  &-item {
-    background-color: $primary;
-    padding: 10px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-
-    &:hover {
-      background-color: $third;
-      transition: 0.5s all;
-    }
-
-    &-left {
-      display: flex;
-      gap: 20px;
-    }
-    
-    &-right {
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      gap: 2vmax;
-
-      @include media-breakpoint-down(sm) {
-        flex-direction: column;
-      }
-
-      .view-player {
-        font-size: 24px;
-      }
-
-      .auto-duel-btn {
-        background-color: rgb(196, 169, 18) !important;
-        box-shadow: 0px 1px 2px 2px rgb(125, 102, 0) !important;
-      }
-
-      .duel-btn {
-        border-radius: 4px;
-        background-color: rgb(133 15 15);
-        box-shadow: 0px 1px 2px 2px rgb(66 6 6);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-      }
-    }
-
-    a {
-      color: $secondary;
-    }
-
-    &-left-image-ranking {
-      width: 64px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: $primary;
-      border-radius: 50%;
-    }
-
-    &-left-container {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-    }
-    
-    &-name-container {
-      display: flex;
-      gap: 5px;
-    }
-
-    &-badge {
-      border: 1px solid $secondary;
-      padding: 0px 10px;
-      padding-top: 3px;
-      border-radius: 10px;
-      width: fit-content;
-      font-size: 14px;
-    }
-  }
-  .active {
-    border: 1px solid $third;
-  }
-}
-
+// Tooltip de estadísticas
 #player-tooltip-wrapper {
-  background-color: $black;
+  background-color: rgba(0, 0, 0, 0.9);
   padding: 15px;
-  border-radius: 3px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
   ul {
-    min-width: 180px;
+    min-width: 200px;
     padding-left: 0;
+
     li {
       white-space: nowrap;
       overflow: hidden;
@@ -200,6 +344,12 @@
       list-style-type: none;
       display: block;
       text-align: center;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+      &:last-child {
+        border-bottom: none;
+      }
     }
   }
 
@@ -207,22 +357,23 @@
     display: flex;
     flex-direction: row;
     gap: 5px;
+    align-items: center;
+    justify-content: center;
   }
 }
 
+// Ranking
 .rank {
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
+
   .list-leaderboard-item-left-image-ranking {
     border-radius: 10px;
+    max-height: 60px;
   }
-  .list-leaderboard-item-left-number-ranking {
-    background: $primary;
-    border-radius: 14%;
-    padding: 3px;
-  }
+
   .floating-rank {
     img,
     div {
@@ -231,9 +382,1141 @@
       position: absolute;
       bottom: -5px;
       right: -15px;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1) rotate(5deg);
+      }
     }
+
     div {
       right: 0;
+    }
+  }
+}
+
+// Animaciones
+@keyframes pulse-green {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 255, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 0, 0);
+  }
+}
+
+@keyframes pulse-orange {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 196, 0, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 196, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 196, 0, 0);
+  }
+}
+
+// Responsive
+@include media-breakpoint-down(md) {
+  .leaderboard-header {
+    .title {
+      font-size: 1.8rem;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+    }
+  }
+
+  .list-leaderboard {
+    max-height: 60vh;
+
+    &-item {
+      padding: 10px;
+
+      &-left {
+        gap: 10px;
+
+        &-image-ranking {
+          width: 50px;
+          height: 50px;
+        }
+      }
+
+      &-badge {
+        padding: 2px 8px;
+        font-size: 0.75rem;
+      }
+    }
+  }
+}
+
+// Mejoras para la experiencia de usuario
+.tags {
+  margin-top: 5px;
+}
+
+.expander {
+  display: flex;
+  flex-wrap: wrap;
+  ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    li {
+      list-style: none;
+    }
+  }
+}
+
+// Mejora del indicador "YOU"
+.you-indicator {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(135deg, #f3e5ab, #c9a66b);
+  color: #000;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  z-index: 5;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  @include media-breakpoint-down(md) {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    right: 5px;
+  }
+}
+
+// Optimización para móviles
+@include media-breakpoint-down(sm) {
+  .list-leaderboard-item {
+    &-left {
+      gap: 8px;
+
+      .player-image img {
+        width: 35px;
+        height: 35px;
+      }
+
+      .player-info {
+        .player-name {
+          font-size: 0.85rem;
+        }
+
+        .player-level .badge {
+          font-size: 0.7rem;
+        }
+      }
+    }
+
+    &-right .player-actions i {
+      font-size: 1rem;
+    }
+  }
+
+  .duel-btn,
+  .auto-duel-btn {
+    width: 36px;
+    height: 36px;
+
+    .fa-sword {
+      font-size: 1rem;
+    }
+  }
+
+  .view-player {
+    font-size: 1.2rem;
+  }
+}
+
+// Estilo para el botón de auto-battle siempre visible
+.auto-battle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 196, 0, 0.2);
+  border: 1px solid rgba(255, 196, 0, 0.5);
+  color: #ffc400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 5px;
+
+  &:hover {
+    background: rgba(255, 196, 0, 0.3);
+    transform: scale(1.1);
+  }
+
+  i {
+    font-size: 1.2rem;
+  }
+
+  @include media-breakpoint-down(sm) {
+    width: 36px;
+    height: 36px;
+
+    i {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Mejora de los tabs
+.tab-container {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 3px;
+  display: inline-flex;
+
+  .tab-item {
+    border: none;
+    border-radius: 6px;
+    color: white;
+    padding: 8px 15px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .tab-icon {
+      font-size: 1.1rem;
+    }
+
+    &.active {
+      background: $third;
+      color: $primary;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    &:not(.active):hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+// Mejora del paginador
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+
+  .page-info {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .page-button {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(.disabled) {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    i {
+      font-size: 0.9rem;
+      color: white;
+    }
+  }
+}
+
+// Reemplaza los estilos de rewards-info con estos
+
+.rewards-info {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-left: 3px solid $third;
+
+  .rewards-header {
+    margin-bottom: 10px;
+  }
+
+  .rewards-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $third;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    i {
+      font-size: 1.1rem;
+    }
+  }
+
+  .rewards-description {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .rewards-positions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    .reward-position {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
+      padding: 8px;
+      flex: 1;
+      min-width: 150px;
+
+      .position-label {
+        font-weight: bold;
+        font-size: 0.9rem;
+        padding: 4px 8px;
+        border-radius: 4px;
+        text-align: center;
+        min-width: 40px;
+
+        &:nth-child(1) {
+          background: linear-gradient(135deg, #ffd700, #ffaa00);
+          color: #5a3800;
+        }
+      }
+
+      &:nth-child(1) .position-label {
+        background: linear-gradient(135deg, #ffd700, #ffaa00);
+        color: #5a3800;
+      }
+
+      &:nth-child(2) .position-label {
+        background: linear-gradient(135deg, #e0e0e0, #b0b0b0);
+        color: #404040;
+      }
+
+      &:nth-child(3) .position-label {
+        background: linear-gradient(135deg, #cd7f32, #a05a2c);
+        color: #3a2010;
+      }
+
+      .reward-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+
+        app-remote-item-box {
+          width: 55px; /* Aumentado de 40px a 55px */
+          height: 55px; /* Aumentado de 40px a 55px */
+          transform: scale(
+            1.1
+          ); /* Efecto de escala para hacerlo más prominente */
+          transition: transform 0.2s ease;
+
+          &:hover {
+            transform: scale(1.2); /* Efecto hover para destacar aún más */
+            z-index: 5;
+          }
+
+          /* Añadir un sutil efecto de brillo */
+          &::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: radial-gradient(
+              circle,
+              rgba(255, 255, 255, 0.2) 0%,
+              rgba(255, 255, 255, 0) 70%
+            );
+            z-index: -1;
+            opacity: 0.7;
+            pointer-events: none;
+          }
+        }
+
+        .consumables-badge {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          padding: 3px 8px;
+          font-size: 0.75rem;
+          color: rgba(255, 255, 255, 0.8);
+          white-space: nowrap;
+        }
+
+        /* Estilo mejorado para el componente de Uruks */
+        app-uruks-displayer {
+          transform: scale(1.1);
+          transition: transform 0.2s ease;
+
+          &:hover {
+            transform: scale(1.15);
+          }
+        }
+      }
+    }
+  }
+
+  @include media-breakpoint-down(md) {
+    .rewards-positions {
+      flex-direction: column;
+
+      .reward-position {
+        min-width: auto;
+      }
+    }
+  }
+}
+
+// Estilos para el podio y la cuenta atrás
+
+// Countdown Timer
+.countdown-container {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  border-radius: 8px;
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  border-left: 3px solid $third;
+
+  .countdown-icon {
+    font-size: 1.8rem;
+    color: $third;
+    margin-right: 15px;
+
+    i {
+      animation: pulse 2s infinite;
+    }
+  }
+
+  .countdown-info {
+    flex: 1;
+
+    .countdown-title {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .countdown-timer {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: $third;
+    }
+  }
+
+  .countdown-note {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    text-align: right;
+    max-width: 200px;
+
+    @include media-breakpoint-down(md) {
+      display: none;
+    }
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}
+
+// Podium Section
+.podium-section {
+  margin-bottom: 25px;
+
+  .podium-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 20px 0;
+    position: relative;
+
+    @include media-breakpoint-down(md) {
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .podium-player {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px;
+      border-radius: 10px;
+      position: relative;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+      }
+
+      .player-avatar {
+        position: relative;
+        margin-bottom: 10px;
+
+        img {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 3px solid;
+        }
+
+        .player-rank {
+          position: absolute;
+          bottom: -5px;
+          right: -5px;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          font-size: 1rem;
+        }
+      }
+
+      .player-info {
+        text-align: center;
+        gap: 5px;
+        margin-bottom: 10px;
+
+        .player-name {
+          font-weight: 600;
+          font-size: 1rem;
+          margin-bottom: 5px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 120px;
+        }
+
+        .player-score {
+          font-size: 0.9rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+          color: $third;
+        }
+      }
+
+      .player-reward {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+
+        .consumables-badge {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          padding: 3px 8px;
+          font-size: 0.75rem;
+          color: rgba(255, 255, 255, 0.8);
+        }
+      }
+
+      // First Place
+      &.first-place {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 215, 0, 0.2) 0%,
+          rgba(255, 215, 0, 0.05) 100%
+        );
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        z-index: 3;
+        order: 2;
+
+        @include media-breakpoint-down(md) {
+          order: 1;
+        }
+
+        .player-avatar img {
+          width: 100px;
+          height: 100px;
+          border-color: #ffd700;
+        }
+
+        .player-rank {
+          background: linear-gradient(135deg, #ffd700, #ffaa00);
+          color: #5a3800;
+        }
+
+        .player-name {
+          color: #ffd700;
+        }
+
+        .crown-icon {
+          position: absolute;
+          top: -15px;
+          color: #ffd700;
+          font-size: 1.8rem;
+          filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+          animation: float 3s ease-in-out infinite;
+        }
+      }
+
+      // Second Place
+      &.second-place {
+        background: linear-gradient(
+          135deg,
+          rgba(192, 192, 192, 0.2) 0%,
+          rgba(192, 192, 192, 0.05) 100%
+        );
+        border: 1px solid rgba(192, 192, 192, 0.3);
+        z-index: 2;
+        order: 1;
+
+        @include media-breakpoint-down(md) {
+          order: 2;
+        }
+
+        .player-avatar img {
+          border-color: #c0c0c0;
+        }
+
+        .player-rank {
+          background: linear-gradient(135deg, #e0e0e0, #b0b0b0);
+          color: #404040;
+        }
+
+        .player-name {
+          color: #c0c0c0;
+        }
+      }
+
+      // Third Place
+      &.third-place {
+        background: linear-gradient(
+          135deg,
+          rgba(205, 127, 50, 0.2) 0%,
+          rgba(205, 127, 50, 0.05) 100%
+        );
+        border: 1px solid rgba(205, 127, 50, 0.3);
+        z-index: 1;
+        order: 3;
+
+        .player-avatar img {
+          border-color: #cd7f32;
+        }
+
+        .player-rank {
+          background: linear-gradient(135deg, #cd7f32, #a05a2c);
+          color: #3a2010;
+        }
+
+        .player-name {
+          color: #cd7f32;
+        }
+      }
+    }
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+}
+
+// Mejora del indicador YOU
+.you-indicator {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(135deg, #f3e5ab, #c9a66b);
+  color: #000;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  box-shadow: 0 0 10px rgba(243, 229, 171, 0.5);
+  z-index: 5;
+}
+
+// Añadir estos estilos para el tooltip de achievements
+.achievement-tooltip {
+  min-width: 320px;
+
+  .achievement-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    .achievement-icon {
+      font-size: 2rem;
+      color: $third;
+    }
+  }
+
+  .current-tier {
+    display: flex;
+    gap: 15px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border-left: 4px solid;
+    margin-bottom: 15px;
+
+    .tier-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      i {
+        color: white;
+        font-size: 1.2rem;
+      }
+    }
+
+    .tier-info {
+      flex: 1;
+
+      h6 {
+        margin-bottom: 2px;
+        font-weight: bold;
+      }
+
+      .tier-description {
+        font-size: 0.85rem;
+        opacity: 0.8;
+        margin-bottom: 8px;
+      }
+
+      .progress-container {
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        overflow: hidden;
+        margin-bottom: 5px;
+
+        .progress-bar {
+          height: 100%;
+          border-radius: 3px;
+        }
+      }
+
+      .progress-text {
+        font-size: 0.8rem;
+        text-align: right;
+        opacity: 0.7;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .tier-progression {
+    h6 {
+      color: $third;
+    }
+
+    .tier-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+
+      .tier-item {
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid;
+        text-align: center;
+        opacity: 0.6;
+        transition: all 0.2s ease;
+
+        &.achieved {
+          opacity: 1;
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tier-badge {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          margin: 0 auto 5px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          i {
+            color: white;
+            font-size: 0.8rem;
+          }
+        }
+
+        .tier-name {
+          font-weight: bold;
+          font-size: 0.8rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .tier-requirement {
+          font-size: 0.7rem;
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+}
+
+// Añadir estos estilos para los badges pequeños
+.tier-badge-small {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5px;
+
+  i {
+    color: white;
+    font-size: 0.7rem;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  }
+}
+
+// Estilos para el contenedor de nombre y título
+.player-name-title {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: calc(100% - 60px);
+  overflow: hidden;
+
+  app-name-player {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+  }
+
+  .player-title {
+    font-size: 0.75rem;
+    font-style: italic;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-transform: uppercase;
+    margin-top: -2px;
+    color: #c9a66b; // Color dorado consistente
+
+    // Efecto de brillo sutil
+    text-shadow: 0 0 5px rgba(201, 166, 107, 0.7);
+    animation: titlePulse 2s infinite alternate;
+
+    @media (max-width: 576px) {
+      font-size: 0.7rem;
+      max-width: 120px;
+    }
+  }
+}
+
+// Animación para el título
+@keyframes titlePulse {
+  from {
+    text-shadow: 0 0 2px rgba(201, 166, 107, 0.5);
+  }
+  to {
+    text-shadow: 0 0 8px rgba(201, 166, 107, 0.8), 0 0 12px rgba(255, 255, 255, 0.3);
+  }
+}
+
+// Ajustar el contenedor de nombre para alinear correctamente el badge
+.list-leaderboard-item-name-container {
+  display: flex;
+  align-items: center; // Volvemos a center para mejor alineación
+
+  // Resto del código existente...
+}
+
+// Asegurarnos que el icono de ojo esté bien alineado
+.view-player {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Estilos para el contenedor principal de información del jugador
+.list-leaderboard-item-left-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+  padding-left: 10px;
+}
+
+// Primera línea: Título del jugador
+.player-title-row {
+  width: 100%;
+  display: flex;
+
+  .player-title {
+    padding-right: 0.5rem;
+    display: flex;
+    font-size: 0.75rem;
+    font-style: italic;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-transform: uppercase;
+    color: #c9a66b; // Color dorado consistente
+    text-shadow: 0 0 5px rgba(201, 166, 107, 0.7);
+    animation: titlePulse 2s infinite alternate;
+    display: inline-block;
+    max-width: 100%;
+
+    @media (max-width: 576px) {
+      font-size: 0.7rem;
+    }
+  }
+}
+
+// Estilo mejorado para el botón de perfil
+.profile-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(201, 166, 107, 0.2);
+  border: 1px solid rgba(201, 166, 107, 0.5);
+  border-radius: 4px;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #c9a66b;
+  font-size: 0.8rem;
+  margin-left: 8px;
+  flex-shrink: 0;
+
+  i {
+    font-size: 0.9rem;
+    margin-right: 4px;
+  }
+
+  span {
+    font-weight: 500;
+  }
+
+  &:hover {
+    background: rgba(201, 166, 107, 0.3);
+    box-shadow: 0 0 8px rgba(201, 166, 107, 0.5);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  @media (max-width: 576px) {
+    padding: 3px 6px;
+  }
+}
+
+// Segunda línea: Nombre, tier y botón de perfil
+.player-info-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  app-name-player {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tier-badge-small {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    i {
+      color: white;
+      font-size: 0.7rem;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+  }
+}
+
+// Tercera línea: Estadísticas relevantes
+.player-stats-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+
+  .stat-badge {
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+
+    .stat-icon {
+      margin-right: 3px;
+      font-size: 0.7rem;
+    }
+
+    @media (max-width: 576px) {
+      font-size: 0.7rem;
+      padding: 1px 4px;
+    }
+  }
+}
+
+// Animación para el título
+@keyframes titlePulse {
+  from {
+    text-shadow: 0 0 2px rgba(201, 166, 107, 0.5);
+  }
+  to {
+    text-shadow: 0 0 8px rgba(201, 166, 107, 0.8), 0 0 12px rgba(255, 255, 255, 0.3);
+  }
+}
+
+// Ajustes para el contenedor principal
+.list-leaderboard-item {
+  padding: 10px 15px;
+
+  &-left {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+// Estilos para el contenedor de recompensas
+.rewards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+
+  .reward-item {
+    position: relative;
+
+    &.consumable-reward {
+      // Hacemos los consumibles un poco más pequeños
+      transform: scale(0.85);
+      margin: -2px;
+
+      // Añadimos un borde sutil para distinguirlos
+      &::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        border-radius: 50%;
+        border: 1px dashed rgba(255, 255, 255, 0.3);
+        pointer-events: none;
+      }
+    }
+  }
+}
+
+// Estilo para la descripción del leaderboard
+.leaderboard-description {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  border-left: 3px solid #c9a66b;
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+
+    i {
+      color: #c9a66b;
+    }
+  }
+
+  @media (max-width: 576px) {
+    padding: 6px 10px;
+
+    p {
+      font-size: 0.8rem;
     }
   }
 }

@@ -1,7 +1,8 @@
-import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Subject, take } from 'rxjs';
+import { BaseFightComponent } from 'src/modules/core/components/base-fight/base-fight.component';
 import {
   BaseFightModel,
   FightTypes,
@@ -30,6 +31,12 @@ export class AutoPvpFightComponent {
 
   fight$ = new Subject<BaseFightModel>();
   triggerDefeat$ = new Subject<void>();
+  fightId: string; // ID único para este combate
+  @ViewChild('baseFight') baseFightComponent: BaseFightComponent;
+
+  constructor() {
+    this.fightId = `autopvp_${Date.now()}`;
+  }
 
   ngOnInit() {
     this.pvpFightService
@@ -40,6 +47,7 @@ export class AutoPvpFightComponent {
           this.playersData = fight.playersData;
           this.fight$.next(this.adaptFight(fight, true));
           this.store.dispatch(new StartFight(this.fightType));
+          this.loadBonusActionsRemaining();
         },
         error: () => {
           this.router.navigateByUrl('/leaderboard');
@@ -63,6 +71,7 @@ export class AutoPvpFightComponent {
 
     return {
       load,
+      fightId: fight.fightId,
       player: {
         name: player.name,
         image: player.image,
@@ -105,5 +114,33 @@ export class AutoPvpFightComponent {
 
   getBackground(): string {
     return '/assets/backgrounds/village.webp';
+  }
+
+  // Cargar acciones adicionales disponibles
+  loadBonusActionsRemaining() {
+    this.pvpFightService.getAutoPvPBonusActionsRemaining().subscribe(data => {
+      this.updateBonusActions(data);
+    });
+  }
+
+  // Actualizar el componente base con los datos de acciones adicionales
+  updateBonusActions(data: { used: number, remaining: number, total: number }) {
+    if (this.baseFightComponent) {
+      this.baseFightComponent.bonusActionsRemaining = data.remaining;
+      this.baseFightComponent.bonusActionsTotal = data.total;
+    }
+  }
+
+  // Método para usar una acción adicional
+  onBonusAction(consumableId: number): void {
+    this.pvpFightService.useAutoPvPPotion(consumableId).subscribe(fight => {
+      // Marcar esta actualización como una actualización de buff solamente
+      const adaptedFight = this.adaptFight(fight, false);
+      adaptedFight.buffUpdateOnly = true;
+
+      // Actualizar inmediatamente el estado local
+      this.fight$.next(adaptedFight);
+      this.loadBonusActionsRemaining();
+    });
   }
 }

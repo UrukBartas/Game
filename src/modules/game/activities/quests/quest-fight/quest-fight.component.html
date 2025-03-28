@@ -1,4 +1,5 @@
 <app-base-fight
+  #baseFight
   [fightType]="fightType"
   [backgroundImage]="getBackground()"
   [fight$]="fight$"
@@ -7,4 +8,6 @@
   (onSurrender)="onSurrender()"
   (onDefeat)="onDefeat($event)"
   (onVictory)="onVictory($event)"
-></app-base-fight>
+  (onBonusAction)="onBonusAction($event)"
+>
+</app-base-fight>

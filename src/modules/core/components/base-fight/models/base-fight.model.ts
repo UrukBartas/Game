@@ -14,10 +14,12 @@ export enum FightTypes {
 
 export interface BaseFightModel {
   load: boolean;
+  fightId: string;
   player: BaseFighterModel;
   enemy: BaseFighterModel;
   turns: FightTurnModel[];
-  result: FightResultModel;
+  result?: FightResultModel;
+  buffUpdateOnly?: boolean;
 }
 
 export interface BaseFighterModel {

@@ -1,20 +1,30 @@
 <div id="title-generator-modal-container" *ngIf="player$ | async as player">
   <div class="content">
-    <div class="d-flex align-items-center justify-content-center flex-column">
-      <span urSubtitle class="text-third">{{
-        player.title ?? 'The untitled'
-      }}</span>
+    <div class="title-header">
+      <h2 class="title-main">Title Generator</h2>
+      <div class="title-subtitle">Customize your character's title</div>
     </div>
+
+    <div class="d-flex align-items-center justify-content-center flex-column mb-4">
+      <span urSubtitle class="text-third" style="font-size: 1.5rem;">
+        {{player.title ?? 'The untitled'}}
+      </span>
+      <div class="mt-2 text-light opacity-75">
+        <small>Your current title</small>
+      </div>
+    </div>
+
     <div class="picker py-2">
       <div class="row gap-3 gap-md-0">
         <div class="col-12 col-md-6">
-          <div class="d-flex justify-content-center">
-            <span class="text-light">Preffix</span>
+          <div class="d-flex justify-content-center mb-3">
+            <span class="text-light">Prefix</span>
           </div>
-          <div class="container-list flex-column d-flex mt-2">
+          <div class="container-list flex-column d-flex">
             @for (title of onlyPrefix(player.titles ?? []); track title.id) {
               <div
                 class="no-title-box text-center justify-content-center pointer p-3"
+                [ngClass]="{'active-title': player.activePrefixTitle == title.id}"
               >
                 <app-item-box
                   [text]="title.name.split('Prefix:')[1]"
@@ -33,24 +43,25 @@
             } @empty {
               <div class="no-title-box">
                 <img
-                  class="uruks-icon pb-1"
+                  class="uruks-icon"
                   src="{{ prefix + '/assets/misc/titles/title_preffix.png' }}"
                 />
                 <span class="text-white">
-                  You don't have any preffix unlocked yet.
+                  You don't have any prefix unlocked yet.
                 </span>
               </div>
             }
           </div>
         </div>
         <div class="col-12 col-md-6">
-          <div class="d-flex justify-content-center">
+          <div class="d-flex justify-content-center mb-3">
             <span class="text-light">Suffix</span>
           </div>
-          <div class="container-list flex-column gap-2 d-flex mt-2">
+          <div class="container-list flex-column d-flex">
             @for (title of onlySuffix(player.titles ?? []); track title.id) {
               <div
                 class="no-title-box text-center justify-content-center pointer p-3"
+                [ngClass]="{'active-title': player.activeSuffixTitle == title.id}"
               >
                 <app-item-box
                   [text]="title.name.split('Suffix:')[1]"
@@ -69,7 +80,7 @@
             } @empty {
               <div class="no-title-box">
                 <img
-                  class="uruks-icon pb-1"
+                  class="uruks-icon"
                   src="{{ prefix + '/assets/misc/titles/title_suffix.png' }}"
                 />
                 <span class="text-white">

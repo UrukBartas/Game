@@ -44,8 +44,7 @@ import { FightAnimationsService } from './services/fight-animations.service';
 })
 export class BaseFightComponent
   extends TemplatePage
-  implements OnInit, OnDestroy
-{
+  implements OnInit, OnDestroy {
   // Constants
   public prefix = ViewportService.getPreffixImg();
   public fightTypes = FightTypes;
@@ -60,6 +59,8 @@ export class BaseFightComponent
   private lastClickTime: number = 0;
   private destroy$ = new Subject<void>();
   private fightTurns: FightTurnModel[] = [];
+  public bonusActionsRemaining = 0;
+  public bonusActionsTotal = 0;
 
   @Input() fightType: FightTypes;
   @Input() backgroundImage: string;
@@ -74,7 +75,9 @@ export class BaseFightComponent
   @Output() onSurrender = new EventEmitter<void>();
   @Output() onDefeat = new EventEmitter<FightResultModel>();
   @Output() onVictory = new EventEmitter<FightResultModel>();
+  @Output() onBonusAction = new EventEmitter<number>();
 
+  public fightId = signal<string>(null);
   constructor(
     private store: Store,
     private viewportService: ViewportService,
@@ -90,13 +93,41 @@ export class BaseFightComponent
     this.setupFightResultListeners();
   }
 
+  openBonusActionModal() {
+    const config: ModalOptions = {
+      initialState: {
+        title: 'Quick Action',
+        description: 'Select a quick action to use without consuming your turn:',
+        isBonusAction: true,
+        accept: (itemId: number) => {
+          if (itemId !== null) {
+            this.useBonusAction(itemId);
+          }
+          modalRef.hide();
+        },
+      },
+    };
+    const modalRef = this.modalService.show(
+      ConsumableModalComponent,
+      config
+    );
+  }
+
+  // Método para usar una acción adicional
+  useBonusAction(consumableId: number) {
+    // Limpiar animaciones antes de aplicar nuevas
+    this.fightAnimationsService.clearAllAnimations();
+    this.onBonusAction.emit(consumableId);
+  }
+
   private setupFightListener() {
     this.fight$
       .pipe(takeUntil(this.destroy$))
       .subscribe((fight: BaseFightModel) => {
         if (fight) {
-          const { player, enemy, load, turns } = fight;
-
+          const { player, enemy, load, turns, fightId } = fight;
+          console.warn(fightId)
+          this.fightId.set(fightId);
           this.player.set(player);
           this.enemy.set(enemy);
           this.fightTurns = turns;
@@ -134,7 +165,15 @@ export class BaseFightComponent
   onActionSubmited(fight: BaseFightModel) {
     const { player, enemy } = fight;
 
-    this.fightAnimationsService.controlTurnActions(fight);
+    // Si es una actualización de buff solamente, no reproducir animaciones completas
+    if (fight.buffUpdateOnly) {
+      // Solo actualizar los estados sin animaciones de ataque/defensa
+      this.player.set(player);
+      this.enemy.set(enemy);
+    } else {
+      // Animaciones completas para acciones normales
+      this.fightAnimationsService.controlTurnActions(fight);
+    }
 
     const ripPlayer = player.currentStats.health < 1;
     const ripEnemy = enemy.currentStats.health < 1;

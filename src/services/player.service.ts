@@ -8,15 +8,17 @@ import {
   MiscellanyItemIdentifier,
 } from 'src/modules/core/models/misc.model';
 import {
+  EmojiIdentifier,
   ItemSet,
   PlayerClass,
   PlayerConfiguration,
   PlayerModel,
 } from 'src/modules/core/models/player.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
-import { RefreshPlayer } from 'src/store/main.store';
+import { LeaderboardType } from 'src/modules/game/activities/leadeboard/enum/leaderboard-type.enum';
+import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ItemService } from './item.service';
-
+type LeaderboardPlayer = PlayerModel & { winCount: number };
 @Injectable({
   providedIn: 'root',
 })
@@ -27,6 +29,18 @@ export class PlayerService extends ApiBaseService {
   ) {
     super(http);
     this.controllerPrefix = '/player';
+  }
+
+  // Método para obtener los emojis desbloqueados del jugador
+  getUnlockedEmojis(): EmojiIdentifier[] {
+    const player = this.store.selectSnapshot(MainState.getPlayer);
+    return player.unlockedEmojis || [
+      EmojiIdentifier.EMOJI_THUMBS_UP,
+      EmojiIdentifier.EMOJI_THUMBS_DOWN,
+      EmojiIdentifier.EMOJI_SMILE,
+      EmojiIdentifier.EMOJI_SAD,
+      EmojiIdentifier.EMOJI_ANGRY
+    ];
   }
 
   public getExtraAttemptPrice(): Observable<number> {
@@ -158,24 +172,27 @@ export class PlayerService extends ApiBaseService {
     return this.get('/get-nfts-items', true);
   }
 
+
+
   public getLeaderboard(
     sortBy: string,
     sortType: 'asc' | 'desc',
     page: number,
     chunkSize: number,
     nameOrWallet: string,
-    from: Date,
-    to: Date
+    periodType: 'weekly' | 'monthly',
+    leaderboardType: LeaderboardType
   ) {
-    return this.post('/get-leaderboard/', {
+    const body = {
       sortBy,
       sortType,
       page,
       chunkSize,
       nameOrWallet,
-      from: from.toISOString(),
-      to: to.toISOString(),
-    }) as Observable<PlayerModel[]>;
+      typeFilter: periodType,
+      leaderboardType
+    }
+    return this.post('/get-leaderboard/', body) as Observable<LeaderboardPlayer[]>;
   }
 
   public getPlayerByAddress(address: string) {

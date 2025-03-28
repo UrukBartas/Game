@@ -17,6 +17,7 @@ export class FightService extends ApiBaseService {
     this.controllerPrefix = '/fight';
   }
 
+  // Métodos existentes
   actions(
     action: TurnActionEnum,
     consumableId: number
@@ -34,5 +35,14 @@ export class FightService extends ApiBaseService {
 
   consumables(): Observable<any> {
     return this.get(`/consumables`);
+  }
+
+  // Nuevos métodos para acciones adicionales
+  usePotion(consumableId: number): Observable<FightModel> {
+    return this.get(`/additional-actions/use-potion/${consumableId}`);
+  }
+
+  getBonusActionsRemaining(): Observable<{ used: number, remaining: number, total: number }> {
+    return this.get(`/additional-actions/bonus-actions-remaining`);
   }
 }

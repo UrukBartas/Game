@@ -5,6 +5,41 @@ import { SessionModel } from './session.model';
 
 export type BoostType = 'EXP' | 'URUKS' | 'TRAVEL' | 'BLACKSMITH';
 
+export interface FightEmoji {
+  id: string;
+  fightId: string;
+  emojiId: string;
+  senderId: string;
+  senderName: string;
+  timestamp: Date;
+}
+
+export enum EmojiIdentifier {
+  // Emojis básicos (gratuitos)
+  EMOJI_THUMBS_UP = 'EMOJI_THUMBS_UP',
+  EMOJI_THUMBS_DOWN = 'EMOJI_THUMBS_DOWN',
+  EMOJI_SMILE = 'EMOJI_SMILE',
+  EMOJI_SAD = 'EMOJI_SAD',
+  EMOJI_ANGRY = 'EMOJI_ANGRY',
+
+  // Emojis premium (de pago)
+  EMOJI_FIRE = 'EMOJI_FIRE',
+  EMOJI_HEART = 'EMOJI_HEART',
+  EMOJI_LAUGH = 'EMOJI_LAUGH',
+  EMOJI_CRY = 'EMOJI_CRY',
+  EMOJI_SHOCKED = 'EMOJI_SHOCKED',
+  EMOJI_COOL = 'EMOJI_COOL',
+  EMOJI_THINKING = 'EMOJI_THINKING',
+  EMOJI_CLAP = 'EMOJI_CLAP',
+  EMOJI_PRAY = 'EMOJI_PRAY',
+  EMOJI_MUSCLE = 'EMOJI_MUSCLE',
+  EMOJI_PARTY = 'EMOJI_PARTY',
+  EMOJI_CROWN = 'EMOJI_CROWN',
+  EMOJI_GHOST = 'EMOJI_GHOST',
+  EMOJI_SKULL = 'EMOJI_SKULL',
+  EMOJI_POOP = 'EMOJI_POOP'
+}
+
 export interface PlayerModel {
   id: string;
   email: string;
@@ -45,6 +80,7 @@ export interface PlayerModel {
   mmr: number;
   finishedQuestsCount: number;
   configuration: PlayerConfiguration;
+  unlockedEmojis: EmojiIdentifier[];
 }
 
 export interface PlayerConfiguration {

@@ -1,10 +1,135 @@
 import { ViewportService } from 'src/services/viewport.service';
 import { AnimateSettingsModel } from './core/models/animate-callback.model';
+import { ConsumableIdentifier } from './core/models/consumable.model';
 import { Item, Rarity } from './core/models/items.model';
-import { PlayerModel } from './core/models/player.model';
+import { MiscellanyItemIdentifier } from './core/models/misc.model';
+import { EmojiIdentifier, PlayerModel } from './core/models/player.model';
 import { ItemTypeSC } from './game/activities/export-import-nft/enums/ItemTypesSC';
 import { pvpTiers } from './game/activities/leadeboard/const/pvp-tiers';
 import { questTiers } from './game/activities/leadeboard/const/quest-tiers';
+import { LeaderboardType } from './game/activities/leadeboard/enum/leaderboard-type.enum';
+
+
+export const rewardsByLeaderboardType = {
+  [LeaderboardType.PVE]: {
+    weekly: [
+      { lootbox: MiscellanyItemIdentifier.LootboxLegendary, gold: 0 },
+      { lootbox: MiscellanyItemIdentifier.LootboxEpic, gold: 0 },
+      { lootbox: MiscellanyItemIdentifier.LootboxEpic, gold: 0 },
+    ],
+    monthly: [
+      { lootbox: MiscellanyItemIdentifier.LootboxMythic, gold: 100 },
+      { lootbox: MiscellanyItemIdentifier.LootboxLegendary, gold: 50 },
+      { lootbox: MiscellanyItemIdentifier.LootboxLegendary, gold: 50 },
+    ],
+  },
+  [LeaderboardType.PVP]: {
+    weekly: [
+      { miscs: [MiscellanyItemIdentifier.LootboxLegendary], gold: 0 },
+      { miscs: [MiscellanyItemIdentifier.LootboxEpic], gold: 0 },
+      { miscs: [MiscellanyItemIdentifier.LootboxEpic], gold: 0 },
+    ],
+    monthly: [
+      { miscs: [MiscellanyItemIdentifier.LootboxMythic], gold: 100 },
+      { miscs: [MiscellanyItemIdentifier.LootboxLegendary], gold: 50 },
+      { miscs: [MiscellanyItemIdentifier.LootboxLegendary], gold: 50 },
+    ],
+  },
+  [LeaderboardType.TOP_PVP]: {
+    weekly: [
+      {
+        miscs: [MiscellanyItemIdentifier.LootboxLegendary],
+        consumables: [
+          ConsumableIdentifier.Bandages,
+          ConsumableIdentifier.Bandages,
+          ConsumableIdentifier.Bandages,
+        ],
+      },
+      {
+        miscs: [MiscellanyItemIdentifier.LootboxEpic],
+        consumables: [
+          ConsumableIdentifier.BigHealthPotion,
+          ConsumableIdentifier.BigHealthPotion,
+          ConsumableIdentifier.BigHealthPotion,
+        ],
+      },
+      {
+        miscs: [MiscellanyItemIdentifier.LootboxUncommon],
+        consumables: [
+          ConsumableIdentifier.SmallHealthPotion,
+          ConsumableIdentifier.SmallHealthPotion,
+          ConsumableIdentifier.SmallHealthPotion,
+        ],
+      },
+    ],
+    monthly: [
+      {
+        miscs: [
+          MiscellanyItemIdentifier.LootboxLegendary,
+          MiscellanyItemIdentifier.LootboxLegendary,
+        ],
+        consumables: [
+          ConsumableIdentifier.Bandages,
+          ConsumableIdentifier.Bandages,
+          ConsumableIdentifier.Bandages,
+          ConsumableIdentifier.BigDamagePotion,
+          ConsumableIdentifier.BigDamagePotion,
+          ConsumableIdentifier.BigDamagePotion,
+        ],
+      },
+      {
+        miscs: [MiscellanyItemIdentifier.LootboxEpic, MiscellanyItemIdentifier.LootboxEpic],
+        consumables: [
+          ConsumableIdentifier.BigHealthPotion,
+          ConsumableIdentifier.BigHealthPotion,
+          ConsumableIdentifier.BigHealthPotion,
+          ConsumableIdentifier.BigDamagePotion,
+          ConsumableIdentifier.BigDamagePotion,
+        ],
+      },
+      {
+        miscs: [MiscellanyItemIdentifier.LootboxUncommon, MiscellanyItemIdentifier.LootboxUncommon],
+        consumables: [
+          ConsumableIdentifier.SmallHealthPotion,
+          ConsumableIdentifier.SmallHealthPotion,
+          ConsumableIdentifier.SmallHealthPotion,
+          ConsumableIdentifier.SmallDamagePotion,
+          ConsumableIdentifier.SmallDamagePotion,
+          ConsumableIdentifier.SmallDamagePotion,
+        ],
+      },
+    ],
+  }
+
+} as any
+
+// Método para obtener la URL de la imagen del emoji
+export function getEmojiImageUrl(emojiId: EmojiIdentifier): string {
+  const emojiMap = {
+    [EmojiIdentifier.EMOJI_THUMBS_UP]: '👍',
+    [EmojiIdentifier.EMOJI_THUMBS_DOWN]: '👎',
+    [EmojiIdentifier.EMOJI_SMILE]: '😊',
+    [EmojiIdentifier.EMOJI_SAD]: '😢',
+    [EmojiIdentifier.EMOJI_ANGRY]: '😠',
+    [EmojiIdentifier.EMOJI_FIRE]: '🔥',
+    [EmojiIdentifier.EMOJI_HEART]: '💖',
+    [EmojiIdentifier.EMOJI_LAUGH]: '😂',
+    [EmojiIdentifier.EMOJI_CRY]: '😢',
+    [EmojiIdentifier.EMOJI_SHOCKED]: '😱',
+    [EmojiIdentifier.EMOJI_COOL]: '🆒',
+    [EmojiIdentifier.EMOJI_THINKING]: '🤔',
+    [EmojiIdentifier.EMOJI_CLAP]: '👏',
+    [EmojiIdentifier.EMOJI_PRAY]: '🙏',
+    [EmojiIdentifier.EMOJI_MUSCLE]: '💪',
+    [EmojiIdentifier.EMOJI_PARTY]: '🎉',
+    [EmojiIdentifier.EMOJI_CROWN]: '👑',
+    [EmojiIdentifier.EMOJI_GHOST]: '👻',
+    [EmojiIdentifier.EMOJI_SKULL]: '💀',
+    [EmojiIdentifier.EMOJI_POOP]: '💩'
+  };
+
+  return emojiMap[emojiId] || '👍';
+}
 
 export const getShowItemCompare = (viewportService: ViewportService) => {
   switch (viewportService.screenWidth) {

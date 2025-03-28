@@ -1,0 +1,12 @@
+<div class="fight-emojis-container">
+  <div
+    class="emoji-bubble"
+    *ngFor="let emoji of emojis"
+    [ngClass]="{
+      'player-emoji': emoji.senderId === currentPlayerId,
+      'enemy-emoji': emoji.senderId !== currentPlayerId,
+    }"
+  >
+    <span class="emoji-native">{{ getEmojiImageUrl(emoji.emojiId) }}</span>
+  </div>
+</div>

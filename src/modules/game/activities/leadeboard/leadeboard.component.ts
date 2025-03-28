@@ -1,14 +1,13 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { debounceTime, first, map, race, take, tap } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { Rarity } from 'src/modules/core/models/items.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
-import { getRarityColor, truncateEthereumAddress } from 'src/modules/utils';
+import { getRarityColor, rewardsByLeaderboardType, truncateEthereumAddress } from 'src/modules/utils';
 import { PlayerService } from 'src/services/player.service';
 import { PvPFightService } from 'src/services/pvp-fight.service';
 import { ViewportService } from 'src/services/viewport.service';
@@ -16,7 +15,7 @@ import { WebSocketService } from 'src/services/websocket.service';
 import { MainState } from 'src/store/main.store';
 import { ChallengeModalComponent } from '../../components/challenge-modal/challenge-modal.component';
 import { pvpTiers } from './const/pvp-tiers';
-import { questTiers } from './const/quest-tiers';
+import { QuestTier, questTiers } from './const/quest-tiers';
 import { LeaderboardType } from './enum/leaderboard-type.enum';
 import { PlayerStateEnum } from './enum/player-state.enum';
 
@@ -35,11 +34,14 @@ export class LeadeboardComponent extends TemplatePage {
   public sortType = signal<'asc' | 'desc'>('desc');
   public activePage = signal<number>(0);
   public chunkSize = signal<number>(25);
-  public from = signal<Date>(new Date(0));
-  public to = signal<Date>(new Date());
+  public periodType = signal<'weekly' | 'monthly'>('weekly');
   public nameOrWallet = signal('');
   public lastPageSize = 0;
   public prefix = ViewportService.getPreffixImg();
+  public viewportService = inject(ViewportService);
+  public topThreePlayers = signal<any[]>([]);
+  public Infinity = Infinity;
+
   public getLeaderboard$ = computed(() => {
     return this.playerService
       .getLeaderboard(
@@ -48,11 +50,14 @@ export class LeadeboardComponent extends TemplatePage {
         this.activePage(),
         this.chunkSize(),
         this.nameOrWallet(),
-        this.from(),
-        this.to()
+        this.periodType(),
+        this.leaderboardType()
       )
       .pipe(
         map((players) => {
+          if (this.activePage() === 0) {
+            this.topThreePlayers.set(players.slice(0, 3));
+          }
           return players.map((player, index) => {
             const title = this.getTitleForQuestsCompleted(
               player.finishedQuestsCount
@@ -77,6 +82,9 @@ export class LeadeboardComponent extends TemplatePage {
   public formGroup = this.fb.group({
     userOrWallet: ['', []],
   });
+  public get userOrWallet() {
+    return this.formGroup.get('userOrWallet') as FormControl;
+  }
   public truncateAddress = truncateEthereumAddress;
   public websocket = inject(WebSocketService);
   public store = inject(Store);
@@ -93,7 +101,7 @@ export class LeadeboardComponent extends TemplatePage {
   };
   public playerStates = PlayerStateEnum;
   public actualAddress = this.store.selectSnapshot(MainState).address;
-  public leaderboardType = LeaderboardType.PVE;
+  public leaderboardType = signal<LeaderboardType>(LeaderboardType.PVE);
   public leaderboardTypes = LeaderboardType;
 
   constructor() {
@@ -108,19 +116,22 @@ export class LeadeboardComponent extends TemplatePage {
   }
 
   public setPvpLeaderboard() {
-    this.leaderboardType = LeaderboardType.PVP;
+    this.leaderboardType.set(LeaderboardType.PVP);
     this.sortBy.set('mmr');
   }
+
+  public setTopPvpLeaderboard() {
+    this.leaderboardType.set(LeaderboardType.TOP_PVP);
+    this.sortBy.set('mmr');
+    this.activePage.set(0);
+  }
+
   public setLevelLeaderboard() {
-    this.leaderboardType = LeaderboardType.PVE;
+    this.leaderboardType.set(LeaderboardType.PVE);
     this.sortBy.set('level');
   }
 
-  public getTitleForQuestsCompleted(questsCompleted: number): {
-    title: string;
-    glow: string;
-    rarity: Rarity;
-  } {
+  public getTitleForQuestsCompleted(questsCompleted: number): QuestTier {
     for (let i = questTiers.length - 1; i >= 0; i--) {
       if (questsCompleted >= questTiers[i].maxQuests) {
         return questTiers[i];
@@ -130,46 +141,12 @@ export class LeadeboardComponent extends TemplatePage {
     return questTiers[0];
   }
 
-  public filterAllTime() {
-    this.from.set(new Date(0));
-    this.to.set(new Date());
-  }
-
   public filterByMonth() {
-    const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
-    this.from.set(startOfMonth);
-    this.to.set(endOfMonth);
+    this.periodType.set('monthly');
   }
 
   public filterCurrentWeek() {
-    const now = new Date();
-
-    const dayOfWeek = now.getDay();
-    const dayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-
-    const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - dayOffset);
-    startOfWeek.setHours(0, 0, 0, 0);
-
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 6);
-    endOfWeek.setHours(23, 59, 59, 999);
-    this.from.set(startOfWeek);
-    this.to.set(endOfWeek);
-  }
-
-  public getImgBasedOnRanking(number: number) {
-    switch (number) {
-      case 0:
-        return `assets/leaderboard/${this.leaderboardType === LeaderboardType.PVE ? 'level' : 'pvp'}/gold.png`;
-      case 1:
-        return `assets/leaderboard/${this.leaderboardType === LeaderboardType.PVE ? 'level' : 'pvp'}/silver.png`;
-      default:
-        return `assets/leaderboard/${this.leaderboardType === LeaderboardType.PVE ? 'level' : 'pvp'}/bronze.png`;
-    }
+    this.periodType.set('weekly');
   }
 
   public nextPage() {
@@ -243,4 +220,120 @@ export class LeadeboardComponent extends TemplatePage {
       });
     this.websocket.sendChallenge({ id, name, level, image }, opponentId);
   }
+
+  public challengePlayerAuto(opponent: PlayerModel) {
+    const { id, name, level, image, mmr } = this.store.selectSnapshot(
+      MainState.getPlayer
+    );
+
+    const config: ModalOptions = {
+      initialState: {
+        opponent: opponent,
+        challenger: true,
+        playerHasHigherMMR: mmr > opponent.mmr,
+        opponentConnected: false,
+        acceptAuto: () => this.acceptAutoPVP(modal, opponent.id),
+        accept: null,
+      },
+    };
+    const modal = this.modalService.show(ChallengeModalComponent, config);
+    modal.onHidden.pipe(take(1)).subscribe(() => {
+      this.websocket.cancelSentChallenge(
+        { id, name, level, image },
+        opponent.id
+      );
+    });
+  }
+
+  public getRewards() {
+    return rewardsByLeaderboardType[this.leaderboardType()][this.periodType()];
+  }
+
+  public remoteIconHeight() {
+    return this.viewportService.isMobile() ? 30 : 50;
+  }
+
+  public showPodium(): boolean {
+    return true;
+  }
+
+  public getCountdownText(): string {
+    const now = new Date();
+    let targetDate: Date;
+
+    if (this.periodType() === 'weekly') {
+      targetDate = new Date(now);
+      const daysUntilSunday = 7 - now.getDay();
+      targetDate.setDate(now.getDate() + (daysUntilSunday === 0 ? 7 : daysUntilSunday));
+      targetDate.setHours(23, 59, 59, 999);
+    } else {
+      targetDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+    }
+
+    const diffTime = targetDate.getTime() - now.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
+
+    return `${diffDays}d ${diffHours}h ${diffMinutes}m`;
+  }
+
+  public getProgressPercentage(completedQuests: number, currentTier: any): number {
+    const nextTierQuests = this.getNextTierQuests(currentTier);
+    const prevTierQuests = this.getPrevTierQuests(currentTier);
+
+    if (nextTierQuests === Infinity) {
+      return 100; // Ya está en el tier máximo
+    }
+
+    const tierProgress = completedQuests - prevTierQuests;
+    const tierRange = nextTierQuests - prevTierQuests;
+    return Math.min(100, Math.floor((tierProgress / tierRange) * 100));
+  }
+
+  public getNextTierQuests(currentTier: any): number {
+    const currentIndex = this.questTiers.findIndex(tier => tier.title === currentTier.title);
+    if (currentIndex === this.questTiers.length - 1) {
+      return Infinity;
+    }
+    return this.questTiers[currentIndex + 1].maxQuests;
+  }
+
+  public getPrevTierQuests(currentTier: any): number {
+    const currentIndex = this.questTiers.findIndex(tier => tier.title === currentTier.title);
+    if (currentIndex === 0) {
+      return 0;
+    }
+    return this.questTiers[currentIndex - 1].maxQuests;
+  }
+
+  public isPvpTierAchieved(player: any, tier: any): boolean {
+    return player.pvpIndex >= tier.range[0] && player.pvpIndex <= tier.range[1];
+  }
+
+  /**
+   * Agrupa items por su ID y cuenta la cantidad de cada uno
+   * @param items Array de IDs de items
+   * @returns Array de objetos con id y amount
+   */
+  public groupItemsByType(items: string[]): { id: string, amount: number }[] {
+    if (!items || !items.length) return [];
+
+    const groupedItems = {};
+
+    // Contar ocurrencias de cada ID
+    items.forEach(itemId => {
+      if (!groupedItems[itemId]) {
+        groupedItems[itemId] = 0;
+      }
+      groupedItems[itemId]++;
+    });
+
+    // Convertir a array de objetos { id, amount }
+    return Object.keys(groupedItems).map(id => ({
+      id,
+      amount: groupedItems[id]
+    }));
+  }
+
 }

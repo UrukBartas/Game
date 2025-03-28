@@ -76,6 +76,8 @@ import { DailyRollButtonComponent } from './activities/shop/components/daily-rol
 import { ShopComponent } from './activities/shop/shop.component';
 import { ShoppingComponent } from './activities/shopping/shopping.component';
 import { ActiveMissionDisplayerComponent } from './activities/tabern/active-mission-displayer/active-mission-displayer.component';
+import { FortuneWheelComponent } from './activities/tabern/fortune-wheel/fortune-wheel.component';
+import { MissionBoardComponent } from './activities/tabern/mission-board/mission-board.component';
 import { TabernComponent } from './activities/tabern/tabern.component';
 import { CryptFightComponent } from './activities/the-crypt/components/crypt-fight/crypt-fight.component';
 import { CryptFinishedComponent } from './activities/the-crypt/components/crypt-finished/crypt-finished.component';
@@ -93,6 +95,8 @@ import { BaseInventoryComponent } from './components/base-inventory/base-invento
 import { ChallengeModalComponent } from './components/challenge-modal/challenge-modal.component';
 import { ConsumableModalComponent } from './components/consumable-modal/consumable-modal.component';
 import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
+import { EmojiSelectorComponent } from './components/emoji-selector/emoji-selector.component';
+import { FightEmojisComponent } from './components/fight-emojis/fight-emojis.component';
 import { FightHistoricComponent } from './components/fight-historic/fight-historic.component';
 import { GameLayoutComponent } from './components/game-layout/game-layout.component';
 import { InventoryTopbarComponent } from './components/inventory-topbar/inventory-topbar.component';
@@ -118,8 +122,6 @@ import { QuestTutorialComponent } from './components/tutorials/quest-tutorial/qu
 import { ShopTutorialComponent } from './components/tutorials/shop-tutorial/shop-tutorial.component';
 import { TabernTutorialComponent } from './components/tutorials/tabern-tutorial/tabern-tutorial.component';
 import { GameRoutingModule } from './game-routing.module';
-import { MissionBoardComponent } from './activities/tabern/mission-board/mission-board.component';
-import { FortuneWheelComponent } from './activities/tabern/fortune-wheel/fortune-wheel.component';
 
 const directives = [
   ValidInputDirective,
@@ -159,7 +161,9 @@ const components = [
   FighterStatsTooltipComponent,
   FightLogsModalComponent,
   TabernTutorialComponent,
-  TabernComponent
+  TabernComponent,
+  FightEmojisComponent,
+  EmojiSelectorComponent,
 ];
 
 const pipes = [
@@ -221,6 +225,8 @@ const pipes = [
     ActiveMissionDisplayerComponent,
     MissionBoardComponent,
     FortuneWheelComponent,
+    EmojiSelectorComponent,
+    FightEmojisComponent,
   ],
   imports: [
     ...directives,

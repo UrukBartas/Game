@@ -4,10 +4,12 @@ import {
   inject,
   OnInit,
   Output,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Subject, take } from 'rxjs';
+import { BaseFightComponent } from 'src/modules/core/components/base-fight/base-fight.component';
 import {
   BaseFightModel,
   FightTypes,
@@ -17,11 +19,11 @@ import {
   FightResultModel,
 } from 'src/modules/core/models/fight.model';
 import { QuestModel } from 'src/modules/core/models/quest.model';
+import { getIRIFromCurrentPlayer } from 'src/modules/utils';
 import { FightService } from 'src/services/fight.service';
 import { MainState, StartFight } from 'src/store/main.store';
 import { QuestStatusEnum } from '../enums/quest-status.enum';
 import { QuestRouterModel } from '../models/quest-router.model';
-import { getIRIFromCurrentPlayer } from 'src/modules/utils';
 
 @Component({
   selector: 'app-quest-fight',
@@ -39,9 +41,12 @@ export class QuestFightComponent implements OnInit {
     .selectSnapshot(MainState.getState)
     .quests.find((quest) => quest.startedAt !== null);
   player = this.store.selectSnapshot(MainState.getPlayer);
-
+  fightId: string; // ID único para este combate
   @Output() questStatusChange = new EventEmitter<QuestRouterModel>();
-
+  @ViewChild('baseFight') baseFightComponent: BaseFightComponent;
+  constructor() {
+    this.fightId = `quest_${Date.now()}`;
+  }
   ngOnInit() {
     this.fightService
       .get('/')
@@ -50,11 +55,43 @@ export class QuestFightComponent implements OnInit {
         next: (fight: FightModel) => {
           this.fight$.next(this.adaptFight(fight, true));
           this.store.dispatch(new StartFight(this.fightType));
+          this.loadBonusActionsRemaining();
         },
         error: () => {
           this.questStatusChange.emit({ status: QuestStatusEnum.PICKING });
         },
       });
+  }
+
+  // Implementar el método para cargar acciones adicionales
+  loadBonusActionsRemaining() {
+    this.fightService.getBonusActionsRemaining().subscribe(data => {
+      // Actualizar el componente base con los datos
+      this.updateBonusActions(data);
+    });
+  }
+
+  // Método para actualizar el componente base
+  updateBonusActions(data: { used: number, remaining: number, total: number }) {
+    // Necesitamos una forma de acceder al componente hijo
+    // Una opción es usar ViewChild
+    if (this.baseFightComponent) {
+      this.baseFightComponent.bonusActionsRemaining = data.remaining;
+      this.baseFightComponent.bonusActionsTotal = data.total;
+    }
+  }
+
+  // Método para usar una acción adicional
+  onBonusAction(consumableId: number): void {
+    this.fightService.usePotion(consumableId).subscribe(fight => {
+      // Marcar esta actualización como una actualización de buff solamente
+      const adaptedFight = this.adaptFight(fight, false);
+      adaptedFight.buffUpdateOnly = true;
+
+      // Actualizar inmediatamente el estado local
+      this.fight$.next(adaptedFight);
+      this.loadBonusActionsRemaining();
+    });
   }
 
   onActionSubmitted(event) {
@@ -71,6 +108,7 @@ export class QuestFightComponent implements OnInit {
     const lastTurn = fight.turns[fight.turns?.length - 1];
     return {
       load,
+      fightId: fight.fightId,
       player: {
         name: this.player.name,
         image: this.player.image,

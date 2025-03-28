@@ -11,7 +11,7 @@
 <div class="description stat verified-name gap-2">
   <label urText class="text-center">{{ player.name }}</label>
   <img
-    class="uruks-icon pb-1 hoverable-text"
+    class="uruks-icon pb-1 hoverable-text" *ngIf="!disabledTrigger"
     [ngClass]="{ 'contrast-zero': !player.emailVerified }"
     (click)="clickedIcon()"
     src="{{

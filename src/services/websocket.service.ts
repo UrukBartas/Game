@@ -5,7 +5,7 @@ import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, Subject, take } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
-import { PlayerModel } from 'src/modules/core/models/player.model';
+import { FightEmoji, PlayerModel } from 'src/modules/core/models/player.model';
 import { PlayerStateEnum } from 'src/modules/game/activities/leadeboard/enum/player-state.enum';
 import { ChallengeModalComponent } from 'src/modules/game/components/challenge-modal/challenge-modal.component';
 import { MainState } from 'src/store/main.store';
@@ -17,6 +17,9 @@ export interface ChatMessage {
   message: string;
   timestamp: Date;
 }
+
+
+
 @Injectable({
   providedIn: 'root',
 })
@@ -30,12 +33,18 @@ export class WebSocketService {
   public chatMessages$ = this.chatMessagesSubject.asObservable();
   private onlineChatPlayersSubject = new BehaviorSubject<number>(0);
   public onlineChatPlayers$ = this.onlineChatPlayersSubject.asObservable();
+
+  // Nuevo subject para emojis en combate
+  private fightEmojisSubject = new Subject<FightEmoji>();
+  public fightEmojis$ = this.fightEmojisSubject.asObservable();
+
   acceptChallenge$ = new Subject<boolean>();
   declineChallenge$ = new Subject<boolean>();
   private store = inject(Store);
   private modalService = inject(BsModalService);
   private router = inject(Router);
   private soundService = inject(SoundService);
+
   connect(): void {
     const token = this.store.selectSnapshot(MainState.getState)?.session?.token;
     this.socket = io(environment.apiUrl, {
@@ -107,6 +116,15 @@ export class WebSocketService {
     this.socket.on('challengeDeclined', () => {
       this.declineChallenge$.next(false);
     });
+
+    // Nuevo listener para emojis en combate
+    this.socket.on('fightEmoji', (emoji: FightEmoji) => {
+      // Emitir solo el emoji recibido
+      this.fightEmojisSubject.next(emoji);
+
+      // Reproducir sonido de emoji
+      this.soundService.playSound('assets/sounds/pop.mp3');
+    });
   }
 
   requestOnlinePlayers(): void {
@@ -172,4 +190,19 @@ export class WebSocketService {
   public getChatHistory(): void {
     this.socket.emit('getChatHistory');
   }
+
+  // Método para enviar un emoji durante el combate
+  sendFightEmoji(emojiId: string, fightId: string): void {
+    const player = this.store.selectSnapshot(MainState.getPlayer);
+    this.socket.emit('sendFightEmoji', {
+      emojiId,
+      fightId,
+      senderId: player.id,
+      senderName: player.name
+    });
+  }
+
+
+
+
 }

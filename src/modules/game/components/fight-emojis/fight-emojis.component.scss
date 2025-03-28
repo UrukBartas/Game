@@ -1,0 +1,72 @@
+.fight-emojis-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.emoji-bubble {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5px 0;
+  animation: fadeInOut 3s ease-in-out;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  padding: 5px 10px;
+  position: absolute;
+}
+
+.player-emoji {
+  right: 25%;
+  bottom: 60%;
+}
+
+.enemy-emoji {
+  left: 25%;
+  bottom: 60%;
+}
+
+.emoji-sender {
+  font-size: 0.8rem;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.emoji-native {
+  font-size: 2.5rem;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: scale(0.5); }
+  10% { opacity: 1; transform: scale(1.2); }
+  20% { opacity: 1; transform: scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .player-emoji {
+    right: 20%;
+  }
+
+  .enemy-emoji {
+    left: 20%;
+  }
+}
+
+@media (max-width: 480px) {
+  .player-emoji {
+    right: 15%;
+  }
+
+  .enemy-emoji {
+    left: 15%;
+  }
+}

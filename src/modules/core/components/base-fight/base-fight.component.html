@@ -29,12 +29,23 @@
     </button>
     <div class="row position-relative h-100">
       <div class="col-12 col-sm-6 fighter-container player-container">
-        <img
-          [src]="prefix + '/' + player().image"
-          [ngbTooltip]="fighterStats"
-          [tooltipContext]="{ fighter: player() }"
-          class="player-image shadow"
-        />
+        <div class="avatar-status-container">
+          <img
+            [src]="prefix + '/' + player().image"
+            [ngbTooltip]="fighterStats"
+            [tooltipContext]="{ fighter: player() }"
+            class="player-image shadow"
+          />
+          <app-fighter-status
+            class="player-status"
+            [fighterStatus]="player().currentStats"
+          ></app-fighter-status>
+          <app-fight-emojis [emitterName]="player().name" [fightId]="fightId()"></app-fight-emojis>
+
+          <div class="emoji-controls">
+            <app-emoji-selector [fightId]="fightId()"></app-emoji-selector>
+          </div>
+        </div>
         <span
           class="text-shadow"
           [ngStyle]="{
@@ -44,8 +55,10 @@
           style="margin-bottom: -1vh"
           >{{ player().name }} (level {{ player().level }})</span
         >
-        <span urSubtext style="margin: -1vh" class="text-light text-shadow">{{
-          player().title ?? 'The untitled'
+        <span urSubtext class="text-light text-shadow">{{
+          player().title && player().title !== ''
+            ? player().title
+            : 'The untitled'
         }}</span>
         <div
           class="progress shadow"
@@ -89,21 +102,22 @@
           ></div>
         </div>
         <ng-content select="[playerTimerBar]"></ng-content>
-        <ng-container
-          [ngTemplateOutlet]="statusBar"
-          [ngTemplateOutletContext]="{
-            fighterStatus: player().currentStats,
-          }"
-        >
-        </ng-container>
       </div>
       <div class="col-12 col-sm-6 fighter-container enemy-container">
-        <img
-          [src]="prefix + enemy().image"
-          [ngbTooltip]="fighterStats"
-          [tooltipContext]="{ fighter: enemy() }"
-          class="enemy-image shadow"
-        />
+        <div class="avatar-status-container">
+          <img
+            [src]="prefix + enemy().image"
+            [ngbTooltip]="fighterStats"
+            [tooltipContext]="{ fighter: enemy() }"
+            class="enemy-image shadow"
+          />
+          <app-fight-emojis [emitterName]="enemy().name" [fightId]="fightId()"></app-fight-emojis>
+
+          <app-fighter-status
+            class="enemy-status"
+            [fighterStatus]="enemy().currentStats"
+          ></app-fighter-status>
+        </div>
         <span
           class="text-shadow"
           [ngStyle]="{
@@ -113,8 +127,8 @@
           style="margin-bottom: -1vh"
           >{{ enemy().name }} (level {{ enemy().level }})</span
         >
-        <span urSubtext style="margin-top: -1vh" class="text-light text-shadow">{{
-          enemy().title ?? 'The untitled'
+        <span urSubtext class="text-light text-shadow">{{
+          enemy().title && enemy().title !== '' ? enemy().title : 'The untitled'
         }}</span>
 
         <div
@@ -160,43 +174,68 @@
         </div>
 
         <ng-content select="[enemyTimerBar]"></ng-content>
-        <ng-container
-          [ngTemplateOutlet]="statusBar"
-          [ngTemplateOutletContext]="{
-            fighterStatus: enemy().currentStats,
-          }"
-        >
-        </ng-container>
       </div>
       <div class="action-buttons">
         <button
           [disabled]="victory || defeat"
           (click)="doAction(turnActions.ATTACK)"
-          [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
+          [class]="
+            'btn btn-primary action-button attack-button shadow ' +
+            getButtonSize()
+          "
         >
           <i class="fa fa-hand-fist"></i> ATTACK
+          <span class="action-cost">1 turn</span>
         </button>
         <button
           [disabled]="victory || defeat"
           (click)="doAction(turnActions.DEFEND)"
-          [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
+          [class]="
+            'btn btn-primary action-button defend-button shadow ' +
+            getButtonSize()
+          "
         >
           <i class="fa fa-shield"></i> DEFEND
+          <span class="action-cost">1 turn</span>
         </button>
 
         <button
           [disabled]="victory || defeat"
           (click)="doAction(turnActions.CHARGE)"
-          [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
+          [class]="
+            'btn btn-primary action-button charge-button shadow ' +
+            getButtonSize()
+          "
         >
           <i class="fa fa-bolt"></i> CHARGE
+          <span class="action-cost">1 turn</span>
         </button>
         <button
           [disabled]="victory || defeat"
           (click)="openConsumableModal()"
-          [class]="'btn btn-primary action-button shadow ' + getButtonSize()"
+          [class]="
+            'btn btn-primary action-button items-button shadow ' +
+            getButtonSize()
+          "
         >
-          <i class="fa fa-flask"></i> ITEMS
+          <i class="fa fa-flask"></i> POTIONS
+          <span class="action-cost">1 turn</span>
+        </button>
+
+        <button
+          [disabled]="victory || defeat || bonusActionsRemaining <= 0"
+          (click)="openBonusActionModal()"
+          [class]="
+            'btn btn-primary action-button bonus-action-button shadow ' +
+            getButtonSize()
+          "
+          [ngbTooltip]="'Use a quick action without consuming a turn'"
+        >
+          <i class="fa fa-bolt-lightning"></i> QUICK
+          <span class="bonus-counter"
+            >{{ bonusActionsRemaining }}/{{ bonusActionsTotal }}</span
+          >
+          <span class="action-cost">Free action</span>
         </button>
       </div>
     </div>

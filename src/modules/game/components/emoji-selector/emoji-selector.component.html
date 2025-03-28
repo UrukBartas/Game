@@ -1,0 +1,17 @@
+<div class="emoji-container">
+  <button class="emoji-button" (click)="toggleSelector()">
+    <i class="fas fa-smile"></i>
+  </button>
+
+  <div class="emoji-selector" *ngIf="showSelector">
+    <div class="emoji-grid">
+      <div
+        class="emoji-item"
+        *ngFor="let emoji of unlockedEmojis"
+        (click)="selectEmoji(emoji)"
+      >
+        <span class="emoji-native">{{ getEmojiImageUrl(emoji) }}</span>
+      </div>
+    </div>
+  </div>
+</div>

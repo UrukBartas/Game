@@ -8,6 +8,7 @@ import { PlayerModel } from './player.model';
 import { QuestModel } from './quest.model';
 
 export interface FightModel {
+  fightId: string;
   questId: number;
   playerId: string;
   playersData?: FightDataModel;
