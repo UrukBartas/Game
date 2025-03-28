@@ -1,5 +1,6 @@
 export enum LeaderboardType {
   PVE = 'pve',
   PVP = 'pvp',
-  TOP_PVP = 'top-pvp'
+  TOP_PVP = 'top-pvp',
+  ALL = 'all'
 }

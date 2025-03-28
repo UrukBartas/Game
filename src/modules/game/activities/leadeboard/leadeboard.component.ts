@@ -115,6 +115,12 @@ export class LeadeboardComponent extends TemplatePage {
       .subscribe((players) => (this.onlinePlayers = players));
   }
 
+  public setAllLeaderboard() {
+    this.leaderboardType.set(LeaderboardType.ALL);
+    this.sortBy.set('level');
+    this.activePage.set(0);
+  }
+
   public setPvpLeaderboard() {
     this.leaderboardType.set(LeaderboardType.PVP);
     this.sortBy.set('mmr');

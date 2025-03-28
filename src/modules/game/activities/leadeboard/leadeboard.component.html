@@ -11,6 +11,14 @@
       <div class="tab-container">
         <button
           class="tab-item"
+          [ngClass]="{ active: leaderboardType() === leaderboardTypes.ALL }"
+          (click)="setAllLeaderboard()"
+        >
+          <i class="bi bi-people-fill tab-icon"></i>
+          {{ viewportService.isMobile() ? '' : 'All Players' }}
+        </button>
+        <button
+          class="tab-item"
           [ngClass]="{ active: leaderboardType() === leaderboardTypes.PVE }"
           (click)="setLevelLeaderboard()"
         >
@@ -51,6 +59,11 @@
         <p>
           <i class="bi bi-info-circle-fill me-2"></i>
           This leaderboard ranks players by their arena rating points earned during the {{ periodType() === 'weekly' ? 'current week' : 'current month' }}.
+        </p>
+      } @else if (leaderboardType() === leaderboardTypes.ALL) {
+        <p>
+          <i class="bi bi-info-circle-fill me-2"></i>
+          This leaderboard shows all players in the realm, ranked by their overall level and experience.
         </p>
       }
     </div>
@@ -165,7 +178,7 @@
           </div>
         </div>
 
-        <div class="player-reward">
+        <div class="player-reward" *ngIf="leaderboardType() !== leaderboardTypes.ALL">
           @if (leaderboardType() === leaderboardTypes.PVE) {
             <app-remote-item-box
               itemType="MISCELLANY"
