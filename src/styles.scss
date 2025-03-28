@@ -124,37 +124,34 @@ app-item-box {
 }
 
 .modal-dialog {
-  position: absolute !important;
-  border: none !important;
-  display: flex !important;
-  justify-content: center;
-  overflow: auto;
-  width: 100%;
-  margin: 0;
-  max-height: 100%;
-  max-width: 100%;
-  @include media-breakpoint-down(sm) {
-    top: 0%;
-  }
   .modal-content {
     background: transparent !important;
-    width: fit-content;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-
-    @include media-breakpoint-down(sm) {
-      width: 90%;
-      padding: 3rem 0;
-    }
-    border: none !important;
-    @include media-breakpoint-up(sm) {
-      justify-content: center;
-    }
   }
-  .modal-content:has(#tooltip-modal) {
-    @include media-breakpoint-down(sm) {
-      height: fit-content !important;
+}
+
+app-confirm-modal {
+  margin-top: 2rem;
+}
+
+@include media-breakpoint-up(sm) {
+  .modal-dialog {
+    position: absolute !important;
+    border: none !important;
+    display: flex !important;
+    justify-content: center;
+    overflow: auto;
+    width: 100%;
+    margin: 0;
+    max-height: 100%;
+    max-width: 100%;
+
+    .modal-content {
+      background: transparent !important;
+      width: fit-content;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      border: none !important;
     }
   }
 }
