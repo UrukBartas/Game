@@ -28,8 +28,7 @@ import { ThreePortalService } from './service/three-portal.service';
 })
 export class ConnectComponent
   extends TemplatePage
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   @ViewChild('threeContainer', { static: true })
   threeContainer!: ElementRef<HTMLDivElement>;
   public prefix = ViewportService.getPreffixImg();
@@ -156,7 +155,7 @@ export class ConnectComponent
     } catch (error: any) {
       this.toast.error(
         error?.message?.message ??
-          'An error occured while trying to recover your password'
+        'An error occured while trying to recover your password'
       );
     }
   }
@@ -178,38 +177,13 @@ export class ConnectComponent
     } catch (error: any) {
       this.toast.error(
         error?.message?.message ??
-          'An error occured while trying to set your new password'
+        'An error occured while trying to set your new password'
       );
     }
   }
 
-  public getProductionRealms(): Array<Realm> {
-    return this.lastLoadedRealms.filter(realm =>
-      realm.name.includes('PROD') ||
-      (!realm.name.includes('Test') && !realm.name.includes('Localhost')));
+  public getRealmsByStatus(status: 'mainnet' | 'testnet'): Array<Realm> {
+    return this.lastLoadedRealms.filter(realm => realm.status === status);
   }
 
-  public getTestRealms(): Array<Realm> {
-    return this.lastLoadedRealms.filter(realm =>
-      realm.name.includes('Test') ||
-      realm.name.includes('Localhost'));
-  }
-
-  public getRealmClass(realm: Realm): string {
-    const name = realm.name.toLowerCase();
-    if (name.includes('morgoroth')) return 'morgoroth';
-    if (name.includes('goblin')) return 'goblin';
-    if (name.includes('localhost')) return 'localhost';
-    return '';
-  }
-
-  public getRealmDescription(realm: Realm): string {
-    const descriptions = {
-      'Morgoroth (PROD)': 'The main realm of Uruk Bartas. Join the adventure!',
-      'Goblin (Test)': 'Test realm for experimental features and updates',
-      'Localhost': 'Local development environment'
-    };
-
-    return descriptions[realm.name] || 'A realm of Uruk Bartas';
-  }
 }

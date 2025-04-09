@@ -10,6 +10,9 @@ export interface SessionModel {
 export interface Realm {
   id: string;
   name: string;
+  description: string;
+  class: string;
   url: string;
   icon: string;
+  status: 'testnet' | 'mainnet';
 }

@@ -78,20 +78,22 @@
 
   <div class="realms-container">
     <!-- Production Realms -->
-    <div class="realm-category">
+    <div class="realm-category" *ngIf="getRealmsByStatus('mainnet').length > 0">
       <h4 class="realm-category-title">Production Realms</h4>
       <div class="realm-cards">
-        <div class="realm-card production"
-             *ngFor="let realm of getProductionRealms()"
-             (click)="handleSelectedRealm(realm)">
-          <div class="realm-banner" [ngClass]="getRealmClass(realm)">
+        <div
+          class="realm-card production"
+          *ngFor="let realm of getRealmsByStatus('mainnet')"
+          (click)="handleSelectedRealm(realm)"
+        >
+          <div class="realm-banner" [ngClass]="realm.class">
             <div class="realm-icon">
               <i [class]="realm.icon"></i>
             </div>
           </div>
           <div class="realm-info">
             <h5 class="realm-name">{{ realm.name }}</h5>
-            <p class="realm-description">{{ getRealmDescription(realm) }}</p>
+            <p class="realm-description">{{ realm.description }}</p>
             <div class="realm-status online">
               <span class="status-indicator"></span>
               <span class="status-text">Online</span>
@@ -102,13 +104,15 @@
     </div>
 
     <!-- Test Realms -->
-    <div class="realm-category test-realms" *ngIf="getTestRealms().length > 0">
+    <div class="realm-category test-realms" *ngIf="getRealmsByStatus('testnet').length > 0">
       <h4 class="realm-category-title">Test Realms</h4>
       <div class="realm-cards">
-        <div class="realm-card test"
-             *ngFor="let realm of getTestRealms()"
-             (click)="handleSelectedRealm(realm)">
-          <div class="realm-banner" [ngClass]="getRealmClass(realm)">
+        <div
+          class="realm-card test"
+          *ngFor="let realm of getRealmsByStatus('testnet')"
+          (click)="handleSelectedRealm(realm)"
+        >
+          <div class="realm-banner" [ngClass]="realm.class">
             <div class="realm-icon">
               <i [class]="realm.icon"></i>
             </div>
@@ -116,7 +120,7 @@
           </div>
           <div class="realm-info">
             <h5 class="realm-name">{{ realm.name }}</h5>
-            <p class="realm-description">{{ getRealmDescription(realm) }}</p>
+            <p class="realm-description">{{ realm.description }}</p>
             <div class="realm-status online">
               <span class="status-indicator"></span>
               <span class="status-text">Online</span>
@@ -125,32 +129,13 @@
         </div>
       </div>
     </div>
-
-    <!-- Coming Soon Realms -->
-    <div class="realm-category coming-soon">
-      <h4 class="realm-category-title">Coming Soon</h4>
-      <div class="realm-cards">
-        <div class="realm-card locked">
-          <div class="realm-banner hardcore">
-            <div class="realm-icon">
-              <i class="fa-solid fa-skull-crossbones"></i>
-            </div>
-            <div class="coming-soon-badge">COMING SOON</div>
-          </div>
-          <div class="realm-info">
-            <h5 class="realm-name">Hardcore</h5>
-            <p class="realm-description">A challenging realm where death is permanent</p>
-            <div class="realm-status locked">
-              <span class="status-indicator"></span>
-              <span class="status-text">Coming Soon</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
-  <button type="button" class="btn btn-dark back-button" (click)="showingRealms = false">
+  <button
+    type="button"
+    class="btn btn-dark back-button"
+    (click)="showingRealms = false"
+  >
     Go back
   </button>
 </ng-template>
