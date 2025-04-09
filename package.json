@@ -6,6 +6,8 @@
     "start": "ng serve",
     "build": "ng build --configuration development && npx capacitor-assets generate --android && npx cap sync",
     "build-prod": "ng build --configuration production && npx capacitor-assets generate --android && npx cap sync",
+    "build-test": "ng build --configuration test && npx capacitor-assets generate --android && npx cap sync",
+    "build-hardcore": "ng build --configuration hardcore && npx capacitor-assets generate --android && npx cap sync",
     "add-android": "npx cap add android",
     "open-android": "npx cap open android",
     "resources": "npx capacitor-assets generate --android",
