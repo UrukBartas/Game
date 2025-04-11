@@ -10,6 +10,7 @@ import { NotificationResponseModel } from 'src/modules/core/models/notifications
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { CompressNumberPipe } from 'src/modules/core/pipes/compress-number.pipe';
 import { calculateXPForLevel } from 'src/modules/utils';
+import { Announcement, AnnouncementsService, AnnouncementType } from 'src/services/announcements.service';
 import { AuthService } from 'src/services/auth.service';
 import { BoardMissionService } from 'src/services/board-mission.service';
 import { PlayerService } from 'src/services/player.service';
@@ -129,6 +130,11 @@ export class GameLayoutComponent {
   public loggedWithemail = this.authService.loggedWithEmail;
   public notifications$: Observable<NotificationResponseModel> =
     this.store.select(MainState.getNotifications);
+  public announcementsService = inject(AnnouncementsService);
+  public announcements$ = this.announcementsService.getAllAnnouncements();
+  public showAnnouncementsBanner = signal(true);
+  public currentAnnouncementIndex = signal(0);
+  public AnnouncementType = AnnouncementType;
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);
@@ -226,5 +232,116 @@ export class GameLayoutComponent {
   public displayTutorial() {
     const tutorial = this.getTutorial();
     this.modalService.show(tutorial);
+  }
+
+  // Method to get the current announcement
+  public getCurrentAnnouncement(announcements: Announcement[]): Announcement | null {
+    if (!announcements || announcements.length === 0) {
+      return null;
+    }
+    return announcements[this.currentAnnouncementIndex() % announcements.length];
+  }
+
+  // Method to navigate to the next announcement
+  public nextAnnouncement(announcements: Announcement[]): void {
+    if (!announcements || announcements.length <= 1) {
+      return;
+    }
+    this.currentAnnouncementIndex.update(index => (index + 1) % announcements.length);
+  }
+
+  // Method to navigate to the previous announcement
+  public prevAnnouncement(announcements: Announcement[]): void {
+    if (!announcements || announcements.length <= 1) {
+      return;
+    }
+    this.currentAnnouncementIndex.update(index =>
+      (index - 1 + announcements.length) % announcements.length
+    );
+  }
+
+  // Method to close the announcements banner
+  public closeAnnouncementsBanner(): void {
+    this.showAnnouncementsBanner.set(false);
+  }
+
+  // Method to get the icon for an announcement type
+  public getAnnouncementIcon(type: AnnouncementType): string {
+    switch (type) {
+      case AnnouncementType.SYSTEM_RATES:
+        return 'fa-solid fa-gauge-high';
+      case AnnouncementType.EVENT:
+        return 'fa-solid fa-calendar';
+      case AnnouncementType.UPDATE:
+        return 'fa-solid fa-code-branch';
+      case AnnouncementType.MAINTENANCE:
+        return 'fa-solid fa-wrench';
+      case AnnouncementType.PROMOTION:
+        return 'fa-solid fa-tags';
+      case AnnouncementType.CUSTOM:
+      default:
+        return 'fa-solid fa-bullhorn';
+    }
+  }
+
+  // Method to get the color class for an announcement type
+  public getAnnouncementColorClass(type: AnnouncementType): string {
+    switch (type) {
+      case AnnouncementType.SYSTEM_RATES:
+        return 'announcement-system';
+      case AnnouncementType.EVENT:
+        return 'announcement-event';
+      case AnnouncementType.UPDATE:
+        return 'announcement-update';
+      case AnnouncementType.MAINTENANCE:
+        return 'announcement-maintenance';
+      case AnnouncementType.PROMOTION:
+        return 'announcement-promotion';
+      case AnnouncementType.CUSTOM:
+      default:
+        return 'announcement-custom';
+    }
+  }
+
+  // Method to check if there are new announcements (within the last 24 hours)
+  public hasNewAnnouncements(announcements: Announcement[]): boolean {
+    if (!announcements) {
+      return false;
+    }
+
+    const oneDayAgo = new Date();
+    oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+
+    return announcements.some(announcement => {
+      const createdAt = new Date(announcement.createdAt);
+      return createdAt > oneDayAgo;
+    });
+  }
+
+  // Method to format expiry date
+  public formatExpiryDate(dateString: string): string {
+    const date = new Date(dateString);
+    const now = new Date();
+
+    // If it's today
+    if (date.toDateString() === now.toDateString()) {
+      return `Today at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    }
+
+    // If it's tomorrow
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    if (date.toDateString() === tomorrow.toDateString()) {
+      return `Tomorrow at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+    }
+
+    // Otherwise show full date
+    return date.toLocaleDateString([], {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 }

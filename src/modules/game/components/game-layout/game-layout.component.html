@@ -75,6 +75,41 @@
         ></i>
       </div>
 
+      <!-- Announcements Icon -->
+      <div class="announcements-icon" *ngIf="(announcements$ | async) as announcements">
+        <div class="dropdown">
+          <i
+            class="fa-solid fa-bullhorn hoverable-text"
+            data-bs-toggle="dropdown"
+            [class.has-new]="hasNewAnnouncements(announcements)"
+          ></i>
+          <div class="dropdown-menu announcements-dropdown">
+            <h6 class="dropdown-header">Realm Announcements</h6>
+            <div class="announcements-list">
+              <ng-container *ngFor="let announcement of announcements">
+                <div class="announcement-card" [ngClass]="getAnnouncementColorClass(announcement.type)">
+                  <div class="announcement-header">
+                    <i [class]="getAnnouncementIcon(announcement.type)"></i>
+                    <h6>{{ announcement.title }}</h6>
+                  </div>
+                  <div class="announcement-body">
+                    <p>{{ announcement.content }}</p>
+                    <img *ngIf="announcement.imageUrl" [src]="announcement.imageUrl" alt="Announcement image">
+                  </div>
+                  <div class="announcement-footer" *ngIf="announcement.expiresAt">
+                    <small>Expires: {{ formatExpiryDate(announcement.expiresAt) }}</small>
+                  </div>
+                </div>
+              </ng-container>
+              <div *ngIf="announcements.length === 0" class="text-center py-3 text-muted">
+                <i class="fa-solid fa-scroll fa-2x mb-2"></i>
+                <p>No active announcements</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="right d-flex align-items-center gap-2">
         <div class="player-dropdown">
           <div

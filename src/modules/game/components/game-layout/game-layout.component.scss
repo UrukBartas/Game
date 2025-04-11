@@ -8,10 +8,35 @@
   font-size: 1.6rem;
   display: flex;
   align-items: center;
+  margin: 0 5px;
+
+  @include media-breakpoint-down(md) {
+    font-size: 1.3rem;
+  }
+
+  @include media-breakpoint-down(sm) {
+    font-size: 1.1rem;
+  }
+
+  i {
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: lighten($primary, 20%);
+    }
+  }
 }
 
 .wrapper {
   background-color: $black;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
+  .d-flex.flex-column.h-100 {
+    flex: 1;
+    overflow: hidden;
+  }
 }
 
 i {
@@ -146,6 +171,16 @@ nav a {
       width: 100px;
     }
   }
+
+  @include media-breakpoint-down(sm) {
+    gap: 5px;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+
+    .right {
+      gap: 5px !important;
+    }
+  }
 }
 .locked-screen {
   position: absolute;
@@ -267,5 +302,348 @@ nav a {
     &:hover {
       color: lighten(#4caf50, 10%);
     }
+  }
+}
+
+// Announcements Banner Styles
+.announcements-banner {
+  position: relative;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  color: white;
+  z-index: 10;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+
+  .announcement-content {
+    display: flex;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .announcement-icon {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.2);
+      flex-shrink: 0;
+
+      @include media-breakpoint-down(sm) {
+        display: none;
+      }
+    }
+
+    .announcement-text {
+      flex: 1;
+
+      h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: bold;
+      }
+
+      p {
+        margin: 0;
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      @include media-breakpoint-down(sm) {
+        h4 {
+          font-size: 0.9rem;
+        }
+
+        p {
+          font-size: 0.8rem;
+        }
+      }
+    }
+
+    .announcement-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: 1rem;
+
+      .announcement-nav-btn, .announcement-close-btn {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.2);
+        }
+      }
+
+      .announcement-counter {
+        font-size: 0.8rem;
+        opacity: 0.8;
+      }
+
+      @include media-breakpoint-down(sm) {
+        .announcement-counter {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+// Announcement type color classes
+.announcement-system {
+  background: linear-gradient(90deg, $primary, darken($primary, 10%));
+}
+
+.announcement-event {
+  background: linear-gradient(90deg, #ff9800, darken(#ff9800, 10%));
+}
+
+.announcement-update {
+  background: linear-gradient(90deg, #2196f3, darken(#2196f3, 10%));
+}
+
+.announcement-maintenance {
+  background: linear-gradient(90deg, #f44336, darken(#f44336, 10%));
+}
+
+.announcement-promotion {
+  background: linear-gradient(90deg, #9c27b0, darken(#9c27b0, 10%));
+}
+
+.announcement-custom {
+  background: linear-gradient(90deg, #607d8b, darken(#607d8b, 10%));
+}
+
+// Announcements Icon Styles
+.announcements-icon {
+  color: white;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  margin: 0 5px;
+  position: relative;
+
+  @include media-breakpoint-down(md) {
+    font-size: 1.3rem;
+  }
+
+  @include media-breakpoint-down(sm) {
+    font-size: 1.1rem;
+  }
+
+  i {
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: lighten($primary, 20%);
+    }
+
+    &.has-new {
+      color: #ff9800;
+      animation: pulse 2s infinite;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: -3px;
+        width: 8px;
+        height: 8px;
+        background-color: #ff9800;
+        border-radius: 50%;
+        box-shadow: 0 0 5px #ff9800;
+
+        @include media-breakpoint-down(sm) {
+          width: 6px;
+          height: 6px;
+          right: -2px;
+        }
+      }
+    }
+  }
+
+  .dropdown-menu {
+    padding: 0;
+    background: $black-300;
+    width: 350px;
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid $primary;
+    box-shadow: 0 0 15px rgba($primary, 0.3);
+    border-radius: 8px;
+
+    // Fix positioning for different screen sizes
+    @include media-breakpoint-down(lg) {
+      right: auto;
+      left: 35% !important;
+      transform: translateX(-50%);
+    }
+
+    @include media-breakpoint-down(md) {
+      width: 320px;
+    }
+
+    @include media-breakpoint-down(sm) {
+      width: 310px;
+      max-height: 400px;
+      position: fixed !important;
+      transform: translateX(-50%);
+    }
+
+    .dropdown-header {
+      background: linear-gradient(90deg, $black-200, darken($primary, 25%));
+      color: white;
+      padding: 12px 15px;
+      font-weight: bold;
+      border-bottom: 2px solid $primary;
+      text-align: center;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 0 0 5px rgba($primary, 0.7);
+    }
+
+    .announcements-list {
+      padding: 12px;
+
+      .announcement-card {
+        background: $black-200;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .announcement-header {
+          padding: 12px 15px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          color: white;
+          position: relative;
+          overflow: hidden;
+
+          &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 30%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1));
+          }
+
+          i {
+            font-size: 1.3rem;
+            background: rgba(0, 0, 0, 0.2);
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            margin-right: 0;
+          }
+
+          h6 {
+            margin: 0;
+            font-weight: bold;
+            font-size: 1rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+          }
+        }
+
+        .announcement-body {
+          padding: 15px;
+          background: $black-300;
+          color: $white-100;
+          border-top: 1px solid rgba(255, 255, 255, 0.05);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+          p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+          }
+
+          img {
+            width: 100%;
+            margin-top: 12px;
+            border-radius: 6px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+          }
+        }
+
+        .announcement-footer {
+          padding: 8px 15px;
+          background: rgba(0, 0, 0, 0.3);
+          color: rgba(255, 255, 255, 0.6);
+          font-size: 0.8rem;
+          text-align: right;
+          font-style: italic;
+        }
+      }
+    }
+  }
+}
+
+// Announcement card color classes
+.announcement-system .announcement-header {
+  background: linear-gradient(135deg, darken($primary, 10%), $primary);
+}
+
+.announcement-event .announcement-header {
+  background: linear-gradient(135deg, darken(#ff9800, 10%), #ff9800);
+}
+
+.announcement-update .announcement-header {
+  background: linear-gradient(135deg, darken(#2196f3, 10%), #2196f3);
+}
+
+.announcement-maintenance .announcement-header {
+  background: linear-gradient(135deg, darken(#f44336, 10%), #f44336);
+}
+
+.announcement-promotion .announcement-header {
+  background: linear-gradient(135deg, darken(#9c27b0, 10%), #9c27b0);
+}
+
+.announcement-custom .announcement-header {
+  background: linear-gradient(135deg, darken(#607d8b, 10%), #607d8b);
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }

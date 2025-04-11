@@ -2,13 +2,14 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject, Subject, take } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 import { FightEmoji, PlayerModel } from 'src/modules/core/models/player.model';
 import { PlayerStateEnum } from 'src/modules/game/activities/leadeboard/enum/player-state.enum';
 import { ChallengeModalComponent } from 'src/modules/game/components/challenge-modal/challenge-modal.component';
-import { MainState } from 'src/store/main.store';
+import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { SoundService } from './sound.service';
 
 export interface ChatMessage {
@@ -44,6 +45,7 @@ export class WebSocketService {
   private modalService = inject(BsModalService);
   private router = inject(Router);
   private soundService = inject(SoundService);
+  private toastr = inject(ToastrService);
 
   connect(): void {
     const token = this.store.selectSnapshot(MainState.getState)?.session?.token;
@@ -54,6 +56,12 @@ export class WebSocketService {
           token,
         }
         : undefined,
+    });
+
+    this.socket.on('notification', (notification: any) => {
+      this.soundService.playSound('assets/sounds/pop.mp3');
+      this.toastr.info(notification.title, 'New notification!');
+      this.store.dispatch(new RefreshPlayer());
     });
 
     this.socket.on('chatMessage', (message: ChatMessage) => {
