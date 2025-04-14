@@ -81,7 +81,14 @@
                   '.webp'
               }}"
             />
-            <span>{{ camelToe(item.itemData.damageType) }}</span>
+            <span
+              [ngStyle]="{
+                color: getDamageTypeColor(camelToe(item.itemData.damageType)),
+                textShadow: '0 0 5px ' + getDamageTypeColor(camelToe(item.itemData.damageType)) + '70'
+              }"
+            >
+              {{ camelToe(item.itemData.damageType) }}
+            </span>
             <span class="separator">•</span>
           }
           <span>{{ mapItemType(item.itemData.itemType) }}</span>
@@ -93,28 +100,9 @@
             {{ getRarityText(item.itemData.rarity) }}
           </span>
         </div>
-      </div>
-    </div>
 
-    <!-- Durability Bar -->
-    <div class="durability-section">
-      <div class="durability-label">
-        <span class="durability-icon">{{ durabilityIndicator(item) }}</span>
-        <span class="durability-percentage">
-          {{
-            getDurabilityPercentage(
-              item.durability,
-              item.itemData.rarity
-            ).toFixed(1)
-          }}%
-        </span>
       </div>
-      <div class="progress durability-progress">
-        <div class="progress-bar"
-             [ngClass]="getDurabilityBarClass(item.durability, item.itemData.rarity)"
-             [style.width.%]="getDurabilityPercentage(item.durability, item.itemData.rarity)">
-        </div>
-      </div>
+
     </div>
   </div>
 
@@ -141,6 +129,42 @@
           >
             <strong>IRI</strong> {{ item.item_rarity_stat.toFixed(2) }}
           </span>
+
+          <!-- Add IRI comparison -->
+          <span
+            *ngIf="compareWith && compareWith.item_rarity_stat"
+            class="iri-comparison"
+            [ngClass]="{
+              'iri-better': item.item_rarity_stat > compareWith.item_rarity_stat,
+              'iri-worse': item.item_rarity_stat < compareWith.item_rarity_stat,
+              'iri-equal': item.item_rarity_stat === compareWith.item_rarity_stat
+            }"
+          >
+            {{ item.item_rarity_stat > compareWith.item_rarity_stat ? '↑' :
+               item.item_rarity_stat < compareWith.item_rarity_stat ? '↓' : '=' }}
+            {{ Math.abs(item.item_rarity_stat - compareWith.item_rarity_stat).toFixed(2) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Add durability section here, below the image -->
+      <div class="durability-section w-100">
+        <div class="durability-label">
+          <span class="durability-icon">{{ durabilityIndicator(item) }}</span>
+          <span class="durability-percentage">
+            {{
+              getDurabilityPercentage(
+                item.durability,
+                item.itemData.rarity
+              ).toFixed(1)
+            }}%
+          </span>
+        </div>
+        <div class="progress durability-progress">
+          <div class="progress-bar"
+               [ngClass]="getDurabilityBarClass(item.durability, item.itemData.rarity)"
+               [style.width.%]="getDurabilityPercentage(item.durability, item.itemData.rarity)">
+          </div>
         </div>
       </div>
 
@@ -170,7 +194,7 @@
         <h4 class="stats-category-title">Primary Stats</h4>
         <ul class="stats-list">
           @for (key of getPrimaryStats(); track key) {
-            <li class="stat-item">
+            <li class="stat-item" [attr.data-stat-name]="parseKeyPascalCase(key)">
               <div class="stat-icon" [ngClass]="getStatIconClass(key)">
                 <img [src]="getStatIcon(key)" alt="{{ parseKeyPascalCase(key) }}" class="stat-icon-img">
               </div>
@@ -190,23 +214,23 @@
                     }}{{ getPercentage(key) }}
                   </span>
 
-                  @if (compareWith) {
+                  @if (getComparisonItem()) {
                     <span
                       class="comparison-value"
                       [ngClass]="{
                         negative:
-                          (item | compareItem: compareWith : key).charAt(0) ==
+                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
                           '-',
                         neutral:
-                          (item | compareItem: compareWith : key).charAt(0) ==
+                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
                           '0',
                         positive:
-                          (item | compareItem: compareWith : key).charAt(0) ==
+                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
                           '+',
                       }"
                     >
                       {{
-                        (item | compareItem: compareWith : key) +
+                        (item | compareItem: getComparisonItem() : key) +
                           getPercentage(key)
                       }}
                     </span>
@@ -223,7 +247,7 @@
         <h4 class="stats-category-title">Secondary Stats</h4>
         <ul class="stats-list">
           @for (key of getSecondaryStats(); track key) {
-            <li class="stat-item">
+            <li class="stat-item" [attr.data-stat-name]="parseKeyPascalCase(key)">
               <div class="stat-icon" [ngClass]="getStatIconClass(key)">
                 <img [src]="getStatIcon(key)" alt="{{ parseKeyPascalCase(key) }}" class="stat-icon-img">
               </div>
@@ -243,23 +267,23 @@
                     }}{{ getPercentage(key) }}
                   </span>
 
-                  @if (compareWith) {
+                  @if (getComparisonItem()) {
                     <span
                       class="comparison-value"
                       [ngClass]="{
                         negative:
-                          (item | compareItem: compareWith : key).charAt(0) ==
+                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
                           '-',
                         neutral:
-                          (item | compareItem: compareWith : key).charAt(0) ==
+                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
                           '0',
                         positive:
-                          (item | compareItem: compareWith : key).charAt(0) ==
+                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
                           '+',
                       }"
                     >
                       {{
-                        (item | compareItem: compareWith : key) +
+                        (item | compareItem: getComparisonItem() : key) +
                           getPercentage(key)
                       }}
                     </span>
@@ -276,7 +300,7 @@
         <h4 class="stats-category-title">Rarity Bonuses</h4>
         <ul class="stats-list">
           @for (key of getPercentageStats(); track key) {
-            <li class="stat-item">
+            <li class="stat-item" [attr.data-stat-name]="parseKeyPascalCase(key)">
               <div class="stat-icon" [ngClass]="getStatIconClass(key)">
                 <img [src]="getStatIcon(key)" alt="{{ parseKeyPascalCase(key) }}" class="stat-icon-img">
               </div>
@@ -296,23 +320,23 @@
                     }}{{ getPercentage(key) }}
                   </span>
 
-                  @if (compareWith) {
+                  @if (getComparisonItem()) {
                     <span
                       class="comparison-value"
                       [ngClass]="{
                         negative:
-                          (item | compareItem: compareWith : key).charAt(0) ==
+                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
                           '-',
                         neutral:
-                          (item | compareItem: compareWith : key).charAt(0) ==
+                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
                           '0',
                         positive:
-                          (item | compareItem: compareWith : key).charAt(0) ==
+                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
                           '+',
                       }"
                     >
                       {{
-                        (item | compareItem: compareWith : key) +
+                        (item | compareItem: getComparisonItem() : key) +
                           getPercentage(key)
                       }}
                     </span>

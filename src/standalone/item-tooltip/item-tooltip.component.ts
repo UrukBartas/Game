@@ -5,7 +5,7 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
 import { camelCase } from 'lodash-es';
 import { map } from 'rxjs';
-import { Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
+import { DamageType, Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
 import {
   calculatedDurabilityRule,
@@ -128,6 +128,7 @@ export class ItemTooltipComponent {
   @Input() extraData: any = null;
   @Input() compareWith: Item;
   @Input() isBeingCompared = false;
+  compareItem = inject(CompareItemPipe);
   public getExtraData() {
     return this.item.extraData || this.extraData;
   }
@@ -323,4 +324,59 @@ export class ItemTooltipComponent {
       return 'durability-low';
     }
   }
+
+  public Math = Math;
+
+  /**
+   * Determines if a comparison should be made between different weapon types
+   * @returns The appropriate item to compare with
+   */
+  public getComparisonItem(): Item | null {
+    if (!this.compareWith) return null;
+
+    // If not weapons, just use the standard comparison
+    if (
+      !this.isWeapon(this.item?.itemData?.itemType) ||
+      !this.isWeapon(this.compareWith?.itemData?.itemType)
+    ) {
+      return this.compareWith;
+    }
+
+    // For weapons, handle the 1H vs 2H comparison
+    const currentIsOneHanded = this.item?.itemData?.itemType === ItemType.Weapon1H;
+    const compareIsOneHanded = this.compareWith?.itemData?.itemType === ItemType.Weapon1H;
+
+    // If same weapon type, standard comparison
+    if (currentIsOneHanded === compareIsOneHanded) {
+      return this.compareWith;
+    }
+
+    return this.compareWith;
+  }
+
+  /**
+   * Checks if an item type is a weapon
+   */
+  private isWeapon(itemType: ItemType): boolean {
+    return itemType === ItemType.Weapon1H || itemType === ItemType.Weapon2H;
+  }
+
+  public getDamageTypeColor(damageType: string): string {
+    const damageColors = {
+      [DamageType.BLUDGEONING]: '#d3d3d3', // Light gray for bludgeoning
+      [DamageType.PIERCING]: '#c0c0c0',    // Silver for piercing
+      [DamageType.SLASHING]: '#a9a9a9',    // Dark gray for slashing
+      [DamageType.FIRE]: '#ff4500',        // Orange-red for fire
+      [DamageType.COLD]: '#add8e6',        // Light blue for cold/ice
+      [DamageType.ELECTRIC]: '#ffff00',    // Yellow for electric/lightning
+      [DamageType.POISON]: '#32cd32',      // Lime green for poison
+      [DamageType.PSYCHIC]: '#9370db',     // Medium purple for psychic/arcane
+      [DamageType.HOLY]: '#ffd700',        // Gold for holy
+      [DamageType.DARK]: '#800080',        // Purple for dark
+    };
+
+    return damageColors[damageType] || '#ffffff';
+  }
+
+
 }
