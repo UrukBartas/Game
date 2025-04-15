@@ -124,6 +124,12 @@
             >
             </app-item-box>
             <div
+              *ngIf="player && !player.emailVerified"
+              class="notifications notification-warning blink"
+            >
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div
               *ngIf="(notifications$ | async)?.newNotificationsCount > 0"
               class="notifications notifications-player"
             >
@@ -152,6 +158,14 @@
               </app-item-box>
               <strong>{{ player.name }}</strong>
               Level {{ player.level }}
+            </li>
+            <li *ngIf="player && !player.emailVerified" class="verification-alert">
+              <a class="dropdown-item px-2 py-2 text-warning" (click)="sendVerificationEmail()">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  <span>Verify your email to access all game functions. Click here.</span>
+                </div>
+              </a>
             </li>
             <hr />
             <li

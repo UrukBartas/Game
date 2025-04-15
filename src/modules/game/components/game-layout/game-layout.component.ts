@@ -52,6 +52,11 @@ export class GameLayoutComponent {
       return true;
     });
   }
+
+  public sendVerificationEmail() {
+    this.accountService.startEmailVerification();
+  }
+
   public routesNavigation: any[] = [
     {
       path: '/presale',

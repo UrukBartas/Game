@@ -81,6 +81,8 @@ export interface PlayerModel {
   finishedQuestsCount: number;
   configuration: PlayerConfiguration;
   unlockedEmojis: EmojiIdentifier[];
+  pveVictoriesWithoutDead: number;
+  pvpVictoriesWithoutDead: number;
 }
 
 export interface PlayerConfiguration {

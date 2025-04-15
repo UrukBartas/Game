@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { debounceTime, first, map, race, take, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { getRarityColor, rewardsByLeaderboardType, truncateEthereumAddress } from 'src/modules/utils';
@@ -18,7 +19,6 @@ import { pvpTiers } from './const/pvp-tiers';
 import { QuestTier, questTiers } from './const/quest-tiers';
 import { LeaderboardType } from './enum/leaderboard-type.enum';
 import { PlayerStateEnum } from './enum/player-state.enum';
-
 @Component({
   selector: 'app-leadeboard',
   templateUrl: './leadeboard.component.html',
@@ -41,6 +41,7 @@ export class LeadeboardComponent extends TemplatePage {
   public viewportService = inject(ViewportService);
   public topThreePlayers = signal<any[]>([]);
   public Infinity = Infinity;
+  public isHardcoreRealm = environment.realm === 'hardcore';
 
   public getLeaderboard$ = computed(() => {
     return this.playerService
@@ -100,7 +101,7 @@ export class LeadeboardComponent extends TemplatePage {
     return player.state;
   };
   public playerStates = PlayerStateEnum;
-  public actualAddress = this.store.selectSnapshot(MainState).address;
+  public player$ = this.store.select(MainState.getPlayer);
   public leaderboardType = signal<LeaderboardType>(LeaderboardType.PVE);
   public leaderboardTypes = LeaderboardType;
 
@@ -135,6 +136,18 @@ export class LeadeboardComponent extends TemplatePage {
   public setLevelLeaderboard() {
     this.leaderboardType.set(LeaderboardType.PVE);
     this.sortBy.set('level');
+  }
+
+  public setHardcorePveLeaderboard() {
+    this.leaderboardType.set(LeaderboardType.HARDCORE_PVE);
+    this.sortBy.set('pveVictoriesWithoutDead');
+    this.activePage.set(0);
+  }
+
+  public setHardcorePvpLeaderboard() {
+    this.leaderboardType.set(LeaderboardType.HARDCORE_PVP);
+    this.sortBy.set('pvpVictoriesWithoutDead');
+    this.activePage.set(0);
   }
 
   public getTitleForQuestsCompleted(questsCompleted: number): QuestTier {

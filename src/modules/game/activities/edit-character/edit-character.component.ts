@@ -31,7 +31,6 @@ import {
   MainState,
   RefreshPlayer,
 } from 'src/store/main.store';
-import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
 import { ClassSelectorComponent } from './components/character-selector/character-selector.component';
 
 export function passwordMatchingValidator(): ValidatorFn {
@@ -329,23 +328,6 @@ export class EditCharacterComponent extends TemplatePage {
   }
 
   public startEmailVerification() {
-    const player = this.store.selectSnapshot(MainState.getState).player;
-    const ref = this.modalService.show(ConfirmModalComponent, {
-      initialState: {
-        title: 'Start Email Verification',
-        description:
-          `You are about to begin the verification process for the email: ${player.email}.\n\n Please check your inbox and click on the verification link to complete the process. Once verified, you will earn the Verified Badge!`,
-        accept: async () => {
-          try {
-            firstValueFrom(this.authService.requestEmailVerification()).then(
-              () => this.toastService.success('Mail sent! Check your inbox!')
-            );
-            ref.hide();
-          } catch (error) {
-            this.toastService.error('Some error happened, try again!');
-          }
-        },
-      },
-    });
+    this.playerService.startEmailVerification();
   }
 }

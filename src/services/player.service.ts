@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { ToastrService } from 'ngx-toastr';
 import { Observable, finalize, firstValueFrom, tap } from 'rxjs';
 import { Consumable } from 'src/modules/core/models/consumable.model';
 import { Material } from 'src/modules/core/models/material.model';
@@ -16,7 +18,9 @@ import {
 } from 'src/modules/core/models/player.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 import { LeaderboardType } from 'src/modules/game/activities/leadeboard/enum/leaderboard-type.enum';
+import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
+import { AuthService } from './auth.service';
 import { ItemService } from './item.service';
 type LeaderboardPlayer = PlayerModel & { winCount: number };
 @Injectable({
@@ -25,7 +29,10 @@ type LeaderboardPlayer = PlayerModel & { winCount: number };
 export class PlayerService extends ApiBaseService {
   constructor(
     private http: HttpClient,
-    private itemService: ItemService
+    private itemService: ItemService,
+    private authService: AuthService,
+    private toastService: ToastrService,
+    private modalService: BsModalService
   ) {
     super(http);
     this.controllerPrefix = '/player';
@@ -41,6 +48,27 @@ export class PlayerService extends ApiBaseService {
       EmojiIdentifier.EMOJI_SAD,
       EmojiIdentifier.EMOJI_ANGRY
     ];
+  }
+
+  public startEmailVerification() {
+    const player = this.store.selectSnapshot(MainState.getState).player;
+    const ref = this.modalService.show(ConfirmModalComponent, {
+      initialState: {
+        title: 'Start Email Verification',
+        description:
+          `You are about to begin the verification process for the email: ${player.email}.\n\n Please check your inbox and click on the verification link to complete the process. Once verified, you will earn the Verified Badge!`,
+        accept: async () => {
+          try {
+            firstValueFrom(this.authService.requestEmailVerification()).then(
+              () => this.toastService.success('Mail sent! Check your inbox!')
+            );
+            ref.hide();
+          } catch (error) {
+            this.toastService.error('Some error happened, try again!');
+          }
+        },
+      },
+    });
   }
 
   public getExtraAttemptPrice(): Observable<number> {

@@ -26,12 +26,34 @@
           {{ viewportService.isMobile() ? '' : 'Quest Champions' }}
         </button>
         <button
+          *ngIf="isHardcoreRealm"
+          class="tab-item"
+          [ngClass]="{
+            active: leaderboardType() === leaderboardTypes.HARDCORE_PVE,
+          }"
+          (click)="setHardcorePveLeaderboard()"
+        >
+          <i class="bi bi-shield-fill-check tab-icon"></i>
+          {{ viewportService.isMobile() ? '' : 'Deathless Quests' }}
+        </button>
+        <button
           class="tab-item"
           [ngClass]="{ active: leaderboardType() === leaderboardTypes.PVP }"
           (click)="setPvpLeaderboard()"
         >
           <i class="bi bi-award-fill tab-icon"></i>
           {{ viewportService.isMobile() ? '' : 'Arena Victories' }}
+        </button>
+        <button
+          *ngIf="isHardcoreRealm"
+          class="tab-item"
+          [ngClass]="{
+            active: leaderboardType() === leaderboardTypes.HARDCORE_PVP,
+          }"
+          (click)="setHardcorePvpLeaderboard()"
+        >
+          <i class="bi bi-lightning-fill tab-icon"></i>
+          {{ viewportService.isMobile() ? '' : 'Deathless Arena' }}
         </button>
         <button
           class="tab-item"
@@ -48,22 +70,43 @@
       @if (leaderboardType() === leaderboardTypes.PVE) {
         <p>
           <i class="bi bi-info-circle-fill me-2"></i>
-          This leaderboard ranks players by the total number of quests completed during the {{ periodType() === 'weekly' ? 'current week' : 'current month' }}.
+          This leaderboard ranks players by the total number of quests completed
+          during the
+          {{ periodType() === 'weekly' ? 'current week' : 'current month' }}.
+        </p>
+      } @else if (leaderboardType() === leaderboardTypes.HARDCORE_PVE) {
+        <p>
+          <i class="bi bi-info-circle-fill me-2"></i>
+          This leaderboard ranks players by the total number of quests completed
+          without dying during the
+          {{ periodType() === 'weekly' ? 'current week' : 'current month' }}.
         </p>
       } @else if (leaderboardType() === leaderboardTypes.PVP) {
         <p>
           <i class="bi bi-info-circle-fill me-2"></i>
-          This leaderboard ranks players by the total number of arena victories achieved during the {{ periodType() === 'weekly' ? 'current week' : 'current month' }}.
+          This leaderboard ranks players by the total number of arena victories
+          achieved during the
+          {{ periodType() === 'weekly' ? 'current week' : 'current month' }}.
+        </p>
+      } @else if (leaderboardType() === leaderboardTypes.HARDCORE_PVP) {
+        <p>
+          <i class="bi bi-info-circle-fill me-2"></i>
+          This leaderboard ranks players by the total number of arena victories
+          achieved without dying during the
+          {{ periodType() === 'weekly' ? 'current week' : 'current month' }}.
         </p>
       } @else if (leaderboardType() === leaderboardTypes.TOP_PVP) {
         <p>
           <i class="bi bi-info-circle-fill me-2"></i>
-          This leaderboard ranks players by their arena rating points earned during the {{ periodType() === 'weekly' ? 'current week' : 'current month' }}.
+          This leaderboard ranks players by their arena rating points earned
+          during the
+          {{ periodType() === 'weekly' ? 'current week' : 'current month' }}.
         </p>
       } @else if (leaderboardType() === leaderboardTypes.ALL) {
         <p>
           <i class="bi bi-info-circle-fill me-2"></i>
-          This leaderboard shows all players in the realm, ranked by their overall level and experience.
+          This leaderboard shows all players in the realm, ranked by their
+          overall level and experience.
         </p>
       }
     </div>
@@ -169,16 +212,25 @@
             @if (leaderboardType() === leaderboardTypes.PVE) {
               <i class="bi bi-check-circle-fill"></i>
               {{ player.finishedQuestsCount }} Quests
+            } @else if (leaderboardType() === leaderboardTypes.HARDCORE_PVE) {
+              <i class="bi bi-shield-fill-check"></i>
+              {{ player.pveVictoriesWithoutDead }} Deathless
             } @else if (leaderboardType() === leaderboardTypes.PVP) {
               <i class="bi bi-trophy-fill"></i>
               {{ player.winCount }} Victories
+            } @else if (leaderboardType() === leaderboardTypes.HARDCORE_PVP) {
+              <i class="bi bi-lightning-fill"></i>
+              {{ player.pvpVictoriesWithoutDead }} Deathless
             } @else {
               <i class="bi bi-star-fill"></i> {{ player.mmr }} Rating
             }
           </div>
         </div>
 
-        <div class="player-reward" *ngIf="leaderboardType() !== leaderboardTypes.ALL">
+        <div
+          class="player-reward"
+          *ngIf="leaderboardType() !== leaderboardTypes.ALL"
+        >
           @if (leaderboardType() === leaderboardTypes.PVE) {
             <app-remote-item-box
               itemType="MISCELLANY"
@@ -193,7 +245,10 @@
               ></app-uruks-displayer>
             }
           } @else if (leaderboardType() === leaderboardTypes.PVP) {
-            @for (miscGroup of groupItemsByType(getRewards()[position].miscs); track miscGroup.id) {
+            @for (
+              miscGroup of groupItemsByType(getRewards()[position].miscs);
+              track miscGroup.id
+            ) {
               <app-remote-item-box
                 itemType="MISCELLANY"
                 [itemId]="miscGroup.id"
@@ -208,7 +263,10 @@
               ></app-uruks-displayer>
             }
           } @else {
-            @for (miscGroup of groupItemsByType(getRewards()[position].miscs); track miscGroup.id) {
+            @for (
+              miscGroup of groupItemsByType(getRewards()[position].miscs);
+              track miscGroup.id
+            ) {
               <app-remote-item-box
                 itemType="MISCELLANY"
                 [itemId]="miscGroup.id"
@@ -218,7 +276,12 @@
               ></app-remote-item-box>
             }
             @if (getRewards()[position].consumables?.length > 0) {
-              @for (consumableGroup of groupItemsByType(getRewards()[position].consumables); track consumableGroup.id) {
+              @for (
+                consumableGroup of groupItemsByType(
+                  getRewards()[position].consumables
+                );
+                track consumableGroup.id
+              ) {
                 <div class="reward-item consumable-reward">
                   <app-remote-item-box
                     itemType="CONSUMABLE"
@@ -237,7 +300,10 @@
   </div>
 </div>
 
-<div class="leaderboard-list-container">
+<div
+  class="leaderboard-list-container"
+  *ngIf="player$ | async as currentPlayer"
+>
   @for (
     player of getLeaderboard$() | async;
     track player.id;
@@ -245,9 +311,9 @@
   ) {
     <div
       class="list-leaderboard-item text-white position-relative"
-      [ngClass]="{ active: player.id == actualAddress }"
+      [ngClass]="{ active: player.id == currentPlayer.id }"
     >
-      @if (player.id == actualAddress) {
+      @if (player.id == currentPlayer.id) {
         <div class="you-indicator">YOU</div>
       }
 
@@ -365,10 +431,30 @@
               </span>
             }
 
+            @if (leaderboardType() === leaderboardTypes.HARDCORE_PVE) {
+              <span
+                class="stat-badge hardcore-badge"
+                [ngbTooltip]="'Total quests completed without dying'"
+              >
+                <i class="bi bi-shield-fill-check stat-icon"></i>
+                {{ player.pveVictoriesWithoutDead }} Deathless Quests
+              </span>
+            }
+
             @if (leaderboardType() === leaderboardTypes.PVP) {
               <span class="stat-badge" [ngbTooltip]="'Total PvP victories'">
                 <i class="bi bi-trophy-fill stat-icon"></i>
                 {{ player.winCount }} Victories
+              </span>
+            }
+
+            @if (leaderboardType() === leaderboardTypes.HARDCORE_PVP) {
+              <span
+                class="stat-badge hardcore-badge"
+                [ngbTooltip]="'Total PvP victories without dying'"
+              >
+                <i class="bi bi-lightning-fill stat-icon"></i>
+                {{ player.pvpVictoriesWithoutDead }} Deathless Victories
               </span>
             }
 
@@ -387,7 +473,7 @@
       <div class="list-leaderboard-item-right">
         <div class="action-buttons d-flex align-items-center">
           <div
-            *ngIf="player.id !== actualAddress"
+            *ngIf="player.id !== currentPlayer.id"
             class="auto-battle-btn"
             [ngbTooltip]="tooltipTemplate"
             [tooltipContext]="{ text: 'Autobattle player' }"
@@ -398,7 +484,7 @@
           </div>
           <div
             *ngIf="
-              player.id !== actualAddress &&
+              player.id !== currentPlayer.id &&
               getPlayerState(player.id) === playerStates.ONLINE
             "
             class="duel-btn"

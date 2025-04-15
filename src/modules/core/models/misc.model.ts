@@ -35,6 +35,24 @@ export enum MiscellanyItemIdentifier {
   MoneyBag500 = 'MoneyBag500',
   MoneyBag1000 = 'MoneyBag1000',
   RecipeEnchant = 'RecipeEnchant',
+  Boost_Exp_10 = 'Boost_Exp_10',
+  Boost_Exp_15 = 'Boost_Exp_15',
+  Boost_Exp_30 = 'Boost_Exp_30',
+  Boost_Exp_50 = 'Boost_Exp_50',
+  Boost_Exp_100 = 'Boost_Exp_100',
+  Boost_Exp_150 = 'Boost_Exp_150',
+  Boost_Exp_200 = 'Boost_Exp_200',
+  Boost_Exp_300 = 'Boost_Exp_300',
+  Boost_Exp_500 = 'Boost_Exp_500',
+  Boost_Uruks_10 = 'Boost_Uruks_10',
+  Boost_Uruks_15 = 'Boost_Uruks_15',
+  Boost_Uruks_30 = 'Boost_Uruks_30',
+  Boost_Uruks_50 = 'Boost_Uruks_50',
+  Boost_Uruks_100 = 'Boost_Uruks_100',
+  Boost_Uruks_150 = 'Boost_Uruks_150',
+  Boost_Uruks_200 = 'Boost_Uruks_200',
+  Boost_Uruks_300 = 'Boost_Uruks_300',
+  Boost_Uruks_500 = 'Boost_Uruks_500',
 
   CryptCommonLootbox = 'CryptCommonLootbox',
   CryptUncommonLootbox = 'CryptUncommonLootbox',
@@ -111,6 +129,29 @@ export const MiscellanyItemIdentifierDisplay: Record<
   [MiscellanyItemIdentifier.PortraitRogueWest]: 'Nyx West',
   [MiscellanyItemIdentifier.PortraitWarriorWest]: 'Tulkas West',
   [MiscellanyItemIdentifier.EmberforgedElixir]: 'Emberforged Elixir',
+
+  [MiscellanyItemIdentifier.Boost_Exp_10]: 'Boost Exp 10',
+  [MiscellanyItemIdentifier.Boost_Exp_15]: 'Boost Exp 15',
+  [MiscellanyItemIdentifier.Boost_Exp_30]: 'Boost Exp 30',
+  [MiscellanyItemIdentifier.Boost_Exp_50]: 'Boost Exp 50',
+  [MiscellanyItemIdentifier.Boost_Exp_100]: 'Boost Exp 100',
+  [MiscellanyItemIdentifier.Boost_Exp_150]: 'Boost Exp 150',
+  [MiscellanyItemIdentifier.Boost_Exp_200]: 'Boost Exp 200',
+  [MiscellanyItemIdentifier.Boost_Exp_300]: 'Boost Exp 300',
+  [MiscellanyItemIdentifier.Boost_Exp_500]: 'Boost Exp 500',
+
+  [MiscellanyItemIdentifier.Boost_Uruks_10]: 'Boost Uruks 10',
+  [MiscellanyItemIdentifier.Boost_Uruks_15]: 'Boost Uruks 15',
+  [MiscellanyItemIdentifier.Boost_Uruks_30]: 'Boost Uruks 30',
+  [MiscellanyItemIdentifier.Boost_Uruks_50]: 'Boost Uruks 50',
+  [MiscellanyItemIdentifier.Boost_Uruks_100]: 'Boost Uruks 100',
+  [MiscellanyItemIdentifier.Boost_Uruks_150]: 'Boost Uruks 150',
+  [MiscellanyItemIdentifier.Boost_Uruks_200]: 'Boost Uruks 200',
+  [MiscellanyItemIdentifier.Boost_Uruks_300]: 'Boost Uruks 300',
+  [MiscellanyItemIdentifier.Boost_Uruks_500]: 'Boost Uruks 500',
+
+
+
 };
 
 // Interfaces

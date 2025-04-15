@@ -9,8 +9,28 @@ import { pvpTiers } from './game/activities/leadeboard/const/pvp-tiers';
 import { questTiers } from './game/activities/leadeboard/const/quest-tiers';
 import { LeaderboardType } from './game/activities/leadeboard/enum/leaderboard-type.enum';
 
+const weeklyHardcoreRewards =
+  [
+    { miscs: [MiscellanyItemIdentifier.Boost_Exp_50, MiscellanyItemIdentifier.Boost_Exp_50, MiscellanyItemIdentifier.Boost_Exp_50, MiscellanyItemIdentifier.Boost_Uruks_50, MiscellanyItemIdentifier.Boost_Uruks_50, MiscellanyItemIdentifier.Boost_Uruks_50], gold: 0 },
+    { miscs: [MiscellanyItemIdentifier.Boost_Exp_30, MiscellanyItemIdentifier.Boost_Exp_30, MiscellanyItemIdentifier.Boost_Uruks_30, MiscellanyItemIdentifier.Boost_Uruks_30], gold: 0 },
+    { miscs: [MiscellanyItemIdentifier.Boost_Exp_10, MiscellanyItemIdentifier.Boost_Uruks_10], gold: 0 },
+  ];
+
+const monthlyHardcoreRewards = [
+  { miscs: [MiscellanyItemIdentifier.Boost_Exp_100, MiscellanyItemIdentifier.Boost_Exp_100, MiscellanyItemIdentifier.Boost_Exp_100, MiscellanyItemIdentifier.Boost_Uruks_100, MiscellanyItemIdentifier.Boost_Uruks_100, MiscellanyItemIdentifier.Boost_Uruks_100], gold: 200 },
+  { miscs: [MiscellanyItemIdentifier.Boost_Exp_50, MiscellanyItemIdentifier.Boost_Uruks_50], gold: 100 },
+  { miscs: [MiscellanyItemIdentifier.Boost_Exp_30], gold: 100 },
+]
 
 export const rewardsByLeaderboardType = {
+  [LeaderboardType.HARDCORE_PVE]: {
+    weekly: weeklyHardcoreRewards,
+    monthly: monthlyHardcoreRewards,
+  },
+  [LeaderboardType.HARDCORE_PVP]: {
+    weekly: weeklyHardcoreRewards,
+    monthly: monthlyHardcoreRewards,
+  },
   [LeaderboardType.PVE]: {
     weekly: [
       { lootbox: MiscellanyItemIdentifier.LootboxLegendary, gold: 0 },

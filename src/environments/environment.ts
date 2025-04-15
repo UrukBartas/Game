@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  realm: 'hardcore',
   permaLinkImgPref:
     'https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main',
   permaLinkImgPrefMobile:
