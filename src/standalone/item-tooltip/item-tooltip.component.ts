@@ -128,7 +128,6 @@ export class ItemTooltipComponent {
   @Input() extraData: any = null;
   @Input() compareWith: Item;
   @Input() isBeingCompared = false;
-  compareItem = inject(CompareItemPipe);
   public getExtraData() {
     return this.item.extraData || this.extraData;
   }
