@@ -1,0 +1,339 @@
+@import 'bootstrap/scss/bootstrap';
+@import 'src/variables.scss';
+
+// Gold variables
+$gold-primary: #c8aa6e;
+$gold-light: #f0e6d2;
+$gold-dark: #785a28;
+
+.product-detail-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba($black, 0.8);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+
+  @include media-breakpoint-down(md) {
+    padding: 1rem;
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+}
+
+.product-detail-modal {
+  background: rgba($black-300, 0.9);
+  border: 1px solid $gold-dark;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 1000px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+  @include media-breakpoint-down(md) {
+    max-height: none;
+  }
+}
+
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 36px;
+  height: 36px;
+  background: rgba($black, 0.5);
+  border: 1px solid $gold-dark;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+
+  i {
+    color: $gold-light;
+    font-size: 1rem;
+  }
+
+  &:hover {
+    background: $gold-dark;
+
+    i {
+      color: $black;
+    }
+  }
+}
+
+.product-detail-content {
+  display: flex;
+
+  @include media-breakpoint-down(md) {
+    flex-direction: column;
+  }
+}
+
+.product-images {
+  flex: 1;
+  padding: 2rem;
+
+  .main-image {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .image-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      background: rgba($black, 0.5);
+      border: 1px solid $gold-dark;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      i {
+        color: $gold-light;
+        font-size: 0.9rem;
+      }
+
+      &:hover {
+        background: $gold-dark;
+
+        i {
+          color: $black;
+        }
+      }
+
+      &.prev {
+        left: 10px;
+      }
+
+      &.next {
+        right: 10px;
+      }
+    }
+  }
+
+  .image-thumbnails {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .thumbnail {
+      width: 70px;
+      height: 70px;
+      border: 2px solid transparent;
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &.active {
+        border-color: $gold-primary;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+}
+
+.product-info {
+  flex: 1;
+  padding: 2rem;
+  border-left: 1px solid rgba($gold-dark, 0.3);
+
+  @include media-breakpoint-down(md) {
+    border-left: none;
+    border-top: 1px solid rgba($gold-dark, 0.3);
+  }
+
+  .product-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: $gold-primary;
+    margin-bottom: 0.5rem;
+  }
+
+  .product-price {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $white-100;
+    margin-bottom: 1.5rem;
+  }
+
+  .product-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: $white-300;
+    margin-bottom: 2rem;
+  }
+
+  .product-options {
+    margin-bottom: 2rem;
+
+    .option-group {
+      margin-bottom: 1.5rem;
+
+      .option-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: $gold-light;
+        margin-bottom: 0.8rem;
+      }
+
+      .option-values {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+
+        .option-value {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 1rem;
+          background: rgba($black, 0.5);
+          border: 1px solid $gold-dark;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &.selected {
+            background: linear-gradient(to bottom, $gold-primary, $gold-dark);
+
+            .option-name {
+              color: $black;
+              font-weight: 600;
+            }
+          }
+
+          &:hover:not(.selected) {
+            border-color: $gold-primary;
+            transform: translateY(-2px);
+          }
+
+          .option-image {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            overflow: hidden;
+
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+
+          .option-name {
+            font-size: 0.9rem;
+            color: $white-300;
+          }
+        }
+      }
+    }
+  }
+
+  .quantity-selector {
+    margin-bottom: 2rem;
+
+    .quantity-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: $gold-light;
+      margin-bottom: 0.8rem;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .quantity-btn {
+        width: 36px;
+        height: 36px;
+        background: rgba($black, 0.5);
+        border: 1px solid $gold-dark;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: $gold-light;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: $gold-dark;
+          color: $black;
+        }
+      }
+
+      .quantity-value {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: $white-100;
+        min-width: 30px;
+        text-align: center;
+      }
+    }
+  }
+
+  .add-to-cart-btn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(to bottom, $gold-primary, $gold-dark);
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $black;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+      background: linear-gradient(to bottom, lighten($gold-primary, 5%), $gold-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}

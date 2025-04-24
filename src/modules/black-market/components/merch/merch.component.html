@@ -1,0 +1,61 @@
+<div class="merch-container">
+  <!-- Store Header -->
+  <div class="store-header">
+    <h1 class="store-title">EXCLUSIVE MERCHANDISE</h1>
+    <p class="store-subtitle">Limited edition apparel and collectibles</p>
+  </div>
+
+  <!-- Category Navigation -->
+  <div class="category-nav">
+    <button class="category-button" [ngClass]="{'active': activeCategory === 'all'}" (click)="setCategory('all')">
+      All Items
+    </button>
+    <button class="category-button" [ngClass]="{'active': activeCategory === 'apparel'}" (click)="setCategory('apparel')">
+      Apparel
+    </button>
+    <button class="category-button" [ngClass]="{'active': activeCategory === 'stickers'}" (click)="setCategory('stickers')">
+      Stickers
+    </button>
+    <button class="category-button" [ngClass]="{'active': activeCategory === 'accessories'}" (click)="setCategory('accessories')">
+      Accessories
+    </button>
+  </div>
+
+  <!-- Products Grid -->
+  <div class="products-grid">
+    <div class="product-card" *ngFor="let product of filteredProducts" (click)="openProductDetail(product)">
+      <div class="product-image">
+        <img [src]="product.images[0]" [alt]="product.name">
+        <div class="product-badge" *ngIf="product.badge">{{ product.badge }}</div>
+      </div>
+      <div class="product-info">
+        <h3 class="product-name">{{ product.name }}</h3>
+        <p class="product-price">{{ product.price | currency:'USD' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shopping Cart Button -->
+  <div class="cart-button" (click)="toggleCart()">
+    <i class="fa-solid fa-shopping-cart"></i>
+    <span class="cart-count" *ngIf="cartItems.length > 0">{{ cartItems.length }}</span>
+  </div>
+
+  <!-- Product Detail Modal -->
+  <app-product-detail
+    *ngIf="selectedProduct"
+    [product]="selectedProduct"
+    (close)="closeProductDetail()"
+    (addToCart)="addToCart($event)">
+  </app-product-detail>
+
+  <!-- Shopping Cart Modal -->
+  <app-shopping-cart
+    *ngIf="isCartOpen"
+    [cartItems]="cartItems"
+    (close)="toggleCart()"
+    (updateQuantity)="updateCartItemQuantity($event)"
+    (removeItem)="removeFromCart($event)"
+    (checkout)="proceedToCheckout()">
+  </app-shopping-cart>
+</div>

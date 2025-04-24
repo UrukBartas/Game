@@ -1,0 +1,70 @@
+<div class="product-detail-overlay" (click)="closeModal()">
+  <div class="product-detail-modal" (click)="$event.stopPropagation()">
+    <button class="close-button" (click)="closeModal()">
+      <i class="fa-solid fa-times"></i>
+    </button>
+
+    <div class="product-detail-content">
+      <div class="product-images">
+        <div class="main-image">
+          <button class="image-nav prev" (click)="prevImage()">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <img [src]="product.images[currentImageIndex]" [alt]="product.name">
+          <button class="image-nav next" (click)="nextImage()">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="image-thumbnails" *ngIf="product.images.length > 1">
+          <div
+            class="thumbnail"
+            *ngFor="let image of product.images; let i = index"
+            [ngClass]="{'active': currentImageIndex === i}"
+            (click)="changeImage(i)">
+            <img [src]="image" [alt]="product.name + ' thumbnail ' + i">
+          </div>
+        </div>
+      </div>
+
+      <div class="product-info">
+        <h2 class="product-name">{{ product.name }}</h2>
+        <p class="product-price">{{ product.price | currency:'USD' }}</p>
+        <p class="product-description">{{ product.description }}</p>
+
+        <div class="product-options" *ngIf="product.options">
+          <div class="option-group" *ngFor="let option of product.options">
+            <h3 class="option-title">{{ option.type | titlecase }}</h3>
+
+            <div class="option-values">
+              <div
+                class="option-value"
+                *ngFor="let value of option.values"
+                [ngClass]="{'selected': isOptionSelected(option.type, value)}"
+                (click)="selectOption(option.type, value)">
+
+                <div class="option-image" *ngIf="value.image">
+                  <img [src]="value.image" [alt]="value.name">
+                </div>
+                <span class="option-name">{{ value.name }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="quantity-selector">
+          <h3 class="quantity-title">Quantity</h3>
+          <div class="quantity-controls">
+            <button class="quantity-btn" (click)="decrementQuantity()">-</button>
+            <span class="quantity-value">{{ quantity }}</span>
+            <button class="quantity-btn" (click)="incrementQuantity()">+</button>
+          </div>
+        </div>
+
+        <button class="add-to-cart-btn" (click)="addItemToCart()">
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

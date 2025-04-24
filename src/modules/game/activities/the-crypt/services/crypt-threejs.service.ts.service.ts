@@ -1,5 +1,5 @@
 import { ElementRef, Injectable, NgZone } from '@angular/core';
-import { LootboxPresaleThreeService } from 'src/modules/lootbox-presale/services/lootbox-presale-threejs.service';
+import { LootboxPresaleThreeService } from 'src/modules/black-market/services/lootbox-presale-threejs.service';
 import { ViewportService } from 'src/services/viewport.service';
 import * as THREE from 'three';
 
@@ -23,7 +23,7 @@ export class CryptThreejsServiceTsService extends LootboxPresaleThreeService {
     this.camera = new THREE.PerspectiveCamera(
       75,
       container.nativeElement.clientWidth /
-        container.nativeElement.clientHeight,
+      container.nativeElement.clientHeight,
       0.1,
       1000
     );

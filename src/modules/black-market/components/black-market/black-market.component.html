@@ -1,0 +1,75 @@
+<div class="black-market-container">
+  <!-- Background elements -->
+  <div class="background-overlay"></div>
+  <div #animatedParticles class="animated-particles"></div>
+
+  <!-- Main content -->
+  <div class="content-container" [ngClass]="{ hidden: activeSection !== null }">
+    <div class="market-header">
+      <h1 class="market-title">BLACK MARKET</h1>
+      <p class="market-subtitle">Exclusive items and rare treasures</p>
+    </div>
+
+    <!-- Back button for main screen -->
+    <div class="back-nav main-back">
+      <button class="back-button" (click)="navigateBack()">
+        <i class="fa-solid fa-arrow-left"></i> Return to Game
+      </button>
+    </div>
+
+    <div class="market-options">
+      <div class="market-option" (click)="navigateToSection('boxes')">
+        <div class="option-content">
+          <div class="option-icon">
+            <i class="fa-solid fa-gem"></i>
+          </div>
+          <h2 class="option-title">BOXES</h2>
+          <p class="option-description">
+            Discover rare loot and exclusive items
+          </p>
+        </div>
+        <div class="option-border"></div>
+      </div>
+
+      <div class="market-option" (click)="navigateToSection('merch')">
+        <div class="option-content">
+          <div class="option-icon">
+            <i class="fa-solid fa-tshirt"></i>
+          </div>
+          <h2 class="option-title">MERCH</h2>
+          <p class="option-description">
+            Limited edition merchandise and collectibles
+          </p>
+        </div>
+        <div class="option-border"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content sections -->
+  <div
+    class="section-container"
+    [ngClass]="{ active: activeSection === 'boxes' }"
+  >
+    <div class="back-nav" *ngIf="activeSection === 'boxes'">
+      <button class="back-button" (click)="resetSection()">
+        <i class="fa-solid fa-arrow-left"></i> Return to Market
+      </button>
+    </div>
+    <app-lootbox-presale
+      *ngIf="activeSection === 'boxes'"
+    ></app-lootbox-presale>
+  </div>
+
+  <div
+    class="section-container"
+    [ngClass]="{ active: activeSection === 'merch' }"
+  >
+    <div class="back-nav" *ngIf="activeSection === 'merch'">
+      <button class="back-button" (click)="resetSection()">
+        <i class="fa-solid fa-arrow-left"></i> Return to Market
+      </button>
+    </div>
+    <app-merch *ngIf="activeSection === 'merch'"></app-merch>
+  </div>
+</div>
