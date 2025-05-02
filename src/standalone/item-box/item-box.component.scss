@@ -84,3 +84,22 @@
   left: 0;
   pointer-events: none;
 }
+
+.set-indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: rgba($black-300, 0.8);
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+
+  .set-icon {
+    font-size: 0.7rem;
+  }
+}

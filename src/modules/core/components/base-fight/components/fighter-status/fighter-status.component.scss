@@ -1,10 +1,95 @@
-#status-bar {
-  position: relative;
-  width: 80%;
-  flex-direction: column;
+#status-container {
   display: flex;
-  gap: 5px;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 0.5rem;
+  flex-direction: column;
 
+  .status-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &.buffs-section {
+      align-items: flex-start;
+    }
+
+    &.debuffs-section {
+      align-items: flex-end;
+    }
+
+    &.energy-status {
+      align-items: center;
+      justify-content: center;
+    }
+
+    .effects-container {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      max-width: 150px;
+
+      .effect-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+
+        .set-passive-image {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        i {
+          font-size: 1rem;
+          position: relative;
+
+          span {
+            position: absolute;
+            bottom: -0.5rem;
+            right: -0.5rem;
+            font-size: 0.7rem;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            width: 1rem;
+            height: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+          }
+
+          .infinity-symbol {
+            font-size: 0.8em;
+            font-weight: bold;
+          }
+        }
+
+        .emoji-icon {
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+
+  // Colores para los diferentes tipos de efectos
   .text-purple {
     color: #6d507c;
   }
@@ -45,13 +130,96 @@
     color: #ffffff;
   }
 
-  .fa-flask {
-    padding-right: 7px;
-    padding-top: 3px;
-    position: relative;
-    span {
-      color: white;
-      font-size: 10px;
+  .text-red {
+    color: #ff5252;
+  }
+
+  // Colores para pasivas de set
+  .text-divine {
+    color: #ffeb3b;
+  }
+
+  .text-blood {
+    color: #d32f2f;
+  }
+
+  .text-serpent {
+    color: #4caf50;
+  }
+
+  .text-burning {
+    color: #ff9800;
+  }
+
+  .text-sharp {
+    color: #9e9e9e;
+  }
+
+  .text-illusion {
+    color: #9c27b0;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  #status-container {
+    .status-section {
+      .effects-container {
+        max-width: 100px;
+        gap: 0.3rem;
+
+        .effect-icon {
+          width: 1.5rem;
+          height: 1.5rem;
+
+          i {
+            font-size: 0.8rem;
+
+            span {
+              font-size: 0.6rem;
+              width: 0.8rem;
+              height: 0.8rem;
+            }
+          }
+
+          .emoji-icon {
+            font-size: 1rem;
+          }
+        }
+      }
     }
   }
+}
+
+.effect-badge {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+
+  &.class-passive {
+    background-color: #8e44ad; // Púrpura para pasivas de clase
+  }
+
+  &.set-passive {
+    background-color: #27ae60; // Verde para pasivas de set
+  }
+}
+
+.effect-icon {
+  position: relative;
+  // Estilos existentes...
+}
+
+.class-passive {
+  background-color: rgba(142, 68, 173, 0.3); // Fondo púrpura semi-transparente para pasivas de clase
+  border: 1px solid #8e44ad;
 }

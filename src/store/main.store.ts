@@ -5,9 +5,11 @@ import { Device } from '@capacitor/device';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { disconnect } from '@wagmi/core';
 import { ToastrService } from 'ngx-toastr';
-import { debounceTime, firstValueFrom, take } from 'rxjs';
+import { debounceTime, firstValueFrom, take, tap } from 'rxjs';
 import { FightTypes } from 'src/modules/core/components/base-fight/models/base-fight.model';
-import { FightModel } from 'src/modules/core/models/fight.model';
+import { ClassPassive } from 'src/modules/core/models/class-passive.model';
+import { ItemSetPassive } from 'src/modules/core/models/item-set-passive.model';
+import { ItemSetData } from 'src/modules/core/models/item-set.model';
 import { MiscellanyItemData } from 'src/modules/core/models/misc.model';
 import { NotificationResponseModel } from 'src/modules/core/models/notifications.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
@@ -18,22 +20,23 @@ import { AuthService } from 'src/services/auth.service';
 import { NotificationsService } from 'src/services/notifications.service';
 import { PlayerService } from 'src/services/player.service';
 import { SessionService } from 'src/services/session.service';
+import { StatsService } from 'src/services/stats.service';
 import { WalletService } from 'src/services/wallet.service';
 import { WebSocketService } from 'src/services/websocket.service';
 
 export class ConnectWallet {
   static readonly type = '[Wallet] Connect';
-  constructor(public payload: string) {}
+  constructor(public payload: string) { }
 }
 
 export class LoginPlayer {
   static readonly type = '[Player] Log in';
-  constructor(public payload?: { email: string; password: string }) {}
+  constructor(public payload?: { email: string; password: string }) { }
 }
 
 export class SetPlayer {
   static readonly type = '[Player] Set';
-  constructor(public payload: PlayerModel) {}
+  constructor(public payload: PlayerModel) { }
 }
 
 export class RefreshPlayer {
@@ -42,12 +45,12 @@ export class RefreshPlayer {
 
 export class SetSession {
   static readonly type = '[Session] Set';
-  constructor(public payload: SessionModel) {}
+  constructor(public payload: SessionModel) { }
 }
 
 export class SetNotifications {
   static readonly type = '[Notifications] Set';
-  constructor(public payload: NotificationResponseModel) {}
+  constructor(public payload: NotificationResponseModel) { }
 }
 
 export class DisconnectWallet {
@@ -56,34 +59,55 @@ export class DisconnectWallet {
 
 export class SetQuests {
   static readonly type = '[Quest] Set';
-  constructor(public payload: QuestModel[]) {}
+  constructor(public payload: QuestModel[]) { }
 }
 
 export class SetSkins {
   static readonly type = '[Skins] Set';
-  constructor(public payload: MiscellanyItemData[]) {}
+  constructor(public payload: MiscellanyItemData[]) { }
+}
+
+export class SetItemSets {
+  static readonly type = '[ItemSets] Set';
+  constructor(public payload: ItemSetData[]) { }
+}
+
+export class LoadItemSets {
+  static readonly type = '[ItemSets] Load';
 }
 
 export class StartFight {
   static readonly type = '[Fight] Start';
-  constructor(public fightType: FightTypes) {}
+  constructor(public fightType: FightTypes) { }
 }
 
 export class EndFight {
   static readonly type = '[Fight] End';
-  constructor(public fightType: FightTypes) {}
+  constructor(public fightType: FightTypes) { }
 }
 
-export class MainStateModel {
-  public address: string;
-  public player: PlayerModel;
-  public session: SessionModel;
-  public quests: QuestModel[];
-  public activeFightTypes: FightTypes[];
-  public notifications: NotificationResponseModel;
-  public skins: MiscellanyItemData[];
-  public web3: boolean;
+export class LoadItemSetPassives {
+  static readonly type = '[Main] Load Item Set Passives';
 }
+
+export class LoadClassPassives {
+  static readonly type = '[Main] Load Class Passives';
+}
+
+export interface MainStateModel {
+  address: string;
+  player: PlayerModel;
+  session: SessionModel;
+  quests: QuestModel[];
+  activeFightTypes: FightTypes[];
+  notifications: NotificationResponseModel;
+  skins: MiscellanyItemData[];
+  itemSets: ItemSetData[];
+  web3: boolean;
+  itemSetPassives: Record<string, ItemSetPassive>;
+  classPassives: Record<string, ClassPassive>;
+}
+
 const defaultState = {
   address: '',
   player: null,
@@ -92,7 +116,10 @@ const defaultState = {
   activeFightTypes: [],
   notifications: null,
   skins: null,
+  itemSets: [],
   web3: false,
+  itemSetPassives: {},
+  classPassives: {},
 };
 
 export const IS_DEFAULT_OR_EMPTY_STATE = (state: any) => {
@@ -118,6 +145,7 @@ export class MainState {
   authService = inject(AuthService);
   notificationsService = inject(NotificationsService);
   storePersistanceService = inject(StorePersistenceService);
+  statsService = inject(StatsService);
 
   @Action(ConnectWallet)
   connectWallet(
@@ -160,6 +188,26 @@ export class MainState {
     });
   }
 
+  @Action(SetItemSets)
+  setItemSets(
+    { patchState }: StateContext<MainStateModel>,
+    { payload }: SetItemSets
+  ) {
+    patchState({
+      itemSets: payload,
+    });
+  }
+
+  @Action(LoadItemSets)
+  async loadItemSets({ dispatch }: StateContext<MainStateModel>) {
+    try {
+      const itemSets = await firstValueFrom(this.statsService.getItemSets());
+      dispatch(new SetItemSets(itemSets));
+    } catch (error) {
+      console.error('Error loading item sets:', error);
+    }
+  }
+
   @Action(SetNotifications)
   setNotifications(
     { patchState }: StateContext<MainStateModel>,
@@ -171,7 +219,7 @@ export class MainState {
   }
 
   @Action(LoginPlayer)
-  async loginPlayer({ patchState }: StateContext<MainStateModel>, { payload }) {
+  async loginPlayer({ patchState, dispatch }: StateContext<MainStateModel>, { payload }) {
     let player = null;
 
     if (!!payload?.email) {
@@ -195,6 +243,7 @@ export class MainState {
         const notifications = await firstValueFrom(
           this.notificationsService.getNotifications()
         );
+
         patchState({ player, session, notifications });
         this.router.navigateByUrl('/inventory');
       } else if (!this.router.url.includes('external')) {
@@ -229,6 +278,7 @@ export class MainState {
 
   @Action(RefreshPlayer) async refreshPlayer({
     patchState,
+    dispatch
   }: StateContext<MainStateModel>) {
     try {
       const player = await this.playerService
@@ -238,6 +288,7 @@ export class MainState {
       patchState({
         player: player,
       });
+      // Cargar los datos de los sets de items
     } catch (error) {
       this.store.dispatch(new DisconnectWallet());
     }
@@ -272,6 +323,26 @@ export class MainState {
     patchState({ activeFightTypes });
   }
 
+  @Action(LoadItemSetPassives)
+  loadItemSetPassives(ctx: StateContext<MainStateModel>) {
+    return this.statsService.getItemSetPassives().pipe(
+      tap((itemSetPassives) => {
+        ctx.patchState({ itemSetPassives });
+      })
+    );
+  }
+
+  @Action(LoadClassPassives)
+  loadClassPassives(ctx: StateContext<MainStateModel>) {
+    return this.statsService.getClassPassives().pipe(
+      tap((classPassives) => {
+        ctx.patchState({
+          classPassives
+        });
+      })
+    );
+  }
+
   @Selector()
   static getState(state: MainStateModel): MainStateModel {
     return state;
@@ -288,6 +359,11 @@ export class MainState {
   }
 
   @Selector()
+  static getItemSets(state: MainStateModel): ItemSetData[] {
+    return state.itemSets;
+  }
+
+  @Selector()
   static getNotifications(state: MainStateModel): NotificationResponseModel {
     return state.notifications;
   }
@@ -295,6 +371,16 @@ export class MainState {
   @Selector()
   static getActiveFightTypes(state: MainStateModel): FightTypes[] {
     return state.activeFightTypes;
+  }
+
+  @Selector()
+  static getItemSetPassives(state: MainStateModel): Record<string, ItemSetPassive> {
+    return state.itemSetPassives;
+  }
+
+  @Selector()
+  static getClassPassives(state: MainStateModel): Record<string, ClassPassive> {
+    return state.classPassives;
   }
 
   private loadedState = false;
@@ -315,6 +401,7 @@ export class MainState {
           if (stateLoaded) {
             this.store.reset(stateLoaded);
             this.loadedState = true;
+
           } else {
             await this.storePersistanceService.saveState(state);
           }
@@ -323,4 +410,5 @@ export class MainState {
         }
       });
   }
+
 }

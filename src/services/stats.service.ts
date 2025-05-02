@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ClassPassive } from 'src/modules/core/models/class-passive.model';
+import { ItemSetPassive } from 'src/modules/core/models/item-set-passive.model';
+import { ItemSetData } from 'src/modules/core/models/item-set.model';
 import { MiscellanyItemType } from 'src/modules/core/models/misc.model';
 import { ApiBaseService } from 'src/modules/core/services/api-base.service';
 
@@ -43,5 +46,17 @@ export class StatsService extends ApiBaseService {
 
   getMineTiers(): Observable<Array<any>> {
     return this.get('/stake-tiers');
+  }
+
+  getItemSets(): Observable<ItemSetData[]> {
+    return this.get('/item-sets');
+  }
+
+  getItemSetPassives(): Observable<Record<string, ItemSetPassive>> {
+    return this.get('/item-set-passives');
+  }
+
+  getClassPassives(): Observable<Record<string, ClassPassive>> {
+    return this.get('/class-passives');
   }
 }
