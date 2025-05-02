@@ -59,7 +59,7 @@ export class GameLayoutComponent {
 
   public routesNavigation: any[] = [
     {
-      path: '/presale',
+      path: '/black-market',
       displayText: 'Black market',
       icon: 'text-rainbow fa fa-skull-crossbones',
     },

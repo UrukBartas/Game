@@ -1,4 +1,4 @@
-import { PlayerModel } from './player.model';
+import { ItemSetEnum, PlayerModel } from './player.model';
 
 export interface Item {
   id: number;
@@ -59,6 +59,7 @@ export interface ItemData {
   items: Item[];
   souldBoundByDefault: boolean;
   extraData?: any;
+  set?: ItemSetEnum;
 }
 
 export enum ItemType {

@@ -27,15 +27,15 @@ export class FightAnimationsService {
 
     this.processTurnAction(
       player,
-      '.player-image',
-      '.enemy-container',
+      '.player-status-container',
+      '.enemy-status-container',
       '.player-container',
       this.viewportService.screenWidth == 'xs' ? 'up' : 'right'
     );
     this.processTurnAction(
       enemy,
-      '.enemy-image',
-      '.player-container',
+      '.enemy-status-container',
+      '.player-status-container',
       '.enemy-container',
       this.viewportService.screenWidth == 'xs' ? 'down' : 'left'
     );
@@ -49,7 +49,8 @@ export class FightAnimationsService {
     direction: 'right' | 'left' | 'up' | 'down'
   ) {
     const action = fighter.lastTurn.action;
-    const damage = fighter.lastTurn.damage;
+    const damages = fighter.lastTurn.damages;
+    const damage = damages && damages.length > 0 ? damages[0].damage : 0;
 
     // Update background effect for all actions
     this.updateBackgroundEffect(action);
@@ -58,13 +59,11 @@ export class FightAnimationsService {
       case TurnActionEnum.ATTACK:
         this.handleFighterAnimation(imageSelector, `attack-${direction}`, 1);
         if (damage > 0) {
-          this.fightNotificationsService.showNotification(
-            enemyNotificationContainer,
-            FightNotificationService.getDamageHtml(damage)
-          );
-          // Add damage flash effect to the target
-          const targetSelector = imageSelector === '.player-image' ? '.enemy-image' : '.player-image';
-          animateElement(targetSelector, 'damage-flash');
+          const targetSelector = imageSelector === '.player-status-container' ? 'enemy' : 'player';
+          this.showDamageNumber(targetSelector, damage, false);
+
+          const targetElementSelector = imageSelector === '.player-status-container' ? '.enemy-status-container' : '.player-status-container';
+          animateElement(targetElementSelector, 'damage-flash');
         }
         break;
 
@@ -75,13 +74,11 @@ export class FightAnimationsService {
           1
         );
         if (damage > 0) {
-          this.fightNotificationsService.showNotification(
-            enemyNotificationContainer,
-            FightNotificationService.getCritDamageHtml(damage)
-          );
-          // Add critical hit effect to the target
-          const targetSelector = imageSelector === '.player-image' ? '.enemy-image' : '.player-image';
-          this.playCriticalHitEffect(targetSelector);
+          const targetSelector = imageSelector === '.player-status-container' ? 'enemy' : 'player';
+          this.showDamageNumber(targetSelector, damage, true);
+
+          const targetElementSelector = imageSelector === '.player-status-container' ? '.enemy-status-container' : '.player-status-container';
+          this.playCriticalHitEffect(targetElementSelector);
         }
         break;
 
@@ -116,7 +113,7 @@ export class FightAnimationsService {
           FightNotificationService.getBlockHTML()
         );
         // Add block effect
-        const blockTarget = imageSelector === '.player-image' ? '.player-image' : '.enemy-image';
+        const blockTarget = imageSelector === '.player-status-container' ? '.player-status-container' : '.enemy-status-container';
         this.playBlockEffect(blockTarget);
         break;
 
@@ -159,8 +156,8 @@ export class FightAnimationsService {
 
       const impact = document.createElement('div');
       impact.className = 'impact-effect slash';
-      impact.style.left = `${element.getBoundingClientRect().left + element.clientWidth/2 - 75}px`;
-      impact.style.top = `${element.getBoundingClientRect().top + element.clientHeight/2 - 75}px`;
+      impact.style.left = `${element.getBoundingClientRect().left + element.clientWidth / 2 - 75}px`;
+      impact.style.top = `${element.getBoundingClientRect().top + element.clientHeight / 2 - 75}px`;
       document.body.appendChild(impact);
 
       animateElement('.impact-effect.slash', 'fadeIn', {
@@ -186,8 +183,8 @@ export class FightAnimationsService {
 
       const block = document.createElement('div');
       block.className = 'impact-effect block';
-      block.style.left = `${element.getBoundingClientRect().left + element.clientWidth/2 - 60}px`;
-      block.style.top = `${element.getBoundingClientRect().top + element.clientHeight/2 - 60}px`;
+      block.style.left = `${element.getBoundingClientRect().left + element.clientWidth / 2 - 60}px`;
+      block.style.top = `${element.getBoundingClientRect().top + element.clientHeight / 2 - 60}px`;
       document.body.appendChild(block);
 
       animateElement('.impact-effect.block', 'bounceIn', {
@@ -210,7 +207,7 @@ export class FightAnimationsService {
     if (bg) {
       bg.classList.remove('attack-phase', 'defend-phase', 'charge-phase');
 
-      switch(action) {
+      switch (action) {
         case TurnActionEnum.ATTACK:
           bg.classList.add('attack-phase');
           break;
@@ -230,8 +227,8 @@ export class FightAnimationsService {
 
   // Añadir un método para limpiar todas las animaciones
   public clearAllAnimations() {
-    const playerImage = document.querySelector('.player-image');
-    const enemyImage = document.querySelector('.enemy-image');
+    const playerImage = document.querySelector('.player-status-container');
+    const enemyImage = document.querySelector('.enemy-status-container');
 
     if (playerImage) {
       playerImage.classList.remove(
@@ -250,5 +247,26 @@ export class FightAnimationsService {
         'defend-right', 'defend-left', 'blocked', 'missed'
       );
     }
+  }
+
+  private showDamageNumber(target: 'player' | 'enemy', amount: number, isCritical: boolean = false) {
+    const targetElement = document.querySelector(`.${target}-image`);
+    if (!targetElement) return;
+
+    const damageElement = document.createElement('div');
+    damageElement.className = `damage-number ${isCritical ? 'critical' : ''}`;
+    damageElement.textContent = `-${amount}`;
+
+    const rect = targetElement.getBoundingClientRect();
+    damageElement.style.left = `${rect.left + rect.width / 2}px`;
+    damageElement.style.top = `${rect.top + rect.height / 3}px`;
+
+    document.body.appendChild(damageElement);
+
+    setTimeout(() => {
+      if (document.body.contains(damageElement)) {
+        document.body.removeChild(damageElement);
+      }
+    }, 1500);
   }
 }

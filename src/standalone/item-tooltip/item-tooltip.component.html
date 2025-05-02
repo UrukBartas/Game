@@ -29,6 +29,56 @@
   </span>
 </ng-template>
 
+<!-- Template reutilizable para categorías de estadísticas -->
+<ng-template #statsCategory let-keys="keys" let-titleClass="titleClass">
+  <div class="stats-category" *ngIf="keys.length > 0">
+    <ul class="stats-list">
+      <li
+        class="stat-item"
+        *ngFor="let key of keys"
+        [attr.data-stat-name]="parseKeyPascalCase(key)"
+      >
+        <div class="stat-icon" [ngClass]="getStatIconClass(key)">
+          <img
+            [src]="getStatIcon(key)"
+            alt="{{ formatStatName(key) }}"
+            class="stat-icon-img"
+          />
+        </div>
+        <div class="stat-details">
+          <span class="stat-name">{{ parseKeyPascalCase(key) }}</span>
+          <div class="stat-value-container">
+            <span class="stat-value" [ngClass]="getValueStatusClass(item[key])">
+              {{ ((item[key] | number: '1.0-2') || 0) + getPercentage(key) }}
+            </span>
+
+            <span
+              class="comparison-value"
+              *ngIf="getComparisonItem()"
+              [ngClass]="{
+                negative:
+                  (item | compareItem: getComparisonItem() : key).charAt(0) ==
+                  '-',
+                neutral:
+                  (item | compareItem: getComparisonItem() : key).charAt(0) ==
+                  '0',
+                positive:
+                  (item | compareItem: getComparisonItem() : key).charAt(0) ==
+                  '+',
+              }"
+            >
+              {{
+                (item | compareItem: getComparisonItem() : key) +
+                  getPercentage(key)
+              }}
+            </span>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
 <div
   id="item-tooltip-wrapper"
   class="w-100"
@@ -84,7 +134,10 @@
             <span
               [ngStyle]="{
                 color: getDamageTypeColor(camelToe(item.itemData.damageType)),
-                textShadow: '0 0 5px ' + getDamageTypeColor(camelToe(item.itemData.damageType)) + '70'
+                textShadow:
+                  '0 0 5px ' +
+                  getDamageTypeColor(camelToe(item.itemData.damageType)) +
+                  '70',
               }"
             >
               {{ camelToe(item.itemData.damageType) }}
@@ -100,9 +153,7 @@
             {{ getRarityText(item.itemData.rarity) }}
           </span>
         </div>
-
       </div>
-
     </div>
   </div>
 
@@ -135,14 +186,25 @@
             *ngIf="compareWith && compareWith.item_rarity_stat"
             class="iri-comparison"
             [ngClass]="{
-              'iri-better': item.item_rarity_stat > compareWith.item_rarity_stat,
+              'iri-better':
+                item.item_rarity_stat > compareWith.item_rarity_stat,
               'iri-worse': item.item_rarity_stat < compareWith.item_rarity_stat,
-              'iri-equal': item.item_rarity_stat === compareWith.item_rarity_stat
+              'iri-equal':
+                item.item_rarity_stat === compareWith.item_rarity_stat,
             }"
           >
-            {{ item.item_rarity_stat > compareWith.item_rarity_stat ? '↑' :
-               item.item_rarity_stat < compareWith.item_rarity_stat ? '↓' : '=' }}
-            {{ Math.abs(item.item_rarity_stat - compareWith.item_rarity_stat).toFixed(2) }}
+            {{
+              item.item_rarity_stat > compareWith.item_rarity_stat
+                ? '↑'
+                : item.item_rarity_stat < compareWith.item_rarity_stat
+                  ? '↓'
+                  : '='
+            }}
+            {{
+              Math.abs(
+                item.item_rarity_stat - compareWith.item_rarity_stat
+              ).toFixed(2)
+            }}
           </span>
         </div>
       </div>
@@ -161,20 +223,28 @@
           </span>
         </div>
         <div class="progress durability-progress">
-          <div class="progress-bar"
-               [ngClass]="getDurabilityBarClass(item.durability, item.itemData.rarity)"
-               [style.width.%]="getDurabilityPercentage(item.durability, item.itemData.rarity)">
-          </div>
+          <div
+            class="progress-bar"
+            [ngClass]="
+              getDurabilityBarClass(item.durability, item.itemData.rarity)
+            "
+            [style.width.%]="
+              getDurabilityPercentage(item.durability, item.itemData.rarity)
+            "
+          ></div>
         </div>
       </div>
 
-      <div class="enchants-section" [class.mobile-enchants]="viewportService.isMobile">
+      <div
+        class="enchants-section"
+        [class.mobile-enchants]="viewportService.isMobile()"
+      >
         <ng-container *ngFor="let enchantKey of keys(mapEnchantsImgs)">
           <app-item-box
             *ngIf="!!item[enchantKey]"
             [image]="mapEnchantsImgs[enchantKey].image"
-            [height]="viewportService.isMobile ? 24 : 32"
-            [width]="viewportService.isMobile ? 24 : 32"
+            [height]="viewportService.isMobile() ? 24 : 32"
+            [width]="viewportService.isMobile() ? 24 : 32"
             [stack]="item[enchantKey]"
           >
             <div tooltip class="tooltip-uruk">
@@ -189,175 +259,135 @@
 
     <!-- Stats Section -->
     <div class="stats-section">
-      <!-- Primary Stats -->
-      <div class="stats-category" *ngIf="getPrimaryStats().length > 0">
-        <h4 class="stats-category-title">Primary Stats</h4>
-        <ul class="stats-list">
-          @for (key of getPrimaryStats(); track key) {
-            <li class="stat-item" [attr.data-stat-name]="parseKeyPascalCase(key)">
-              <div class="stat-icon" [ngClass]="getStatIconClass(key)">
-                <img [src]="getStatIcon(key)" alt="{{ parseKeyPascalCase(key) }}" class="stat-icon-img">
-              </div>
-              <div class="stat-details">
-                <span class="stat-name">{{ parseKeyPascalCase(key) }}</span>
-                <div class="stat-value-container">
-                  <span
-                    class="stat-value"
-                    [ngClass]="{
-                      'positive-rarity-bonus':
-                        isRarityBonus(key) && item[key] >= 0,
-                      'negative-rarity-bonus':
-                        isRarityBonus(key) && item[key] < 0,
-                    }"
-                  >
-                    {{ item[key] >= 0 ? '+' : '' }}{{ formatNumberFn(item[key])
-                    }}{{ getPercentage(key) }}
-                  </span>
-
-                  @if (getComparisonItem()) {
-                    <span
-                      class="comparison-value"
-                      [ngClass]="{
-                        negative:
-                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
-                          '-',
-                        neutral:
-                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
-                          '0',
-                        positive:
-                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
-                          '+',
-                      }"
-                    >
-                      {{
-                        (item | compareItem: getComparisonItem() : key) +
-                          getPercentage(key)
-                      }}
-                    </span>
-                  }
-                </div>
-              </div>
-            </li>
+      <!-- Primary Stats usando el template -->
+      <ng-container
+        *ngTemplateOutlet="
+          statsCategory;
+          context: {
+            keys: getPrimaryStats(),
+            titleClass: 'primary-stats',
           }
-        </ul>
-      </div>
+        "
+      ></ng-container>
 
-      <!-- Secondary Stats -->
-      <div class="stats-category" *ngIf="getSecondaryStats().length > 0">
-        <h4 class="stats-category-title">Secondary Stats</h4>
-        <ul class="stats-list">
-          @for (key of getSecondaryStats(); track key) {
-            <li class="stat-item" [attr.data-stat-name]="parseKeyPascalCase(key)">
-              <div class="stat-icon" [ngClass]="getStatIconClass(key)">
-                <img [src]="getStatIcon(key)" alt="{{ parseKeyPascalCase(key) }}" class="stat-icon-img">
-              </div>
-              <div class="stat-details">
-                <span class="stat-name">{{ parseKeyPascalCase(key) }}</span>
-                <div class="stat-value-container">
-                  <span
-                    class="stat-value"
-                    [ngClass]="{
-                      'positive-rarity-bonus':
-                        isRarityBonus(key) && item[key] >= 0,
-                      'negative-rarity-bonus':
-                        isRarityBonus(key) && item[key] < 0,
-                    }"
-                  >
-                    {{ item[key] >= 0 ? '+' : '' }}{{ formatNumberFn(item[key])
-                    }}{{ getPercentage(key) }}
-                  </span>
-
-                  @if (getComparisonItem()) {
-                    <span
-                      class="comparison-value"
-                      [ngClass]="{
-                        negative:
-                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
-                          '-',
-                        neutral:
-                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
-                          '0',
-                        positive:
-                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
-                          '+',
-                      }"
-                    >
-                      {{
-                        (item | compareItem: getComparisonItem() : key) +
-                          getPercentage(key)
-                      }}
-                    </span>
-                  }
-                </div>
-              </div>
-            </li>
+      <!-- Secondary Stats usando el template -->
+      <ng-container
+        *ngTemplateOutlet="
+          statsCategory;
+          context: {
+            keys: getSecondaryStats(),
+            titleClass: 'secondary-stats',
           }
-        </ul>
-      </div>
+        "
+      ></ng-container>
 
-      <!-- Percentage Bonuses -->
-      <div class="stats-category" *ngIf="getPercentageStats().length > 0">
-        <h4 class="stats-category-title">Rarity Bonuses</h4>
-        <ul class="stats-list">
-          @for (key of getPercentageStats(); track key) {
-            <li class="stat-item" [attr.data-stat-name]="parseKeyPascalCase(key)">
-              <div class="stat-icon" [ngClass]="getStatIconClass(key)">
-                <img [src]="getStatIcon(key)" alt="{{ parseKeyPascalCase(key) }}" class="stat-icon-img">
-              </div>
-              <div class="stat-details">
-                <span class="stat-name">{{ parseKeyPascalCase(key) }}</span>
-                <div class="stat-value-container">
-                  <span
-                    class="stat-value"
-                    [ngClass]="{
-                      'positive-rarity-bonus':
-                        isRarityBonus(key) && item[key] >= 0,
-                      'negative-rarity-bonus':
-                        isRarityBonus(key) && item[key] < 0,
-                    }"
-                  >
-                    {{ item[key] >= 0 ? '+' : '' }}{{ formatNumberFn(item[key])
-                    }}{{ getPercentage(key) }}
-                  </span>
-
-                  @if (getComparisonItem()) {
-                    <span
-                      class="comparison-value"
-                      [ngClass]="{
-                        negative:
-                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
-                          '-',
-                        neutral:
-                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
-                          '0',
-                        positive:
-                          (item | compareItem: getComparisonItem() : key).charAt(0) ==
-                          '+',
-                      }"
-                    >
-                      {{
-                        (item | compareItem: getComparisonItem() : key) +
-                          getPercentage(key)
-                      }}
-                    </span>
-                  }
-                </div>
-              </div>
-            </li>
+      <!-- Percentage Stats usando el template -->
+      <ng-container
+        *ngTemplateOutlet="
+          statsCategory;
+          context: {
+            keys: getPercentageStats(),
+            titleClass: 'percentage-stats',
           }
-        </ul>
-      </div>
+        "
+      ></ng-container>
     </div>
   </div>
 
   <!-- Footer Section -->
   <div class="tooltip-footer">
+    <!-- Set Information Section -->
+    <div class="set-info-section" *ngIf="hasSetBonus()">
+      <h4
+        class="set-title d-none d-md-block"
+        [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }"
+      >
+        {{ getItemSet()?.name }} Set
+        <ng-container
+          *ngIf="store.selectSnapshot(MainState.getPlayer) as player"
+        >
+          ({{ countEquippedSetPieces(player) }}/{{ getMaxSetPieces() }})
+        </ng-container>
+      </h4>
+
+      <div class="set-bonuses-compact">
+        <ng-container
+          *ngIf="store.selectSnapshot(MainState.getPlayer) as player"
+        >
+          <ng-container
+            *ngFor="
+              let bonus of getActiveSetBonuses().concat(getPendingSetBonuses())
+            "
+          >
+            <div class="bonus-stage">
+              <div
+                class="bonus-header"
+                [ngClass]="{
+                  active: countEquippedSetPieces(player) >= bonus.pieces,
+                  pending: countEquippedSetPieces(player) < bonus.pieces,
+                }"
+              >
+                <span class="pieces-count">{{ bonus.pieces }}:</span>
+
+                <!-- Stats Bonuses -->
+                <div class="bonus-stats" *ngIf="bonus.bonusStats">
+                  <ng-container
+                    *ngFor="
+                      let stat of getObjectEntries(bonus.bonusStats);
+                      let last = last
+                    "
+                  >
+                    <li
+                      class="stat-item compact"
+                      [attr.data-stat-name]="parseKeyPascalCase(stat.key)"
+                    >
+                      <div
+                        class="stat-icon"
+                        [ngClass]="getStatIconClass(stat.key)"
+                      >
+                        <img
+                          [src]="getStatIcon(stat.key)"
+                          alt="{{ formatStatName(stat.key) }}"
+                          class="stat-icon-img small"
+                        />
+                      </div>
+
+                      <span class="stat-value positive"
+                        >+{{ (stat.value | number: '1.0-2') || 0
+                        }}{{ getPercentage(stat.key) }}</span
+                      >
+                    </li>
+                  </ng-container>
+                </div>
+
+                <!-- Passive Bonus -->
+                <div class="bonus-passive" *ngIf="bonus.bonusPassive">
+                  <div class="passive-info">
+                    <span class="passive-name"
+                      ><img
+                        *ngIf="bonus.bonusPassive.image"
+                        [src]="prefix + '/' + bonus.bonusPassive.image"
+                        class="passive-icon"
+                        alt="{{ bonus.bonusPassive.name }}"
+                      />{{ bonus.bonusPassive.name }}
+                    </span>
+                    <span class="passive-description">{{
+                      bonus.bonusPassive.description
+                    }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+
     <p
       class="item-description"
       [ngStyle]="{ color: getRarityColor(item.itemData.rarity) }"
       *ngIf="
-        item.itemData?.description?.length > 0 &&
-        !viewportService.isMobile
+        item.itemData?.description?.length > 0 && !viewportService.isMobile()
       "
     >
       {{ item.itemData.description }}

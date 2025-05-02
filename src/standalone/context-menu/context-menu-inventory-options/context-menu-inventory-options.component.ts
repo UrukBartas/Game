@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, TemplateRef } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { Item, ItemType } from 'src/modules/core/models/items.model';
 import { BlacksmithModalComponent } from 'src/modules/game/activities/blacksmith/modal/blacksmith-modal.component';
 import { ContextMenuService } from 'src/services/context-menu.service';
-import { ItemService } from 'src/services/item.service';
+import { InspectModalComponent } from 'src/standalone/inspect-modal/inspect-modal.component';
+import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
 import { RefreshPlayer } from 'src/store/main.store';
-
 @Component({
   selector: 'app-context-menu-inventory-options',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ItemTooltipComponent, InspectModalComponent],
   templateUrl: './context-menu-inventory-options.component.html',
   styleUrl: './context-menu-inventory-options.component.scss',
 })
@@ -30,7 +30,6 @@ export class ContextMenuInventoryOptionsComponent {
   modalService = inject(BsModalService);
   contextMenuService = inject(ContextMenuService);
 
-  private itemService = inject(ItemService);
   private toast = inject(ToastrService);
 
   public async repairItem(item: Item) {
@@ -48,6 +47,16 @@ export class ContextMenuInventoryOptionsComponent {
     };
     const ref = this.modalService.show(BlacksmithModalComponent, config);
     //  await firstValueFrom(this.itemService.getRepairItems([item.id]));
+    this.contextMenuService.hideContextMenu();
+  }
+
+  public async inspectItem(item: Item, inspectModal: TemplateRef<any>) {
+    const config: ModalOptions = {
+      initialState: {
+        item,
+      },
+    };
+    this.modalService.show(inspectModal, config);
     this.contextMenuService.hideContextMenu();
   }
 }

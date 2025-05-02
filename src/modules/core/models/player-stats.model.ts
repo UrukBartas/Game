@@ -1,4 +1,4 @@
-import { BuffType } from './fight-buff.model';
+import { EffectType } from './fight-buff.model';
 
 export interface FighterStats {
   health: number;
@@ -11,5 +11,6 @@ export interface FighterStats {
   crit: number;
   accuracy: number;
   dodge: number;
-  buffs?: Map<BuffType, { value: number; turns: number }>;
+  buffs?: Map<EffectType, { value: number; turns: number }>;
+  debuffs?: Map<EffectType, { value: number; turns: number }>;
 }

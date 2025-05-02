@@ -1,3 +1,4 @@
+
 import { NgModule, Type } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RedirectPageComponent } from 'src/modules/core/components/redirect-page/redirect-page.component';
@@ -38,10 +39,10 @@ const routes: Routes = [
       import('../modules/game/game.module').then((m) => m.GameModule),
   },
   {
-    path: 'presale',
-    loadComponent: () =>
-      import('../modules/lootbox-presale/lootbox-presale.component').then(
-        (m) => m.LootboxPresaleComponent
+    path: 'black-market',
+    loadChildren: () =>
+      import('../modules/black-market/black-market.module').then(
+        (m) => m.BlackMarketModule
       ),
   },
   {

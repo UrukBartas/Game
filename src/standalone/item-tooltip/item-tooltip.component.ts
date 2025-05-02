@@ -1,27 +1,38 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
 import { camelCase } from 'lodash-es';
 import { map } from 'rxjs';
+import { ItemSetPassive } from 'src/modules/core/models/item-set-passive.model';
+import { ItemSetData } from 'src/modules/core/models/item-set.model';
 import { DamageType, Item, ItemType, Rarity } from 'src/modules/core/models/items.model';
+import { PlayerModel } from 'src/modules/core/models/player.model';
 import { CompareItemPipe } from 'src/modules/core/pipes/compare-item.pipe';
 import {
   calculatedDurabilityRule,
   getDurabilityPercentage,
   getDurabilityTier,
+  getPercentage,
   getRarityBasedOnIRI,
   getRarityColor,
   getRarityText,
+  getStatIcon,
+  getStatIconClass,
+  getStatValueClass,
+  getValueStatusClass,
+  mapTotalPercentLabels,
+  primaryStats
 } from 'src/modules/utils';
 import { ViewportService } from 'src/services/viewport.service';
-import { MainState } from 'src/store/main.store';
+import { LoadItemSetPassives, LoadItemSets, MainState } from 'src/store/main.store';
 import { ItemBoxComponent } from '../item-box/item-box.component';
 import {
   Tier,
   TierizedProgressBarComponent,
 } from '../tierized-progress-bar/tierized-progress-bar.component';
+
 export const avoidableStats = [
   'id',
   'level',
@@ -47,6 +58,7 @@ export const avoidableStats = [
   'enchantShuffleCount',
   'durability',
 ];
+
 export const mapPercentLabels = {
   per_health: 'total health',
   per_damage: 'total damage',
@@ -59,19 +71,6 @@ export const mapPercentLabels = {
   per_accuracy: 'total accuracy',
   per_penetration: 'total penetration',
 };
-export const mapTotalPercentLabels = {
-  totalPerHealth: 'per_health',
-  totalPerDamage: 'per_damage',
-  totalPerArmor: 'per_armor',
-  totalPerSpeed: 'per_speed',
-  totalPerEnergy: 'per_energy',
-  totalPerDodge: 'per_dodge',
-  totalPerCrit: 'per_crit',
-  totalPerBlock: 'per_block',
-  totalPerAccuracy: 'per_accuracy',
-  totalPerPenetration: 'per_penetration',
-};
-
 
 export const getLoopableStatsKeys = (item: Item): Array<string[]> => {
   if (!item) return [];
@@ -97,18 +96,6 @@ export const getLoopableStatsKeys = (item: Item): Array<string[]> => {
   return [nonPercentualStats, percentualStats];
 };
 
-export const getPercentage = (key: string) => {
-  return [
-    'dodge',
-    'accuracy',
-    'block',
-    'crit',
-    'penetration',
-    ...Object.keys(mapPercentLabels),
-  ].includes(key)
-    ? '%'
-    : '';
-};
 @Component({
   selector: 'app-item-tooltip',
   standalone: true,
@@ -121,16 +108,161 @@ export const getPercentage = (key: string) => {
   ],
   templateUrl: './item-tooltip.component.html',
   styleUrl: './item-tooltip.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ItemTooltipComponent {
+export class ItemTooltipComponent implements OnInit, OnChanges {
   public prefix = ViewportService.getPreffixImg();
   @Input() item: Item;
   @Input() extraData: any = null;
   @Input() compareWith: Item;
   @Input() isBeingCompared = false;
+  getPercentage = getPercentage;
+  // Propiedades para sets de items
+  public itemSets: ItemSetData[] = [];
+  public itemSetPassives: Record<string, ItemSetPassive> = {};
+  public currentSet: ItemSetData | null = null;
+  public equippedSetPieces: number = 0;
+  public MainState = MainState;
+  constructor(
+    public store: Store,
+    private cdr: ChangeDetectorRef
+  ) { }
+
+  private equippedSetPiecesCache = new Map<string, number>();
+  private activeSetBonusesCache = new Map<string, any[]>();
+  private pendingSetBonusesCache = new Map<string, any[]>();
+  private itemSetCache: ItemSetData | null = null;
+  private lastItemId: string | null = null;
+
+  ngOnInit() {
+    // Cargar los datos necesarios de una sola vez
+    const state = this.store.snapshot();
+    this.itemSets = state.main.itemSets || [];
+    this.itemSetPassives = state.main.itemSetPassives || {};
+
+    // Si los datos no están cargados, cargarlos
+    if (this.itemSets.length === 0) {
+      this.store.dispatch(new LoadItemSets()).subscribe(() => {
+        this.itemSets = this.store.selectSnapshot(MainState.getItemSets);
+        this.checkItemSet();
+        this.cdr.markForCheck();
+      });
+    } else {
+      this.checkItemSet();
+    }
+
+    if (Object.keys(this.itemSetPassives).length === 0) {
+      this.store.dispatch(new LoadItemSetPassives()).subscribe(() => {
+        this.itemSetPassives = this.store.selectSnapshot(MainState.getItemSetPassives);
+        this.cdr.markForCheck();
+      });
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['item']) {
+      this.lastItemId = null;
+      this.itemSetCache = null;
+      this.equippedSetPiecesCache.clear();
+      this.activeSetBonusesCache.clear();
+      this.pendingSetBonusesCache.clear();
+    }
+  }
+
+  // Verificar si el item pertenece a un set
+  private checkItemSet() {
+    if (this.item?.itemData?.set && this.itemSets?.length) {
+      this.currentSet = this.itemSets.find(set => set.id === this.item.itemData.set) || null;
+
+      // Pre-calcular las piezas equipadas para evitar múltiples cálculos
+      const player = this.store.selectSnapshot(MainState.getPlayer);
+      if (player) {
+        this.equippedSetPieces = this.countEquippedSetPieces(player);
+      }
+    } else {
+      this.currentSet = null;
+      this.equippedSetPieces = 0;
+    }
+  }
+
+  // Obtener los bonuses activos del set según las piezas equipadas
+  public getActiveSetBonuses(): any[] {
+    const currentSet = this.getItemSet();
+    if (!currentSet) return [];
+
+    const player = this.store.selectSnapshot(MainState.getPlayer);
+    const equippedPieces = this.countEquippedSetPieces(player);
+
+    // Crear una clave única para el caché
+    const cacheKey = `${currentSet.id}-${equippedPieces}`;
+
+    // Verificar si ya tenemos el resultado en caché
+    if (this.activeSetBonusesCache.has(cacheKey)) {
+      return this.activeSetBonusesCache.get(cacheKey);
+    }
+
+    // Calcular el resultado si no está en caché
+    const result = currentSet.stages
+      .filter(stage => equippedPieces >= stage.pieces)
+      .map(stage => ({
+        pieces: stage.pieces,
+        bonusStats: stage.bonusStats,
+        bonusPassive: stage.bonusPassive
+      }));
+
+    // Guardar en caché para futuras consultas
+    this.activeSetBonusesCache.set(cacheKey, result);
+    return result;
+  }
+
+  // Obtener los bonuses pendientes del set
+  public getPendingSetBonuses(): any[] {
+    const currentSet = this.getItemSet();
+    if (!currentSet) return [];
+
+    const player = this.store.selectSnapshot(MainState.getPlayer);
+    const equippedPieces = this.countEquippedSetPieces(player);
+
+    // Crear una clave única para el caché
+    const cacheKey = `${currentSet.id}-${equippedPieces}`;
+
+    // Verificar si ya tenemos el resultado en caché
+    if (this.pendingSetBonusesCache.has(cacheKey)) {
+      return this.pendingSetBonusesCache.get(cacheKey);
+    }
+
+    // Calcular el resultado si no está en caché
+    const result = currentSet.stages
+      .filter(stage => equippedPieces < stage.pieces)
+      .map(stage => ({
+        pieces: stage.pieces,
+        bonusStats: stage.bonusStats,
+        bonusPassive: stage.bonusPassive
+      }));
+
+    // Guardar en caché para futuras consultas
+    this.pendingSetBonusesCache.set(cacheKey, result);
+    return result;
+  }
+
+  // Formatear el nombre del stat para mostrar
+  public formatStatName(statName: string): string {
+    if (statName.startsWith('totalPer')) {
+      const baseName = statName.replace('totalPer', '');
+      return `+${baseName} %`;
+    }
+    return statName;
+  }
+
+  // Verificar si el item pertenece a un set
+  public hasSetBonus(): boolean {
+    return !!this.item?.itemData?.set;
+  }
+
   public getExtraData() {
     return this.item.extraData || this.extraData;
   }
+
   mapEnchantsImgs = {
     enchantAddRarityCount: {
       image: '/assets/misc/recipes/add_recipe.webp',
@@ -153,6 +285,7 @@ export class ItemTooltipComponent {
         `This item was enchanted ${times} times with the Recipe of Rarity Reborn`,
     },
   };
+
   public keys = Object.keys;
   public durabilityTiers: Tier[] = [
     {
@@ -191,7 +324,6 @@ export class ItemTooltipComponent {
   public abs = Math.abs;
   public ceil = Math.ceil;
   public nonPorcentualStatsLength = 0;
-  private store = inject(Store);
 
   public player$ = this.store
     .select(MainState.getState)
@@ -216,8 +348,6 @@ export class ItemTooltipComponent {
 
   public isRarityBonus = (stat) => Object.keys(mapPercentLabels).includes(stat);
 
-
-
   public mapItemType = (itemType: ItemType) => {
     if ([ItemType.Weapon1H, ItemType.Weapon2H].includes(itemType)) {
       return {
@@ -228,9 +358,6 @@ export class ItemTooltipComponent {
     return camelCase(itemType);
   };
 
-  public getPercentage(key: string) {
-    return getPercentage(key);
-  }
   //4 tiers
   private getDurabilityColor = (activeTierDurability: Tier): string => {
     if (activeTierDurability.end <= 1) return 'danger-durability';
@@ -252,7 +379,7 @@ export class ItemTooltipComponent {
     const [nonPercentualStats, _] = getLoopableStatsKeys(this.item);
     // Primary stats are the most important ones like damage, health, armor
     return nonPercentualStats.filter(stat =>
-      ['damage', 'health', 'armor', 'energy'].includes(stat)
+      primaryStats.includes(stat)
     );
   }
 
@@ -269,48 +396,11 @@ export class ItemTooltipComponent {
   }
 
   // Get appropriate icon for each stat type
-  public getStatIcon(stat: string): string {
-    const iconMap = {
-      // Primary stats
-      'damage': this.prefix + '/assets/icons/biceps.png',
-      'health': this.prefix + '/assets/icons/health-normal.png',
-      'armor': this.prefix + '/assets/icons/armor-vest.png',
-      'energy': this.prefix + '/assets/icons/embrassed-energy.png',
-
-      // Secondary stats
-      'speed': this.prefix + '/assets/icons/sprint.png',
-      'dodge': this.prefix + '/assets/icons/dodging.png',
-      'crit': this.prefix + '/assets/icons/explosion-rays.png',
-      'block': this.prefix + '/assets/icons/shield-bounces.png',
-      'accuracy': this.prefix + '/assets/icons/bullseye.png',
-      'penetration': this.prefix + '/assets/icons/cracked-shield.png',
-
-      // Percentage stats
-      'per_health': this.prefix + '/assets/icons/health-normal.png',
-      'per_damage': this.prefix + '/assets/icons/biceps.png',
-      'per_armor': this.prefix + '/assets/icons/armor-vest.png',
-      'per_speed': this.prefix + '/assets/icons/sprint.png',
-      'per_energy': this.prefix + '/assets/icons/embrassed-energy.png',
-      'per_dodge': this.prefix + '/assets/icons/dodging.png',
-      'per_crit': this.prefix + '/assets/icons/explosion-rays.png',
-      'per_block': this.prefix + '/assets/icons/shield-bounces.png',
-      'per_accuracy': this.prefix + '/assets/icons/bullseye.png',
-      'per_penetration': this.prefix + '/assets/icons/cracked-shield.png'
-    };
-
-    return iconMap[stat] || this.prefix + '/assets/icons/biceps.png';
-  }
-
-  public getStatIconClass(stat: string): string {
-    // Different background colors for different stat types
-    if (['damage', 'health', 'armor', 'energy'].includes(stat)) {
-      return 'primary-stat';
-    } else if (stat.startsWith('per_')) {
-      return 'percentage-stat';
-    } else {
-      return 'secondary-stat';
-    }
-  }
+  public getStatIcon = getStatIcon;
+  public getStatIconClass = getStatIconClass;
+  public getStatValueClass = getStatValueClass;
+  public getValueStatusClass = getValueStatusClass;
+  public mapTotalPercentLabels = mapTotalPercentLabels;
 
   public getDurabilityBarClass(durability: number, rarity: Rarity): string {
     const percentage = this.getDurabilityPercentage(durability, rarity);
@@ -377,5 +467,67 @@ export class ItemTooltipComponent {
     return damageColors[damageType] || '#ffffff';
   }
 
+  // Convertir objeto a array para iterar en el template
+  public getObjectEntries(obj: any): { key: string, value: any }[] {
+    if (!obj) return [];
+    return Object.entries(obj).map(([key, value]) => ({ key, value }));
+  }
 
+  // Añadir este método para obtener el número máximo de piezas del set
+  public getMaxSetPieces(): number {
+    const currentSet = this.getItemSet();
+    if (!currentSet || !currentSet.stages || currentSet.stages.length === 0) {
+      return 0;
+    }
+
+    // Encontrar el stage con el mayor número de piezas requeridas
+    return Math.max(...currentSet.stages.map(stage => stage.pieces));
+  }
+
+  // Obtener la imagen de la pasiva del set
+  public getPassiveImage(passiveId: string): string {
+    return this.itemSetPassives[passiveId]?.image || '';
+  }
+
+  // Obtener el set al que pertenece el item
+  public getItemSet(): ItemSetData | null {
+    if (!this.item?.itemData?.set || !this.itemSets) return null;
+
+    // Si el item no ha cambiado, devolver el resultado en caché
+    if (this.lastItemId === this.item.id.toString() && this.itemSetCache) {
+      return this.itemSetCache;
+    }
+
+    // Actualizar el caché
+    this.lastItemId = this.item.id.toString();
+    this.itemSetCache = this.itemSets.find(set => set.id === this.item.itemData.set) || null;
+
+    return this.itemSetCache;
+  }
+
+  // Contar cuántas piezas del set están equipadas
+  public countEquippedSetPieces(player: PlayerModel): number {
+    const currentSet = this.getItemSet();
+    if (!currentSet || !player?.items) return 0;
+
+    // Crear una clave única para el caché
+    const cacheKey = `${currentSet.id}-${player.id}`;
+
+    // Verificar si ya tenemos el resultado en caché
+    if (this.equippedSetPiecesCache.has(cacheKey)) {
+      return this.equippedSetPiecesCache.get(cacheKey);
+    }
+
+    // Calcular el resultado si no está en caché
+    let count = 0;
+    for (const item of player.items) {
+      if (item?.itemData?.set === currentSet.id) {
+        count++;
+      }
+    }
+
+    // Guardar en caché para futuras consultas
+    this.equippedSetPiecesCache.set(cacheKey, count);
+    return count;
+  }
 }
