@@ -730,3 +730,76 @@ app-base-tutorial {
 //   align-items: center;
 //   justify-content: center;
 // }
+
+// Clases para iconos de estadísticas
+.stat-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+
+  &.primary-stat {
+    background: rgba(164, 208, 7, 0.2);
+    border: 1px solid rgba(164, 208, 7, 0.3);
+  }
+
+  &.rarity-stat {
+    background: rgba(0, 150, 255, 0.2);
+    border: 1px solid rgba(0, 150, 255, 0.3);
+  }
+
+  &.percentage-stat {
+    background: rgba(255, 215, 0, 0.2);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+  }
+
+  .stat-icon-img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+  }
+}
+
+// Clases para valores de estadísticas
+.stat-value {
+  &.primary {
+    color: rgba(164, 208, 7, 0.9);
+  }
+
+  &.secondary {
+    color: rgba(0, 150, 255, 0.9);
+  }
+
+  &.percentage {
+    color: rgba(255, 215, 0, 0.9);
+  }
+
+  &.positive {
+    color: $third;
+  }
+
+  &.negative {
+    color: $red;
+  }
+
+  &.neutral {
+    color: $white-300;
+  }
+}
+
+// Responsive
+@include media-breakpoint-down(sm) {
+  .stat-icon {
+    width: 20px;
+    height: 20px;
+
+    .stat-icon-img {
+      width: 12px;
+      height: 12px;
+    }
+  }
+}

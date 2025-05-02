@@ -14,51 +14,43 @@
         *ngFor="let perStat of perStatItems"
       >
         <td class="flex justify-content-start">
-          <img
-            class="uruk-filter"
-            src="{{ prefix + perStat.icon }}"
-            alt=""
-            srcset=""
-          />
-          %
-          <i
-            class="fa-solid fa-circle-info text-third fa-sm px-1"
-            [ngbTooltip]="statExplanation"
-            [tooltipContext]="{ text: perStat.tooltip }"
-          ></i>
+          <div class="stat-icon" [ngClass]="getStatIconClass(perStat.key)">
+            <img
+              class="stat-icon-img"
+              src="{{ prefix + perStat.icon }}"
+              alt=""
+            />
+          </div>
         </td>
-        <td>
+        <td class="w-100">
           <span
-            [ngClass]="{
-              'positive-rarity-bonus': player.perStats[perStat.key] > 0,
-              'negative-rarity-bonus': player.perStats[perStat.key] < 0,
-              'text-white': player.perStats[perStat.key] == 0,
-            }"
+            class="stat-value"
+            [ngClass]="getValueStatusClass(player.perStats[perStat.key])"
           >
-            {{ player.perStats[perStat.key] | number: '1.0-2' }}%
+            {{ (player.perStats[perStat.key] || 0) | number: '1.0-2' }}%
             <span
               *ngIf="
                 !!hoveredItemStats &&
                 !!hoveredItemStats[mapTotalPercentLabels[perStat.key]]
               "
-              class="value"
-              [ngClass]="{
-                negative:
-                  hoveredItemStats[mapTotalPercentLabels[perStat.key]].charAt(
-                    0
-                  ) == '-',
-                neutral:
-                  hoveredItemStats[mapTotalPercentLabels[perStat.key]].charAt(
-                    0
-                  ) == '0',
-              }"
+              class="stat-value"
+              [ngClass]="
+                getValueStatusClass(
+                  hoveredItemStats[mapTotalPercentLabels[perStat.key]]
+                )
+              "
             >
               {{
                 hoveredItemStats[mapTotalPercentLabels[perStat.key]] +
                   getPercentage(perStat.key)
               }}</span
-            ></span
-          >
+            >
+          </span>
+          <i
+            class="fa-solid fa-circle-info text-third fa-sm px-1"
+            [ngbTooltip]="statExplanation"
+            [tooltipContext]="{ text: perStat.tooltip }"
+          ></i>
         </td>
         <td *ngIf="!simplified">
           <span *ngIf="cappedPerStats[perStat.key]" class="max-value">

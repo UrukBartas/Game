@@ -4,10 +4,11 @@ import { Debounce } from 'lodash-decorators';
 import { ToastrService } from 'ngx-toastr';
 import { filter, firstValueFrom, map, shareReplay, switchMap, tap } from 'rxjs';
 import { PlayerModel } from 'src/modules/core/models/player.model';
+import { getPercentage, getStatIconClass, getStatValueClass, getValueStatusClass } from 'src/modules/utils';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { getPercentage } from 'src/standalone/item-tooltip/item-tooltip.component';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
+
 @Component({
   selector: 'app-generic-stats',
   templateUrl: './generic-stats.component.html',
@@ -42,12 +43,16 @@ export class GenericStatsComponent {
   ];
   allStatsUpgradeStatus$ = this.getUpgradeStatus();
 
-  public getPercentage(key: string) {
-    return getPercentage(key);
-  }
+  // Usar los métodos de utils.ts
+  public getPercentage = getPercentage;
+  public getStatIconClass = getStatIconClass;
+  public getStatValueClass = getStatValueClass;
+  public getValueStatusClass = getValueStatusClass;
+
   private getUpgradeStatus() {
     return this.playerService.getUpgradeCost().pipe(shareReplay(1));
   }
+
   public statItems = [
     {
       label: 'Life',
@@ -117,6 +122,7 @@ export class GenericStatsComponent {
       suffix: '%',
     },
   ];
+
   @Debounce(200)
   public upgradeStat(stat: string) {
     firstValueFrom(

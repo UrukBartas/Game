@@ -29,23 +29,28 @@
     </button>
     <div class="row position-relative h-100">
       <div class="col-12 col-sm-6 fighter-container player-container">
-        <div class="avatar-status-container">
+        <div class="avatar-status-container player-status-container">
           <img
             [src]="prefix + '/' + player().image"
             [ngbTooltip]="fighterStats"
             [tooltipContext]="{ fighter: player() }"
             class="player-image shadow"
           />
-          <app-fighter-status
-            class="player-status"
-            [fighterStatus]="player().currentStats"
-          ></app-fighter-status>
-          <app-fight-emojis [emitterName]="player().name" [fightId]="fightId()"></app-fight-emojis>
+
+          <app-fight-emojis
+            [emitterName]="player().name"
+            [fightId]="fightId()"
+          ></app-fight-emojis>
 
           <div class="emoji-controls">
             <app-emoji-selector [fightId]="fightId()"></app-emoji-selector>
           </div>
+          <app-fighter-status
+            class="player-status"
+            [fighterStatus]="player().currentStats"
+          ></app-fighter-status>
         </div>
+
         <span
           class="text-shadow"
           [ngStyle]="{
@@ -104,14 +109,17 @@
         <ng-content select="[playerTimerBar]"></ng-content>
       </div>
       <div class="col-12 col-sm-6 fighter-container enemy-container">
-        <div class="avatar-status-container">
+        <div class="avatar-status-container enemy-status-container">
           <img
             [src]="prefix + enemy().image"
             [ngbTooltip]="fighterStats"
             [tooltipContext]="{ fighter: enemy() }"
             class="enemy-image shadow"
           />
-          <app-fight-emojis [emitterName]="enemy().name" [fightId]="fightId()"></app-fight-emojis>
+          <app-fight-emojis
+            [emitterName]="enemy().name"
+            [fightId]="fightId()"
+          ></app-fight-emojis>
 
           <app-fighter-status
             class="enemy-status"

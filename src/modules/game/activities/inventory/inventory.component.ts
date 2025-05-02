@@ -148,7 +148,7 @@ export class InventoryComponent extends TemplatePage {
   };
 
   public getItem$ = (itemTypes: ItemType[], slotType: ItemType) => {
-    let itemTypesAdapted = itemTypes.includes(ItemType.Weapon1H) || itemTypes.includes(ItemType.Weapon2H) ? [ItemType.Weapon1H, ItemType.Weapon2H] : itemTypes
+    let itemTypesAdapted = itemTypes.includes(ItemType.Weapon1H) || itemTypes.includes(ItemType.Weapon2H) ? [ItemType.Weapon1H, ItemType.Weapon2H, ItemType.SHIELD] : itemTypes
 
     return this.actualPlayer$.pipe(
       filter((player) => !!player),
