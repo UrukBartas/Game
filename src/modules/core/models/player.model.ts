@@ -40,6 +40,15 @@ export enum EmojiIdentifier {
   EMOJI_POOP = 'EMOJI_POOP'
 }
 
+export enum ItemSetEnum {
+  HAND_OF_GOD = 'HAND_OF_GOD',
+  VAMPIRIC_BLOODLINES = 'VAMPIRIC_BLOODLINES',
+  DEATH_RITUALS = 'DEATH_RITUALS',
+  BURNING_DESIRE = 'BURNING_DESIRE',
+  IRON_MAIDEN = 'IRON_MAIDEN',
+  SHADOW_DANCER = 'SHADOW_DANCER'
+}
+
 export interface PlayerModel {
   id: string;
   email: string;
@@ -56,6 +65,7 @@ export interface PlayerModel {
   activeQuests: QuestModel[];
   boosts: BoostActive[];
   uruks: number;
+  set: ItemSetEnum;
   // Calculated stats with items
   stats: PlayerStatsModel;
   perStats?: TotalPerStats;

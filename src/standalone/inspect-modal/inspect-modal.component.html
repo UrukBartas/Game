@@ -1,0 +1,28 @@
+<div id="confirm-modal" class="gap-2">
+  <div class="row d-flex justify-content-center">
+    <div
+      style="position: relative"
+      class="col d-flex flex-column gap-2 justify-content-center align-items-center"
+    >
+      <i
+        class="fa-regular fa-circle-xmark close-icon pointer d-block d-sm-none"
+        (click)="close()"
+      ></i>
+
+      <!-- Contenido del encabezado del modal -->
+      <ng-content select="[header]"></ng-content>
+    </div>
+  </div>
+
+  <div class="main-content mt-3">
+    <ng-content></ng-content>
+  </div>
+
+  <!-- Contenido del pie del modal -->
+  <ng-content select="[footer]"></ng-content>
+
+  <!-- Botón de cierre -->
+  <div class="text-center mt-3">
+    <button class="btn btn-third w-100" (click)="close()">Close</button>
+  </div>
+</div>

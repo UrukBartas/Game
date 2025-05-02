@@ -14,19 +14,22 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
+import { ClassPassive } from 'src/modules/core/models/class-passive.model';
 import {
   PlayerClass,
   PlayerConfiguration,
   PlayerModel,
 } from 'src/modules/core/models/player.model';
-import { truncateEthereumAddress } from 'src/modules/utils';
+import { getStatIcon, truncateEthereumAddress } from 'src/modules/utils';
 import { AuthService } from 'src/services/auth.service';
 import { MiscellanyService } from 'src/services/miscellany.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
+import { mapPercentLabels } from 'src/standalone/item-tooltip/item-tooltip.component';
 import {
   DisconnectWallet,
+  LoadClassPassives,
   LoginPlayer,
   MainState,
   RefreshPlayer,
@@ -66,6 +69,7 @@ export class EditCharacterComponent extends TemplatePage {
   truncateAddress = truncateEthereumAddress;
   imagePrefix = ViewportService.getPreffixImg();
   PlayerClass = PlayerClass;
+  classPassives: Record<string, ClassPassive> = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -117,6 +121,8 @@ export class EditCharacterComponent extends TemplatePage {
       });
     }
 
+    // Cargar las pasivas de clase
+    this.loadClassPassives();
   }
 
   public getClassBackground(className: PlayerClass) {
@@ -329,5 +335,32 @@ export class EditCharacterComponent extends TemplatePage {
 
   public startEmailVerification() {
     this.playerService.startEmailVerification();
+  }
+
+  private loadClassPassives() {
+    const passives = this.store.selectSnapshot(MainState.getClassPassives);
+    if (!passives || Object.keys(passives).length === 0) {
+      this.store.dispatch(new LoadClassPassives()).subscribe(() => {
+        this.classPassives = this.store.selectSnapshot(MainState.getClassPassives);
+      });
+    } else {
+      this.classPassives = passives;
+    }
+  }
+
+  public getClassPassivesForCurrentClass(): ClassPassive {
+    const currentClass = this.form.value.clazz;
+    return this.classPassives[currentClass];
+  }
+
+  public getStatIcon = getStatIcon;
+
+  public getStatName(stat: string): string {
+    return mapPercentLabels[stat];
+  }
+
+  public getObjectEntries(obj: any): { key: string, value: any }[] {
+    if (!obj) return [];
+    return Object.entries(obj).map(([key, value]) => ({ key, value }));
   }
 }

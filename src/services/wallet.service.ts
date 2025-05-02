@@ -137,7 +137,7 @@ export class WalletService {
   }
 
   private async controlWalletFlow(address: `0x${string}` | undefined) {
-    if (this.router.url == '/edit' || this.router.url == '/presale') return;
+    if (this.router.url == '/edit' || this.router.url == '/black-market') return;
     const state = await firstValueFrom(
       this.store.select(MainState.getState).pipe(filter((e) => !!e))
     );

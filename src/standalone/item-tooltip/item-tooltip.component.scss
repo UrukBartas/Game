@@ -36,6 +36,8 @@
   color: $red;
 }
 
+
+
 #item-tooltip-wrapper {
   background-color: rgba(15, 15, 20, 0.95);
   padding: 1.25rem;
@@ -67,10 +69,6 @@
 
   // Header Section
   .tooltip-header {
-    margin-bottom: 1.25rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 1rem;
-
     .item-name-section {
       margin-bottom: 0.75rem;
 
@@ -267,34 +265,6 @@
               background: rgba(255, 255, 255, 0.07);
             }
 
-            .stat-icon {
-              width: 30px;
-              height: 30px;
-              border-radius: 50%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              flex-shrink: 0;
-
-              &.primary-stat {
-                background: rgba(164, 208, 7, 0.2);
-              }
-
-              &.secondary-stat {
-                background: rgba(0, 150, 255, 0.2);
-              }
-
-              &.percentage-stat {
-                background: rgba(255, 215, 0, 0.2);
-              }
-
-              .stat-icon-img {
-                width: 18px;
-                height: 18px;
-                object-fit: contain;
-              }
-            }
-
             .stat-details {
               flex: 1;
               display: flex;
@@ -355,8 +325,6 @@
 
   // Footer Section
   .tooltip-footer {
-    margin-top: 1.25rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
     padding-top: 1rem;
 
     .item-description {
@@ -365,6 +333,11 @@
       margin-bottom: 0.75rem;
       line-height: 1.4;
       opacity: 0.9;
+      margin-top: 0.25rem;
+
+      @include media-breakpoint-down(sm) {
+        font-size: 0.6rem;
+      }
     }
 
     .tooltip-footer-meta {
@@ -416,12 +389,9 @@
   #item-tooltip-wrapper {
     padding: 0.75rem;
     min-width: auto;
-    max-width: 100%;
+    max-width: 95vw;
 
     .tooltip-header {
-      margin-bottom: 0.5rem;
-      padding-bottom: 0.5rem;
-
       .item-name-section {
         .item-name {
           font-size: 1rem;
@@ -516,7 +486,6 @@
           .stats-list {
             gap: 0.25rem;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
 
             .stat-item {
               padding: 0.25rem;
@@ -526,17 +495,6 @@
               flex-direction: row;
               align-items: center;
               justify-content: flex-start;
-
-              .stat-icon {
-                width: 20px;
-                height: 20px;
-                margin-right: 4px;
-
-                .stat-icon-img {
-                  width: 12px;
-                  height: 12px;
-                }
-              }
 
               .stat-details {
                 flex: 1;
@@ -568,7 +526,6 @@
     }
 
     .tooltip-footer {
-      margin-top: 0.5rem;
       padding-top: 0.35rem;
 
       .tooltip-footer-meta {
@@ -600,7 +557,8 @@
   .stat-item {
     position: relative;
 
-    &:hover::before, &:active::before {
+    &:hover::before,
+    &:active::before {
       content: attr(data-stat-name);
       position: absolute;
       top: -20px;
@@ -640,10 +598,12 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(90deg,
-                 rgba(255, 255, 255, 0) 0%,
-                 rgba(255, 255, 255, 0.1) 50%,
-                 rgba(255, 255, 255, 0) 100%);
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
       animation: shine 1.5s infinite;
     }
 
@@ -662,8 +622,12 @@
 }
 
 @keyframes shine {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 // Add IRI comparison styles (for both mobile and desktop)
@@ -733,7 +697,9 @@
 
 .stat-item {
   position: relative;
-  transition: transform 0.15s ease, background 0.2s ease;
+  transition:
+    transform 0.15s ease,
+    background 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
@@ -765,8 +731,12 @@
 }
 
 @keyframes pulse-icon {
-  from { transform: scale(1); }
-  to { transform: scale(1.1); }
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
 }
 
 // Add styles for the comparison summary
@@ -791,9 +761,15 @@
       font-weight: bold;
       font-size: 0.9rem;
 
-      &.better { color: #4caf50; }
-      &.equal { color: #9e9e9e; }
-      &.worse { color: #f44336; }
+      &.better {
+        color: #4caf50;
+      }
+      &.equal {
+        color: #9e9e9e;
+      }
+      &.worse {
+        color: #f44336;
+      }
     }
   }
 
@@ -830,5 +806,219 @@
     .upgrade-icon {
       font-size: 0.8rem;
     }
+  }
+}
+
+// Estilos para la sección de información del set
+.set-info-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba($white-300, 0.1);
+  will-change: transform; // Ayuda a optimizar las animaciones
+
+  .set-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+
+    &::before {
+      content: '⚔️';
+      margin-right: 0.5rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  .set-bonuses-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+
+    .bonus-stage {
+      .bonus-header {
+        display: flex;
+        align-items: center;
+        font-size: 0.85rem;
+        padding: 0.35rem 0.5rem;
+        border-radius: 0.25rem;
+        background: rgba($black-300, 0.5);
+        will-change: transform, opacity; // Optimiza las transiciones
+
+        &.active {
+          background: rgba($third, 0.15);
+          border-left: 0.1875rem solid $third;
+        }
+
+        &.pending {
+          background: rgba($black-300, 0.3);
+          border-left: 0.1875rem solid rgba($yellow, 0.5);
+          opacity: 0.7;
+        }
+
+        .pieces-count {
+          font-weight: 600;
+          margin-right: 0.5rem;
+          min-width: 1.5rem;
+
+          .active & {
+            color: $third;
+          }
+
+          .pending & {
+            color: $yellow;
+          }
+        }
+
+        // Estilos para los stats del set
+        .bonus-stats {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+
+          .stat-item.compact {
+            display: flex;
+            align-items: center;
+            margin-right: 0.75rem;
+
+            .stat-icon {
+              width: 1.25rem;
+              height: 1.25rem;
+              margin-right: 0.25rem;
+
+              .stat-icon-img.small {
+                width: 100%;
+                height: 100%;
+              }
+            }
+
+            .stat-value.positive {
+              color: $third;
+              font-weight: 600;
+            }
+
+            .pending & .stat-value.positive {
+              color: rgba($third, 0.6);
+            }
+          }
+        }
+
+        // Estilos para las pasivas del set
+        .bonus-passive {
+          display: flex;
+          align-items: center;
+
+          .passive-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-right: 0.5rem;
+          }
+
+          .passive-info {
+            display: flex;
+            flex-direction: column;
+
+            .passive-name {
+              font-weight: 600;
+              color: $cyan;
+              font-size: 0.9rem;
+              text-align: start;
+
+              .pending & {
+                color: rgba($cyan, 0.6);
+              }
+            }
+
+            .passive-description {
+              font-size: 0.8rem;
+              color: $white-300;
+              text-align: start;
+
+              .pending & {
+                color: rgba($white-300, 0.5);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@include media-breakpoint-down(sm) {
+  .set-info-section {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+
+    .set-title {
+      font-size: 0.8rem;
+      margin-bottom: 0.3rem;
+
+      &::before {
+        font-size: 0.7rem;
+        margin-right: 0.3rem;
+      }
+    }
+
+    .set-bonuses-compact {
+      gap: 0.2rem;
+
+      .bonus-stage {
+        .bonus-header {
+          font-size: 0.65rem;
+          padding: 0.15rem 0.3rem;
+          flex-wrap: wrap;
+
+          .pieces-count {
+            min-width: 1rem;
+            margin-right: 0.2rem;
+            font-size: 0.65rem;
+          }
+
+          .bonus-stats {
+            .stat-item.compact {
+              margin-right: 0.4rem;
+
+              .stat-icon {
+                width: 1rem;
+                height: 1rem;
+                margin-right: 0.15rem;
+              }
+
+              .stat-value {
+                font-size: 0.65rem;
+              }
+            }
+          }
+
+          // Ajustes para pasivas en móvil
+          .bonus-passive {
+            .passive-icon {
+              width: 0.8rem;
+              height: 0.8rem;
+              margin-right: 0.2rem;
+            }
+
+            .passive-info {
+              .passive-name {
+                font-size: 0.65rem;
+              }
+
+              .passive-description {
+                display: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Ajustar el ancho máximo del tooltip en móvil para evitar que sobresalga
+  #item-tooltip-wrapper {
+    padding: 0.75rem;
+    min-width: auto;
+    max-width: 95vw;
   }
 }

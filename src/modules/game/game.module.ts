@@ -265,7 +265,7 @@ const pipes = [
     UruksDisplayerComponent,
     RemoteItemBoxComponent,
     QRCodeModule,
-    MonsterTypeAvatarComponent,
+    MonsterTypeAvatarComponent
   ],
   exports: [
     GameLayoutComponent,

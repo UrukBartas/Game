@@ -11,26 +11,29 @@
       </tr>
       <tr [ngClass]="{ 'col-6': simplified }" *ngFor="let stat of statItems">
         <td>
-          <img src="{{ prefix + stat.icon }}" alt="" srcset="" />
+          <div class="stat-icon" [ngClass]="getStatIconClass(stat.key)">
+            <img [src]="prefix + stat.icon" alt="" class="stat-icon-img" />
+          </div>
+        </td>
+        <td class="w-100">
+          <span class="stat-value" [ngClass]="getStatValueClass(stat.key)">
+            {{
+              (player.stats[stat.key] || player[stat.key] || 0) | number: '1.0-2'
+            }}
+            {{ stat.suffix ? stat.suffix : '' }}
+          </span>
+          <span
+            *ngIf="!!hoveredItemStats && !!hoveredItemStats[stat.key]"
+            class="stat-value"
+            [ngClass]="getValueStatusClass(hoveredItemStats[stat.key])"
+          >
+            {{ hoveredItemStats[stat.key] + getPercentage(stat.key) }}
+          </span>
           <i
             class="fa-solid fa-circle-info text-third fa-sm px-1"
             [ngbTooltip]="statExplanation"
             [tooltipContext]="{ text: stat.tooltip }"
           ></i>
-        </td>
-        <td>
-          {{ player.stats[stat.key] || player[stat.key] | number: '1.0-2' }}
-          {{ stat.suffix ? stat.suffix : '' }}
-          <span
-            *ngIf="!!hoveredItemStats && !!hoveredItemStats[stat.key]"
-            class="value"
-            [ngClass]="{
-              negative: hoveredItemStats[stat.key].charAt(0) == '-',
-              neutral: hoveredItemStats[stat.key].charAt(0) == '0',
-            }"
-          >
-            {{ hoveredItemStats[stat.key] + getPercentage(stat.key) }}</span
-          >
         </td>
         <td *ngIf="!simplified">
           @if (cappedStats[stat.key]) {

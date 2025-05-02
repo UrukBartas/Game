@@ -32,6 +32,67 @@
                   </h4>
                 </div>
                 <p class="class-description">{{ classItem.description }}</p>
+                <div
+                  class="class-passives"
+                  *ngIf="!pickingSkin && getClassPassivesForSelectedClass()"
+                >
+                  <h5 class="text-white">Class Traits:</h5>
+
+                  <!-- Effects -->
+                  <div class="traits-container">
+                    <div class="traits-section">
+                      <h6 class="section-title">Special Abilities</h6>
+                      <div class="effects-container">
+                        <div
+                          *ngFor="
+                            let effect of getClassPassivesForSelectedClass()
+                              ?.effects
+                          "
+                          class="effect-item"
+                        >
+                          <app-item-box
+                            [width]="50"
+                            [height]="50"
+                            [image]="effect.image"
+                            [ngbTooltip]="effectTooltip"
+                            [tooltipContext]="{ effect: effect }"
+                          ></app-item-box>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Stat Boosts -->
+                    <div
+                      class="traits-section"
+                      *ngIf="getClassPassivesForSelectedClass()?.statBoosts"
+                    >
+                      <h6 class="section-title">Stat Boosts</h6>
+                      <div class="stats-container">
+                        <div
+                          *ngFor="
+                            let stat of getObjectEntries(
+                              getClassPassivesForSelectedClass()?.statBoosts
+                            )
+                          "
+                          class="stat-item"
+                        >
+                          <div class="stat-icon">
+                            <img
+                              [src]="getStatIcon(stat.key)"
+                              [alt]="getStatName(stat.key)"
+                            />
+                          </div>
+                          <div class="stat-info">
+                            <span class="stat-name">{{
+                              getStatName(stat.key)
+                            }}</span>
+                            <span class="stat-value">+{{ stat.value }} pts</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <h4
                   *ngIf="showSelectSkin"
                   urText
@@ -59,7 +120,7 @@
                   @for (skin of getClassSkins(); track $index) {
                     <img
                       [ngClass]="{
-                        selected: selectedSkin.id === skin.id,
+                        selected: selectedSkin?.id === skin?.id,
                         disabled: !isSkinOwned(skin),
                       }"
                       (click)="selectSkin(skin)"
@@ -96,7 +157,9 @@
                   (click)="saveSkin(selectedSkin.id)"
                 >
                   {{
-                    isSkinOwned(selectedSkin) ? 'Pick this skin' : '🛇 Not owned'
+                    selectedSkin && isSkinOwned(selectedSkin)
+                      ? 'Pick this skin'
+                      : '🛇 Not owned'
                   }}
                 </button>
               </div>
@@ -107,3 +170,23 @@
     </ng-template>
   </swiper>
 </div>
+
+<ng-template #effectTooltip let-effect="effect">
+  <div class="effect-tooltip">
+    <div class="effect-header">
+      <div class="effect-image">
+        <img [src]="imagePrefix + '/' + effect.image" [alt]="effect.name" />
+      </div>
+      <h5 class="effect-name">{{ effect.name }}</h5>
+    </div>
+    <p class="effect-description">{{ effect.description }}</p>
+    <div class="effect-details" *ngIf="effect.probability || effect.damage">
+      <span *ngIf="effect.probability" class="detail-item">
+        <i class="fa fa-dice"></i> {{ effect.probability }}% chance
+      </span>
+      <span *ngIf="effect.damage" class="detail-item">
+        <i class="fa fa-bolt"></i> {{ effect.damage }}% damage
+      </span>
+    </div>
+  </div>
+</ng-template>
