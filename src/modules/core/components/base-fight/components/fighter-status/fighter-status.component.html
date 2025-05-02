@@ -1,157 +1,130 @@
-<div id="status-bar" *ngIf="(fighterStatus.buffs | keyvalue).length > 0">
-  <ng-container *ngFor="let buff of fighterStatus.buffs | keyvalue">
-    <ng-container [ngSwitch]="+buff.key">
-      <ng-container *ngSwitchCase="buffType.CHARGE">
-        <span
-          urText
-          [ngbTooltip]="
-            'Charged: Next attack does 50% more damage for ' +
-            buff.value.turns +
-            ' turns'
-          "
-        >
-          🔥
-        </span>
-      </ng-container>
-      <ng-container *ngSwitchCase="buffType.ARMOR_POTION">
-        <i
-          urText
-          [ngbTooltip]="
-            'Armor potion: ' +
-            buff.value.value +
-            '% increased armor for ' +
-            buff.value.turns +
-            ' turns'
-          "
-          class="fa fa-flask text-gray"
-        >
-          <span>{{ buff.value.turns }}</span>
-        </i>
-      </ng-container>
-      <ng-container *ngSwitchCase="buffType.ENERGY_POTION">
-        <i
-          urText
-          [ngbTooltip]="
-            'Energy potion: Recover ' +
-            buff.value.value +
-            '% energy each turn for ' +
-            buff.value.turns +
-            ' turns'
-          "
-          class="fa fa-flask text-yellow"
-        >
-          <span>{{ buff.value.turns }}</span>
-        </i>
-      </ng-container>
-      <ng-container *ngSwitchCase="buffType.FURY_POTION">
-        <i
-          urText
-          [ngbTooltip]="
-            'Fury potion: ' +
-            buff.value.value +
-            '% increased damage for ' +
-            buff.value.turns +
-            ' turns'
-          "
-          class="fa fa-flask text-orange"
-        >
-          <span>{{ buff.value.turns }}</span>
-        </i>
-      </ng-container>
-      <ng-container *ngSwitchCase="buffType.SPEED_POTION">
-        <i
-          urText
-          [ngbTooltip]="
-            'Speed potion: ' +
-            buff.value.value +
-            '% increased speed for ' +
-            buff.value.turns +
-            ' turns'
-          "
-          class="fa fa-flask text-green"
-        >
-          <span>{{ buff.value.turns }}</span>
-        </i>
-      </ng-container>
-      <ng-container *ngSwitchCase="buffType.PENETRATION_POTION">
-        <i
-          urText
-          [ngbTooltip]="
-            'Penetration potion: ' +
-            buff.value.value +
-            '% increased penetration for ' +
-            buff.value.turns +
-            ' turns'
-          "
-          class="fa fa-flask text-deep-blue"
-        >
-          <span>{{ buff.value.turns }}</span>
-        </i>
-      </ng-container>
-      <ng-container *ngSwitchCase="buffType.CRIT_POTION">
-        <i
-          urText
-          [ngbTooltip]="
-            'Crit potion: ' +
-            buff.value.value +
-            '% increased critical hit chance for ' +
-            buff.value.turns +
-            ' turns'
-          "
-          class="fa fa-flask text-purple"
-        >
-          <span>{{ buff.value.turns }}</span>
-        </i>
-      </ng-container>
-      <ng-container *ngSwitchCase="buffType.DODGE_POTION">
-        <i
-          urText
-          [ngbTooltip]="
-            'Dodge potion: ' +
-            buff.value.value +
-            '% increased dodge chance for ' +
-            buff.value.turns +
-            ' turns'
-          "
-          class="fa fa-flask text-turquoise"
-        >
-          <span>{{ buff.value.turns }}</span>
-        </i>
-      </ng-container>
-      <ng-container *ngSwitchCase="buffType.BLOCK_POTION">
-        <i
-          urText
-          [ngbTooltip]="
-            'Block potion: ' +
-            buff.value.value +
-            '% increased block chance for ' +
-            buff.value.turns +
-            ' turns'
-          "
-          class="fa fa-flask text-sky-blue"
-        >
-          <span>{{ buff.value.turns }}</span>
-        </i>
-      </ng-container>
-      <ng-container *ngSwitchCase="buffType.ACCURACY_POTION">
-        <i
-          urText
-          [ngbTooltip]="
-            'Accuracy potion: ' +
-            buff.value.value +
-            '% increased accuracy for ' +
-            buff.value.turns +
-            ' turns'
-          "
-          class="fa fa-flask text-white"
-        >
-          <span>{{ buff.value.turns }}</span>
-        </i>
-      </ng-container>
-    </ng-container>
-  </ng-container>
-  <ng-template #exhausted>Exhausted: Attacks do 50% less damage</ng-template>
-  <span urText *ngIf="fighterStatus.energy < 40" [ngbTooltip]="exhausted"
-    >😫</span
+<div id="status-container" *ngIf="fighterStatus">
+  <!-- Buffs Section -->
+  <div
+    class="status-section buffs-section"
+    *ngIf="((fighterStatus?.buffs | keyvalue) ?? [])?.length > 0"
   >
+    <div class="effects-container">
+      <ng-container *ngFor="let effect of fighterStatus?.buffs | keyvalue">
+        <div
+          class="effect-icon"
+          [ngClass]="getEffectInfo(effect.key).color"
+          [ngbTooltip]="
+            getEffectTooltip(effect.key, effect.value.value, effect.value.turns)
+          "
+        >
+          <!-- Set Passive or Class Passive with Image -->
+          <ng-container *ngIf="hasImage(effect.key); else standardIcon">
+            <div class="set-passive-image">
+              <img
+                [src]="prefix + '/' + getImagePath(effect.key)"
+                alt="{{ getEffectInfo(effect.key).name }}"
+              />
+            </div>
+          </ng-container>
+
+          <!-- Standard Icon (FontAwesome or Emoji) -->
+          <ng-template #standardIcon>
+            <ng-container
+              *ngIf="
+                getEffectInfo(effect.key).icon.startsWith('fa-');
+                else emojiIcon
+              "
+            >
+              <i class="fa-solid {{ getEffectInfo(effect.key).icon }}">
+                <span
+                  *ngIf="
+                    effect.value.turns !== Infinity &&
+                    effect.value.turns !== null
+                  "
+                  >{{ effect.value.turns }}</span
+                >
+                <span
+                  *ngIf="
+                    effect.value.turns === Infinity ||
+                    effect.value.turns === null
+                  "
+                  class="infinity-symbol"
+                  >∞</span
+                >
+              </i>
+            </ng-container>
+
+            <ng-template #emojiIcon>
+              <span class="emoji-icon">{{
+                getEffectInfo(effect.key).icon
+              }}</span>
+            </ng-template>
+          </ng-template>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Debuffs Section -->
+  <div
+    class="status-section debuffs-section"
+    *ngIf="((fighterStatus?.debuffs | keyvalue) ?? [])?.length > 0"
+  >
+    <div class="effects-container">
+      <ng-container *ngFor="let effect of fighterStatus?.debuffs | keyvalue">
+        <div
+          class="effect-icon"
+          [ngClass]="getEffectInfo(effect.key).color"
+          [ngbTooltip]="
+            getEffectTooltip(effect.key, effect.value.value, effect.value.turns)
+          "
+        >
+          <!-- Set Passive with Image -->
+          <ng-container *ngIf="hasImage(effect.key); else standardIcon">
+            <div class="set-passive-image">
+              <img
+                [src]="prefix + '/' + getImagePath(effect.key)"
+                alt="{{ getEffectInfo(effect.key).name }}"
+              />
+            </div>
+          </ng-container>
+
+          <!-- Standard Icon (FontAwesome or Emoji) -->
+          <ng-template #standardIcon>
+            <ng-container
+              *ngIf="
+                getEffectInfo(effect.key).icon.startsWith('fa-');
+                else emojiIcon
+              "
+            >
+              <i class="fa-solid {{ getEffectInfo(effect.key).icon }}">
+                <span
+                  *ngIf="
+                    effect.value.turns !== Infinity &&
+                    effect.value.turns !== null
+                  "
+                  >{{ effect.value.turns }}</span
+                >
+                <span
+                  *ngIf="
+                    effect.value.turns === Infinity ||
+                    effect.value.turns === null
+                  "
+                  class="infinity-symbol"
+                  >∞</span
+                >
+              </i>
+            </ng-container>
+            <ng-template #emojiIcon>
+              <span class="emoji-icon">{{
+                getEffectInfo(effect.key).icon
+              }}</span>
+            </ng-template>
+          </ng-template>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Estado de energía -->
+  <ng-template #exhausted>Exhausted: Attacks do 50% less damage</ng-template>
+  <div class="status-section energy-status" *ngIf="fighterStatus?.energy < 40">
+    <span class="emoji-icon" [ngbTooltip]="exhausted">😫</span>
+  </div>
 </div>

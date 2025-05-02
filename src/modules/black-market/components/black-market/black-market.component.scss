@@ -1,0 +1,606 @@
+@import 'bootstrap/scss/bootstrap';
+@import 'src/variables.scss';
+
+// Gold variables (add these to variables.scss later)
+$gold-primary: #c8aa6e;
+$gold-light: #f0e6d2;
+$gold-dark: #785a28;
+$dark-bg: #010a13;
+$dark-bg-secondary: #0a1428;
+
+@keyframes borderGlow {
+  0% { box-shadow: 0 0 5px rgba($gold-primary, 0.5); }
+  50% { box-shadow: 0 0 20px rgba($gold-primary, 0.8); }
+  100% { box-shadow: 0 0 5px rgba($gold-primary, 0.5); }
+}
+
+@keyframes titleGlow {
+  0% { text-shadow: 0 0 5px rgba($gold-primary, 0.5); }
+  50% { text-shadow: 0 0 15px rgba($gold-primary, 0.8), 0 0 5px rgba($gold-light, 0.3); }
+  100% { text-shadow: 0 0 5px rgba($gold-primary, 0.5); }
+}
+
+.black-market-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  color: $gold-light;
+  background: $black;
+
+  // Background image
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/black-market/background.webp');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.7;
+    z-index: 0;
+
+    @include media-breakpoint-down(sm) {
+      background-image: url('https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets/black-market/background.webp');
+    }
+  }
+
+  // Background elements
+  .background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba($black, 0.6) 0%, rgba($black-300, 0.5) 100%);
+    z-index: 1;
+  }
+
+  .animated-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.6;
+
+    canvas {
+      display: block;
+    }
+  }
+
+  // Main content
+  .content-container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 2rem;
+    transition: all 0.5s ease-in-out;
+
+    &.hidden {
+      opacity: 0;
+      transform: translateY(-50px);
+      pointer-events: none;
+    }
+  }
+
+  .market-header {
+    text-align: center;
+    margin-bottom: 4rem;
+
+    .market-title {
+      font-size: 4rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: $gold-primary;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      animation: titleGlow 3s infinite;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+
+      @include media-breakpoint-down(md) {
+        font-size: 3rem;
+      }
+    }
+
+    .market-subtitle {
+      font-size: 1.2rem;
+      color: $white-300;
+      opacity: 0.9;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+
+      @include media-breakpoint-down(md) {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .market-options {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    width: 100%;
+    max-width: 1200px;
+
+    @include media-breakpoint-down(md) {
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+  }
+
+  .market-option {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    background: rgba($black-300, 0.6);
+    border: 1px solid $gold-dark;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+
+    @include media-breakpoint-down(md) {
+      width: 280px;
+      height: 350px;
+    }
+
+    &:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+
+      .option-border {
+        opacity: 1;
+      }
+
+      .option-content {
+        background: rgba($black-300, 0.7);
+      }
+
+      .option-title {
+        color: $gold-light;
+      }
+    }
+
+    .option-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      background: rgba($black-300, 0.4);
+    }
+
+    .option-icon {
+      font-size: 3rem;
+      color: $gold-primary;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 10px rgba($gold-primary, 0.5);
+    }
+
+    .option-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: $gold-primary;
+      margin-bottom: 1rem;
+      letter-spacing: 2px;
+      transition: color 0.3s ease;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    }
+
+    .option-description {
+      font-size: 1rem;
+      color: $white-300;
+      opacity: 0.8;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    }
+
+    .option-border {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 2px solid $gold-primary;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      animation: borderGlow 2s infinite;
+    }
+  }
+
+  // Section containers
+  .section-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+
+    &.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .back-nav {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+    }
+  }
+
+  // Coming soon section
+  .coming-soon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    padding: 2rem;
+    background: rgba($black, 0.7);
+
+    h2 {
+      font-size: 3rem;
+      color: $gold-primary;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: $white-300;
+      opacity: 0.9;
+      max-width: 600px;
+      margin-bottom: 2rem;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+    }
+  }
+
+  // Back button
+  .back-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.7rem 1.5rem;
+    background: linear-gradient(to bottom, $gold-primary, $gold-dark);
+    border: 1px solid $gold-light;
+    border-radius: 4px;
+    color: $black;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    letter-spacing: 1px;
+
+    &:hover {
+      background: linear-gradient(to bottom, lighten($gold-primary, 5%), $gold-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    i {
+      font-size: 0.8rem;
+    }
+  }
+
+  .main-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+  }
+
+  .back-button {
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.8);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    i {
+      margin-right: 6px;
+    }
+  }
+}
+
+.coming-soon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding: 2rem;
+}
+
+.coming-soon-content {
+  background: linear-gradient(145deg, rgba(10, 10, 10, 0.85), rgba(20, 20, 20, 0.9));
+  border: 1px solid $gold-dark;
+  border-radius: 8px;
+  padding: 3rem;
+  text-align: center;
+  max-width: 600px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.7) 100%);
+    z-index: -1;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent 45%,
+      rgba($gold-primary, 0.1) 50%,
+      transparent 55%
+    );
+    z-index: 0;
+    animation: shimmer 4s infinite linear;
+    pointer-events: none;
+  }
+}
+
+.coming-soon-icon-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 1.5rem;
+  background: radial-gradient(circle, rgba($gold-primary, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coming-soon-icon {
+  font-size: 3.5rem;
+  color: $gold-primary;
+  position: relative;
+  z-index: 1;
+  animation: float 3s ease-in-out infinite;
+  text-shadow: 0 0 15px rgba($gold-primary, 0.7);
+}
+
+.coming-soon-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: $gold-primary;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+  animation: titleGlow 3s infinite;
+}
+
+.coming-soon-divider {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(to right, transparent, $gold-primary, transparent);
+  margin: 1.5rem auto;
+  position: relative;
+  z-index: 1;
+}
+
+.coming-soon-text {
+  font-size: 1.2rem;
+  color: $gold-light;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+.coming-soon-footer {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.coming-soon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.5rem 1rem;
+  background: rgba($gold-dark, 0.3);
+  border: 1px solid $gold-dark;
+  border-radius: 20px;
+  color: $gold-light;
+  font-size: 0.9rem;
+  font-weight: 500;
+
+  i {
+    color: $gold-primary;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-50%) translateY(-50%) rotate(0deg);
+  }
+  100% {
+    transform: translateX(-50%) translateY(-50%) rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@media (max-width: 768px) {
+  .coming-soon-content {
+    padding: 2rem;
+  }
+
+  .coming-soon-icon-container {
+    width: 80px;
+    height: 80px;
+  }
+
+  .coming-soon-icon {
+    font-size: 2.5rem;
+  }
+
+  .coming-soon-title {
+    font-size: 2rem;
+  }
+
+  .coming-soon-text {
+    font-size: 1rem;
+  }
+}
+
+.merch-coming-soon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100% - 60px);
+  width: 100%;
+  padding: 2rem;
+  position: relative;
+  z-index: 5;
+  margin-top: 60px;
+}
+
+.coming-soon-card {
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 2px solid $gold-dark;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  position: relative;
+}
+
+.coming-soon-header {
+  background: linear-gradient(to right, $gold-dark, darken($gold-primary, 20%), $gold-dark);
+  padding: 2rem;
+  text-align: center;
+
+  i {
+    font-size: 3rem;
+    color: $gold-light;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  h2 {
+    color: $gold-light;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.coming-soon-body {
+  padding: 2rem;
+  text-align: center;
+
+  p {
+    color: $gold-light;
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+}
+
+.coming-soon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.5rem 1.5rem;
+  background-color: rgba($gold-dark, 0.3);
+  border: 1px solid $gold-dark;
+  border-radius: 50px;
+  color: $gold-light;
+  font-weight: 500;
+
+  i {
+    color: $gold-primary;
+  }
+}
+
+@media (max-width: 768px) {
+  .coming-soon-header {
+    padding: 1.5rem;
+
+    i {
+      font-size: 2.5rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+    }
+  }
+
+  .coming-soon-body {
+    padding: 1.5rem;
+
+    p {
+      font-size: 1rem;
+    }
+  }
+}
+
+.back-nav {
+  position: relative;
+  z-index: 10;
+}

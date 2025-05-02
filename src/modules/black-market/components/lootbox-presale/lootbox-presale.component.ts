@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -10,10 +9,8 @@ import {
 } from '@angular/core';
 import { getAccount, waitForTransaction } from '@wagmi/core';
 
-import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { ethers } from 'ethers';
 import { cloneDeep } from 'lodash-es';
-import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import * as party from 'party-js';
@@ -28,16 +25,14 @@ import { WalletService } from 'src/services/wallet.service';
 import { WebSocketService } from 'src/services/websocket.service';
 import { ChainSwitcherComponent } from 'src/standalone/chain-switcher/chain-switcher.component';
 import SwiperCore, { EffectCoverflow, Navigation, SwiperOptions } from 'swiper';
-import { SwiperModule } from 'swiper/angular';
-import { LootboxStatsDisplayerComponent } from '../../standalone/lootbox-stats-displayer/lootbox-stats-displayer.component';
-import { Rarity } from '../core/models/items.model';
+import { Rarity } from '../../../core/models/items.model';
 import {
   MiscellanyItemData,
   MiscellanyItemType,
-} from '../core/models/misc.model';
-import { getRarityColor } from '../utils';
-import { PresaleClaimInfoModalComponent } from './modal/presale-claim-info-modal/presale-claim-info-modal.component';
-import { LootboxPresaleThreeService } from './services/lootbox-presale-threejs.service';
+} from '../../../core/models/misc.model';
+import { getRarityColor } from '../../../utils';
+import { PresaleClaimInfoModalComponent } from '../../modal/presale-claim-info-modal/presale-claim-info-modal.component';
+import { LootboxPresaleThreeService } from '../../services/lootbox-presale-threejs.service';
 
 SwiperCore.use([Navigation, EffectCoverflow]);
 interface LootboxDataBlockchain {
@@ -48,16 +43,6 @@ interface LootboxDataBlockchain {
   selector: 'app-lootbox-presale',
   templateUrl: './lootbox-presale.component.html',
   styleUrls: ['./lootbox-presale.component.scss'],
-  imports: [
-    CommonModule,
-    SwiperModule,
-    NgxSliderModule,
-    ChainSwitcherComponent,
-    LootboxStatsDisplayerComponent,
-    AccordionModule,
-  ],
-  providers: [LootboxPresaleThreeService, PresaleContractService],
-  standalone: true,
   encapsulation: ViewEncapsulation.None,
 })
 export class LootboxPresaleComponent implements AfterViewInit {

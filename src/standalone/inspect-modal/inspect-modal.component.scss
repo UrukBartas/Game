@@ -1,0 +1,27 @@
+@import '../../variables.scss';
+@import 'node_modules/bootstrap/scss/mixins';
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
+#confirm-modal {
+  padding: 20px 40px;
+  background: $black-300;
+  border-radius: 10px;
+  width: 60vw;
+  @include media-breakpoint-down(md) {
+    width: 90vw;
+  }
+
+  .uruks-icon {
+    max-width: 30px;
+    max-height: 30px;
+  }
+  .preview-sell {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .inventory {
+    max-height: 50vh;
+    overflow: auto;
+  }
+}

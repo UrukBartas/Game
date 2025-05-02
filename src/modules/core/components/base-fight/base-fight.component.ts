@@ -171,6 +171,22 @@ export class BaseFightComponent
       this.player.set(player);
       this.enemy.set(enemy);
     } else {
+      // Check for damage dealt in this turn
+      const lastTurn = fight.turns[fight.turns.length - 1];
+      if (lastTurn) {
+        const isPlayerCrit = lastTurn.playerTurn.action === TurnActionEnum.CRIT;
+        const isEnemyCrit = lastTurn.enemyTurn.action === TurnActionEnum.CRIT;
+        // Show damage to enemy if player attacked
+        if (lastTurn.playerTurn.action === TurnActionEnum.ATTACK && lastTurn.playerTurn.damages.length > 0 && lastTurn.playerTurn.damages[0].damage > 0) {
+          this.showDamageNumber('enemy', lastTurn.playerTurn.damages[0].damage, isPlayerCrit);
+        }
+
+        // Show damage to player if enemy attacked
+        if (lastTurn.enemyTurn.action === TurnActionEnum.ATTACK && lastTurn.enemyTurn.damages.length > 0 && lastTurn.enemyTurn.damages[0].damage > 0) {
+          this.showDamageNumber('player', lastTurn.enemyTurn.damages[0].damage, isEnemyCrit);
+        }
+      }
+
       // Animaciones completas para acciones normales
       this.fightAnimationsService.controlTurnActions(fight);
     }
@@ -188,8 +204,8 @@ export class BaseFightComponent
   }
 
   triggerVictory(result: FightResultModel) {
-    animateElement('.player-image', 'pulse');
-    animateElement('.enemy-image', 'hinge', {
+    animateElement('.player-status-container', 'pulse');
+    animateElement('.enemy-status-container', 'hinge', {
       callback: () => {
         this.victory = true;
         this.store.dispatch(new EndFight(this.fightType));
@@ -205,8 +221,8 @@ export class BaseFightComponent
   }
 
   triggerDefeat(result: FightResultModel) {
-    animateElement('.enemy-image', 'pulse');
-    animateElement('.player-image', 'hinge', {
+    animateElement('.enemy-status-container', 'pulse');
+    animateElement('.player-status-container', 'hinge', {
       callback: () => {
         this.defeat = true;
         this.store.dispatch(new EndFight(this.fightType));
@@ -309,6 +325,27 @@ export class BaseFightComponent
       },
     };
     const modalRef = this.modalService.show(FightLogsModalComponent, config);
+  }
+
+  showDamageNumber(target: 'player' | 'enemy', amount: number, isCritical: boolean = false) {
+    const targetElement = document.querySelector(`.${target}-image`);
+    if (!targetElement) return;
+
+    const damageElement = document.createElement('div');
+    damageElement.className = `damage-number ${isCritical ? 'critical' : ''}`;
+    damageElement.textContent = `-${amount}`;
+
+    // Position the damage number near the target
+    const rect = targetElement.getBoundingClientRect();
+    damageElement.style.left = `${rect.left + rect.width / 2}px`;
+    damageElement.style.top = `${rect.top + rect.height / 3}px`;
+
+    document.body.appendChild(damageElement);
+
+    // Remove the element after animation completes
+    setTimeout(() => {
+      document.body.removeChild(damageElement);
+    }, 1500);
   }
 
   ngOnDestroy(): void {

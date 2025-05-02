@@ -1,0 +1,70 @@
+<div class="cart-overlay" (click)="closeCart()">
+  <div class="cart-modal" (click)="$event.stopPropagation()">
+    <button class="close-button" (click)="closeCart()">
+      <i class="fa-solid fa-times"></i>
+    </button>
+
+    <div class="cart-header">
+      <h2 class="cart-title">Your Shopping Cart</h2>
+      <p class="cart-subtitle" *ngIf="cartItems.length > 0">{{ cartItems.length }} item(s) in your cart</p>
+    </div>
+
+    <div class="cart-empty" *ngIf="cartItems.length === 0">
+      <i class="fa-solid fa-shopping-cart cart-icon"></i>
+      <p class="empty-message">Your cart is empty</p>
+      <button class="continue-shopping-btn" (click)="closeCart()">Continue Shopping</button>
+    </div>
+
+    <div class="cart-content" *ngIf="cartItems.length > 0">
+      <div class="cart-items">
+        <div class="cart-item" *ngFor="let item of cartItems; let i = index">
+          <div class="item-image">
+            <img [src]="item.product.images[0]" [alt]="item.product.name">
+          </div>
+
+          <div class="item-details">
+            <h3 class="item-name">{{ item.product.name }}</h3>
+            <p class="item-options" *ngIf="getOptionLabel(item)">{{ getOptionLabel(item) }}</p>
+            <p class="item-price">{{ item.product.price | currency:'USD' }}</p>
+
+            <div class="item-quantity">
+              <button class="quantity-btn" (click)="decrementQuantity(i)">-</button>
+              <span class="quantity-value">{{ item.quantity }}</span>
+              <button class="quantity-btn" (click)="incrementQuantity(i)">+</button>
+            </div>
+          </div>
+
+          <div class="item-total">
+            <p class="total-price">{{ getItemTotal(item) | currency:'USD' }}</p>
+            <button class="remove-btn" (click)="removeCartItem(i)">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cart-summary">
+        <div class="summary-row">
+          <span class="summary-label">Subtotal:</span>
+          <span class="summary-value">{{ getCartTotal() | currency:'USD' }}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Shipping:</span>
+          <span class="summary-value">Calculated at checkout</span>
+        </div>
+        <div class="summary-row total">
+          <span class="summary-label">Total:</span>
+          <span class="summary-value">{{ getCartTotal() | currency:'USD' }}</span>
+        </div>
+
+        <button class="checkout-btn" (click)="proceedToCheckout()">
+          Proceed to Checkout
+        </button>
+
+        <button class="continue-shopping-btn" (click)="closeCart()">
+          Continue Shopping
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

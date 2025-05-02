@@ -3,16 +3,18 @@ import { Store } from '@ngxs/store';
 import { cloneDeep } from 'lodash-es';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { firstValueFrom } from 'rxjs';
+import { ClassPassive } from 'src/modules/core/models/class-passive.model';
 import {
   MiscellanyItemData,
   MiscellanyItemIdentifier,
 } from 'src/modules/core/models/misc.model';
 import { PlayerClass } from 'src/modules/core/models/player.model';
-import { getRarityColor } from 'src/modules/utils';
+import { getRarityColor, getStatIcon } from 'src/modules/utils';
 import { MiscellanyService } from 'src/services/miscellany.service';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { MainState, RefreshPlayer, SetSkins } from 'src/store/main.store';
+import { mapPercentLabels } from 'src/standalone/item-tooltip/item-tooltip.component';
+import { LoadClassPassives, MainState, RefreshPlayer, SetSkins } from 'src/store/main.store';
 import SwiperCore, {
   EffectCoverflow,
   Navigation,
@@ -71,6 +73,8 @@ export class ClassSelectorComponent implements OnInit {
   private playerService = inject(PlayerService);
   public getRarityColor = getRarityColor;
 
+  classPassives: Record<string, ClassPassive> = {};
+
   constructor() {
     this.classes = cloneDeep(classData);
     this.selectedClass = classData[0].clazz;
@@ -93,6 +97,8 @@ export class ClassSelectorComponent implements OnInit {
       this.selectSkin(this.selectedSkin);
       this.swiperConfig.initialSlide = selectedClassIndex;
     }
+
+    this.loadClassPassives();
   }
 
   private loadSkins() {
@@ -118,7 +124,7 @@ export class ClassSelectorComponent implements OnInit {
   getClassSkins() {
     return this.skins?.filter(
       (skin) => skin.extraData.clazz === this.selectedClass
-    );
+    ).filter(skin => !!skin);
   }
 
   selectSkin(skin: MiscellanyItemData) {
@@ -139,5 +145,31 @@ export class ClassSelectorComponent implements OnInit {
 
   openSkinSelector() {
     this.pickingSkin = true;
+  }
+
+  private loadClassPassives() {
+    const passives = this.store.selectSnapshot(MainState.getClassPassives);
+    if (!passives || Object.keys(passives).length === 0) {
+      this.store.dispatch(new LoadClassPassives()).subscribe(() => {
+        this.classPassives = this.store.selectSnapshot(MainState.getClassPassives);
+      });
+    } else {
+      this.classPassives = passives;
+    }
+  }
+
+  public getClassPassivesForSelectedClass(): ClassPassive {
+    return this.classPassives[this.selectedClass];
+  }
+
+  public getStatIcon = getStatIcon;
+
+  public getStatName(stat: string): string {
+    return mapPercentLabels[stat];
+  }
+
+  public getObjectEntries(obj: any): { key: string, value: any }[] {
+    if (!obj) return [];
+    return Object.entries(obj).map(([key, value]) => ({ key, value }));
   }
 }

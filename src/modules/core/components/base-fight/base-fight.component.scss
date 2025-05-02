@@ -786,7 +786,7 @@ app-fighter-status {
 .emoji-controls {
   position: absolute;
   bottom: -15px;
-  right: 50%;
+  left: 60%;
   z-index: 100;
   display: flex;
   align-items: center;
@@ -804,4 +804,66 @@ app-fighter-status {
 // Asegurarnos de que el contenedor de emojis esté por encima de otros elementos
 .fight-emojis-container {
   z-index: 101;
+}
+
+// Damage number animation
+@keyframes damage-float {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.8);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.2);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(-40px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.8);
+  }
+}
+
+// Damage number styling
+.damage-number {
+  position: fixed;
+  z-index: 1000;
+  color: #ff4d4d;
+  font-weight: bold;
+  font-size: 1.5rem;
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000,
+    0 0 8px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+  animation: damage-float 1.5s ease-out forwards;
+  transform-origin: center;
+
+  &.critical {
+    color: #ff9900;
+    font-size: 2rem;
+    text-shadow:
+      -2px -2px 0 #000,
+      2px -2px 0 #000,
+      -2px 2px 0 #000,
+      2px 2px 0 #000,
+      0 0 10px rgba(255, 0, 0, 0.7);
+    animation: damage-float 1.5s ease-out forwards, critical-pulse 0.5s ease-in-out 3;
+  }
+}
+
+@keyframes critical-pulse {
+  0% {
+    transform: scale(1) translateY(-20px);
+  }
+  50% {
+    transform: scale(1.3) translateY(-20px);
+  }
+  100% {
+    transform: scale(1) translateY(-20px);
+  }
 }

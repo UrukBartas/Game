@@ -450,3 +450,149 @@ export function animateElement(
       });
   }, startingDelay ?? 0);
 }
+
+/**
+ * Determina la clase CSS para el icono de una estadística
+ * @param key Clave de la estadística
+ * @returns Clase CSS para el icono
+ */
+export function getStatIconClass(key: string): string {
+  if (primaryStats.includes(key)) {
+    return 'primary-stat';
+  } else if (percentageStats.includes(key)) {
+    return 'percentage-stat';
+  } else {
+    return 'rarity-stat';
+  }
+}
+
+/**
+ * Determina la clase CSS para el valor de una estadística
+ * @param key Clave de la estadística
+ * @returns Clase CSS para el valor
+ */
+export function getStatValueClass(key: string): string {
+
+  if (primaryStats.includes(key)) {
+    return 'primary';
+  } else if (percentageStats.includes(key)) {
+    return 'percentage';
+  } else {
+    return 'secondary';
+  }
+}
+
+/**
+ * Determina la clase CSS para un valor numérico (positivo, negativo o neutral)
+ * @param value Valor numérico o string que comienza con +, - o 0
+ * @returns Clase CSS para el valor
+ */
+export function getValueStatusClass(value: number | string): string {
+  if (typeof value === 'number') {
+    if (value > 0) {
+      return 'positive';
+    } else if (value < 0) {
+      return 'negative';
+    } else {
+      return 'neutral';
+    }
+  } else if (typeof value === 'string') {
+    if (value.charAt(0) === '+') {
+      return 'positive';
+    } else if (value.charAt(0) === '-') {
+      return 'negative';
+    } else {
+      return 'neutral';
+    }
+  }
+  return 'neutral';
+}
+
+export const getStatIcon = (key: string): string => {
+  const prefix = ViewportService.getPreffixImg();
+  const iconMap = {
+    // Primary stats
+    'damage': prefix + '/assets/icons/biceps.png',
+    'health': prefix + '/assets/icons/health-normal.png',
+    'armor': prefix + '/assets/icons/armor-vest.png',
+    'energy': prefix + '/assets/icons/embrassed-energy.png',
+
+    // Secondary stats
+    'speed': prefix + '/assets/icons/sprint.png',
+    'dodge': prefix + '/assets/icons/dodging.png',
+    'crit': prefix + '/assets/icons/explosion-rays.png',
+    'block': prefix + '/assets/icons/shield-bounces.png',
+    'accuracy': prefix + '/assets/icons/bullseye.png',
+    'penetration': prefix + '/assets/icons/cracked-shield.png',
+
+    // Percentage stats
+    'per_health': prefix + '/assets/icons/health-normal.png',
+    'per_damage': prefix + '/assets/icons/biceps.png',
+    'per_armor': prefix + '/assets/icons/armor-vest.png',
+    'per_speed': prefix + '/assets/icons/sprint.png',
+    'per_energy': prefix + '/assets/icons/embrassed-energy.png',
+    'per_dodge': prefix + '/assets/icons/dodging.png',
+    'per_crit': prefix + '/assets/icons/explosion-rays.png',
+    'per_block': prefix + '/assets/icons/shield-bounces.png',
+    'per_accuracy': prefix + '/assets/icons/bullseye.png',
+    'per_penetration': prefix + '/assets/icons/cracked-shield.png'
+  };
+
+  return iconMap[key] || '/assets/icons/biceps.png';
+}
+
+
+export const percentageStats = [
+  'crit',
+  'dodge',
+  'block',
+  'accuracy',
+  'penetration',
+];
+
+export const rarityStats = [
+  'per_health',
+  'per_armor',
+  'per_energy',
+  'per_damage',
+  'per_speed',
+  'per_crit',
+  'per_dodge',
+  'per_block',
+  'per_accuracy',
+  'per_penetration',
+]
+
+export const primaryStats = [
+  'health',
+  'armor',
+  'energy',
+  'damage',
+  'speed',
+];
+
+
+/**
+ * Determina si una estadística debe mostrar un símbolo de porcentaje
+ * @param key Clave de la estadística
+ * @returns Símbolo de porcentaje o cadena vacía
+ */
+export function getPercentage(key: string): string {
+  return [...percentageStats, ...rarityStats].includes(key) ? '%' : '';
+}
+
+/**
+ * Mapeo de etiquetas de porcentaje total
+ */
+export const mapTotalPercentLabels = {
+  per_health: 'per_health',
+  per_armor: 'per_armor',
+  per_energy: 'per_energy',
+  per_damage: 'per_damage',
+  per_speed: 'per_speed',
+  per_crit: 'per_crit',
+  per_dodge: 'per_dodge',
+  per_block: 'per_block',
+  per_accuracy: 'per_accuracy',
+  per_penetration: 'per_penetration',
+};
