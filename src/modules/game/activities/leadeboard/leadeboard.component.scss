@@ -49,7 +49,7 @@
 
     .tabs-row {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 10px;
 
       @include media-breakpoint-down(sm) {
@@ -1167,241 +1167,6 @@
   }
 }
 
-// Mejora del indicador YOU
-.you-indicator {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: linear-gradient(135deg, #f3e5ab, #c9a66b);
-  color: #000;
-  font-weight: bold;
-  padding: 3px 8px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  letter-spacing: 1px;
-  box-shadow: 0 0 10px rgba(243, 229, 171, 0.5);
-  z-index: 5;
-}
-
-// Añadir estos estilos para el tooltip de achievements
-.achievement-tooltip {
-  min-width: 320px;
-
-  .achievement-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-
-    .achievement-icon {
-      font-size: 2rem;
-      color: $third;
-    }
-  }
-
-  .current-tier {
-    display: flex;
-    gap: 15px;
-    padding: 12px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    border-left: 4px solid;
-    margin-bottom: 15px;
-
-    .tier-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      i {
-        color: white;
-        font-size: 1.2rem;
-      }
-    }
-
-    .tier-info {
-      flex: 1;
-
-      h6 {
-        margin-bottom: 2px;
-        font-weight: bold;
-      }
-
-      .tier-description {
-        font-size: 0.85rem;
-        opacity: 0.8;
-        margin-bottom: 8px;
-      }
-
-      .progress-container {
-        height: 6px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 3px;
-        overflow: hidden;
-        margin-bottom: 5px;
-
-        .progress-bar {
-          height: 100%;
-          border-radius: 3px;
-        }
-      }
-
-      .progress-text {
-        font-size: 0.8rem;
-        text-align: right;
-        opacity: 0.7;
-        margin-bottom: 0;
-      }
-    }
-  }
-
-  .tier-progression {
-    h6 {
-      color: $third;
-    }
-
-    .tier-list {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-
-      .tier-item {
-        padding: 8px;
-        border-radius: 6px;
-        border: 1px solid;
-        text-align: center;
-        opacity: 0.6;
-        transition: all 0.2s ease;
-
-        &.achieved {
-          opacity: 1;
-          background: rgba(255, 255, 255, 0.05);
-        }
-
-        .tier-badge {
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          margin: 0 auto 5px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          i {
-            color: white;
-            font-size: 0.8rem;
-          }
-        }
-
-        .tier-name {
-          font-weight: bold;
-          font-size: 0.8rem;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .tier-requirement {
-          font-size: 0.7rem;
-          opacity: 0.7;
-        }
-      }
-    }
-  }
-}
-
-// Añadir estos estilos para los badges pequeños
-.tier-badge-small {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 5px;
-
-  i {
-    color: white;
-    font-size: 0.7rem;
-  }
-
-  &:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-  }
-}
-
-// Estilos para el contenedor de nombre y título
-.player-name-title {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  max-width: calc(100% - 60px);
-  overflow: hidden;
-
-  app-name-player {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 100%;
-  }
-
-  .player-title {
-    font-size: 0.75rem;
-    font-style: italic;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    text-transform: uppercase;
-    margin-top: -2px;
-    color: #c9a66b; // Color dorado consistente
-
-    // Efecto de brillo sutil
-    text-shadow: 0 0 5px rgba(201, 166, 107, 0.7);
-    animation: titlePulse 2s infinite alternate;
-
-    @media (max-width: 576px) {
-      font-size: 0.7rem;
-      max-width: 120px;
-    }
-  }
-}
-
-// Animación para el título
-@keyframes titlePulse {
-  from {
-    text-shadow: 0 0 2px rgba(201, 166, 107, 0.5);
-  }
-  to {
-    text-shadow:
-      0 0 8px rgba(201, 166, 107, 0.8),
-      0 0 12px rgba(255, 255, 255, 0.3);
-  }
-}
-
-// Ajustar el contenedor de nombre para alinear correctamente el badge
-.list-leaderboard-item-name-container {
-  display: flex;
-  align-items: center; // Volvemos a center para mejor alineación
-
-  // Resto del código existente...
-}
-
-// Asegurarnos que el icono de ojo esté bien alineado
-.view-player {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 // Estilos para el contenedor principal de información del jugador
 .list-leaderboard-item-left-container {
   display: flex;
@@ -1542,63 +1307,6 @@
   }
 }
 
-// Animación para el título
-@keyframes titlePulse {
-  from {
-    text-shadow: 0 0 2px rgba(201, 166, 107, 0.5);
-  }
-  to {
-    text-shadow:
-      0 0 8px rgba(201, 166, 107, 0.8),
-      0 0 12px rgba(255, 255, 255, 0.3);
-  }
-}
-
-// Ajustes para el contenedor principal
-.list-leaderboard-item {
-  padding: 10px 15px;
-
-  &-left {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    min-width: 0;
-  }
-}
-
-// Estilos para el contenedor de recompensas
-.rewards-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
-
-  .reward-item {
-    position: relative;
-
-    &.consumable-reward {
-      // Hacemos los consumibles un poco más pequeños
-      transform: scale(0.85);
-      margin: -2px;
-
-      // Añadimos un borde sutil para distinguirlos
-      &::after {
-        content: '';
-        position: absolute;
-        top: -2px;
-        left: -2px;
-        right: -2px;
-        bottom: -2px;
-        border-radius: 50%;
-        border: 1px dashed rgba(255, 255, 255, 0.3);
-        pointer-events: none;
-      }
-    }
-  }
-}
-
 // Estilo para la descripción del leaderboard
 .leaderboard-description {
   background: rgba(0, 0, 0, 0.2);
@@ -1649,3 +1357,48 @@
   }
 }
 
+.toggle-online {
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 22px;
+    margin-bottom: 0;
+
+    input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: $gray-400;
+      border-radius: 22px;
+      transition: background 0.2s;
+      &:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 2px;
+        bottom: 2px;
+        background: $white-100;
+        border-radius: 50%;
+        transition: .2s;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      }
+    }
+
+    input:checked + .slider {
+      background: $third;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(16px);
+      background: $primary;
+    }
+  }
+}

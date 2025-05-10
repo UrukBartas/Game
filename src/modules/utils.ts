@@ -3,7 +3,7 @@ import { AnimateSettingsModel } from './core/models/animate-callback.model';
 import { ConsumableIdentifier } from './core/models/consumable.model';
 import { Item, Rarity } from './core/models/items.model';
 import { MiscellanyItemIdentifier } from './core/models/misc.model';
-import { EmojiIdentifier, PlayerModel } from './core/models/player.model';
+import { EmojiIdentifier, PlayerClass, PlayerModel } from './core/models/player.model';
 import { ItemTypeSC } from './game/activities/export-import-nft/enums/ItemTypesSC';
 import { pvpTiers } from './game/activities/leadeboard/const/pvp-tiers';
 import { questTiers } from './game/activities/leadeboard/const/quest-tiers';
@@ -122,6 +122,20 @@ export const rewardsByLeaderboardType = {
   }
 
 } as any
+
+export function getClassBackground(className: PlayerClass) {
+  switch (className) {
+    case PlayerClass.WARLOCK:
+      return '/assets/free-portraits/backgrounds/warlock.webp';
+    case PlayerClass.MAGE:
+      return '/assets/free-portraits/backgrounds/mage.webp';
+    case PlayerClass.ROGUE:
+      return '/assets/free-portraits/backgrounds/rogue.webp';
+    case PlayerClass.WARRIOR:
+      return '/assets/free-portraits/backgrounds/warrior.webp';
+  }
+}
+
 
 // Método para obtener la URL de la imagen del emoji
 export function getEmojiImageUrl(emojiId: EmojiIdentifier): string {

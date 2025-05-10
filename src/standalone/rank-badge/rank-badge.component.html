@@ -1,0 +1,175 @@
+@if (type === 'pve') {
+  <div
+    class="tier-badge"
+    [ngClass]="size"
+    [ngStyle]="{
+      background: getRarityColor(getCurrentTier().rarity),
+    }"
+    [ngbTooltip]="questsAchevementsTooltip"
+    [tooltipContext]="{
+      completedQuests: player.finishedQuestsCount,
+      currentTier: getCurrentTier(),
+    }"
+  >
+    <i class="bi {{ getCurrentTier().badge }}"></i>
+  </div>
+} @else {
+  <div
+    class="tier-badge"
+    [ngClass]="size"
+    [ngStyle]="{ background: getRarityColor(getCurrentTier().rarity) }"
+    [ngbTooltip]="pvpAchievementsTooltip"
+    [tooltipContext]="{
+      player: player,
+      currentTier: getCurrentTier(),
+    }"
+  >
+    <i class="bi {{ getCurrentTier().badge }}"></i>
+  </div>
+}
+
+
+<ng-template
+  #questsAchevementsTooltip
+  let-completedQuests="completedQuests"
+  let-currentTier="currentTier"
+>
+  <div id="player-tooltip-wrapper" class="achievement-tooltip">
+    <div class="achievement-header">
+      <i class="bi bi-trophy-fill achievement-icon"></i>
+      <div>
+        <h5 class="mb-0">Quest Achievement</h5>
+        <p class="mb-0 text-third">Completed quests: {{ completedQuests }}</p>
+      </div>
+    </div>
+
+    <div
+      class="current-tier"
+      [ngStyle]="{ borderColor: getRarityColor(currentTier.rarity) }"
+    >
+      <div
+        class="tier-icon"
+        [ngStyle]="{ background: getRarityColor(currentTier.rarity) }"
+      >
+        <i class="bi {{ currentTier.badge }}"></i>
+      </div>
+      <div class="tier-info">
+        <h6 [ngStyle]="{ color: getRarityColor(currentTier.rarity) }">
+          {{ currentTier.title }}
+        </h6>
+        <p class="tier-description">{{ currentTier.description }}</p>
+        <div class="progress-container">
+          <div
+            class="progress-bar"
+            [ngStyle]="{
+              width: getProgressPercentage(completedQuests, currentTier) + '%',
+              background: getRarityColor(currentTier.rarity),
+            }"
+          ></div>
+        </div>
+        <p class="progress-text">
+          {{ completedQuests }} / {{ getNextTierQuests(currentTier) }} quests
+        </p>
+      </div>
+    </div>
+
+    <div class="tier-progression">
+      <h6 class="text-center mb-2">Achievement Progression</h6>
+      <div class="tier-list">
+        @for (tier of questTiers; track tier.title) {
+          <div
+            class="tier-item"
+            [ngClass]="{ achieved: completedQuests >= tier.maxQuests }"
+            [ngStyle]="{ borderColor: getRarityColor(tier.rarity) }"
+          >
+            <div
+              class="tier-badge"
+              [ngStyle]="{ background: getRarityColor(tier.rarity) }"
+            >
+              <i class="d-flex bi {{ tier.badge }}"></i>
+            </div>
+            <div
+              class="tier-name"
+              [ngStyle]="{ color: getRarityColor(tier.rarity) }"
+            >
+              {{ tier.title }}
+            </div>
+            <div class="tier-requirement">
+              {{ tier.maxQuests === Infinity ? '10000+' : tier.maxQuests }}
+              quests
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template
+  #pvpAchievementsTooltip
+  let-player="player"
+  let-currentTier="currentTier"
+>
+  <div id="player-tooltip-wrapper" class="achievement-tooltip">
+    <div class="achievement-header">
+      <i class="bi bi-award-fill achievement-icon"></i>
+      <div>
+        <h5 class="mb-0">Arena Rank</h5>
+        <p class="mb-0 text-third">Rating: {{ player.mmr }}</p>
+      </div>
+    </div>
+
+    <div
+      class="current-tier"
+      [ngStyle]="{ borderColor: getRarityColor(currentTier.rarity) }"
+    >
+      <div
+        class="tier-icon"
+        [ngStyle]="{ background: getRarityColor(currentTier.rarity) }"
+      >
+        <i class="bi {{ currentTier.badge }}"></i>
+      </div>
+      <div class="tier-info">
+        <h6 [ngStyle]="{ color: getRarityColor(currentTier.rarity) }">
+          {{ currentTier.title }}
+        </h6>
+        <p class="tier-description">{{ currentTier.description }}</p>
+        <p class="rank-text">Current Rank: {{ player.pvpIndex }}</p>
+      </div>
+    </div>
+
+    <div class="tier-progression">
+      <h6 class="text-center mb-2">Arena Ranks</h6>
+      <div class="tier-list">
+        @for (tier of pvpTiers; track tier.title) {
+          <div
+            class="tier-item"
+            [ngClass]="{ achieved: isPvpTierAchieved(player, tier) }"
+            [ngStyle]="{ borderColor: getRarityColor(tier.rarity) }"
+          >
+            <div
+              class="tier-badge"
+              [ngStyle]="{ background: getRarityColor(tier.rarity) }"
+            >
+              <i class="bi {{ tier.badge }}"></i>
+            </div>
+            <div
+              class="tier-name"
+              [ngStyle]="{ color: getRarityColor(tier.rarity) }"
+            >
+              {{ tier.title }}
+            </div>
+            <div class="tier-requirement">
+              Rank {{ tier.range[0]
+              }}{{
+                tier.range[1] !== tier.range[0]
+                  ? ' - ' + (tier.range[1] === Infinity ? '∞' : tier.range[1])
+                  : ''
+              }}
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</ng-template>

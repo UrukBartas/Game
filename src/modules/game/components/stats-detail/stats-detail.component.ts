@@ -3,12 +3,14 @@ import { Store } from '@ngxs/store';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
+import { ClassPassive } from 'src/modules/core/models/class-passive.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { getPvpTier, getQuestTier, getRarityColor } from 'src/modules/utils';
 import { PlayerService } from 'src/services/player.service';
 import { ViewportService } from 'src/services/viewport.service';
-import { MainState, RefreshPlayer } from 'src/store/main.store';
+import { LoadClassPassives, MainState, RefreshPlayer } from 'src/store/main.store';
 import { ClassSelectorComponent } from '../../activities/edit-character/components/character-selector/character-selector.component';
+import { TitleGeneratorModalComponent } from '../title-generator-modal/title-generator-modal.component';
 
 @Component({
   selector: 'app-stats-detail',
@@ -24,6 +26,7 @@ export class StatsDetailComponent extends TemplatePage {
   private modalService = inject(BsModalService);
   private playerService = inject(PlayerService);
   getRarityColor = getRarityColor;
+  classPassives: Record<string, ClassPassive> = {};
   public prefix = ViewportService.getPreffixImg();
   public getPlayerImageSize() {
     if (
@@ -69,5 +72,33 @@ export class StatsDetailComponent extends TemplatePage {
       },
     };
     const modalRef = this.modalService.show(ClassSelectorComponent, config);
+  }
+
+  ngOnInit() {
+    // Cargar las pasivas de clase
+    this.loadClassPassives();
+  }
+
+  public openTitleSelector() {
+    this.modalService.show(TitleGeneratorModalComponent);
+  }
+
+  public onClassPicked(event: { selectedClass: any, selectedSkin: any }) {
+    if (event.selectedClass) {
+      this.playerService.updateClass(event.selectedClass.clazz, event.selectedSkin.id).pipe(take(1)).subscribe((player) => {
+        this.store.dispatch(new RefreshPlayer());
+      });
+    }
+  }
+
+  private loadClassPassives() {
+    const passives = this.store.selectSnapshot(MainState.getClassPassives);
+    if (!passives || Object.keys(passives).length === 0) {
+      this.store.dispatch(new LoadClassPassives()).subscribe(() => {
+        this.classPassives = this.store.selectSnapshot(MainState.getClassPassives);
+      });
+    } else {
+      this.classPassives = passives;
+    }
   }
 }

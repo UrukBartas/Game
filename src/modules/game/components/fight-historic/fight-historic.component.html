@@ -1,4 +1,7 @@
 <div id="historic-list">
+  <div class="description stat">
+    <p urText>Arena Matches</p>
+  </div>
   <ng-container *ngIf="getPlayerHistoric$ | async as historic">
     <ng-container *ngIf="historic.length > 0">
       <div

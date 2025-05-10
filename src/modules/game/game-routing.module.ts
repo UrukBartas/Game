@@ -163,6 +163,7 @@ const routes: Routes = [
         title: 'Leaderboard',
         data: {
           tutorial: LeaderboardTutorialComponent,
+          hideChat: true
         },
       },
       {
