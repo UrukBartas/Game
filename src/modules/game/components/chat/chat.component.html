@@ -9,7 +9,7 @@
       <i class="fas fa-comments"></i>
       <span *ngIf="hasUnreadMessages && !isChatExpanded" class="new-message-indicator"></span>
       <span>UrukBox Chat</span>
-      <span class="online-count">{{ (onlinePlayers$ | async) || 0 }} online</span>
+      <span class="online-count">{{ (onlinePlayers$ | async)?.length || 0 }} online</span>
     </div>
     <i *ngIf="isChatExpanded"
       class="fas text-light"

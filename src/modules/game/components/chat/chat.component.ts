@@ -16,7 +16,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   messages: ChatMessage[] = [];
   messageInput = new FormControl('');
   private chatSubscription: Subscription;
-  public onlinePlayers$ = this.webSocketService.onlineChatPlayers$;
+  public onlinePlayers$ = this.webSocketService.onlinePlayers$;
   store = inject(Store);
   showEmojiSelector = false;
   emojis: string[] = [
