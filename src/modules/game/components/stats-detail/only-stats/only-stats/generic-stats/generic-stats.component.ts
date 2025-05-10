@@ -16,9 +16,9 @@ import { MainState, RefreshPlayer } from 'src/store/main.store';
 })
 export class GenericStatsComponent {
   @Input() cappedStats: any;
-  @Input() simplified = false;
   @Input() player!: PlayerModel;
   @Input() hoveredItemStats: any = null;
+  @Input() allowUpgrade = false;
   playerService = inject(PlayerService);
   toastService = inject(ToastrService);
   store = inject(Store);
@@ -57,32 +57,32 @@ export class GenericStatsComponent {
     {
       label: 'Life',
       key: 'health',
-      tooltip: 'Total health points of the character',
+      tooltip: 'Health: Total health points of the character',
       icon: '/assets/icons/health-normal.png',
     },
     {
       label: 'Armor',
       key: 'armor',
       tooltip:
-        'Reduce incoming damage, reduction is correlated to health (max 50%)',
+        'Armor: Reduce incoming damage, reduction is correlated to health (max 50%)',
       icon: '/assets/icons/armor-vest.png',
     },
     {
       label: 'Energy',
       key: 'energy',
-      tooltip: 'Consumed when attacking (40), lack of it reduces damage dealt',
+      tooltip: 'Energy: Consumed when attacking (40), lack of it reduces damage dealt',
       icon: '/assets/icons/embrassed-energy.png',
     },
     {
       label: 'Damage',
       key: 'damage',
-      tooltip: 'Base damage points',
+      tooltip: 'Damage: Base damage points',
       icon: '/assets/icons/biceps.png',
     },
     {
       label: 'Speed',
       key: 'speed',
-      tooltip: 'In a tie context, will decide the winner',
+      tooltip: 'Speed: In a tie context, will decide the winner',
       icon: '/assets/icons/sprint.png',
     },
     {
@@ -90,35 +90,35 @@ export class GenericStatsComponent {
       icon: '/assets/icons/cracked-shield.png',
       key: 'penetration',
       tooltip:
-        'Reduce in a percent the armor of the opponent (deal more damage)',
+        'Penetration: Reduce in a percent the armor of the opponent (deal more damage)',
       suffix: '%',
     },
     {
       label: 'Crit',
       key: 'crit',
       icon: '/assets/icons/explosion-rays.png',
-      tooltip: 'Chance of doubling the final calculated damage',
+      tooltip: 'Crit: Chance of doubling the final calculated damage',
       suffix: '%',
     },
     {
       label: 'Dodge',
       key: 'dodge',
       icon: '/assets/icons/dodging.png',
-      tooltip: 'Chance of making an opponent miss an attack',
+      tooltip: 'Dodge: Chance of making an opponent miss an attack',
       suffix: '%',
     },
     {
       label: 'Block',
       key: 'block',
       icon: '/assets/icons/shield-bounces.png',
-      tooltip: 'Chance of blocking an opponent attack',
+      tooltip: 'Block: Chance of blocking an opponent attack',
       suffix: '%',
     },
     {
       label: 'Acc',
       key: 'accuracy',
       icon: '/assets/icons/bullseye.png',
-      tooltip: 'Accuracy, Reduces the chance of missing an attack',
+      tooltip: 'Accuracy: Reduces the chance of missing an attack',
       suffix: '%',
     },
   ];

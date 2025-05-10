@@ -131,14 +131,27 @@
         </button>
       </div>
 
-      <div class="search-input">
-        <i class="bi bi-search search-icon"></i>
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search by name or address..."
-          [formControl]="userOrWallet"
-        />
+      <div class="search-row d-flex align-items-center gap-2 w-100">
+        <div class="search-input flex-grow-1">
+          <i class="bi bi-search search-icon"></i>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search by name or address..."
+            [formControl]="userOrWallet"
+          />
+        </div>
+        <div class="toggle-online ms-2 d-flex align-items-center">
+          <label class="switch mb-0">
+            <input
+              type="checkbox"
+              [checked]="showOnlyOnline()"
+              (change)="setShowOnlyOnline($event)"
+            />
+            <span class="slider"></span>
+          </label>
+          <span class="ms-2 text-light">Online</span>
+        </div>
       </div>
     </div>
   </div>
@@ -182,7 +195,7 @@
 </div>
 
 <!-- Podium Section -->
-<div class="podium-section" *ngIf="topThreePlayers().length > 0">
+<div class="podium-section" *ngIf="topThreePlayers().length > 0 && !hasActiveFilters()">
   <div class="podium-container">
     <!-- Iteramos sobre los jugadores del podio -->
     @for (player of topThreePlayers(); track player.id; let position = $index) {
@@ -367,45 +380,22 @@
             ></app-name-player>
 
             @if (leaderboardType() === leaderboardTypes.PVE) {
-              <div
-                class="tier-badge-small ms-2"
-                [ngStyle]="{
-                  background: getRarityColor(
-                    getTitleForQuestsCompleted(player.finishedQuestsCount)
-                      .rarity
-                  ),
-                }"
-                [ngbTooltip]="questsAchevementsTooltip"
-                [tooltipContext]="{
-                  completedQuests: player.finishedQuestsCount,
-                  currentTier: getTitleForQuestsCompleted(
-                    player.finishedQuestsCount
-                  ),
-                }"
-              >
-                <i
-                  class="bi {{
-                    getTitleForQuestsCompleted(player.finishedQuestsCount).badge
-                  }}"
-                ></i>
-              </div>
+              <app-rank-badge
+                [type]="'pve'"
+                [player]="player"
+                [size]="'small'"
+              ></app-rank-badge>
             }
 
             @if (
               leaderboardType() === leaderboardTypes.PVP ||
               leaderboardType() === leaderboardTypes.TOP_PVP
             ) {
-              <div
-                class="tier-badge-small ms-2"
-                [ngStyle]="{ background: getRarityColor(player.pvp.rarity) }"
-                [ngbTooltip]="pvpAchievementsTooltip"
-                [tooltipContext]="{
-                  player: player,
-                  currentTier: player.pvp,
-                }"
-              >
-                <i class="bi {{ player.pvp.badge }}"></i>
-              </div>
+              <app-rank-badge
+                [type]="'pvp'"
+                [player]="player"
+                [size]="'small'"
+              ></app-rank-badge>
             }
 
             <div

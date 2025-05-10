@@ -10,17 +10,16 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { getAccount } from '@wagmi/core';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom, take } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { ClassPassive } from 'src/modules/core/models/class-passive.model';
 import {
   PlayerClass,
-  PlayerConfiguration,
-  PlayerModel,
+  PlayerConfiguration
 } from 'src/modules/core/models/player.model';
-import { getStatIcon, truncateEthereumAddress } from 'src/modules/utils';
+import { getClassBackground, getStatIcon, truncateEthereumAddress } from 'src/modules/utils';
 import { AuthService } from 'src/services/auth.service';
 import { MiscellanyService } from 'src/services/miscellany.service';
 import { PlayerService } from 'src/services/player.service';
@@ -34,7 +33,6 @@ import {
   MainState,
   RefreshPlayer,
 } from 'src/store/main.store';
-import { ClassSelectorComponent } from './components/character-selector/character-selector.component';
 
 export function passwordMatchingValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
@@ -70,6 +68,7 @@ export class EditCharacterComponent extends TemplatePage {
   imagePrefix = ViewportService.getPreffixImg();
   PlayerClass = PlayerClass;
   classPassives: Record<string, ClassPassive> = {};
+  selectedCard: 'class' | 'credentials' | 'notifications' | 'account' | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -107,6 +106,7 @@ export class EditCharacterComponent extends TemplatePage {
         disablePVP: [false, []],
         disableSound: [false, []],
         disableEmailNotifications: [false, []],
+        disableChatNotifications: [false, []],
         ignoreMine: [false, []],
         referralCode: ['', []],
       },
@@ -125,18 +125,7 @@ export class EditCharacterComponent extends TemplatePage {
     this.loadClassPassives();
   }
 
-  public getClassBackground(className: PlayerClass) {
-    switch (className) {
-      case PlayerClass.WARLOCK:
-        return '/assets/free-portraits/backgrounds/warlock.webp';
-      case PlayerClass.MAGE:
-        return '/assets/free-portraits/backgrounds/mage.webp';
-      case PlayerClass.ROGUE:
-        return '/assets/free-portraits/backgrounds/rogue.webp';
-      case PlayerClass.WARRIOR:
-        return '/assets/free-portraits/backgrounds/warrior.webp';
-    }
-  }
+  public getClassBackground = getClassBackground;
 
   public userHasLinkedAddress() {
     const player = this.store.selectSnapshot(MainState.getState).player;
@@ -169,37 +158,23 @@ export class EditCharacterComponent extends TemplatePage {
     }
   }
 
-  public openCharacterSelector() {
-    const player = this.store.selectSnapshot(
-      MainState.getPlayer
-    ) as PlayerModel;
-    const config: ModalOptions = {
-      initialState: {
-        pickClass: (selectedClass, selectedSkin) => {
-          if (selectedClass) {
-            this.form.patchValue({
-              image: selectedClass.img,
-              clazz: selectedClass.clazz,
-            });
-            if (this.editing) {
-              this.playerService
-                .updateClass(selectedClass.clazz, selectedSkin.id)
-                .pipe(take(1))
-                .subscribe((player) => {
-                  this.store.dispatch(new RefreshPlayer());
-                });
-            }
-          }
-          modalRef.hide();
-        },
-        selectedClass: player?.clazz,
-        _selectedSkin: player?.activeSkin,
-        showSelectSkin: this.editing,
-        ownedSkins: player?.unlockedPortraitsIds,
-      },
-    };
-    const modalRef = this.modalService.show(ClassSelectorComponent, config);
+  public onClassPicked(event: { selectedClass: any, selectedSkin: any }) {
+    if (event.selectedClass) {
+      this.form.patchValue({
+        image: event.selectedSkin.imageLocal,
+        clazz: event.selectedClass.clazz,
+      });
+      if (this.editing) {
+        this.playerService
+          .updateClass(event.selectedClass.clazz, event.selectedSkin.id)
+          .pipe(take(1))
+          .subscribe((player) => {
+            this.store.dispatch(new RefreshPlayer());
+          });
+      }
+    }
   }
+
 
   private async loadPlayer() {
     const player = this.store.selectSnapshot(MainState.getState).player;
@@ -213,6 +188,7 @@ export class EditCharacterComponent extends TemplatePage {
         disablePVP: configuration?.disablePVP,
         disableSound: configuration?.disableSound,
         disableEmailNotifications: configuration?.disableEmailNotifications,
+        disableChatNotifications: configuration?.disableChatNotifications,
         ignoreMine: configuration?.ignoreMine,
       });
     }
@@ -257,6 +233,7 @@ export class EditCharacterComponent extends TemplatePage {
       disablePVP,
       disableSound,
       disableEmailNotifications,
+      disableChatNotifications,
       ignoreMine,
       referralCode,
     } = this.form.value;
@@ -264,6 +241,7 @@ export class EditCharacterComponent extends TemplatePage {
       disablePVP,
       disableSound,
       disableEmailNotifications,
+      disableChatNotifications,
       ignoreMine,
     };
     const state = this.store.selectSnapshot(MainState.getState);
@@ -309,12 +287,14 @@ export class EditCharacterComponent extends TemplatePage {
       disablePVP,
       disableSound,
       disableEmailNotifications,
+      disableChatNotifications,
       ignoreMine,
     } = this.form.value;
     const configuration: PlayerConfiguration = {
       disablePVP,
       disableSound,
       disableEmailNotifications,
+      disableChatNotifications,
       ignoreMine,
     };
 
@@ -362,5 +342,13 @@ export class EditCharacterComponent extends TemplatePage {
   public getObjectEntries(obj: any): { key: string, value: any }[] {
     if (!obj) return [];
     return Object.entries(obj).map(([key, value]) => ({ key, value }));
+  }
+
+  selectCard(card: 'class' | 'credentials' | 'notifications' | 'account') {
+    this.selectedCard = card;
+  }
+
+  goBack() {
+    this.selectedCard = null;
   }
 }

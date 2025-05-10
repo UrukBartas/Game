@@ -92,20 +92,17 @@ export class FortuneWheelComponent implements OnInit, AfterViewInit {
   private generateRandomizedSegments(): WheelSegment[] {
     // Crear los segmentos según las probabilidades deseadas
     const segmentsToCreate: WheelSegment[] = [
-      // x0 (5 segmentos = 25%)
-      ...Array(5).fill({ multiplier: 0, color: '#e74c3c', label: 'x0' }),
+      // x2 (10 segmentos = 48%)
+      ...Array(10).fill({ multiplier: 2, color: '#3498db', label: 'x2' }),
 
-      // x2 (7 segmentos = 35%)
-      ...Array(7).fill({ multiplier: 2, color: '#3498db', label: 'x2' }),
+      // x3 (6 segmentos = 32%)
+      ...Array(6).fill({ multiplier: 3, color: '#2ecc71', label: 'x3' }),
 
-      // x3 (5 segmentos = 25%)
-      ...Array(5).fill({ multiplier: 3, color: '#2ecc71', label: 'x3' }),
-
-      // x5 (2 segmentos = 10%)
+      // x5 (2 segmentos = 12%)
       ...Array(2).fill({ multiplier: 5, color: '#f39c12', label: 'x5' }),
 
-      // x10 (1 segmento = 5%)
-      ...Array(1).fill({ multiplier: 10, color: '#9b59b6', label: 'x10', image: ViewportService.getPreffixImg() + '/assets/misc/stickers/goblin.webp' })
+      // x10 (2 segmentos = 8%)
+      ...Array(2).fill({ multiplier: 10, color: '#9b59b6', label: 'x10' })
     ];
 
     // Mezclar los segmentos aleatoriamente (algoritmo de Fisher-Yates)

@@ -29,6 +29,7 @@ import {
 } from 'src/modules/core/models/misc.model';
 import { ItemSet, PlayerModel } from 'src/modules/core/models/player.model';
 import {
+  getClassBackground,
   getIRIFromCurrentPlayer,
   getMountTimeReductionByRarity,
   getRarityBasedOnIRI,
@@ -45,7 +46,6 @@ import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import { MainState, RefreshPlayer } from 'src/store/main.store';
 import { ConfirmModalComponent } from '../../components/confirm-modal/confirm.modal.component';
-import { TitleGeneratorModalComponent } from '../../components/title-generator-modal/title-generator-modal.component';
 import { ItemSetModalComponent } from './item-set-modal/item-set-modal.component';
 import { InventoryUpdateService } from './services/inventory-update.service';
 
@@ -84,9 +84,7 @@ export class InventoryComponent extends TemplatePage {
     this.store.dispatch(new RefreshPlayer());
   }
 
-  public openTitleSelector() {
-    this.modalService.show(TitleGeneratorModalComponent);
-  }
+
 
   public siluettes$ = this.store.select(MainState.getState).pipe(
     filter((player) => !!player),
@@ -203,10 +201,10 @@ export class InventoryComponent extends TemplatePage {
 
   public isViewingPlayer =
     this.route.snapshot.url[0].path.includes('view-player');
-
+  public getClassBackground = getClassBackground;
+  public playerDeeds$: Observable<any>;
   constructor() {
     super();
-    if (this.isViewingPlayer) this.activeSlideIndex = 1;
     this.getPlayer$.subscribe((player) => {
       this.actualPlayer$.next(player);
     });
@@ -216,6 +214,7 @@ export class InventoryComponent extends TemplatePage {
     this.inventoryUpdateService.updateAllInventory$
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.loadInventories());
+    this.playerDeeds$ = this.playerService.getPlayerDeeds();
   }
 
   ngAfterViewInit(): void {

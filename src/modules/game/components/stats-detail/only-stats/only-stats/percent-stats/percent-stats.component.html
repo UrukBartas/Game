@@ -4,14 +4,13 @@
   </div>
 </ng-template>
 <div class="table-responsive rarity-table">
-  <table class="table table-dark" [ngClass]="{ 'table-striped': !simplified }">
-    <tbody [ngClass]="{ 'simplified-table-body row': simplified }">
-      <tr *ngIf="!simplified">
-        <td colspan="3" class="table-section">Rarity Stats</td>
-      </tr>
+  <table class="table table-dark">
+    <tbody class="simplified-table-body row">
       <tr
-        [ngClass]="{ 'col-6': simplified }"
+        class="col-6"
         *ngFor="let perStat of perStatItems"
+        [ngbTooltip]="statExplanation"
+        [tooltipContext]="{ text: perStat.tooltip }"
       >
         <td class="flex justify-content-start">
           <div class="stat-icon" [ngClass]="getStatIconClass(perStat.key)">
@@ -23,38 +22,53 @@
           </div>
         </td>
         <td class="w-100">
-          <span
-            class="stat-value"
-            [ngClass]="getValueStatusClass(player.perStats[perStat.key])"
-          >
-            {{ (player.perStats[perStat.key] || 0) | number: '1.0-2' }}%
+          <span class="stat-value">
             <span
               *ngIf="
                 !!hoveredItemStats &&
-                !!hoveredItemStats[mapTotalPercentLabels[perStat.key]]
+                !!hoveredItemStats[totalStatsToPercentualStats[perStat.key]]
               "
               class="stat-value"
               [ngClass]="
                 getValueStatusClass(
-                  hoveredItemStats[mapTotalPercentLabels[perStat.key]]
+                  hoveredItemStats[totalStatsToPercentualStats[perStat.key]]
                 )
               "
             >
               {{
-                hoveredItemStats[mapTotalPercentLabels[perStat.key]] +
+                hoveredItemStats[totalStatsToPercentualStats[perStat.key]] +
                   getPercentage(perStat.key)
               }}</span
             >
-          </span>
-          <i
-            class="fa-solid fa-circle-info text-third fa-sm px-1"
-            [ngbTooltip]="statExplanation"
-            [tooltipContext]="{ text: perStat.tooltip }"
-          ></i>
-        </td>
-        <td *ngIf="!simplified">
-          <span *ngIf="cappedPerStats[perStat.key]" class="max-value">
-            (Max: {{ cappedPerStats[perStat.key] }}%)
+            <ng-container
+              *ngIf="
+                cappedPerStats[perStat.key] &&
+                  (player.perStats[perStat.key] || 0) >=
+                    cappedPerStats[perStat.key];
+                else notMax
+              "
+            >
+              <span
+                [ngClass]="getValueStatusClass(player.perStats[perStat.key])"
+              >
+                {{ player.perStats[perStat.key] || 0 | number: '1.0-2' }}/{{
+                  cappedPerStats[perStat.key]
+                }}%
+              </span>
+            </ng-container>
+            <ng-template #notMax>
+              <span
+                [ngClass]="getValueStatusClass(player.perStats[perStat.key])"
+              >
+                {{ player.perStats[perStat.key] || 0 | number: '1.0-2' }}
+              </span>
+              <span *ngIf="cappedPerStats[perStat.key]" class="max-value">
+                /{{ cappedPerStats[perStat.key] }}%
+              </span>
+              <span *ngIf="!cappedPerStats[perStat.key]" class="max-value"
+                >%</span
+              >
+            </ng-template>
           </span>
         </td>
       </tr>

@@ -181,10 +181,11 @@ export class WebSocketService {
   }
 
   private notifyNewMessage(): void {
-    // Aquí puedes implementar la lógica de notificación
-    // Por ejemplo, reproducir un sonido o mostrar una notificación
-    const audio = new Audio('assets/sounds/chat-notification.mp3');
-    audio.play().catch(err => console.log('Error playing notification sound:', err));
+    const player = this.store.selectSnapshot(MainState.getPlayer);
+    if (!player.configuration.disableChatNotifications) {
+      const audio = new Audio('assets/sounds/pop.mp3');
+      audio.play().catch(err => console.log('Error playing notification sound:', err));
+    }
   }
 
   public joinGlobalChat(): void {

@@ -209,7 +209,8 @@ export class PlayerService extends ApiBaseService {
     chunkSize: number,
     nameOrWallet: string,
     periodType: 'weekly' | 'monthly',
-    leaderboardType: LeaderboardType
+    leaderboardType: LeaderboardType,
+    onlyOnline: boolean
   ) {
     const body = {
       sortBy,
@@ -218,7 +219,8 @@ export class PlayerService extends ApiBaseService {
       chunkSize,
       nameOrWallet,
       typeFilter: periodType,
-      leaderboardType
+      leaderboardType,
+      onlyOnline
     }
     return this.post('/get-leaderboard/', body) as Observable<LeaderboardPlayer[]>;
   }

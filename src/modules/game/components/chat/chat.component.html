@@ -1,0 +1,70 @@
+<div
+  class="game-communication-panel"
+  [class.chat-expanded]="isChatExpanded"
+  [class.chat-collapsed]="!isChatExpanded"
+  data-game-feature="player-communication"
+>
+  <div class="chat-header" (click)="toggleChat()">
+    <div class="header-content">
+      <i class="fas fa-comments"></i>
+      <span *ngIf="hasUnreadMessages && !isChatExpanded" class="new-message-indicator"></span>
+      <span>UrukBox Chat</span>
+      <span class="online-count">{{ (onlinePlayers$ | async) || 0 }} online</span>
+    </div>
+    <i *ngIf="isChatExpanded"
+      class="fas text-light"
+      [class.fa-chevron-up]="!isChatExpanded"
+      [class.fa-chevron-down]="isChatExpanded"
+    ></i>
+  </div>
+
+  <div class="chat-content" *ngIf="isChatExpanded">
+    <div #chatContainer class="messages-container">
+      <div
+        class="message"
+        *ngFor="let message of messages"
+        [class.own-message]="message.username === getCurrentUsername()"
+      >
+        <div class="message-header">
+          <span class="timestamp">{{
+            message.timestamp | date: 'HH:mm'
+          }}</span>
+          <span
+            class="username"
+            [ngStyle]="getPlayerNameColor(message.username)"
+          >
+            {{ message.username }}
+          </span>
+        </div>
+        <div class="message-content">
+          {{ message.message }}
+        </div>
+      </div>
+    </div>
+
+    <form class="chat-input" (ngSubmit)="sendMessage()">
+      <button type="button" class="emoji-btn" (click)="toggleEmojiSelector()" tabindex="-1" type="button">
+        <i class="fa-regular fa-face-smile"></i>
+      </button>
+      <input
+        #messageInputRef
+        type="text"
+        [formControl]="messageInput"
+        placeholder="Type your message..."
+        maxlength="200"
+        (keydown.enter)="$event.preventDefault(); sendMessage()"
+      />
+      <button type="submit" [disabled]="!messageInput.value?.trim()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </form>
+    <div *ngIf="showEmojiSelector" class="emoji-selector-popover-casero">
+      <span
+        *ngFor="let emoji of emojis"
+        class="emoji-casero"
+        (click)="addEmoji(emoji)"
+        >{{ emoji }}</span
+      >
+    </div>
+  </div>
+</div>
