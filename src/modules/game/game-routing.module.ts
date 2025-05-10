@@ -128,6 +128,9 @@ const routes: Routes = [
         path: 'create',
         component: EditCharacterComponent,
         title: 'Create character',
+        data: {
+          hideChat: true,
+        },
       },
       {
         path: 'export-import',
