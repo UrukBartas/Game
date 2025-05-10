@@ -4,69 +4,78 @@
   </div>
 </ng-template>
 <div class="table-responsive stat-table" *ngIf="player as viewedPlayer">
-  <table class="table table-dark" [ngClass]="{ 'table-striped': !simplified }">
-    <tbody [ngClass]="{ 'simplified-table-body row': simplified }">
-      <tr *ngIf="!simplified">
-        <td colspan="4" class="table-section">Stats</td>
-      </tr>
-      <tr [ngClass]="{ 'col-6': simplified }" *ngFor="let stat of statItems">
+  <table class="table table-dark">
+    <tbody class="simplified-table-body row">
+      <tr
+        class="col-6"
+        *ngFor="let stat of statItems"
+        [ngbTooltip]="statExplanation"
+        [tooltipContext]="{ text: stat.tooltip }"
+      >
         <td>
           <div class="stat-icon" [ngClass]="getStatIconClass(stat.key)">
             <img [src]="prefix + stat.icon" alt="" class="stat-icon-img" />
           </div>
         </td>
         <td class="w-100">
-          <span class="stat-value" [ngClass]="getStatValueClass(stat.key)">
-            {{
-              (player.stats[stat.key] || player[stat.key] || 0) | number: '1.0-2'
-            }}
-            {{ stat.suffix ? stat.suffix : '' }}
-          </span>
-          <span
-            *ngIf="!!hoveredItemStats && !!hoveredItemStats[stat.key]"
-            class="stat-value"
-            [ngClass]="getValueStatusClass(hoveredItemStats[stat.key])"
-          >
-            {{ hoveredItemStats[stat.key] + getPercentage(stat.key) }}
-          </span>
-          <i
-            class="fa-solid fa-circle-info text-third fa-sm px-1"
-            [ngbTooltip]="statExplanation"
-            [tooltipContext]="{ text: stat.tooltip }"
-          ></i>
-        </td>
-        <td *ngIf="!simplified">
-          @if (cappedStats[stat.key]) {
-            <span class="max-value"> (Max: {{ cappedStats[stat.key] }}%) </span>
-          } @else {
-            <span class="max-value">
-              (Max: <i class="fa-solid fa-infinity"></i>)
+          <span class="stat-value">
+            <span
+              *ngIf="!!hoveredItemStats && !!hoveredItemStats[stat.key]"
+              class="stat-value"
+              [ngClass]="getValueStatusClass(hoveredItemStats[stat.key])"
+            >
+              {{ hoveredItemStats[stat.key] + getPercentage(stat.key) }}
             </span>
-          }
-        </td>
-        <td *ngIf="!simplified && currentPlayer$ | async as currentPlayer">
-          <span
-            class="d-flex align-items-center gap-2"
-            *ngIf="
-              currentPlayer.id == viewedPlayer.id &&
-                allowedStatsToUpgrade.includes(stat.key) &&
-                allStatsUpgradeStatus$ | async as allStatsUpgradeCost
-            "
-          >
-            {{ allStatsUpgradeCost[stat.key] }}
-            @if (
-              (player.stats[stat.key] || player[stat.key]) <
-                cappedStats[stat.key] || !cappedStats[stat.key]
-            ) {
-              <img
-                class="navbar-uruks-icon"
-                src="{{ prefix + '/assets/goldenuruks.png' }}"
-                style="max-width: 20px"
-              /><i
-                class="fa-solid fa-circle-up text-third pointer fa-md"
-                (click)="upgradeStat(stat.key)"
-              ></i>
-            }
+            <ng-container
+              *ngIf="
+                cappedStats[stat.key] &&
+                  (player.stats[stat.key] || player[stat.key] || 0) >=
+                    cappedStats[stat.key];
+                else notMax
+              "
+            >
+              <span [ngClass]="getStatValueClass(stat.key)">
+                {{
+                  player.stats[stat.key] || player[stat.key] || 0
+                    | number: '1.0-2'
+                }}/{{ cappedStats[stat.key]
+                }}{{ stat.suffix ? stat.suffix : '' }}
+              </span>
+            </ng-container>
+            <ng-template #notMax>
+              <span [ngClass]="getStatValueClass(stat.key)">
+                {{
+                  player.stats[stat.key] || player[stat.key] || 0
+                    | number: '1.0-2'
+                }}
+              </span>
+              <span *ngIf="cappedStats[stat.key]" class="max-value">
+                /{{ cappedStats[stat.key] }}{{ stat.suffix ? stat.suffix : '' }}
+              </span>
+              <span *ngIf="!cappedStats[stat.key]" class="max-value">
+                {{ stat.suffix ? stat.suffix : '' }}
+              </span>
+            </ng-template>
+            <span
+              class="pointer"
+              *ngIf="
+                allowUpgrade &&
+                  allowedStatsToUpgrade.includes(stat.key) &&
+                  (cappedStats[stat.key]
+                    ? (player.stats[stat.key] || player[stat.key]) <
+                      cappedStats[stat.key]
+                    : true) &&
+                  allStatsUpgradeStatus$ | async as allStatsUpgradeCost
+              "
+              [ngbTooltip]="
+                'Upgrade cost: ' +
+                allStatsUpgradeCost[stat.key] +
+                ' Golden Uruks'
+              "
+              (click)="upgradeStat(stat.key)"
+            >
+              <i class="fa-solid fa-circle-up"></i>
+            </span>
           </span>
         </td>
       </tr>

@@ -13,14 +13,11 @@
     <div class="stat text-center">
       <div class="row">
         <div class="col-12">
-          <div
-            class="table-container"
-            [ngClass]="{ 'justify-content-start': simplified }"
-          >
+          <div class="table-container justify-content-start">
             <div class="row w-100">
               <div
                 class="col-12"
-                *ngIf="!simplified && playerDeeds$ | async as playerDeeds"
+                *ngIf="!showAchievements && playerDeeds$ | async as playerDeeds"
               >
                 <div class="list-deeds">
                   <app-item-box
@@ -67,18 +64,18 @@
               <div class="col-12 col-xxl-6">
                 <app-generic-stats
                   [player]="player"
-                  [simplified]="simplified"
                   [cappedStats]="cappedStats"
                   [hoveredItemStats]="combinedPlayerHoveredItem$ | async"
+                  [allowUpgrade]="allowUpgrade"
                 ></app-generic-stats>
               </div>
               <div class="col-12 col-xxl-6">
                 <app-percent-stats
                   [player]="player"
-                  [simplified]="simplified"
                   [perStatItems]="perStatItems"
                   [cappedPerStats]="cappedPerStats"
                   [hoveredItemStats]="combinedPlayerHoveredItem$ | async"
+                  [allowUpgrade]="allowUpgrade"
                 >
                 </app-percent-stats>
               </div>

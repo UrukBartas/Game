@@ -3,45 +3,74 @@
     <div class="row">
       <div class="col">
         <div class="description stat">
-          <p urText>Player</p>
-          <div class="player-info">
-            <div class="row w-100">
-              <div class="col-12 col-xl-3">
-                <div class="d-flex justify-content-center player-avatar">
-                  <app-item-box
-                    (click)="openSkinSelector()"
-                    [height]="getPlayerImageSize()"
-                    [width]="getPlayerImageSize()"
-                    [image]="player.image"
-                  ></app-item-box>
-                  <app-name-player [player]="player" [disabledTrigger]="isViewingAnotherPlayer"></app-name-player>
-                </div>
+          <div class="player-info justify-content-center">
+            <div class="row w-100 gap-2 gap-md-0">
+              <div class="col-12 col-xl-5">
+                <app-character-class-info
+                  [characterImage]="player.image"
+                  [characterClass]="player.clazz"
+                  [classPassives]="classPassives"
+                  [showActiveSkin]="true"
+                  [readOnly]="isViewingAnotherPlayer"
+                  (classPicked)="onClassPicked($event)"
+                ></app-character-class-info>
               </div>
-              <div class="col-12 col-xl-9">
+              <div class="col-12 col-xl-7 d-flex flex-column gap-2">
+                <div class="d-flex justify-content-between align-items-center">
+                  <app-name-player
+                    [player]="player"
+                    [disabledTrigger]="isViewingAnotherPlayer"
+                  ></app-name-player>
+                  <span
+                    class="title-selector hoverable-text"
+                    (click)="
+                      isViewingAnotherPlayer ? false : openTitleSelector()
+                    "
+                    >{{ player.title ?? 'The untitled' }}
+                    <i
+                      class="fa-solid fa-arrow-right-arrow-left"
+                      *ngIf="!isViewingAnotherPlayer"
+                    ></i
+                  ></span>
+                </div>
                 <ul class="list-stats">
                   <li class="d-flex justify-content-between gap-2">
                     <label class="text-third">Arena rank:</label>
-                    <span
-                      [ngStyle]="{
-                        color: getRarityColor(
-                          getPvpTier(player.pvpIndex).rarity
-                        ),
-                      }"
-                    >
-                      {{ getPvpTier(player.pvpIndex).title }}</span
-                    >
+                    <div class="d-flex align-items-center gap-2">
+                      <app-rank-badge
+                        [type]="'pvp'"
+                        [player]="player"
+                        [size]="'medium'"
+                      ></app-rank-badge>
+                      <span
+                        [ngStyle]="{
+                          color: getRarityColor(
+                            getPvpTier(player.pvpIndex).rarity
+                          ),
+                        }"
+                      >
+                        {{ getPvpTier(player.pvpIndex).title }}
+                      </span>
+                    </div>
                   </li>
                   <li class="d-flex justify-content-between gap-2">
                     <label class="text-third">Questing rank:</label>
-                    <span
-                      [ngStyle]="{
-                        color: getRarityColor(
-                          getQuestTier(player.finishedQuestsCount).rarity
-                        ),
-                      }"
-                    >
-                      {{ getQuestTier(player.finishedQuestsCount).title }}</span
-                    >
+                    <div class="d-flex align-items-center gap-2">
+                      <app-rank-badge
+                        [type]="'pve'"
+                        [player]="player"
+                        [size]="'medium'"
+                      ></app-rank-badge>
+                      <span
+                        [ngStyle]="{
+                          color: getRarityColor(
+                            getQuestTier(player.finishedQuestsCount).rarity
+                          ),
+                        }"
+                      >
+                        {{ getQuestTier(player.finishedQuestsCount).title }}
+                      </span>
+                    </div>
                   </li>
                   <li class="d-flex justify-content-between gap-2">
                     <label class="text-third">Level:</label>
@@ -56,6 +85,10 @@
                     {{ player.mmr }}
                   </li>
                   <li class="d-flex justify-content-between gap-2">
+                    <label class="text-third">Arena victories:</label>
+                    {{ player.winCount }}
+                  </li>
+                  <li class="d-flex justify-content-between gap-2">
                     <label class="text-third">Member since:</label>
                     {{ player.createdAt | date }}
                   </li>
@@ -66,7 +99,6 @@
         </div>
       </div>
     </div>
-    <app-only-stats [player]="player"></app-only-stats>
   </div>
 } @else {
   Loading...

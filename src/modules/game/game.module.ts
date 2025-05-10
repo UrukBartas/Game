@@ -14,7 +14,9 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { TimeAgoPipe } from 'src/app/time-ago.pipe';
 import { ConfirmModalComponent } from 'src/modules/game/components/confirm-modal/confirm.modal.component';
 import { ItemPickerComponent } from 'src/modules/game/components/item-picker/item-picker.component';
+import { AchievementsComponent } from 'src/standalone/achievements/achievements.component';
 import { BalanceSelectorComponent } from 'src/standalone/balance-selector/balance-selector.component';
+import { CharacterClassInfoComponent } from 'src/standalone/character-class-info/character-class-info.component';
 import { BlacksmithContextMenuComponent } from 'src/standalone/context-menu/blacksmith-context-menu/blacksmith-context-menu.component';
 import { ContextMenuInventoryOptionsComponent } from 'src/standalone/context-menu/context-menu-inventory-options/context-menu-inventory-options.component';
 import { ContextMenuComponent } from 'src/standalone/context-menu/context-menu.component';
@@ -24,6 +26,7 @@ import { ItemRouletteComponent } from 'src/standalone/item-roulette/item-roulett
 import { ItemTooltipComponent } from 'src/standalone/item-tooltip/item-tooltip.component';
 import { MinMaxComboSelectorComponent } from 'src/standalone/min-max-combo-selector/min-max-combo-selector.component';
 import { MonsterTypeAvatarComponent } from 'src/standalone/monster-type-avatar/monster-type-avatar.component';
+import { RankBadgeComponent } from 'src/standalone/rank-badge/rank-badge.component';
 import { RemoteItemBoxComponent } from 'src/standalone/remote-item-box/remote-item-box.component';
 import { SpinnerComponent } from 'src/standalone/spinner/spinner.component';
 import { TierizedProgressBarComponent } from 'src/standalone/tierized-progress-bar/tierized-progress-bar.component';
@@ -93,6 +96,7 @@ import { StakeRemoveRequestModalComponent } from './activities/the-mine/stake-re
 import { TheMineComponent } from './activities/the-mine/the-mine.component';
 import { BaseInventoryComponent } from './components/base-inventory/base-inventory.component';
 import { ChallengeModalComponent } from './components/challenge-modal/challenge-modal.component';
+import { ChatComponent } from './components/chat/chat.component';
 import { ConsumableModalComponent } from './components/consumable-modal/consumable-modal.component';
 import { ConsumablesInventoryComponent } from './components/consumables-inventory/consumables-inventory.component';
 import { EmojiSelectorComponent } from './components/emoji-selector/emoji-selector.component';
@@ -227,6 +231,7 @@ const pipes = [
     FortuneWheelComponent,
     EmojiSelectorComponent,
     FightEmojisComponent,
+    ChatComponent
   ],
   imports: [
     ...directives,
@@ -265,7 +270,9 @@ const pipes = [
     UruksDisplayerComponent,
     RemoteItemBoxComponent,
     QRCodeModule,
-    MonsterTypeAvatarComponent
+    MonsterTypeAvatarComponent,
+    RankBadgeComponent, AchievementsComponent,
+    CharacterClassInfoComponent
   ],
   exports: [
     GameLayoutComponent,

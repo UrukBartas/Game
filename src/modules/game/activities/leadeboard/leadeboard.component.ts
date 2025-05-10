@@ -19,6 +19,11 @@ import { pvpTiers } from './const/pvp-tiers';
 import { QuestTier, questTiers } from './const/quest-tiers';
 import { LeaderboardType } from './enum/leaderboard-type.enum';
 import { PlayerStateEnum } from './enum/player-state.enum';
+
+
+
+
+
 @Component({
   selector: 'app-leadeboard',
   templateUrl: './leadeboard.component.html',
@@ -42,8 +47,11 @@ export class LeadeboardComponent extends TemplatePage {
   public topThreePlayers = signal<any[]>([]);
   public Infinity = Infinity;
   public isHardcoreRealm = environment.realm === 'hardcore';
+  public showOnlyOnline = signal<boolean>(false);
+  public onlinePlayers: { address: string; state: PlayerStateEnum }[] = [];
 
   public getLeaderboard$ = computed(() => {
+
     return this.playerService
       .getLeaderboard(
         this.sortBy(),
@@ -52,14 +60,15 @@ export class LeadeboardComponent extends TemplatePage {
         this.chunkSize(),
         this.nameOrWallet(),
         this.periodType(),
-        this.leaderboardType()
+        this.leaderboardType(),
+        this.showOnlyOnline()
       )
       .pipe(
         map((players) => {
           if (this.activePage() === 0) {
             this.topThreePlayers.set(players.slice(0, 3));
           }
-          return players.map((player, index) => {
+          let mapped = players.map((player, index) => {
             const title = this.getTitleForQuestsCompleted(
               player.finishedQuestsCount
             );
@@ -68,13 +77,14 @@ export class LeadeboardComponent extends TemplatePage {
               pve: {
                 ...title,
               },
-              pvp: pvpTiers.find(
+              pvp: this.pvpTiers.find(
                 (tier) =>
                   player.pvpIndex >= tier.range[0] &&
                   player.pvpIndex <= tier.range[1]
               ),
             };
           });
+          return mapped;
         }),
         tap((entry) => (this.lastPageSize = entry.length))
       );
@@ -92,7 +102,6 @@ export class LeadeboardComponent extends TemplatePage {
   public modalService = inject(BsModalService);
   public pvpService = inject(PvPFightService);
   private router = inject(Router);
-  public onlinePlayers: { address: string; state: PlayerStateEnum }[] = [];
   public getPlayerState = (playerId: string) => {
     const player = this.onlinePlayers.find(
       (onlinePlayer) => onlinePlayer.address === playerId
@@ -105,6 +114,10 @@ export class LeadeboardComponent extends TemplatePage {
   public leaderboardType = signal<LeaderboardType>(LeaderboardType.PVE);
   public leaderboardTypes = LeaderboardType;
 
+  public hasActiveFilters = computed(() => {
+    return !!this.nameOrWallet() || this.showOnlyOnline();
+  });
+
   constructor() {
     super();
     this.formGroup
@@ -114,6 +127,10 @@ export class LeadeboardComponent extends TemplatePage {
     this.websocket.onlinePlayers$
       .pipe(takeUntilDestroyed())
       .subscribe((players) => (this.onlinePlayers = players));
+  }
+
+  public setShowOnlyOnline(event: Event) {
+    this.showOnlyOnline.set((event.target as HTMLInputElement).checked);
   }
 
   public setAllLeaderboard() {

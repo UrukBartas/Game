@@ -1,5 +1,5 @@
-<div id="edit-character">
-  <div class="character-edit-container pb-5 position-relative">
+<div id="edit-character" class="h-100">
+  <div class="character-edit-container pb-5 position-relative h-100">
     <!-- Background image with mask -->
     <div
       class="background-image"
@@ -12,403 +12,439 @@
     <!-- Content on top of the background -->
     <div class="content-container">
       <div [formGroup]="form" class="d-flex flex-column gap-3">
-        <div class="d-flex justify-content-center mb-2">
-          <div
-            class="col-12 col-sm-4 d-flex flex-column align-items-center gap-2"
-          >
-            <!-- Class Traits Section -->
+        <!-- Registration Mode -->
+        <ng-container *ngIf="!editing">
+          <div class="d-flex justify-content-center mb-2">
             <div
-              class="class-passives-section"
-              *ngIf="
-                (editing || form.value.clazz) &&
-                getClassPassivesForCurrentClass()
-              "
+              class="col-12 col-sm-4 d-flex flex-column align-items-center gap-2"
             >
-              <div class="position-relative" (click)="openCharacterSelector()">
-                <img
-                  [src]="imagePrefix + form.value.image"
-                  class="character-image shadow"
-                />
-                <div class="character-class-container">
-                  <img
-                    class="class-icon"
-                    [src]="
-                      imagePrefix +
-                      '/assets/free-portraits/icons/' +
-                      form.value.clazz.toLowerCase() +
-                      '.webp'
-                    "
-                  />
-                  <span urText class="text-white">{{
-                    form.value.clazz | capitalizeFirst
-                  }}</span>
-                </div>
-              </div>
-
-
-              <!-- Effects -->
-              <div class="traits-container">
-                <div class="traits-section">
-                  <h5 class="section-title">Special Abilities</h5>
-                  <div class="effects-container">
-                    <div
-                      *ngFor="
-                        let effect of getClassPassivesForCurrentClass()?.effects
-                      "
-                      class="effect-item"
-                    >
-                      <app-item-box
-                        [width]="60"
-                        [height]="60"
-                        [image]="effect.image"
-                        [ngbTooltip]="effectTooltip"
-                        [tooltipContext]="{ effect: effect }"
-                      ></app-item-box>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Stat Boosts -->
-                <div
-                  class="traits-section"
-                  *ngIf="getClassPassivesForCurrentClass()?.statBoosts"
-                >
-                  <h5 class="section-title">Stat Boosts</h5>
-                  <div class="stats-container">
-                    <div
-                      *ngFor="
-                        let stat of getObjectEntries(
-                          getClassPassivesForCurrentClass()?.statBoosts
-                        )
-                      "
-                      class="stat-item"
-                    >
-                      <div class="stat-icon">
-                        <img
-                          [src]="getStatIcon(stat.key)"
-                          [alt]="getStatName(stat.key)"
-                        />
-                      </div>
-                      <div class="stat-info">
-                        <span class="stat-name">{{
-                          getStatName(stat.key)
-                        }}</span>
-                        <span class="stat-value">+{{ stat.value }} pts</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <app-character-class-info
+                [characterImage]="form.value.image"
+                [characterClass]="form.value.clazz"
+                [classPassives]="classPassives"
+                [showActiveSkin]="editing"
+                (classPicked)="onClassPicked($event)"
+              ></app-character-class-info>
             </div>
+          </div>
 
-            <button
-              class="btn btn-lg btn-primary save-button w-100 text-shadow"
-              [ngClass]="{
-                'button-warlock': form.value.clazz == PlayerClass.WARLOCK,
-                'button-rogue': form.value.clazz == PlayerClass.ROGUE,
-                'button-warrior': form.value.clazz == PlayerClass.WARRIOR,
-                'button-mage': form.value.clazz == PlayerClass.MAGE,
-              }"
-              (click)="openCharacterSelector()"
+          <!-- Registration Form Fields -->
+          <div class="form-group col-12">
+            <label for="characterName" class="text-third"
+              >Character Name:</label
             >
-              Pick your class
-            </button>
-          </div>
-        </div>
-
-        <div *ngIf="!editing" class="form-group col-12">
-          <label for="characterName" class="text-third">Character Name:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="characterName"
-            formControlName="name"
-            name="characterName"
-            placeholder="Enter character name"
-            validInput
-          />
-        </div>
-
-        <div class="form-group col-12">
-          <label for="email" class="text-third">Email:</label>
-          <input
-            type="email"
-            class="form-control"
-            id="email"
-            formControlName="email"
-            name="email"
-            placeholder="Enter email"
-            validInput
-          />
-          <small
-            *ngIf="!editing && !viewportService.isMobile()"
-            class="form-text text-secondary"
-          >
-            Email used to receive in-game notifications.
-          </small>
-        </div>
-
-        <div class="row">
-          <div class="form-group col-12 col-md-6 pb-3">
-            <label for="password" class="text-third">Password:</label>
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              formControlName="password"
-              name="password"
-              placeholder="Enter password"
-            />
-          </div>
-
-          <div class="form-group col-12 col-md-6">
-            <label for="repeatPassword" class="text-third"
-              >Repeat password:</label
-            >
-            <input
-              type="password"
-              class="form-control"
-              id="repeatPassword"
-              formControlName="repeatPassword"
-              name="repeatPassword"
-              placeholder="Repeat password"
-            />
-          </div>
-          <div class="col-12" *ngIf="!editing && !viewportService.isMobile()">
-            <small class="form-text text-secondary">
-              Password is necessary if you want to log in with Web2 (without
-              Web3 wallet).
-            </small>
-          </div>
-        </div>
-
-        <div
-          *ngIf="
-            form.errors?.['passwordMismatch'] &&
-            (form.get('password').touched || form.get('repeatPassword').touched)
-          "
-        >
-          <span class="error text-danger">The passwords have to match</span>
-        </div>
-
-        <div
-          *ngIf="
-            form.get('password').errors?.['pattern'] &&
-            form.get('password').touched
-          "
-        >
-          <span class="error text-danger"
-            >The password must be at least 8 characters long and include an
-            uppercase letter, a lowercase letter, a number, and a special
-            character.</span
-          >
-        </div>
-
-        <div class="row" *ngIf="!editing">
-          <div class="form-group col-12 col-md-6 pb-3">
-            <label for="referralCode" class="text-third">Referral Code:</label>
             <input
               type="text"
               class="form-control"
-              id="referralCode"
-              formControlName="referralCode"
-              name="referralCode"
-              placeholder="Enter referral code"
+              id="characterName"
+              formControlName="name"
+              name="characterName"
+              placeholder="Enter character name"
+              validInput
             />
           </div>
-        </div>
 
-        <div class="description pt-3" *ngIf="!!editing">
-          <span urText>Settings</span>
-        </div>
+          <div class="form-group col-12">
+            <label for="email" class="text-third">Email:</label>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              formControlName="email"
+              name="email"
+              placeholder="Enter email"
+              validInput
+            />
+            <small
+              *ngIf="!editing && !viewportService.isMobile()"
+              class="form-text text-secondary"
+            >
+              Email used to receive in-game notifications.
+            </small>
+          </div>
 
-        <div class="settings-container" *ngIf="!!editing">
-          <!-- Game Settings Section -->
-          <div class="settings-card">
-            <div class="settings-card-header">
-              <i class="bi bi-gear-fill me-2"></i>
-              <span urText>Game Settings</span>
+          <div class="row">
+            <div class="form-group col-12 col-md-6 pb-3">
+              <label for="password" class="text-third">Password:</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                formControlName="password"
+                name="password"
+                placeholder="Enter password"
+              />
             </div>
-            <div class="settings-card-body">
-              <div class="settings-toggle-grid">
-                <div class="toggle-item">
-                  <div class="toggle-label">
-                    <i class="bi bi-shield-fill me-2"></i>
-                    <span>PVP Notifications</span>
-                  </div>
-                  <div class="form-check form-switch">
-                    <input
-                      formControlName="disablePVP"
-                      class="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="togglePVP"
-                    />
-                  </div>
-                </div>
 
-                <div class="toggle-item">
-                  <div class="toggle-label">
-                    <i class="bi bi-volume-up-fill me-2"></i>
-                    <span>Sound Effects</span>
-                  </div>
-                  <div class="form-check form-switch">
-                    <input
-                      formControlName="disableSound"
-                      class="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="toggleSound"
-                    />
-                  </div>
-                </div>
+            <div class="form-group col-12 col-md-6">
+              <label for="repeatPassword" class="text-third"
+                >Repeat password:</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="repeatPassword"
+                formControlName="repeatPassword"
+                name="repeatPassword"
+                placeholder="Repeat password"
+              />
+            </div>
+            <div class="col-12" *ngIf="!editing && !viewportService.isMobile()">
+              <small class="form-text text-secondary">
+                Password is necessary if you want to log in with Web2 (without
+                Web3 wallet).
+              </small>
+            </div>
+          </div>
 
-                <div class="toggle-item">
-                  <div class="toggle-label">
-                    <i class="bi bi-envelope-fill me-2"></i>
-                    <span>Email Notifications</span>
-                  </div>
-                  <div class="form-check form-switch">
-                    <input
-                      formControlName="disableEmailNotifications"
-                      class="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="toggleEmail"
-                    />
-                  </div>
-                </div>
+          <div
+            *ngIf="
+              form.errors?.['passwordMismatch'] &&
+              (form.get('password').touched ||
+                form.get('repeatPassword').touched)
+            "
+          >
+            <span class="error text-danger">The passwords have to match</span>
+          </div>
 
-                <div class="toggle-item">
-                  <div class="toggle-label">
-                    <i class="bi bi-gem me-2"></i>
-                    <span>Mine Notifications</span>
-                  </div>
-                  <div class="form-check form-switch">
-                    <input
-                      formControlName="ignoreMine"
-                      class="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="toggleMine"
-                    />
-                  </div>
-                </div>
+          <div
+            *ngIf="
+              form.get('password').errors?.['pattern'] &&
+              form.get('password').touched
+            "
+          >
+            <span class="error text-danger"
+              >The password must be at least 8 characters long and include an
+              uppercase letter, a lowercase letter, a number, and a special
+              character.</span
+            >
+          </div>
+
+          <div class="row" *ngIf="!editing">
+            <div class="form-group col-12 col-md-6 pb-3">
+              <label for="referralCode" class="text-third"
+                >Referral Code:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="referralCode"
+                formControlName="referralCode"
+                name="referralCode"
+                placeholder="Enter referral code"
+              />
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Edit Mode -->
+        <ng-container *ngIf="editing">
+          <!-- Cards View -->
+          <div class="settings-cards" *ngIf="!selectedCard">
+            <div class="settings-card" (click)="selectCard('class')">
+              <div class="settings-card-header">
+                <i class="bi bi-person-badge me-2"></i>
+                <span urText>Change Class</span>
+              </div>
+              <div class="settings-card-body">
+                <p>Modify your character's class and appearance</p>
+              </div>
+            </div>
+
+            <div class="settings-card" (click)="selectCard('credentials')">
+              <div class="settings-card-header">
+                <i class="bi bi-shield-lock me-2"></i>
+                <span urText>Credentials</span>
+              </div>
+              <div class="settings-card-body">
+                <p>Update your email and password</p>
+              </div>
+            </div>
+
+            <div class="settings-card" (click)="selectCard('notifications')">
+              <div class="settings-card-header">
+                <i class="bi bi-bell me-2"></i>
+                <span urText>Notifications</span>
+              </div>
+              <div class="settings-card-body">
+                <p>Configure your notification preferences</p>
+              </div>
+            </div>
+
+            <div class="settings-card" (click)="selectCard('account')">
+              <div class="settings-card-header">
+                <i class="bi bi-link-45deg me-2"></i>
+                <span urText>Account Links</span>
+              </div>
+              <div class="settings-card-body">
+                <p>Manage your wallet and external connections</p>
               </div>
             </div>
           </div>
 
-          <!-- Email verification section -->
-          <div class="settings-card">
-            <div class="settings-card-header">
-              <i class="bi bi-check-circle-fill me-2"></i>
-              <span urText>Email Verification</span>
-            </div>
-            <div class="settings-card-body">
-              <div class="d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center gap-2">
+          <!-- Specific Content View -->
+          <div class="settings-content" *ngIf="selectedCard">
+            <button class="btn btn-back mb-3" (click)="goBack()">
+              <i class="bi bi-arrow-left me-2"></i>
+              Back to Settings
+            </button>
+
+            <!-- Class Change -->
+            <div *ngIf="selectedCard === 'class'" class="settings-card">
+              <div class="settings-card-header">
+                <i class="bi bi-person-badge me-2"></i>
+                <span urText>Change Class</span>
+              </div>
+              <div class="settings-card-body">
+                <div class="d-flex justify-content-center mb-2">
                   <div
-                    class="verification-status-icon"
-                    [class.verified]="isEmailVerified()"
+                    class="col-12 col-sm-4 d-flex flex-column align-items-center gap-2 w-100"
                   >
-                    <i
-                      class="bi"
-                      [ngClass]="
-                        isEmailVerified()
-                          ? 'bi-check-circle-fill'
-                          : 'bi-x-circle-fill'
-                      "
-                    ></i>
+                    <app-character-class-info
+                      [characterImage]="form.value.image"
+                      [characterClass]="form.value.clazz"
+                      [classPassives]="classPassives"
+                      [showActiveSkin]="editing"
+                      (classPicked)="onClassPicked($event)"
+                    ></app-character-class-info>
                   </div>
-                  <div>
-                    <div class="email-address">{{ form.value.email }}</div>
-                    <div
-                      class="verification-status"
-                      [class.verified]="isEmailVerified()"
+                </div>
+              </div>
+            </div>
+
+            <!-- Credentials -->
+            <div *ngIf="selectedCard === 'credentials'" class="settings-card">
+              <div class="settings-card-header">
+                <i class="bi bi-shield-lock me-2"></i>
+                <span urText>Credentials</span>
+              </div>
+              <div class="settings-card-body d-flex flex-column gap-3">
+                <div class="form-group col-12">
+                  <label for="email" class="text-third">Email:</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    formControlName="email"
+                    name="email"
+                    placeholder="Enter email"
+                    validInput
+                  />
+                </div>
+
+                <div class="row">
+                  <div class="form-group col-12 col-md-6 pb-3">
+                    <label for="password" class="text-third"
+                      >New Password:</label
                     >
-                      {{ isEmailVerified() ? 'Verified' : 'Not verified' }}
-                    </div>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      formControlName="password"
+                      name="password"
+                      placeholder="Enter new password"
+                    />
+                  </div>
+
+                  <div class="form-group col-12 col-md-6">
+                    <label for="repeatPassword" class="text-third"
+                      >Repeat password:</label
+                    >
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="repeatPassword"
+                      formControlName="repeatPassword"
+                      name="repeatPassword"
+                      placeholder="Repeat new password"
+                    />
                   </div>
                 </div>
-                <button
-                  *ngIf="!isEmailVerified()"
-                  class="btn btn-verify"
-                  (click)="startEmailVerification()"
+
+                <div
+                  *ngIf="
+                    form.errors?.['passwordMismatch'] &&
+                    (form.get('password').touched ||
+                      form.get('repeatPassword').touched)
+                  "
                 >
-                  <i class="bi bi-envelope-check me-2"></i>
-                  Verify Email
-                </button>
-                <div *ngIf="isEmailVerified()" class="verified-badge">
-                  <i class="bi bi-check-circle-fill me-2"></i>
-                  Verified
+                  <span class="error text-danger"
+                    >The passwords have to match</span
+                  >
+                </div>
+
+                <div
+                  *ngIf="
+                    form.get('password').errors?.['pattern'] &&
+                    form.get('password').touched
+                  "
+                >
+                  <span class="error text-danger"
+                    >The password must be at least 8 characters long and include
+                    an uppercase letter, a lowercase letter, a number, and a
+                    special character.</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Notifications -->
+            <div *ngIf="selectedCard === 'notifications'" class="settings-card">
+              <div class="settings-card-header">
+                <i class="bi bi-bell me-2"></i>
+                <span urText>Mute notifications</span>
+              </div>
+              <div class="settings-card-body">
+                <div class="settings-toggle-grid">
+                  <div class="toggle-item">
+                    <div class="toggle-label">
+                      <i class="bi bi-shield-fill me-2"></i>
+                      <span>PVP Notifications</span>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input
+                        formControlName="disablePVP"
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="togglePVP"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="toggle-item">
+                    <div class="toggle-label">
+                      <i class="bi bi-volume-up-fill me-2"></i>
+                      <span>Sound Effects</span>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input
+                        formControlName="disableSound"
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="toggleSound"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="toggle-item">
+                    <div class="toggle-label">
+                      <i class="bi bi-chat-dots me-2"></i>
+                      <span>Chat Notifications</span>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input
+                        formControlName="disableChatNotifications"
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="toggleChat"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="toggle-item">
+                    <div class="toggle-label">
+                      <i class="bi bi-envelope-fill me-2"></i>
+                      <span>Email Notifications</span>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input
+                        formControlName="disableEmailNotifications"
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="toggleEmail"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="toggle-item">
+                    <div class="toggle-label">
+                      <i class="bi bi-gem me-2"></i>
+                      <span>Mine Notifications</span>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input
+                        formControlName="ignoreMine"
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="toggleMine"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Account Links -->
+            <div *ngIf="selectedCard === 'account'" class="settings-card">
+              <div class="settings-card-header">
+                <i class="bi bi-link-45deg me-2"></i>
+                <span urText>Account Links</span>
+              </div>
+              <div class="settings-card-body">
+                <div class="account-links">
+                  <div class="account-link-item">
+                    <div class="link-info">
+                      <i class="bi bi-wallet2 me-2"></i>
+                      <div>
+                        <div class="link-title">Wallet Address</div>
+                        <div class="link-status">
+                          @if (userHasLinkedAddress()) {
+                            <span class="text-success">
+                              {{ truncateAddress(getPlayerAddress()) }}
+                            </span>
+                          } @else {
+                            <span class="text-warning">Not linked</span>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      *ngIf="!userHasLinkedAddress()"
+                      class="btn btn-link-wallet"
+                      (click)="linkWeb3WalletAddressToThisAccount()"
+                    >
+                      {{
+                        this.hasWalletConnected()
+                          ? 'Verify ownership'
+                          : 'Link Web3 Wallet'
+                      }}
+                    </button>
+                  </div>
+
+                  <div class="account-link-item">
+                    <div class="link-info">
+                      <i class="fa-brands fa-github me-2"></i>
+                      <div>
+                        <div class="link-title">Feedback & Support</div>
+                        <div class="link-status">
+                          Report issues or suggest improvements
+                        </div>
+                      </div>
+                    </div>
+                    <a
+                      class="btn btn-feedback"
+                      href="https://github.com/UrukBartas/Game/issues"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <i class="fa-brands fa-github me-2"></i>
+                      GitHub
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- Account Links Section -->
-          <div class="settings-card">
-            <div class="settings-card-header">
-              <i class="bi bi-link-45deg me-2"></i>
-              <span urText>Account Links</span>
-            </div>
-            <div class="settings-card-body">
-              <div class="account-links">
-                <div class="account-link-item">
-                  <div class="link-info">
-                    <i class="bi bi-wallet2 me-2"></i>
-                    <div>
-                      <div class="link-title">Wallet Address</div>
-                      <div class="link-status">
-                        @if (userHasLinkedAddress()) {
-                          <span class="text-success">
-                            {{ truncateAddress(getPlayerAddress()) }}
-                          </span>
-                        } @else {
-                          <span class="text-warning">Not linked</span>
-                        }
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    *ngIf="!userHasLinkedAddress()"
-                    class="btn btn-link-wallet"
-                    (click)="linkWeb3WalletAddressToThisAccount()"
-                  >
-                    {{
-                      this.hasWalletConnected()
-                        ? 'Verify ownership'
-                        : 'Link Web3 Wallet'
-                    }}
-                  </button>
-                </div>
-
-                <div class="account-link-item">
-                  <div class="link-info">
-                    <i class="fa-brands fa-github me-2"></i>
-                    <div>
-                      <div class="link-title">Feedback & Support</div>
-                      <div class="link-status">
-                        Report issues or suggest improvements
-                      </div>
-                    </div>
-                  </div>
-                  <a
-                    class="btn btn-feedback"
-                    href="https://github.com/UrukBartas/Game/issues"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <i class="fa-brands fa-github me-2"></i>
-                    GitHub
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        </ng-container>
       </div>
-      <!-- Agregar el nuevo botón flotante -->
+
+      <!-- Floating Save Button -->
       <div class="floating-save-button" *ngIf="!form.pristine">
         <button (click)="save()" class="btn btn-save" [disabled]="form.invalid">
           <i class="bi bi-check2-circle me-2"></i>

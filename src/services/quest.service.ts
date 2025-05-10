@@ -50,4 +50,5 @@ export class QuestService extends ApiBaseService {
     const quests = await firstValueFrom(this.getActive());
     this.store.dispatch(new SetQuests(quests));
   }
+
 }
