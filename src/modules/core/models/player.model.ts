@@ -93,6 +93,7 @@ export interface PlayerModel {
   unlockedEmojis: EmojiIdentifier[];
   pveVictoriesWithoutDead: number;
   pvpVictoriesWithoutDead: number;
+  winCount: number;
 }
 
 export interface PlayerConfiguration {
@@ -100,6 +101,7 @@ export interface PlayerConfiguration {
   disableSound: boolean;
   ignoreMine: boolean;
   disableEmailNotifications: boolean;
+  disableChatNotifications: boolean;
 }
 
 export interface PlayerStatsModel {

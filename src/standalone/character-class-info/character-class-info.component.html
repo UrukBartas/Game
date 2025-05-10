@@ -1,0 +1,104 @@
+<div
+  class="class-passives-section justify-content-center align-items-center"
+  *ngIf="characterClass"
+>
+  <div class="position-relative">
+    <img [src]="imagePrefix + characterImage" class="character-image shadow" />
+    <div class="character-class-container">
+      <img
+        class="class-icon"
+        [src]="
+          imagePrefix +
+          '/assets/free-portraits/icons/' +
+          characterClass.toLowerCase() +
+          '.webp'
+        "
+      />
+      <span urText class="text-white">{{
+        characterClass | capitalizeFirst
+      }}</span>
+    </div>
+  </div>
+
+  <!-- Effects -->
+  <div class="traits-container">
+    <div class="traits-section">
+      <h5 class="section-title">Special Abilities</h5>
+      <div class="effects-container">
+        <div
+          *ngFor="let effect of getClassPassivesForCurrentClass()?.effects"
+          class="effect-item"
+        >
+          <app-item-box
+            [width]="60"
+            [height]="60"
+            [image]="effect.image"
+            [ngbTooltip]="effectTooltip"
+            [tooltipContext]="{ effect: effect }"
+          ></app-item-box>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stat Boosts -->
+    <div
+      class="traits-section"
+      *ngIf="getClassPassivesForCurrentClass()?.statBoosts"
+    >
+      <h5 class="section-title">Stat Boosts</h5>
+      <div class="stats-container">
+        <div
+          *ngFor="
+            let stat of getObjectEntries(
+              getClassPassivesForCurrentClass()?.statBoosts
+            )
+          "
+          class="stat-item"
+        >
+          <div class="stat-icon">
+            <img
+              [src]="getStatIcon(stat.key)"
+              [alt]="stat.key | capitalizeFirst"
+            />
+          </div>
+          <div class="stat-info">
+            <span class="stat-name">{{ stat.key | capitalizeFirst }}</span>
+            <span class="stat-value">+{{ stat.value }} pts</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<button *ngIf="!readOnly"
+  class="btn btn-lg btn-primary save-button w-100 text-shadow"
+  [ngClass]="{
+    'button-warlock': characterClass == PlayerClass.WARLOCK,
+    'button-rogue': characterClass == PlayerClass.ROGUE,
+    'button-warrior': characterClass == PlayerClass.WARRIOR,
+    'button-mage': characterClass == PlayerClass.MAGE,
+  }"
+  (click)="openCharacterSelector()"
+>
+  Pick your class
+</button>
+<!-- Tooltip template -->
+<ng-template #effectTooltip let-effect="effect">
+  <div class="effect-tooltip">
+    <div class="effect-header">
+      <div class="effect-image">
+        <img [src]="imagePrefix + '/' + effect.image" [alt]="effect.name" />
+      </div>
+      <h5 class="effect-name">{{ effect.name }}</h5>
+    </div>
+    <p class="effect-description">{{ effect.description }}</p>
+    <div class="effect-details" *ngIf="effect.probability || effect.damage">
+      <span *ngIf="effect.probability" class="detail-item">
+        <i class="fa fa-dice"></i> {{ effect.probability }}% chance
+      </span>
+      <span *ngIf="effect.damage" class="detail-item">
+        <i class="fa fa-bolt"></i> {{ effect.damage }}% damage
+      </span>
+    </div>
+  </div>
+</ng-template>

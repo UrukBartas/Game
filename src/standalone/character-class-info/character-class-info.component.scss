@@ -1,0 +1,219 @@
+.class-passives-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.position-relative {
+  position: relative;
+  width: fit-content;
+}
+
+.character-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.character-class-container {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.class-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.traits-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.traits-section {
+  .section-title {
+    color: #ffd700;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    text-align: center;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.effects-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+
+  .effect-item {
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+  }
+}
+
+.stats-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      transform: translateY(-3px);
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .stat-icon {
+      width: 2rem;
+      height: 2rem;
+      margin-right: 0.5rem;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+
+      .stat-name {
+        font-size: 0.8rem;
+        color: white;
+      }
+
+      .stat-value {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #ffd700;
+      }
+    }
+  }
+}
+
+// Tooltip styles
+::ng-deep .tooltip-inner {
+  background-color: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0;
+  max-width: 300px;
+}
+
+.effect-tooltip {
+  max-width: 280px;
+  padding: 15px;
+
+  .effect-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 12px;
+
+    .effect-image {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #ffd700;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .effect-name {
+      color: #ffd700;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 0;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  .effect-description {
+    color: white;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .effect-details {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: #ccc;
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+
+      i {
+        color: #ffd700;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .stats-container {
+    gap: 0.5rem;
+
+    .stat-item {
+      padding: 0.3rem;
+
+      .stat-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-right: 0.3rem;
+      }
+
+      .stat-info {
+        .stat-name {
+          font-size: 0.7rem;
+        }
+
+        .stat-value {
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}

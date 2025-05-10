@@ -1,11 +1,11 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, inject, signal, TemplateRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Preferences } from '@capacitor/preferences';
 import { Select, Store } from '@ngxs/store';
 import { Memoize } from 'lodash-decorators';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { map, Observable, switchMap } from 'rxjs';
+import { filter, map, Observable, startWith, switchMap } from 'rxjs';
 import { NotificationResponseModel } from 'src/modules/core/models/notifications.model';
 import { PlayerModel } from 'src/modules/core/models/player.model';
 import { CompressNumberPipe } from 'src/modules/core/pipes/compress-number.pipe';
@@ -140,6 +140,22 @@ export class GameLayoutComponent {
   public showAnnouncementsBanner = signal(true);
   public currentAnnouncementIndex = signal(0);
   public AnnouncementType = AnnouncementType;
+
+  public showChat$ = this.store.select(MainState.getState).pipe(
+    map(state => !!state.player) // Solo mostrar el chat si hay un token
+  );
+
+  public hideChat$ = this.router.events.pipe(
+    filter(event => event instanceof NavigationEnd),
+    startWith(null),
+    map(() => {
+      let route = this.activeRoute;
+      while (route.firstChild) {
+        route = route.firstChild;
+      }
+      return route.snapshot.data['hideChat'] === true;
+    })
+  );
 
   public toggleSidebarOpened(): void {
     this.isSidebarOpened.update((currentValue) => !currentValue);
