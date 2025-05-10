@@ -27,8 +27,8 @@
       >
         <div class="message-header">
           <span class="timestamp">{{
-            message.timestamp | date: 'HH:mm'
-          }}</span>
+            message.timestamp | date: 'shortDate'
+          }} {{message.timestamp | date: 'HH:mm'}}</span>
           <span
             class="username"
             [ngStyle]="getPlayerNameColor(message.username)"
