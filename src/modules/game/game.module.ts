@@ -30,6 +30,7 @@ import { RankBadgeComponent } from 'src/standalone/rank-badge/rank-badge.compone
 import { RemoteItemBoxComponent } from 'src/standalone/remote-item-box/remote-item-box.component';
 import { SpinnerComponent } from 'src/standalone/spinner/spinner.component';
 import { TierizedProgressBarComponent } from 'src/standalone/tierized-progress-bar/tierized-progress-bar.component';
+import { UrukCheckoutButtonComponent } from 'src/standalone/uruk-checkout-button/uruk-checkout-button.component';
 import { SwiperModule } from 'swiper/angular';
 import { ChainSwitcherComponent } from '../../standalone/chain-switcher/chain-switcher.component';
 import { ChanceDisplayerComponent } from '../../standalone/chance-displayer/chance-displayer.component';
@@ -237,8 +238,8 @@ const pipes = [
     ...directives,
     ...pipes,
     CommonModule,
-    TabsModule,
-    PaginationModule,
+    TabsModule.forRoot(),
+    PaginationModule.forRoot(),
     GameRoutingModule,
     NgbModule,
     ItemBoxComponent,
@@ -257,22 +258,26 @@ const pipes = [
     NgxSpinnerModule,
     SpinnerComponent,
     ItemRouletteComponent,
-    ButtonsModule,
-    AccordionModule,
+    ButtonsModule.forRoot(),
+    AccordionModule.forRoot(),
     TierizedProgressBarComponent,
     BalanceSelectorComponent,
     ChainSwitcherComponent,
     SwiperModule,
     ChanceDisplayerComponent,
     LootboxStatsDisplayerComponent,
-    NgxEchartsModule,
+    NgxEchartsModule.forRoot({
+      echarts: () => import('echarts'),
+    }),
     MinMaxComboSelectorComponent,
     UruksDisplayerComponent,
     RemoteItemBoxComponent,
     QRCodeModule,
     MonsterTypeAvatarComponent,
-    RankBadgeComponent, AchievementsComponent,
-    CharacterClassInfoComponent
+    RankBadgeComponent,
+    AchievementsComponent,
+    CharacterClassInfoComponent,
+    UrukCheckoutButtonComponent
   ],
   exports: [
     GameLayoutComponent,

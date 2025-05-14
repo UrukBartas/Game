@@ -10,7 +10,7 @@ import {
 
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { delay, filter, firstValueFrom, map, switchMap, tap } from 'rxjs';
+import { filter, firstValueFrom } from 'rxjs';
 import { RefreshPlayer } from 'src/store/main.store';
 import { WalletService } from './wallet.service';
 
@@ -19,6 +19,7 @@ export enum ContractTypes {
   NFT = 'NFT',
   ERC20 = 'ERC20',
   PRESALE = 'PRESALE',
+  CHECKOUT = 'CHECKOUT'
 }
 
 export class ContractService {
@@ -27,7 +28,7 @@ export class ContractService {
   constructor(
     @Inject(CONTRACT_TYPE) private contractType: string,
     private chainId?: number
-  ) {}
+  ) { }
 
   private getContractDetails() {
     const chainId = this.chainId ?? getNetwork().chain.id;

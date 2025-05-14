@@ -5,6 +5,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { filter, firstValueFrom, map, of, tap } from 'rxjs';
 import { TimeAgoPipe } from 'src/app/time-ago.pipe';
+import { ProductType } from 'src/modules/core/enums/UrukCheckoutProductType.mode';
 import { MarketListing } from 'src/modules/core/models/market-listing.model';
 import { getGenericItemItemData } from 'src/modules/utils';
 import { AuctionHouseService } from 'src/services/auction-house.service';
@@ -52,6 +53,7 @@ export class AuctionHouseViewItemComponent {
   modalRef = inject(BsModalRef);
   onAccept: Function;
   timeAgo = inject(TimeAgoPipe);
+  public ProductType = ProductType;
   public player$ = this.store.select(MainState.getState).pipe(
     filter((player) => !!player),
     map((entry) => entry.player)
@@ -189,6 +191,9 @@ export class AuctionHouseViewItemComponent {
     }
     this.modalRef.hide();
   }
+
+
+
 
   public async confirmOffer() {
     try {

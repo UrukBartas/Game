@@ -363,28 +363,18 @@
               Add offer
             </button>
           </div>
-          <button
-            type="button"
-            class="btn btn-secondary btn-lg btn-block w-100 btn-pending d-flex align-items-center justify-content-center gap-2"
-            (click)="buy()"
-          >
-            Buy for
-            <div
-              class="price text-white text-center"
-              urTitle
-              [ngbTooltip]="uruks"
-              [tooltipContext]="{
-                uruks: listing.price,
-              }"
-            >
-              {{ listing.price | compressNumber }}
-              <img
-                class="uruks-icon pb-1"
-                src="{{ prefix + '/assets/goldenuruks.png' }}"
-              />
-            </div>
-          </button>
-
+          <div class="w-100">
+            <app-uruk-checkout-button
+              [items]="[
+                {
+                  productType: ProductType.AUCTION_ITEM,
+                  price: listing.price,
+                  backendId: listing.id,
+                },
+              ]"
+              (onGamePayment)="buy()"
+            ></app-uruk-checkout-button>
+          </div>
           <button
             *ngIf="listing.seller.id == (player$ | async).id"
             type="button"

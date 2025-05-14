@@ -1,0 +1,388 @@
+// Main Epic Checkout Button
+.btn-uruk-checkout {
+  position: relative;
+  background: linear-gradient(135deg, #4a0072, #9000ff);
+  border: 2px solid #b659ff;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(144, 0, 255, 0.5),
+              inset 0 0 10px rgba(255, 255, 255, 0.2);
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+    transform: rotate(45deg);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(144, 0, 255, 0.7),
+                inset 0 0 15px rgba(255, 255, 255, 0.3);
+
+    &:before {
+      opacity: 1;
+      animation: shine 1.5s infinite;
+    }
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 0 10px rgba(144, 0, 255, 0.4);
+  }
+
+  .checkout-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    margin-right: 0.5rem;
+  }
+
+  .checkout-subtext {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    font-weight: normal;
+    font-style: italic;
+  }
+}
+
+// Animation
+@keyframes shine {
+  0% {
+    opacity: 0.3;
+    top: -50%;
+    left: -50%;
+  }
+  25% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0;
+    top: 150%;
+    left: 150%;
+  }
+}
+
+// Checkout Popup
+.uruk-checkout-popup {
+  position: relative;
+  background: linear-gradient(135deg, #1f1f3a 0%, #2a2a4a 100%);
+  border: 2px solid #b659ff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 0 30px rgba(144, 0, 255, 0.3);
+  animation: popup-appear 0.3s ease-out;
+  margin: 0 auto;
+  color: white;
+
+  .popup-header {
+    position: relative;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, rgba(144, 0, 255, 0.1), rgba(182, 89, 255, 0.1));
+    padding: 1rem;
+    border-radius: 8px;
+
+    h4 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+      background: linear-gradient(135deg, #fff 0%, #e0e0ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .close-icon {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      color: #fff;
+      font-size: 1.2rem;
+      transition: all 0.2s;
+      opacity: 0.7;
+
+      &:hover {
+        opacity: 1;
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+@keyframes popup-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Game Balance Button
+.btn-game-balance {
+  background: linear-gradient(135deg, #4a0072, #9000ff);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  transition: all 0.3s;
+  padding: 1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(144, 0, 255, 0.3);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(144, 0, 255, 0.4);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  .price {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+
+    .uruks-icon {
+      width: 24px;
+      height: auto;
+      margin-left: 0.5rem;
+    }
+  }
+}
+
+// Divider
+.divider-container {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+
+  .divider {
+    flex-grow: 1;
+    height: 1px;
+    background: linear-gradient(90deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,0.1) 50%,
+      rgba(255,255,255,0) 100%);
+  }
+
+  .divider-text {
+    padding: 0 1rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+}
+
+// Blockchain Option Buttons
+.blockchain-options {
+  .btn-blockchain-uruk,
+  .btn-blockchain-native {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    color: white;
+    transition: all 0.3s;
+    margin-bottom: 0.5rem;
+    backdrop-filter: blur(5px);
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .price-details {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+
+      .current-price {
+        color: rgba(255, 255, 255, 0.5);
+      }
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .btn-blockchain-uruk {
+    background: linear-gradient(135deg, rgba(144, 0, 255, 0.2), rgba(144, 0, 255, 0.1));
+    border-color: rgba(144, 0, 255, 0.3);
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, rgba(144, 0, 255, 0.25), rgba(144, 0, 255, 0.15));
+      border-color: rgba(144, 0, 255, 0.4);
+    }
+  }
+
+  .btn-blockchain-native {
+    background: linear-gradient(135deg, rgba(78, 56, 216, 0.2), rgba(78, 56, 216, 0.1));
+    border-color: rgba(78, 56, 216, 0.3);
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, rgba(78, 56, 216, 0.25), rgba(78, 56, 216, 0.15));
+      border-color: rgba(78, 56, 216, 0.4);
+    }
+  }
+}
+
+.transaction-details {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  backdrop-filter: blur(5px);
+
+  .details-header {
+    color: white;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: all 0.3s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    i {
+      transition: transform 0.3s ease;
+      opacity: 0.7;
+
+      &.rotated {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .details-content {
+    margin-top: 1rem;
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      color: rgba(255, 255, 255, 0.8);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+// Payment Status
+.payment-status {
+  margin-top: 1rem;
+
+  .status-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    &.info {
+      background: rgba(49, 130, 206, 0.1);
+      color: #63b3ed;
+      border: 1px solid rgba(49, 130, 206, 0.2);
+    }
+
+    &.success {
+      background: rgba(72, 187, 120, 0.1);
+      color: #9ae6b4;
+      border: 1px solid rgba(72, 187, 120, 0.2);
+    }
+
+    &.error {
+      background: rgba(245, 101, 101, 0.1);
+      color: #feb2b2;
+      border: 1px solid rgba(245, 101, 101, 0.2);
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 576px) {
+  .uruk-checkout-popup {
+    padding: 1rem;
+  }
+
+  .btn-game-balance,
+  .btn-blockchain-uruk,
+  .btn-blockchain-native {
+    padding: 0.75rem;
+  }
+
+  .popup-header h4 {
+    font-size: 1.25rem;
+  }
+}
+
+.quote-timer {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, rgba(144, 0, 255, 0.1), rgba(182, 89, 255, 0.05));
+  border: 1px solid rgba(182, 89, 255, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  .timer-text {
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+
+    i {
+      color: #b659ff;
+    }
+  }
+
+  .progress {
+    height: 4px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #4a0072, #9000ff);
+      transition: width 1s linear;
+      box-shadow: 0 0 10px rgba(144, 0, 255, 0.5);
+
+      &.warning {
+        background: linear-gradient(90deg, #ff6b6b, #ffd93d);
+      }
+    }
+  }
+}
