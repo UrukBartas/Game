@@ -91,6 +91,8 @@ export const GankMonstersIds = [
 export interface FighterTurnModel {
   action: TurnActionEnum;
   damages: Array<{ damage: number }>;
+  healings?: Array<{ type: string; healing: number }>;
+  effects?: Array<{ type: string; value: number }>;
 }
 
 export enum TurnActionEnum {
