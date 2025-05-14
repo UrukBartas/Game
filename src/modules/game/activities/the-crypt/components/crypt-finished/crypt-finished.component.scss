@@ -2,7 +2,211 @@
 
 .crypt-finished {
   text-align: center;
-  color: $third; // #28a745 no tiene una variable exacta definida, puedes crear una nueva si lo deseas
+  color: $white-100;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 15px;
+  padding: 2.5rem;
+  box-shadow: 0 0 20px rgba($third, 0.4), inset 0 0 30px rgba($black, 0.6);
+  position: relative;
+  border: 1px solid rgba($third, 0.4);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, transparent, $third, transparent);
+    border-radius: 15px 15px 0 0;
+    opacity: 0.8;
+  }
+
+  h2 {
+    color: $third;
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 10px rgba($third, 0.6);
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 10%;
+      width: 80%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba($third, 0.6), transparent);
+    }
+  }
+
+  p {
+    color: $white-300;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  h3 {
+    color: $white-200;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 20%;
+      width: 60%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba($white-300, 0.4), transparent);
+    }
+  }
+}
+
+.victory-icon {
+  margin-bottom: 1.5rem;
+
+  i {
+    font-size: 3rem;
+    color: $third;
+    opacity: 0.9;
+    text-shadow: 0 0 15px rgba($third, 0.7);
+    animation: float 3s infinite ease-in-out;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-10px) rotate(5deg); }
+    100% { transform: translateY(0) rotate(0); }
+  }
+}
+
+.player-state {
+  margin-bottom: 2rem;
+  padding: 1.2rem;
+  background-color: rgba($black-400, 0.5);
+  border-radius: 10px;
+  border: 1px solid rgba($third, 0.2);
+  box-shadow: 0 0 15px rgba($third, 0.1);
+}
+
+.progress-summary {
+  margin-bottom: 2rem;
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+
+    li {
+      background-color: rgba($black-300, 0.6);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      border: 1px solid rgba($third, 0.3);
+      color: $white-200;
+
+      .stat-label {
+        font-size: 0.9rem;
+        color: $white-400;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: $white-100;
+      }
+    }
+  }
+}
+
+.reward-info {
+  margin: 1.5rem 0;
+  padding: 1.2rem;
+  border: 1px solid rgba($third, 0.3);
+  background-color: rgba($black-300, 0.6);
+  border-radius: 8px;
+  font-size: 1rem;
+  color: $white-300;
+  text-align: center;
+  box-shadow: 0 0 10px rgba($third, 0.2);
+  position: relative;
+
+  .reward-icon {
+    position: absolute;
+    top: -15px;
+    left: calc(50% - 15px);
+    width: 30px;
+    height: 30px;
+    background-color: $black-300;
+    border-radius: 50%;
+    border: 1px solid rgba($third, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      color: $third;
+      font-size: 0.9rem;
+    }
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: calc(50% - 10px);
+    width: 20px;
+    height: 20px;
+    background-color: rgba($black-300, 0.6);
+    transform: rotate(45deg);
+    border-left: 1px solid rgba($third, 0.3);
+    border-top: 1px solid rgba($third, 0.3);
+    z-index: -1;
+  }
+
+  p strong {
+    color: $third;
+  }
+}
+
+.actions {
+  margin-top: 2.5rem;
+
+  .btn-dark {
+    background: linear-gradient(to bottom, rgba($black-200, 0.9), rgba($black-400, 0.9));
+    color: $white-100;
+    border: 1px solid $third;
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba($third, 0.3);
+
+    i {
+      margin-right: 0.5rem;
+    }
+
+    &:hover {
+      background: linear-gradient(to bottom, rgba($black-300, 0.9), rgba($black-500, 0.9));
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba($third, 0.5);
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
 }
 
 .rewards ul,
@@ -32,17 +236,6 @@
   margin-left: 10px;
   border-radius: 5px;
   cursor: pointer;
-}
-
-.reward-info {
-  margin: 1rem 0;
-  padding: 0.75rem;
-  border: 1px solid $third;
-  background-color: $secondary;
-  border-radius: 5px;
-  font-size: 1rem;
-  color: white;
-  text-align: center;
 }
 
 ul {

@@ -176,14 +176,33 @@ export class BaseFightComponent
       if (lastTurn) {
         const isPlayerCrit = lastTurn.playerTurn.action === TurnActionEnum.CRIT;
         const isEnemyCrit = lastTurn.enemyTurn.action === TurnActionEnum.CRIT;
-        // Show damage to enemy if player attacked
-        if (lastTurn.playerTurn.action === TurnActionEnum.ATTACK && lastTurn.playerTurn.damages.length > 0 && lastTurn.playerTurn.damages[0].damage > 0) {
-          this.showDamageNumber('enemy', lastTurn.playerTurn.damages[0].damage, isPlayerCrit);
+
+        // Show damage and healing for player's turn
+        if (lastTurn.playerTurn.action === TurnActionEnum.ATTACK) {
+          // Show damage to enemy
+          if (lastTurn.playerTurn.damages.length > 0 && lastTurn.playerTurn.damages[0].damage > 0) {
+            this.showDamageNumber('enemy', lastTurn.playerTurn.damages[0].damage, isPlayerCrit);
+          }
+          // Show healing to player
+          if (lastTurn.playerTurn.healings?.length > 0) {
+            lastTurn.playerTurn.healings.forEach(healing => {
+              this.showHealingNumber('player', healing.healing);
+            });
+          }
         }
 
-        // Show damage to player if enemy attacked
-        if (lastTurn.enemyTurn.action === TurnActionEnum.ATTACK && lastTurn.enemyTurn.damages.length > 0 && lastTurn.enemyTurn.damages[0].damage > 0) {
-          this.showDamageNumber('player', lastTurn.enemyTurn.damages[0].damage, isEnemyCrit);
+        // Show damage and healing for enemy's turn
+        if (lastTurn.enemyTurn.action === TurnActionEnum.ATTACK) {
+          // Show damage to player
+          if (lastTurn.enemyTurn.damages.length > 0 && lastTurn.enemyTurn.damages[0].damage > 0) {
+            this.showDamageNumber('player', lastTurn.enemyTurn.damages[0].damage, isEnemyCrit);
+          }
+          // Show healing to enemy
+          if (lastTurn.enemyTurn.healings?.length > 0) {
+            lastTurn.enemyTurn.healings.forEach(healing => {
+              this.showHealingNumber('enemy', healing.healing);
+            });
+          }
         }
       }
 
@@ -345,6 +364,27 @@ export class BaseFightComponent
     // Remove the element after animation completes
     setTimeout(() => {
       document.body.removeChild(damageElement);
+    }, 1500);
+  }
+
+  showHealingNumber(target: 'player' | 'enemy', amount: number) {
+    const targetElement = document.querySelector(`.${target}-image`);
+    if (!targetElement) return;
+
+    const healingElement = document.createElement('div');
+    healingElement.className = 'damage-number healing';
+    healingElement.textContent = `+${amount}`;
+
+    // Position the healing number near the target
+    const rect = targetElement.getBoundingClientRect();
+    healingElement.style.left = `${rect.left + rect.width / 2}px`;
+    healingElement.style.top = `${rect.top + rect.height / 3}px`;
+
+    document.body.appendChild(healingElement);
+
+    // Remove the element after animation completes
+    setTimeout(() => {
+      document.body.removeChild(healingElement);
     }, 1500);
   }
 

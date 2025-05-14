@@ -7,15 +7,14 @@
     *ngIf="currentState"
   >
     <div class="player-basic-info d-flex col-12 gap-2">
-      <app-item-box
-        [height]="getPlayerImageSize()"
-        [width]="getPlayerImageSize()"
-        [image]="currentState.image"
-      ></app-item-box>
-
       <div class="stats-player row">
-        <div class="col-12 col-lg-6">
-          <div class="vitals d-flex gap-2 flex-column">
+        <div class="col-12 col-lg-6 flex-row">
+          <app-item-box
+            [height]="getPlayerImageSize()"
+            [width]="getPlayerImageSize()"
+            [image]="currentState.image"
+          ></app-item-box>
+          <div class="vitals d-flex gap-2 flex-column px-2">
             <div
               class="progress shadow"
               [style.height]="getHealthBarHeight() + 'px'"
@@ -58,30 +57,27 @@
                 "
               ></div>
             </div>
-          </div>
-          <div class="upgrades gap-2 py-2">
-            <div
-              class="reward text-light"
-              *ngFor="let reward of appliedBonuses"
-            >
-              <app-item-box
-                [height]="50"
-                [width]="50"
-                [image]="reward.icon"
-                [rarity]="reward.rarity"
+            <div class="upgrades gap-2 py-2">
+              <div
+                class="reward text-light"
+                *ngFor="let reward of appliedBonuses"
               >
-                <div tooltip class="tooltip-uruk p-2">
-                  <label class="text-center">{{ reward.description }}</label>
-                </div>
-              </app-item-box>
+                <app-item-box
+                  [height]="50"
+                  [width]="50"
+                  [image]="reward.icon"
+                  [rarity]="reward.rarity"
+                >
+                  <div tooltip class="tooltip-uruk p-2">
+                    <label class="text-center">{{ reward.description }}</label>
+                  </div>
+                </app-item-box>
+              </div>
             </div>
           </div>
         </div>
         <div class="col-12 col-lg-6">
-          <app-only-stats
-            [player]="currentState"
-            [showAchievements]="false"
-          ></app-only-stats>
+          <app-only-stats [player]="currentState"></app-only-stats>
         </div>
       </div>
     </div>

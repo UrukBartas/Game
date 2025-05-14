@@ -11,21 +11,25 @@
     class="description desc-mover w-100 rooms-list-header"
     style="align-self: self-start"
   >
-    <p urTitle>Rooms list</p>
-    <div class="actions pb-3 pb-md-0">
-      <button
-        type="button"
-        class="btn btn-secondary"
-        (click)="startedEncounter.emit(encounters[currentLevel])"
-      >
-        ⚔️ Fight next encounter!
-      </button>
-      <button type="button" class="btn btn-dark" (click)="takeShortBreakFn()">
-        💤 Take short break
-      </button>
-      <button type="button" class="btn btn-dark" (click)="triggerSurrender()">
-        💀 Surrender
-      </button>
+    <div class="actions-container">
+      <div class="actions mt-2">
+        <button
+          type="button"
+          class="btn btn-secondary action-btn"
+          (click)="startedEncounter.emit(encounters[currentLevel])"
+        >
+          <i class="btn-icon">⚔️</i>
+          <span class="btn-text text-white">Fight next encounter!</span>
+        </button>
+        <button type="button" class="btn btn-dark action-btn" (click)="takeShortBreakFn()">
+          <i class="btn-icon">💤</i>
+          <span class="btn-text">Take short break</span>
+        </button>
+        <button type="button" class="btn btn-dark action-btn" (click)="triggerSurrender()">
+          <i class="btn-icon">💀</i>
+          <span class="btn-text">Surrender</span>
+        </button>
+      </div>
     </div>
   </div>
   <app-rooms-list

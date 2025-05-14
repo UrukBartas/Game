@@ -20,7 +20,6 @@ import { MainState } from 'src/store/main.store';
 })
 export class OnlyStatsComponent {
   @Input() player!: PlayerModel;
-  @Input() showAchievements = false;
   @Input() allowUpgrade = false;
   public statsService = inject(StatsService);
   public playerService = inject(PlayerService);

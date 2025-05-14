@@ -1,15 +1,23 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-crypt-fight',
   templateUrl: './crypt-fight.component.html',
-  styleUrl: './crypt-fight.component.scss',
+  styleUrls: ['./crypt-fight.component.scss'],
 })
-export class CryptFightComponent {
-  @Output() fightResolved = new EventEmitter<any>();
+export class CryptFightComponent implements OnInit {
+  @Output() questStatusChange = new EventEmitter<any>();
 
-  resolveFight() {
-    // Simula un resultado del combate
-    this.fightResolved.emit({ success: true, rewards: { health: 10 } });
+  constructor() {}
+
+  ngOnInit(): void {
+    // Automatically resolve fight after 3 seconds for a better visual experience
+    setTimeout(() => {
+      this.resolveFight();
+    }, 3000);
+  }
+
+  private resolveFight(): void {
+    this.questStatusChange.emit({ data: { status: 'COMPLETED' } });
   }
 }

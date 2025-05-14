@@ -15,52 +15,6 @@
         <div class="col-12">
           <div class="table-container justify-content-start">
             <div class="row w-100">
-              <div
-                class="col-12"
-                *ngIf="!showAchievements && playerDeeds$ | async as playerDeeds"
-              >
-                <div class="list-deeds">
-                  <app-item-box
-                    *ngFor="let deed of playerDeeds.allDeeds"
-                    [height]="64"
-                    [width]="64"
-                    image="{{ deed.image }}"
-                    [ngClass]="{
-                      inactive: !getPlayerDeed(
-                        deed.id,
-                        playerDeeds.playerDeeds
-                      ),
-                    }"
-                  >
-                    <ng-container tooltip>
-                      <div class="content-tooltip p-3 py-2">
-                        <div class="description w-100 flex-column">
-                          <p class="h6 m-0 text-light" style="font-size: 13px">
-                            {{ deed.name }}
-                          </p>
-                          <p class="m-0">{{ deed.description }}</p>
-                          <ng-container
-                            *ngIf="
-                              getPlayerDeed(
-                                deed.id,
-                                playerDeeds.playerDeeds
-                              ) as playerDeed
-                            "
-                          >
-                            <p class="m-0 text-light" style="font-size: 13px">
-                              Current tier level
-                              {{ playerDeed.currentTierIndex + 1 }}
-                            </p>
-                            <p class="m-0 text-light" style="font-size: 13px">
-                              All base stats +{{ playerDeed.currentTierIndex }}
-                            </p>
-                          </ng-container>
-                        </div>
-                      </div>
-                    </ng-container>
-                  </app-item-box>
-                </div>
-              </div>
               <div class="col-12 col-xxl-6">
                 <app-generic-stats
                   [player]="player"

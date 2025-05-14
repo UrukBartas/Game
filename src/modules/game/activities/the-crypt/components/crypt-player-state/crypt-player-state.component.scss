@@ -1,15 +1,121 @@
 @import 'node_modules/bootstrap/scss/mixins';
 @import 'node_modules/bootstrap/scss/functions';
 @import 'node_modules/bootstrap/scss/variables';
+@import '../../../../../../variables.scss';
 
-.upgrades {
-  display: flex;
-  flex-wrap: wrap;
+.stats {
+  position: relative;
+
+  .description {
+    margin-bottom: 1rem;
+
+    p {
+      color: $white-200;
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      display: inline-block;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          $white-400,
+          transparent
+        );
+      }
+    }
+  }
 }
 
 .player-basic-info {
   flex-wrap: nowrap;
+  background-color: rgba($black-400, 0.5);
+  border-radius: 10px;
+  padding: 1.2rem;
+  border: 1px solid rgba($white-500, 0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+
   @include media-breakpoint-down(sm) {
     flex-wrap: wrap;
+  }
+
+  app-item-box {
+    position: relative;
+    filter: drop-shadow(0 0 8px rgba($white-100, 0.2));
+    transform: scale(1);
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
+      border-radius: 5px;
+      border: 1px solid rgba($white-400, 0.2);
+      pointer-events: none;
+    }
+  }
+}
+
+.stats-player {
+  flex: 1;
+}
+
+.vitals {
+  margin-bottom: 1rem;
+  flex: 1;
+  .progress {
+    height: 25px !important;
+    border-radius: 8px;
+    background-color: rgba($black-300, 0.6);
+    border: 1px solid rgba($white-500, 0.1);
+    overflow: hidden;
+    position: relative;
+
+    .progress-text {
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      color: $white-100;
+      font-weight: bold;
+      font-size: 0.9rem;
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.7);
+      z-index: 2;
+    }
+  }
+}
+
+.upgrades {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem !important;
+
+  .reward {
+    position: relative;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+    }
+
+    app-item-box {
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba($white-300, 0.2);
+    }
   }
 }

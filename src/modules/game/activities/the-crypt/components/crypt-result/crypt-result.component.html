@@ -1,14 +1,43 @@
 <div class="crypt-result">
-  <h2>Encounter Result</h2>
-  <p *ngIf="result.success">You defeated the enemy! 🎉</p>
-  <p *ngIf="!result.success">The enemy defeated you! 😔</p>
+  <div class="result-content">
+    <div class="result-icon" *ngIf="result.success">
+      <i class="fas fa-medal"></i>
+    </div>
+    <div class="result-icon failed" *ngIf="!result.success">
+      <i class="fas fa-skull-crossbones"></i>
+    </div>
 
-  <h3>Rewards:</h3>
-  <ul>
-    <li *ngFor="let reward of result.rewards">
-      {{ reward.type }}: {{ reward.value }}
-    </li>
-  </ul>
+    <h2 *ngIf="result.success">Victory!</h2>
+    <h2 *ngIf="!result.success">Defeat!</h2>
 
-  <button (click)="next()">Continue</button>
+    <p *ngIf="result.success">You have vanquished your foe and emerged victorious from this encounter!</p>
+    <p *ngIf="!result.success">The darkness overcame you this time, but your story is not yet over...</p>
+
+    <div class="rewards-section" *ngIf="result.rewards && result.rewards.length > 0">
+      <h3>Spoils of Battle</h3>
+      <div class="rewards-container">
+        <div class="reward-item" *ngFor="let reward of result.rewards">
+          <div class="reward-icon">
+            <i class="fas"
+              [ngClass]="{
+                'fa-heart': reward.type === 'health',
+                'fa-bolt': reward.type === 'energy',
+                'fa-coins': reward.type === 'gold',
+                'fa-gem': reward.type === 'gems',
+                'fa-star': reward.type === 'xp'
+              }"></i>
+          </div>
+          <div class="reward-value">+{{ reward.value }}</div>
+          <div class="reward-type">{{ reward.type }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-continue" (click)="next()">
+        <span>Continue</span>
+        <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
 </div>

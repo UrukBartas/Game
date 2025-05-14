@@ -2,24 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { PlayerModel } from '../../modules/core/models/player.model';
+import { Deed, DeedData, DeedId, PlayerModel } from '../../modules/core/models/player.model';
 import { ItemBoxComponent } from '../item-box/item-box.component';
 
-interface PlayerDeed {
-  deedId: number;
-  currentTierIndex: number;
-}
-
-interface Deed {
-  id: number;
-  name: string;
-  description: string;
-  image: string;
-}
-
 interface PlayerDeedsResponse {
-  allDeeds: Deed[];
-  playerDeeds: PlayerDeed[];
+  allDeeds: DeedData[];
+  playerDeeds: any[];
 }
 
 type FilterType = 'all' | 'unlocked' | 'locked';
@@ -57,11 +45,12 @@ type FilterType = 'all' | 'unlocked' | 'locked';
       <div class="list-deeds" *ngIf="playerDeeds$ | async as playerDeeds">
         <app-item-box
           *ngFor="let deed of filteredDeeds(playerDeeds)"
-          [height]="50"
-          [width]="50"
-          [image]="deed.image"
+          [height]="64"
+          [width]="64"
+          image="{{ deed.image }}"
           [ngClass]="{
-            inactive: !getPlayerDeed(deed.id, playerDeeds.playerDeeds)
+            inactive: !getPlayerDeed(deed.id, playerDeeds.playerDeeds),
+            'achievement-unlocked': getPlayerDeed(deed.id, playerDeeds.playerDeeds)
           }"
         >
           <ng-container tooltip>
@@ -94,6 +83,7 @@ type FilterType = 'all' | 'unlocked' | 'locked';
       flex-direction: column;
       gap: 15px;
       padding: 10px;
+      width: 100%;
     }
 
     .search-filter-container {
@@ -161,17 +151,42 @@ type FilterType = 'all' | 'unlocked' | 'locked';
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      justify-content: center;
     }
 
     .inactive {
       opacity: 0.5;
       filter: grayscale(1);
+      transition: all 0.3s ease;
+    }
+
+    .achievement-unlocked {
+      opacity: 1;
+      filter: none;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
     }
 
     .content-tooltip {
       background: rgba(0, 0, 0, 0.9);
       border-radius: 4px;
       max-width: 300px;
+      color: white;
+    }
+
+    :host ::ng-deep app-item-box {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
     }
   `]
 })
@@ -188,15 +203,20 @@ export class AchievementsComponent {
     { label: 'Locked', value: 'locked' as FilterType }
   ];
 
-  getPlayerDeed(deedId: number, playerDeeds: PlayerDeed[]): PlayerDeed | undefined {
-    return playerDeeds?.find((deed) => deed.deedId === deedId);
+  public getPlayerDeed(deedId: DeedId, deedsPlayer: Array<Deed>) {
+    return deedsPlayer.find((entry) => entry.deedDataId == deedId) as Deed & {
+      currentTierIndex: number;
+    };
   }
 
-  filteredDeeds(playerDeeds: PlayerDeedsResponse): Deed[] {
+  filteredDeeds(playerDeeds: PlayerDeedsResponse): DeedData[] {
+    if (!playerDeeds?.allDeeds) return [];
+
     return playerDeeds.allDeeds.filter(deed => {
       const isUnlocked = !!this.getPlayerDeed(deed.id, playerDeeds.playerDeeds);
-      const matchesSearch = deed.name.toLowerCase().includes(this.searchText.toLowerCase()) ||
-                          deed.description.toLowerCase().includes(this.searchText.toLowerCase());
+      const matchesSearch = !this.searchText ||
+        deed.name.toLowerCase().includes(this.searchText.toLowerCase()) ||
+        deed.description.toLowerCase().includes(this.searchText.toLowerCase());
 
       switch (this.currentFilter) {
         case 'unlocked':
@@ -214,6 +234,6 @@ export class AchievementsComponent {
   }
 
   onSearchChange() {
-    // Trigger change detection
+    // La detección de cambios se maneja automáticamente por ngModel
   }
 }

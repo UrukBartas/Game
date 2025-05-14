@@ -1,12 +1,14 @@
 <div class="crypt-finished">
-  <h2>Victory in the Crypt! 🎉</h2>
+  <div class="victory-icon">
+    <i class="fas fa-crown"></i>
+  </div>
+  <h2>Victory in the Crypt! 🏆</h2>
   <p>
-    Congratulations! You have conquered all the challenges and emerged
-    victorious.
+    You have conquered the darkness! The ancient evil has been vanquished, and you emerge triumphant from the depths of the crypt.
   </p>
 
   <div class="player-state">
-    <h3>Player Final State</h3>
+    <h3>Champion's Final State</h3>
     <app-crypt-player-state
       [hideTitle]="true"
       [crypt]="crypt"
@@ -16,10 +18,16 @@
   </div>
 
   <div class="progress-summary">
-    <h3>Your Progress</h3>
+    <h3>Your Glorious Path</h3>
     <ul>
-      <li>Levels Reached: {{ currentLevel }}</li>
-      <li>Encounters Completed: {{ completedEncounters.length }}</li>
+      <li>
+        <div class="stat-label">Levels Conquered</div>
+        <div class="stat-value">{{ currentLevel }}</div>
+      </li>
+      <li>
+        <div class="stat-label">Foes Defeated</div>
+        <div class="stat-value">{{ completedEncounters.length }}</div>
+      </li>
     </ul>
     <app-rooms-list
       [encounters]="crypt.encounters"
@@ -28,13 +36,17 @@
   </div>
 
   <div class="reward-info">
+    <div class="reward-icon">
+      <i class="fa fa-gem"></i>
+    </div>
     <p class="mb-0">
-      <strong>Well done!</strong> Your progress will be evaluated, and rewards
-      will be distributed at the end of the week.
+      <strong>Legendary Triumph!</strong> Your valor has earned you great rewards, which will be bestowed upon you at the week's end. The gods smile upon your courage.
     </p>
   </div>
 
-  <div class="actions">
-    <button class="btn btn-dark" (click)="exit()">Try again ⚔️</button>
+  <div class="actions d-flex justify-content-center">
+    <button class="btn btn-dark d-flex justify-content-center align-items-center" (click)="exit()">
+      <i class="fas fa-sword"></i> Challenge Again
+    </button>
   </div>
 </div>

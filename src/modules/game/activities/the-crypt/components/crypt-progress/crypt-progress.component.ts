@@ -112,9 +112,9 @@ export class CryptProgressComponent extends TemplatePage {
         title: 'Take a Short Break',
         description: `Taking a short break comes with risks and rewards. Here’s what could happen:
 
-- **25% chance:** You may encounter unforeseen dangers that could result in losing 10% of your remaining health or even death if your health is too low.
-- **5% chance:** An unfortunate twist of fate might cause your immediate demise, ending your progress in the Crypt.
-- **70% chance:** You could recover 20% of your health (up to your maximum) and continue exploring the Crypt with renewed vitality.
+- 25% chance: You may encounter unforeseen dangers that could result in losing 10% of your remaining health or even death if your health is too low.
+- 5% chance: An unfortunate twist of fate might cause your immediate demise, ending your progress in the Crypt.
+- 70% chance: You could recover 20% of your health (up to your maximum) and continue exploring the Crypt with renewed vitality.
 
 Do you want to take the risk?`,
         accept: async () => {

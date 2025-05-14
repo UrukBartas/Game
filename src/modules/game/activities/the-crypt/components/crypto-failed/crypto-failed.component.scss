@@ -2,31 +2,176 @@
 
 .crypt-failed {
   text-align: center;
-  color: $red;
-}
-
-.retry-button {
-  background-color: $red;
   color: $white-100;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 0 20px rgba($red, 0.4), inset 0 0 30px rgba($black, 0.6);
+  position: relative;
+  border: 1px solid rgba($red, 0.4);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, transparent, $red, transparent);
+    border-radius: 15px 15px 0 0;
+    opacity: 0.8;
+  }
+
+  h2 {
+    color: $red;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 10px rgba($red, 0.6);
+    font-weight: bold;
+    position: relative;
+    display: inline-block;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 10%;
+      width: 80%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba($red, 0.6), transparent);
+    }
+  }
+
+  p {
+    color: $white-300;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
 }
 
+.defeat-icon {
+  margin-bottom: 1.5rem;
 
+  i {
+    font-size: 3rem;
+    color: $red;
+    opacity: 0.9;
+    text-shadow: 0 0 15px rgba($red, 0.7);
+    animation: pulse 2s infinite ease-in-out;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+  }
+}
+
+.progress-summary {
+  margin-bottom: 2rem;
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    color: $white-300;
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+.stats-container {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+
+  .stat-item {
+    background-color: rgba($black-300, 0.6);
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    border: 1px solid rgba($red, 0.3);
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: $white-100;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: $white-400;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  }
+}
 
 .reward-info {
-  margin: 1rem 0;
-  padding: 0.75rem;
-  border: 1px solid $third;
-  background-color: $secondary;
-  border-radius: 5px;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid rgba($red, 0.3);
+  background-color: rgba($black-300, 0.6);
+  border-radius: 8px;
   font-size: 1rem;
-  color: white;
+  color: $white-300;
   text-align: center;
+  box-shadow: 0 0 10px rgba($red, 0.1);
+  position: relative;
+
+  .reward-icon {
+    position: absolute;
+    top: -15px;
+    left: calc(50% - 15px);
+    width: 30px;
+    height: 30px;
+    background-color: $black-300;
+    border-radius: 50%;
+    border: 1px solid rgba($red, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      color: $white-400;
+      font-size: 0.9rem;
+    }
+  }
+
+  p strong {
+    color: $red;
+  }
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
+.actions {
+  margin-top: 2rem;
+
+  .btn-dark {
+    background: linear-gradient(to bottom, rgba($black-200, 0.9), rgba($black-400, 0.9));
+    color: $white-100;
+    border: 1px solid $red;
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba($red, 0.3);
+
+    i {
+      margin-right: 0.5rem;
+    }
+
+    &:hover {
+      background: linear-gradient(to bottom, rgba($black-300, 0.9), rgba($black-500, 0.9));
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px rgba($red, 0.5);
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
 }
