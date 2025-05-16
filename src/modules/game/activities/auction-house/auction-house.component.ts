@@ -160,6 +160,9 @@ export class AuctionHouseComponent {
       initialState: {
         listing,
         onAccept: () => {
+            this.marketListingFilter.set(cloneDeep(this.lastMarketListingFilter));
+        },
+        onPurchaseCompleted: () => {
           this.marketListingFilter.set(cloneDeep(this.lastMarketListingFilter));
         },
       },

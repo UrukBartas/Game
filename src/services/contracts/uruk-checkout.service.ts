@@ -1,7 +1,9 @@
 import { inject, Injectable } from "@angular/core";
 import { ethers } from "ethers";
+import { firstValueFrom } from "rxjs";
 import { Quote } from "src/modules/core/models/uruk-checkout.model";
 import { ContractService, ContractTypes } from "../contract.service";
+import { UrukCheckoutService as BackendCheckoutService } from "../uruk-checkout.service";
 import { ERC20ContractService } from "./erc20-contract.service";
 
 @Injectable({
@@ -9,7 +11,7 @@ import { ERC20ContractService } from "./erc20-contract.service";
 })
 export class UrukCheckoutService extends ContractService {
   private erc20Service = inject(ERC20ContractService);
-
+  private backendService = inject(BackendCheckoutService);
   constructor() {
     super(ContractTypes.CHECKOUT);
   }
@@ -19,56 +21,114 @@ export class UrukCheckoutService extends ContractService {
   }
 
   public async createAndPayBasketWithUruks(quote: Quote) {
-    // Prepare parameters for the contract call
-    const types = quote.items.map(item => item.type);
-    const quantities = quote.items.length;
-    const urukPrices = quote.items.map(item => item.priceUruks);
-    const nativePrices = Array(quote.items.length).fill(0); // Not used for URUK payment
-    const backendIds = quote.items.map(item => item.id);
-    const totalAmount = ethers.parseUnits(quote.totalPriceUruks.toString(), 18);
+    try {
+      // Convert items to BasketItem array
+      const basketItems = quote.items.map(item => ({
+        itemType: item.type,
+        quantity: item.quantity,
+        urukPrice: ethers.parseEther(item.priceUruks + ''),
+        nativePrice: 0,
+        backendId: item.id
+      }));
 
-    // Execute the contract call
-    return this.executeWriteContract(
-      'createAndPayBasketWithUruks',
-      [
-        types,
-        quantities,
-        urukPrices,
-        nativePrices,
-        backendIds,
-        quote.verificationHash,
-        totalAmount
-      ]
-    );
+      // Calculate total amount and approve spending
+      const totalAmount = ethers.parseEther(quote.totalPriceUruks + '');
+      await this.triggerTx(
+        () => this.erc20Service.approve(this.contractAddress, totalAmount),
+        'Approval successful',
+        true
+      );
+
+      // Execute the contract call with the new structure
+      const { receipt } = await this.triggerTx(
+        () => this.executeWriteContract(
+          'createAndPayBasketWithUruks',
+          [
+            basketItems,
+            quote.verificationHash,
+            totalAmount
+          ]
+        ),
+        'Payment successful',
+        true
+      );
+
+      await this.executeOnBasketPaid(receipt);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    } finally {
+      this.spinnerService.hide();
+    }
+
+  }
+
+
+
+  private async executeOnBasketPaid(receipt: any) {
+    try {
+      // Buscar el evento BasketPaid en los logs
+      const basketPaidLog = receipt.logs.find(log => {
+        try {
+          const { address, topics } = log;
+          // Verificar que el log viene de nuestro contrato
+          return address.toLowerCase() === this.contractAddress.toLowerCase() &&
+            // El primer topic es el hash del evento
+            topics[0] === ethers.id("BasketPaid(bytes32,address,bool)");
+        } catch {
+          return false;
+        }
+      });
+
+      if (basketPaidLog) {
+        const basketId = basketPaidLog.topics[1];
+        await firstValueFrom(this.backendService.onBasketPaid(basketId));
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 
   public async createAndPayBasketWithNative(quote: Quote) {
-    // Calculate total amount including fees
-    const fee = await this.calculateBasketFee(quote.items.length);
-    const totalAmount = ethers.parseUnits(
-      (quote.totalPriceNative + Number(ethers.formatUnits(fee, 18))).toString(),
-      18
-    );
 
-    // Prepare parameters for the contract call
-    const types = quote.items.map(item => item.type);
-    const quantities = quote.items.length;
-    const urukPrices = quote.items.map(item => item.priceUruks);
-    const nativePrices = quote.items.map(() => quote.totalPriceNative);
-    const backendIds = quote.items.map(item => item.id);
+    try {
+      const basePriceNative = ethers.parseEther(quote.totalPriceNative + '');
+      const basketItems = quote.items.map(item => ({
+        itemType: item.type,
+        quantity: item.quantity,
+        urukPrice: ethers.parseEther(item.priceUruks + ''),
+        nativePrice: ethers.parseEther(item.priceNative + ''),
+        backendId: item.id
+      }));
 
-    // Execute the contract call with value
-    return this.executeWriteContract(
-      'createAndPayBasketWithNative',
-      [
-        types,
-        quantities,
-        urukPrices,
-        nativePrices,
-        backendIds,
-        quote.verificationHash
-      ],
-      { value: totalAmount }
-    );
+      // Get fees - will be added by the contract
+      const fee = await this.calculateBasketFee(quote.items.length);
+      // Total amount to send includes both base price and fees
+      const totalAmountToSend = basePriceNative + fee;
+
+      // Execute the contract call with the new structure
+      const { receipt } = await this.triggerTx(
+        () => this.executeWriteContract(
+          'createAndPayBasketWithNative',
+          [
+            basketItems,
+            quote.verificationHash,
+            basePriceNative // Pass only the base price, contract will add fees
+          ],
+          totalAmountToSend
+        ),
+        'Payment successful',
+        true
+      );
+
+      await this.executeOnBasketPaid(receipt);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    } finally {
+      this.spinnerService.hide();
+    }
+
+
   }
 }

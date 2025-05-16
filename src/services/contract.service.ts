@@ -30,6 +30,16 @@ export class ContractService {
     private chainId?: number
   ) { }
 
+  /**
+   * Gets the contract address for the current chain
+   * @returns The contract address
+   */
+  protected get contractAddress(): string {
+    const details = this.getContractDetails();
+    if (!details) throw new Error('Contract details not found');
+    return details.address;
+  }
+
   private getContractDetails() {
     const chainId = this.chainId ?? getNetwork().chain.id;
     const chain = this.wallet.getChainById(chainId);
@@ -40,28 +50,38 @@ export class ContractService {
     };
   }
 
-  private spinnerService = inject(NgxSpinnerService);
+  protected spinnerService = inject(NgxSpinnerService);
   private store = inject(Store);
   private toastService = inject(ToastrService);
 
-  public async triggerTx(tx: Function, mesasge?: string) {
+  public async triggerTx(tx: Function, mesasge?: string, avoidStoppingSpinner = false) {
     this.spinnerService.show();
     try {
       const txRes = await tx();
       const receipt = await waitForTransaction({
         hash: txRes.hash,
+        confirmations: 1
       });
+
       this.toastService.success(
         mesasge ?? 'Transaction completed successfully!'
       );
       this.store.dispatch(new RefreshPlayer());
+
+      return {
+        receipt,
+        hash: txRes.hash,
+        logs: receipt.logs
+      };
     } catch (error: any) {
       this.toastService.error(
-        'Eror during transaction - Transaction canceled',
+        'Error during transaction - Transaction canceled',
         error?.shortMessage ?? ''
       );
+      throw error;
+    } finally {
+      if (!avoidStoppingSpinner) this.spinnerService.hide();
     }
-    this.spinnerService.hide();
   }
 
   protected async executeReadContract<T>(
@@ -93,9 +113,14 @@ export class ContractService {
   }
 
   public async autoConnectToValidChain() {
+    const currentChain = getNetwork().chain.id;
     const validChains = await firstValueFrom(
       this.wallet.chains.pipe(filter((e) => e.length > 0))
     );
-    await switchNetwork({ chainId: validChains[0].id });
+    if (validChains.some((e) => e.id === currentChain)) {
+      await switchNetwork({ chainId: currentChain });
+    } else {
+      await switchNetwork({ chainId: validChains[0].id });
+    }
   }
 }

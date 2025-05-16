@@ -1,6 +1,8 @@
 // Main Epic Checkout Button
 .btn-uruk-checkout {
   position: relative;
+  display: flex;
+  flex-direction: column;
   background: linear-gradient(135deg, #4a0072, #9000ff);
   border: 2px solid #b659ff;
   color: white;
@@ -9,8 +11,9 @@
   border-radius: 8px;
   overflow: hidden;
   transition: all 0.3s ease;
-  box-shadow: 0 0 15px rgba(144, 0, 255, 0.5),
-              inset 0 0 10px rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 0 15px rgba(144, 0, 255, 0.5),
+    inset 0 0 10px rgba(255, 255, 255, 0.2);
 
   &:before {
     content: '';
@@ -19,7 +22,11 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0) 70%
+    );
     transform: rotate(45deg);
     opacity: 0;
     transition: opacity 0.3s;
@@ -27,8 +34,9 @@
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 20px rgba(144, 0, 255, 0.7),
-                inset 0 0 15px rgba(255, 255, 255, 0.3);
+    box-shadow:
+      0 0 20px rgba(144, 0, 255, 0.7),
+      inset 0 0 15px rgba(255, 255, 255, 0.3);
 
     &:before {
       opacity: 1;
@@ -51,6 +59,7 @@
 
   .checkout-subtext {
     font-size: 0.8rem;
+    color: lightgray;
     opacity: 0.9;
     font-weight: normal;
     font-style: italic;
@@ -92,7 +101,11 @@
   .popup-header {
     position: relative;
     margin-bottom: 1.5rem;
-    background: linear-gradient(135deg, rgba(144, 0, 255, 0.1), rgba(182, 89, 255, 0.1));
+    background: linear-gradient(
+      135deg,
+      rgba(144, 0, 255, 0.1),
+      rgba(182, 89, 255, 0.1)
+    );
     padding: 1rem;
     border-radius: 8px;
 
@@ -176,10 +189,12 @@
   .divider {
     flex-grow: 1;
     height: 1px;
-    background: linear-gradient(90deg,
-      rgba(255,255,255,0) 0%,
-      rgba(255,255,255,0.1) 50%,
-      rgba(255,255,255,0) 100%);
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
   }
 
   .divider-text {
@@ -195,7 +210,11 @@
   .btn-blockchain-uruk,
   .btn-blockchain-native {
     width: 100%;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.05)
+    );
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     padding: 1rem;
@@ -205,7 +224,11 @@
     backdrop-filter: blur(5px);
 
     &:hover:not(:disabled) {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.15),
+        rgba(255, 255, 255, 0.1)
+      );
       border-color: rgba(255, 255, 255, 0.2);
       transform: translateY(-2px);
     }
@@ -227,21 +250,37 @@
   }
 
   .btn-blockchain-uruk {
-    background: linear-gradient(135deg, rgba(144, 0, 255, 0.2), rgba(144, 0, 255, 0.1));
+    background: linear-gradient(
+      135deg,
+      rgba(144, 0, 255, 0.2),
+      rgba(144, 0, 255, 0.1)
+    );
     border-color: rgba(144, 0, 255, 0.3);
 
     &:hover:not(:disabled) {
-      background: linear-gradient(135deg, rgba(144, 0, 255, 0.25), rgba(144, 0, 255, 0.15));
+      background: linear-gradient(
+        135deg,
+        rgba(144, 0, 255, 0.25),
+        rgba(144, 0, 255, 0.15)
+      );
       border-color: rgba(144, 0, 255, 0.4);
     }
   }
 
   .btn-blockchain-native {
-    background: linear-gradient(135deg, rgba(78, 56, 216, 0.2), rgba(78, 56, 216, 0.1));
+    background: linear-gradient(
+      135deg,
+      rgba(78, 56, 216, 0.2),
+      rgba(78, 56, 216, 0.1)
+    );
     border-color: rgba(78, 56, 216, 0.3);
 
     &:hover:not(:disabled) {
-      background: linear-gradient(135deg, rgba(78, 56, 216, 0.25), rgba(78, 56, 216, 0.15));
+      background: linear-gradient(
+        135deg,
+        rgba(78, 56, 216, 0.25),
+        rgba(78, 56, 216, 0.15)
+      );
       border-color: rgba(78, 56, 216, 0.4);
     }
   }
@@ -346,10 +385,100 @@
   }
 }
 
+@media screen and (max-width: 576px) {
+  .uruk-checkout-popup {
+    width: 95%;
+    padding: 0.75rem;
+
+    .popup-header {
+      h4 {
+        font-size: 0.6rem;
+      }
+
+      .close-icon {
+        font-size: 1rem;
+      }
+    }
+
+    .btn-game-balance {
+      padding: 0.75rem;
+      font-size: 0.9rem;
+
+      .uruks-icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .blockchain-options {
+      .btn-blockchain-uruk,
+      .btn-blockchain-native {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+
+        .price-details {
+          font-size: 0.75rem;
+        }
+
+        .uruks-icon {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+
+    .divider-text {
+      font-size: 0.8rem;
+    }
+
+    .transaction-details {
+      .details-header {
+        font-size: 0.9rem;
+      }
+
+      .details-content {
+        font-size: 0.8rem;
+      }
+    }
+
+    .circular-timer {
+      width: 30px;
+      height: 30px;
+
+      .timer-text {
+        font-size: 0.6rem;
+      }
+    }
+
+    .payment-status {
+      .status-message {
+        font-size: 0.8rem;
+        padding: 0.75rem;
+      }
+    }
+  }
+
+  .btn-uruk-checkout {
+    padding: 0.5rem 1rem;
+
+    .checkout-text {
+      font-size: 1.2rem;
+    }
+
+    .checkout-subtext {
+      font-size: 0.7rem;
+    }
+  }
+}
+
 .quote-timer {
   margin-bottom: 1rem;
   padding: 0.75rem;
-  background: linear-gradient(135deg, rgba(144, 0, 255, 0.1), rgba(182, 89, 255, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(144, 0, 255, 0.1),
+    rgba(182, 89, 255, 0.05)
+  );
   border: 1px solid rgba(182, 89, 255, 0.2);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -384,5 +513,88 @@
         background: linear-gradient(90deg, #ff6b6b, #ffd93d);
       }
     }
+  }
+}
+
+// Loading State
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
+
+  .spinner-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+
+    i {
+      color: #9000ff;
+      font-size: 1.2rem;
+    }
+  }
+}
+
+// Quote Timer
+.quote-timer-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  position: absolute;
+  top: 0;
+
+  @media screen and (max-width: 576px) {
+    left: 0;
+  }
+
+  .circular-timer {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    @media screen and (max-width: 576px) {
+      width: 25px;
+      height: 25px;
+    }
+
+    svg {
+      transform: rotate(-90deg);
+
+      path {
+        transition: stroke-dasharray 1s linear;
+      }
+    }
+
+    .timer-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.7rem;
+      @media screen and (max-width: 576px) {
+        font-size: 0.5rem;
+      }
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+    }
+
+    &.warning {
+      animation: pulse 2s infinite;
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
   }
 }

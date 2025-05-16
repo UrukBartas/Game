@@ -4,6 +4,7 @@ export interface QuoteItem {
   type: ProductType;
   quantity: number;
   priceUruks: number;
+  priceNative: number;
   id: string;
 }
 

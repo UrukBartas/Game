@@ -172,6 +172,12 @@ nav a {
     }
   }
 
+  .chain-display {
+    display: flex;
+    align-items: center;
+    margin: 0 5px;
+  }
+
   @include media-breakpoint-down(sm) {
     gap: 5px;
     padding-left: 10px !important;
@@ -182,6 +188,23 @@ nav a {
     }
   }
 }
+
+:host ::ng-deep {
+  .chain-switcher-tooltip {
+    background: $black-300 !important;
+    border: 1px solid $primary !important;
+    padding: 8px !important;
+    opacity: 1 !important;
+  }
+  @include media-breakpoint-down(sm) {
+    .chain-display {
+      .box {
+        margin-top: -7px;
+      }
+    }
+  }
+}
+
 .locked-screen {
   position: absolute;
   pointer-events: none;
@@ -371,7 +394,8 @@ nav a {
       gap: 0.5rem;
       margin-left: 1rem;
 
-      .announcement-nav-btn, .announcement-close-btn {
+      .announcement-nav-btn,
+      .announcement-close-btn {
         background: none;
         border: none;
         color: white;
@@ -528,7 +552,9 @@ nav a {
         overflow: hidden;
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
 
         &:hover {
           transform: translateY(-2px);
@@ -551,7 +577,11 @@ nav a {
             right: 0;
             width: 30%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1));
+            background: linear-gradient(
+              90deg,
+              transparent,
+              rgba(255, 255, 255, 0.1)
+            );
           }
 
           i {

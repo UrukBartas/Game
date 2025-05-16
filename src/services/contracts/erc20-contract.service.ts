@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BigNumberish } from 'ethers';
 import { ContractService, ContractTypes } from '../contract.service';
 
 @Injectable({
@@ -45,5 +46,15 @@ export class ERC20ContractService extends ContractService {
 
   importCoins(args: any[]) {
     return this.executeWriteContract('importCoins', args);
+  }
+
+  /**
+   * Approves the spender to spend tokens on behalf of the caller
+   * @param spender The address that will spend the tokens
+   * @param amount The amount of tokens to approve
+   * @returns A promise that resolves to the transaction response
+   */
+  public approve(spender: string, amount: BigNumberish) {
+    return this.executeWriteContract('approve', [spender, amount]);
   }
 }

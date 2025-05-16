@@ -69,7 +69,6 @@ export class TheCryptComponent extends TemplatePage {
         const cryptData = this.currentCrypt();
         //Aqui calcular el status de la crypta (cryptoStatusEnum)
         if (cryptData && cryptData.status != CryptStatus.STARTING) {
-          console.warn('Crypt Data:', cryptData);
 
           const newStatus = this.calculateCryptStatus(cryptData);
 

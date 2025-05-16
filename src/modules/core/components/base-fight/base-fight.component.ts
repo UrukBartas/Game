@@ -126,7 +126,6 @@ export class BaseFightComponent
       .subscribe((fight: BaseFightModel) => {
         if (fight) {
           const { player, enemy, load, turns, fightId } = fight;
-          console.warn(fightId)
           this.fightId.set(fightId);
           this.player.set(player);
           this.enemy.set(enemy);

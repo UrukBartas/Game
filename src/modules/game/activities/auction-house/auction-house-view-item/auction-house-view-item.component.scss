@@ -2,6 +2,9 @@
 
 #confirm-modal {
   padding: 20px 40px;
+  @media screen and (max-width: 576px) {
+    padding: 20px 10px;
+  }
   background: $black-300;
   border-radius: 10px;
   display: flex;

@@ -52,6 +52,7 @@ export class AuctionHouseViewItemComponent {
   store = inject(Store);
   modalRef = inject(BsModalRef);
   onAccept: Function;
+  onPurchaseCompleted: Function;
   timeAgo = inject(TimeAgoPipe);
   public ProductType = ProductType;
   public player$ = this.store.select(MainState.getState).pipe(
@@ -173,6 +174,15 @@ export class AuctionHouseViewItemComponent {
     } catch (error) {
       this.toast.error(`Error creating the trade ${error}`);
     }
+    this.modalRef.hide();
+  }
+
+  public purchaseCompleted(event: any) {
+    this.toast.success(
+      `Congratulations, you bought the item.`,
+      'You have a new item in your inventory!'
+    );
+    if (this.onPurchaseCompleted) this.onPurchaseCompleted();
     this.modalRef.hide();
   }
 

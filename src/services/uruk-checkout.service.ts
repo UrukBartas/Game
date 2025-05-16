@@ -22,4 +22,13 @@ export class UrukCheckoutService extends ApiBaseService {
     return this.post('/quote', { items });
   }
 
+  /**
+   * Notifies the Uruk Checkout service that a basket has been paid
+   * @param basketId The ID of the basket that has been paid
+   * @returns Observable with the response from the Uruk Checkout service
+   */
+  public onBasketPaid(basketId: string): Observable<void> {
+    return this.post('/on-basket-paid', { basketId });
+  }
+
 }

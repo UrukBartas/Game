@@ -1,46 +1,11 @@
 <!-- Main Button -->
-<button
-  type="button"
-  class="btn btn-uruk-checkout w-100 btn-epic-checkout d-flex align-items-center justify-content-center gap-2"
-  (click)="togglePopup()"
-  *ngIf="!showPopup"
->
-  <span class="checkout-text">BUY</span>
-  <span class="checkout-subtext"
-    >with uruk checkout <i class="fa-regular fa-registered"></i
-  ></span>
-</button>
-
-<!-- Popup -->
-<div class="uruk-checkout-popup" *ngIf="showPopup">
-  <div class="popup-header">
-    <i class="fa-solid fa-xmark close-icon pointer" (click)="togglePopup()"></i>
-    <h4 class="text-center">Choose Payment Method</h4>
-
-    <!-- Quote Timer -->
-    <div class="quote-timer" *ngIf="remainingTime$ | async as remainingTime">
-      <div class="timer-text">
-        <i class="fa-regular fa-clock me-2"></i>
-        Quote expires in {{ Math.floor(remainingTime / 60) }}:{{ (remainingTime % 60).toString().padStart(2, '0') }}
-      </div>
-      <div class="progress">
-        <div
-          class="progress-bar"
-          [class.warning]="remainingTime < 60"
-          [ngStyle]="{
-            'width': ((remainingTime / 300) * 100) + '%'
-          }"
-        ></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Game Balance Payment -->
+<ng-template #gameBalancePayment>
   <button
     type="button"
-    class="btn btn-game-balance w-100 mb-3"
+    class="btn btn-game-balance w-100"
+    [class.mb-3]="!isWeb2User"
     (click)="payWithGameBalance()"
-    [disabled]="!currentQuote"
+    [disabled]="!isWeb2User && (!currentQuote || isLoadingQuote)"
   >
     <div class="d-flex align-items-center justify-content-between w-100">
       <span class="d-flex align-items-center">
@@ -56,100 +21,200 @@
       </span>
     </div>
   </button>
+</ng-template>
+@if (isWeb2User) {
+  <ng-container *ngTemplateOutlet="gameBalancePayment"></ng-container>
+} @else {
+  <button
+    type="button"
+    class="btn btn-uruk-checkout w-100 btn-epic-checkout d-flex align-items-center justify-content-center gap-2"
+    (click)="togglePopup()"
+    *ngIf="!showPopup"
+  >
+    <span class="checkout-text">BUY</span>
+    <span class="checkout-subtext"
+      >powered by uruk checkout <i class="fa-regular fa-registered"></i
+    ></span>
+  </button>
+}
 
-  <!-- Divider -->
-  <div class="divider-container">
-    <div class="divider"></div>
-    <span class="divider-text">OR PAY WITH CRYPTO</span>
-    <div class="divider"></div>
-  </div>
+<!-- Popup -->
+<div class="uruk-checkout-popup" *ngIf="showPopup">
+  <div class="popup-header">
+    <i class="fa-solid fa-xmark close-icon pointer" (click)="togglePopup()"></i>
+    <h4 class="text-center">
+      {{ isWeb2User ? 'Game Balance Payment' : 'Choose Payment Method' }}
+    </h4>
 
-  <!-- Blockchain Payment Options -->
-  <div class="blockchain-options">
-    <!-- URUK Token Payment -->
-    <button
-      type="button"
-      class="btn btn-blockchain-uruk"
-      (click)="payWithUrukToken()"
-      [disabled]="!currentQuote"
-    >
-      <div class="d-flex flex-column w-100">
-        <div class="d-flex align-items-center justify-content-between">
-          <span class="d-flex align-items-center">
-            <img
-              class="uruks-icon me-2"
-              [src]="prefix + '/assets/goldenuruks.png'"
-              alt="URUK"
-            />
-            URUK Token
-          </span>
-          <span>{{ currentQuote?.totalPriceUruks | compressNumber }} URUK</span>
-        </div>
-        <div class="price-details" *ngIf="currentQuote">
-          <div class="d-flex justify-content-between align-items-center">
-            <small>≈ ${{ (currentQuote.totalPriceUruks * currentQuote.currentUrukPrice) | number:'1.2-2' }}</small>
-            <small class="current-price">${{ currentQuote.currentUrukPrice | number:'1.4-4' }}/URUK</small>
-          </div>
-        </div>
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="!isWeb2User && isLoadingQuote">
+      <div class="spinner-container">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <span>Getting quote...</span>
       </div>
-    </button>
-
-    <!-- Native Token Payment -->
-    <button
-      type="button"
-      class="btn btn-blockchain-native"
-      (click)="payWithNativeToken()"
-      [disabled]="!currentQuote"
-    >
-      <div class="d-flex flex-column w-100">
-        <div class="d-flex align-items-center justify-content-between">
-          <span class="d-flex align-items-center">
-            <img
-              *ngIf="currentQuote?.imageNativeCoin"
-              class="uruks-icon me-2"
-              [src]="prefix + currentQuote?.imageNativeCoin"
-              [alt]="currentQuote?.nativeCoinName"
-            />
-            <i *ngIf="!currentQuote?.imageNativeCoin" class="fa-solid fa-link-simple me-2"></i>
-            {{ currentQuote?.nativeCoinName }}
-          </span>
-          <span>{{ currentQuote?.totalPriceNative | number:'1.4-4' }} {{ currentQuote?.nativeCoinName }}</span>
-        </div>
-        <div class="price-details" *ngIf="currentQuote">
-          <div class="d-flex justify-content-between align-items-center">
-            <small>≈ ${{ (currentQuote.totalPriceNative * currentQuote.currentNativeCoinPrice) | number:'1.2-2' }}</small>
-            <small class="current-price">${{ currentQuote.currentNativeCoinPrice | number:'1.4-4' }}/{{ currentQuote?.nativeCoinName }}</small>
-          </div>
-        </div>
-      </div>
-    </button>
-  </div>
-
-  <!-- Transaction Details -->
-  <div class="transaction-details" *ngIf="currentQuote">
-    <div class="details-header" (click)="showDetails = !showDetails">
-      <span>
-        <i class="fa-solid fa-receipt me-2"></i>
-        Transaction Details
-      </span>
-      <i class="fa-solid fa-chevron-down" [class.rotated]="showDetails"></i>
     </div>
 
-    <div class="details-content" *ngIf="showDetails">
-      <div class="detail-row">
-        <span>Network Fee</span>
-        <span>{{ currentQuote.feesToBePaid | number:'1.4-4' }} {{ currentQuote?.nativeCoinName }}</span>
-      </div>
-      <div class="detail-row">
-        <span>Max Slippage</span>
-        <span>1%</span>
-      </div>
-      <div class="detail-row">
-        <span>Quote Valid For</span>
-        <span>5 minutes</span>
+    <!-- Quote Timer -->
+    <div
+      class="quote-timer-container"
+      *ngIf="
+        !isWeb2User && !isLoadingQuote && remainingTime$
+          | async as remainingTime
+      "
+    >
+      <div class="circular-timer" [ngClass]="{ warning: remainingTime < 60 }">
+        <svg viewBox="0 0 36 36">
+          <path
+            d="M18 2.0845
+              a 15.9155 15.9155 0 0 1 0 31.831
+              a 15.9155 15.9155 0 0 1 0 -31.831"
+            fill="none"
+            stroke="rgba(255, 255, 255, 0.1)"
+            stroke-width="2"
+          />
+          <path
+            d="M18 2.0845
+              a 15.9155 15.9155 0 0 1 0 31.831
+              a 15.9155 15.9155 0 0 1 0 -31.831"
+            fill="none"
+            [attr.stroke]="remainingTime < 60 ? '#ffd93d' : '#9000ff'"
+            stroke-width="2"
+            [style.stroke-dasharray]="(remainingTime / 300) * 100 + ', 100'"
+          />
+        </svg>
+        <span class="timer-text"
+          >{{ Math.floor(remainingTime / 60) }}:{{
+            (remainingTime % 60).toString().padStart(2, '0')
+          }}</span
+        >
       </div>
     </div>
   </div>
+
+  <!-- Game Balance Payment -->
+  <ng-container *ngTemplateOutlet="gameBalancePayment"></ng-container>
+
+  <!-- Web3 Payment Options -->
+  <ng-container *ngIf="!isWeb2User">
+    <!-- Divider -->
+    <div class="divider-container">
+      <div class="divider"></div>
+      <span class="divider-text">OR PAY WITH WALLET</span>
+      <div class="divider"></div>
+    </div>
+
+    <!-- Blockchain Payment Options -->
+    <div class="blockchain-options">
+      <!-- URUK Token Payment -->
+      <button
+        type="button"
+        class="btn btn-blockchain-uruk"
+        (click)="payWithUrukToken()"
+        [disabled]="!currentQuote || isLoadingQuote"
+      >
+        <div class="d-flex flex-column w-100">
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="d-flex align-items-center">
+              <img
+                class="uruks-icon me-2"
+                [src]="prefix + '/assets/goldenuruks.png'"
+                alt="URUK"
+              />
+              URUK Token
+            </span>
+            <span
+              >{{ currentQuote?.totalPriceUruks | compressNumber }} URUK</span
+            >
+          </div>
+          <div class="price-details" *ngIf="currentQuote">
+            <div class="d-flex justify-content-between align-items-center">
+              <small
+                >≈ ${{
+                  currentQuote.totalPriceUruks * currentQuote.currentUrukPrice
+                    | number: '1.2-2'
+                }}</small
+              >
+              <small class="current-price"
+                >${{
+                  currentQuote.currentUrukPrice | number: '1.4-4'
+                }}/URUK</small
+              >
+            </div>
+          </div>
+        </div>
+      </button>
+
+      <!-- Native Token Payment -->
+      <button
+        type="button"
+        class="btn btn-blockchain-native"
+        (click)="payWithNativeToken()"
+        [disabled]="!currentQuote || isLoadingQuote"
+      >
+        <div class="d-flex flex-column w-100">
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="d-flex align-items-center">
+              <img
+                *ngIf="currentQuote?.imageNativeCoin"
+                class="uruks-icon me-2"
+                [src]="prefix + currentQuote?.imageNativeCoin"
+                [alt]="currentQuote?.nativeCoinName"
+              />
+              <i
+                *ngIf="!currentQuote?.imageNativeCoin"
+                class="fa-solid fa-link-simple me-2"
+              ></i>
+              {{ currentQuote?.nativeCoinName }}
+            </span>
+            <span
+              >{{ currentQuote?.totalPriceNative | number: '1.4-4' }}
+              {{ currentQuote?.nativeCoinName }}</span
+            >
+          </div>
+          <div class="price-details" *ngIf="currentQuote">
+            <div class="d-flex justify-content-between align-items-center">
+              <small
+                >≈ ${{
+                  currentQuote.totalPriceNative *
+                    currentQuote.currentNativeCoinPrice | number: '1.2-2'
+                }}</small
+              >
+              <small class="current-price"
+                >${{ currentQuote.currentNativeCoinPrice | number: '1.4-4' }}/{{
+                  currentQuote?.nativeCoinName
+                }}</small
+              >
+            </div>
+          </div>
+        </div>
+      </button>
+    </div>
+
+    <!-- Transaction Details -->
+    <div class="transaction-details" *ngIf="currentQuote">
+      <div class="details-header" (click)="showDetails = !showDetails">
+        <span>
+          <i class="fa-solid fa-receipt me-2"></i>
+          Transaction Details
+        </span>
+        <i class="fa-solid fa-chevron-down" [class.rotated]="showDetails"></i>
+      </div>
+
+      <div class="details-content" *ngIf="showDetails">
+        <div class="detail-row">
+          <span>Processing Fee</span>
+          <span
+            >{{ currentQuote.feesToBePaid | number: '1.4-4' }}
+            {{ currentQuote?.nativeCoinName }}</span
+          >
+        </div>
+        <div class="detail-row">
+          <span>Quote Valid For</span>
+          <span>5 minutes</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 
   <!-- Payment Status -->
   <div class="payment-status" *ngIf="paymentStatus">

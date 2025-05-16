@@ -210,4 +210,8 @@ export class WalletService {
       })
     );
   }
+
+  public isWeb3User(): boolean {
+    return !!this.address$.getValue();
+  }
 }

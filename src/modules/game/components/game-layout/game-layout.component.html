@@ -33,6 +33,16 @@
         !isSidebarOpened() ? 'content-extended' : 'content-collapsed'
       }}"
     >
+      <div class="d-flex d-sm-none">
+        <ng-container
+          *ngTemplateOutlet="
+            itemmenu;
+            context: {
+              isMobile: true,
+            }
+          "
+        ></ng-container>
+      </div>
       <app-uruks-displayer [goldenUruks]="player.uruks"></app-uruks-displayer>
       <div
         class="mission-status"
@@ -58,16 +68,6 @@
         [style.height]="getProgressBarHeight() + 'px'"
       ></app-progress-bar>
 
-      <div class="d-flex d-sm-none">
-        <ng-container
-          *ngTemplateOutlet="
-            itemmenu;
-            context: {
-              isMobile: true,
-            }
-          "
-        ></ng-container>
-      </div>
       <div class="tutorial" *ngIf="hasTutorial()">
         <i
           class="fa-regular fa-circle-question hoverable-text"
@@ -128,6 +128,28 @@
           </div>
         </div>
       </div>
+
+      <!-- Chain Display with Tooltip -->
+      <div class="chain-display" *ngIf="walletService.isWeb3User()">
+        <app-item-box
+          [height]="getProgressBarHeight()"
+          [width]="getProgressBarHeight()"
+          [image]="
+            walletService.getChainById(walletService.activeNetworkId.getValue())
+              ?.img
+          "
+          [ngbTooltip]="chainSwitcherTpl"
+          [autoClose]="'inside'"
+          [triggers]="'click'"
+          [openDelay]="0"
+          tooltipClass="chain-switcher-tooltip"
+        >
+        </app-item-box>
+      </div>
+
+      <ng-template #chainSwitcherTpl>
+        <app-chain-switcher [height]="40" [width]="40"></app-chain-switcher>
+      </ng-template>
 
       <div class="right d-flex align-items-center gap-2">
         <div class="player-dropdown">
@@ -297,7 +319,7 @@
     (click)="isMobile ? displayFullScreenDialog(menu) : toggleSidebarOpened()"
   >
     @if (isMobile) {
-      Menu
+      <i class="fa-solid fa-bars"></i>
     }
     <i
       *ngIf="!isMobile"
