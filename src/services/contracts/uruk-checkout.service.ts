@@ -22,17 +22,17 @@ export class UrukCheckoutService extends ContractService {
 
   public async createAndPayBasketWithUruks(quote: Quote) {
     try {
-      // Convert items to BasketItem array
+      // Convert items to BasketItem array with proper decimal handling
       const basketItems = quote.items.map(item => ({
         itemType: item.type,
         quantity: item.quantity,
-        urukPrice: ethers.parseEther(item.priceUruks + ''),
+        urukPrice: ethers.parseEther(item.priceUruks.toFixed(18)),
         nativePrice: 0,
         backendId: item.id
       }));
 
       // Calculate total amount and approve spending
-      const totalAmount = ethers.parseEther(quote.totalPriceUruks + '');
+      const totalAmount = ethers.parseEther(quote.totalPriceUruks.toFixed(18));
       await this.triggerTx(
         () => this.erc20Service.approve(this.contractAddress, totalAmount),
         'Approval successful',
@@ -60,10 +60,7 @@ export class UrukCheckoutService extends ContractService {
     } finally {
       this.spinnerService.hide();
     }
-
   }
-
-
 
   private async executeOnBasketPaid(receipt: any) {
     try {
@@ -90,21 +87,20 @@ export class UrukCheckoutService extends ContractService {
   }
 
   public async createAndPayBasketWithNative(quote: Quote) {
-
     try {
-      const basePriceNative = ethers.parseEther(quote.totalPriceNative + '');
+      // Format numbers with proper decimal handling
+      const basePriceNative = ethers.parseEther(quote.totalPriceNative.toFixed(18));
       const basketItems = quote.items.map(item => ({
         itemType: item.type,
         quantity: item.quantity,
-        urukPrice: ethers.parseEther(item.priceUruks + ''),
-        nativePrice: ethers.parseEther(item.priceNative + ''),
+        urukPrice: ethers.parseEther(item.priceUruks.toFixed(18)),
+        nativePrice: ethers.parseEther(item.priceNative.toFixed(18)),
         backendId: item.id
       }));
 
-      // Get fees - will be added by the contract
-      const fee = await this.calculateBasketFee(quote.items.length);
-      // Total amount to send includes both base price and fees
-      const totalAmountToSend = basePriceNative + fee;
+      // Get fees using the new dynamic fee calculation
+      const fees = await this.calculateBasketFee(basketItems.length);
+      const totalAmountToSend = basePriceNative + BigInt(fees);
 
       // Execute the contract call with the new structure
       const { receipt } = await this.triggerTx(
@@ -113,7 +109,7 @@ export class UrukCheckoutService extends ContractService {
           [
             basketItems,
             quote.verificationHash,
-            basePriceNative // Pass only the base price, contract will add fees
+            basePriceNative
           ],
           totalAmountToSend
         ),
@@ -128,7 +124,5 @@ export class UrukCheckoutService extends ContractService {
     } finally {
       this.spinnerService.hide();
     }
-
-
   }
 }
