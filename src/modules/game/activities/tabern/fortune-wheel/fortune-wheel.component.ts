@@ -90,20 +90,58 @@ export class FortuneWheelComponent implements OnInit, AfterViewInit {
 
   // Método para generar segmentos mezclados aleatoriamente
   private generateRandomizedSegments(): WheelSegment[] {
-    // Crear los segmentos según las probabilidades deseadas
-    const segmentsToCreate: WheelSegment[] = [
-      // x2 (10 segmentos = 48%)
-      ...Array(10).fill({ multiplier: 2, color: '#3498db', label: 'x2' }),
+    // Configuración de colores para cada multiplicador
+    const colorMap = {
+      2: '#3498db',
+      3: '#2ecc71',
+      5: '#f39c12',
+      10: '#9b59b6'
+    };
 
-      // x3 (6 segmentos = 32%)
-      ...Array(6).fill({ multiplier: 3, color: '#2ecc71', label: 'x3' }),
-
-      // x5 (2 segmentos = 12%)
-      ...Array(2).fill({ multiplier: 5, color: '#f39c12', label: 'x5' }),
-
-      // x10 (2 segmentos = 8%)
-      ...Array(2).fill({ multiplier: 10, color: '#9b59b6', label: 'x10' })
+    // Configuración de la ruleta (debe coincidir con el backend)
+    const wheelConfig = [
+      { multiplier: 2, probability: 0.45 },
+      { multiplier: 3, probability: 0.30 },
+      { multiplier: 5, probability: 0.15 },
+      { multiplier: 10, probability: 0.10 }
     ];
+
+    // Total de segmentos que queremos en la rueda
+    const TOTAL_SEGMENTS = 20;
+
+    // Crear los segmentos según las probabilidades
+    const segmentsToCreate: WheelSegment[] = [];
+
+    wheelConfig.forEach(config => {
+      // Calcular cuántos segmentos necesitamos para esta probabilidad
+      const segments = Math.round(TOTAL_SEGMENTS * config.probability);
+
+      // Crear los segmentos para este multiplicador
+      const newSegments = Array(segments).fill({
+        multiplier: config.multiplier,
+        color: colorMap[config.multiplier],
+        label: `x${config.multiplier}`
+      });
+
+      segmentsToCreate.push(...newSegments);
+    });
+
+    // Ajustar el número total de segmentos si hay discrepancias por redondeo
+    while (segmentsToCreate.length < TOTAL_SEGMENTS) {
+      // Añadir segmentos del multiplicador más común (x2)
+      segmentsToCreate.push({
+        multiplier: 2,
+        color: colorMap[2],
+        label: 'x2'
+      });
+    }
+    while (segmentsToCreate.length > TOTAL_SEGMENTS) {
+      // Remover segmentos del multiplicador más común (x2)
+      const index = segmentsToCreate.findIndex(s => s.multiplier === 2);
+      if (index !== -1) {
+        segmentsToCreate.splice(index, 1);
+      }
+    }
 
     // Mezclar los segmentos aleatoriamente (algoritmo de Fisher-Yates)
     for (let i = segmentsToCreate.length - 1; i > 0; i--) {
