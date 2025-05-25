@@ -161,6 +161,10 @@ export class WalletService {
   public disconnect() {
     this.store.dispatch(new DisconnectWallet());
     disconnect();
+    this.latestModalEvent.set({
+      type: 'track',
+      event: 'MODAL_CREATED',
+    });
   }
 
   public logIn() {
