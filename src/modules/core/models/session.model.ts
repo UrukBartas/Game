@@ -15,4 +15,5 @@ export interface Realm {
   url: string;
   icon: string;
   status: 'testnet' | 'mainnet';
+  disabled?: boolean;
 }

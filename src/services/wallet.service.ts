@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngxs/store';
 import {
+  disconnect,
   getAccount,
   getNetwork,
   signMessage,
@@ -155,6 +156,11 @@ export class WalletService {
 
   public loginVoid() {
     firstValueFrom(this.logIn());
+  }
+
+  public disconnect() {
+    this.store.dispatch(new DisconnectWallet());
+    disconnect();
   }
 
   public logIn() {

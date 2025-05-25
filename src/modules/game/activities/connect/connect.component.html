@@ -7,14 +7,26 @@
     walletService.latestModalEvent().event == 'CONNECT_SUCCESS' ||
     (walletService.walletConnectIsLoggedIn$ | async) == true
   ) {
-    <button
-      (click)="walletService.loginVoid()"
-      type="submit"
-      class="btn btn-lg btn-primary save-button"
-    >
-      Sign Authentication
-      <i class="fa-solid fa-torii-gate pl-2"></i>
-    </button>
+    <div class="connect-wrapper gap-3 align-items-center">
+      <button
+        (click)="walletService.loginVoid()"
+        type="submit"
+        class="btn btn-lg btn-primary save-button"
+      >
+        Sign Authentication
+        <i class="fa-solid fa-torii-gate pl-2"></i>
+      </button>
+
+      <div class="options d-flex gap-4 justify-content-center">
+        <p
+          urText
+          class="text-white text-center pointer hoverable-text"
+          (click)="walletService.disconnect()"
+        >
+          Disconnect wallet
+        </p>
+      </div>
+    </div>
   } @else {
     <div class="connect-wrapper gap-3 align-items-center">
       <img class="logo" src="{{ prefix + '/assets/login/title-2.png' }}" />
@@ -40,7 +52,7 @@
               @if (!!selectedRealm) {
                 Enter the {{ selectedRealm.name }} realm
               } @else {
-                Enter the realms
+                Choose your realm
               }
 
               <i class="fa-solid fa-torii-gate pl-2"></i>
@@ -83,6 +95,7 @@
       <div class="realm-cards">
         <div
           class="realm-card production"
+          [ngClass]="{ disabled: realm.disabled }"
           *ngFor="let realm of getRealmsByStatus('mainnet')"
           (click)="handleSelectedRealm(realm)"
         >
@@ -90,13 +103,22 @@
             <div class="realm-icon">
               <i [class]="realm.icon"></i>
             </div>
+            <div class="disabled-overlay" *ngIf="realm.disabled">
+              <i class="fa-solid fa-lock"></i>
+              <span>DISABLED</span>
+            </div>
           </div>
           <div class="realm-info">
             <h5 class="realm-name">{{ realm.name }}</h5>
             <p class="realm-description">{{ realm.description }}</p>
-            <div class="realm-status online">
+            <div
+              class="realm-status"
+              [ngClass]="realm.disabled ? 'offline' : 'online'"
+            >
               <span class="status-indicator"></span>
-              <span class="status-text">Online</span>
+              <span class="status-text">{{
+                realm.disabled ? 'Disabled' : 'Online'
+              }}</span>
             </div>
           </div>
         </div>
@@ -104,11 +126,15 @@
     </div>
 
     <!-- Test Realms -->
-    <div class="realm-category test-realms" *ngIf="getRealmsByStatus('testnet').length > 0">
+    <div
+      class="realm-category test-realms"
+      *ngIf="getRealmsByStatus('testnet').length > 0"
+    >
       <h4 class="realm-category-title">Test Realms</h4>
       <div class="realm-cards">
         <div
           class="realm-card test"
+          [ngClass]="{ disabled: realm.disabled }"
           *ngFor="let realm of getRealmsByStatus('testnet')"
           (click)="handleSelectedRealm(realm)"
         >
@@ -117,13 +143,22 @@
               <i [class]="realm.icon"></i>
             </div>
             <div class="test-badge">TEST</div>
+            <div class="disabled-overlay" *ngIf="realm.disabled">
+              <i class="fa-solid fa-lock"></i>
+              <span>DISABLED</span>
+            </div>
           </div>
           <div class="realm-info">
             <h5 class="realm-name">{{ realm.name }}</h5>
             <p class="realm-description">{{ realm.description }}</p>
-            <div class="realm-status online">
+            <div
+              class="realm-status"
+              [ngClass]="realm.disabled ? 'offline' : 'online'"
+            >
               <span class="status-indicator"></span>
-              <span class="status-text">Online</span>
+              <span class="status-text">{{
+                realm.disabled ? 'Disabled' : 'Online'
+              }}</span>
             </div>
           </div>
         </div>

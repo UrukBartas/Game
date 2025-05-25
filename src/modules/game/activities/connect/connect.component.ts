@@ -72,23 +72,46 @@ export class ConnectComponent
     const player = this.store.selectSnapshot(MainState.getState).player;
     if (player) {
       this.router.navigateByUrl('/inventory');
+      return;
     }
     await firstValueFrom(this.realms$);
+    this.walletService.disconnect();
     const urlParams = new URLSearchParams(window.location.search);
     const realmParam = urlParams.get('realm');
-
+    await Preferences.clear();
     if (realmParam) {
       const existingRealm = this.lastLoadedRealms.find(
         (e) => e.id == realmParam
       );
-      if (this.lastLoadedRealms.find((e) => e.id == realmParam)) {
+      if (existingRealm) {
+        // Check if realm is disabled
+        if (existingRealm.disabled) {
+          this.toast.error(
+            `The realm "${existingRealm.name}" is currently disabled. Please select another realm.`,
+            'Realm Unavailable'
+          );
+          this.showingRealms = true;
+          return;
+        }
         await Preferences.set({ key: 'selectedRealm', value: realmParam });
         this.selectedRealm = existingRealm;
       } else {
         console.log('realm ' + realmParam + ' does not exist');
+        this.showingRealms = true;
       }
     } else {
-      this.selectedRealm = await this.getRealmFromPreferences();
+      const selectedRealm = await this.getRealmFromPreferences();
+      // Check if the stored realm is disabled
+      if (selectedRealm && selectedRealm.disabled) {
+        this.toast.warning(
+          `Your previously selected realm "${selectedRealm.name}" is currently disabled. Please select another realm.`,
+          'Realm Unavailable'
+        );
+        this.showingRealms = true;
+        this.selectedRealm = null;
+      } else {
+        this.selectedRealm = selectedRealm;
+      }
     }
   }
 
@@ -105,6 +128,15 @@ export class ConnectComponent
     }
     const selectedRealm = await this.getRealmFromPreferences();
     if (!!selectedRealm) {
+      // Check if the selected realm is disabled
+      if (selectedRealm.disabled) {
+        this.toast.warning(
+          `Your selected realm "${selectedRealm.name}" is currently disabled. Please select another realm.`,
+          'Realm Unavailable'
+        );
+        this.showingRealms = true;
+        return;
+      }
       this.walletService.modal.open();
     } else {
       this.showingRealms = true;
@@ -112,6 +144,15 @@ export class ConnectComponent
   }
 
   public async handleSelectedRealm(realm: Realm) {
+    // Prevent selection of disabled realms
+    if (realm.disabled) {
+      this.toast.error(
+        `The realm "${realm.name}" is currently disabled and cannot be accessed.`,
+        'Realm Unavailable'
+      );
+      return;
+    }
+
     await Preferences.set({
       key: 'selectedRealm',
       value: JSON.stringify(realm),
@@ -184,6 +225,10 @@ export class ConnectComponent
 
   public getRealmsByStatus(status: 'mainnet' | 'testnet'): Array<Realm> {
     return this.lastLoadedRealms.filter(realm => realm.status === status);
+  }
+
+  public getEnabledRealmsByStatus(status: 'mainnet' | 'testnet'): Array<Realm> {
+    return this.lastLoadedRealms.filter(realm => realm.status === status && !realm.disabled);
   }
 
 }
