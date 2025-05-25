@@ -78,7 +78,6 @@ export class ConnectComponent
     this.walletService.disconnect();
     const urlParams = new URLSearchParams(window.location.search);
     const realmParam = urlParams.get('realm');
-    await Preferences.clear();
     if (realmParam) {
       const existingRealm = this.lastLoadedRealms.find(
         (e) => e.id == realmParam
