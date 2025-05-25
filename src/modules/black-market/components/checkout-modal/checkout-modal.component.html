@@ -1,0 +1,165 @@
+<div class="checkout-modal-overlay" *ngIf="isOpen" (click)="closeModal()">
+  <div class="checkout-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">Checkout</h2>
+      <button class="close-btn" (click)="closeModal()">
+        <i class="fa-solid fa-times"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Step Indicator -->
+      <div class="step-indicator">
+        <div class="step" [ngClass]="{ active: currentStep >= 1, completed: currentStep > 1 }">
+          <div class="step-number">1</div>
+          <span>Shipping Info</span>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step" [ngClass]="{ active: currentStep >= 2 }">
+          <div class="step-number">2</div>
+          <span>Payment</span>
+        </div>
+      </div>
+
+      <!-- Step 1: Shipping Information -->
+      <div class="checkout-step" *ngIf="currentStep === 1">
+        <h3>Shipping Information</h3>
+
+        <form [formGroup]="checkoutForm" class="checkout-form">
+          <div class="form-group">
+            <label for="contactEmail">Email Address *</label>
+            <input
+              type="email"
+              id="contactEmail"
+              formControlName="contactEmail"
+              [class.error]="isFieldInvalid('contactEmail')"
+              placeholder="your.email@example.com">
+            <div class="error-message" *ngIf="isFieldInvalid('contactEmail')">
+              {{ getFieldError('contactEmail') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="shippingAddress">Shipping Address *</label>
+            <textarea
+              id="shippingAddress"
+              formControlName="shippingAddress"
+              [class.error]="isFieldInvalid('shippingAddress')"
+              rows="3"
+              placeholder="Enter your complete shipping address including street, city, state/province, postal code, and country"></textarea>
+            <div class="error-message" *ngIf="isFieldInvalid('shippingAddress')">
+              {{ getFieldError('shippingAddress') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              formControlName="phoneNumber"
+              [class.error]="isFieldInvalid('phoneNumber')"
+              placeholder="+1234567890">
+            <div class="error-message" *ngIf="isFieldInvalid('phoneNumber')">
+              {{ getFieldError('phoneNumber') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="notes">Special Instructions (Optional)</label>
+            <textarea
+              id="notes"
+              formControlName="notes"
+              rows="2"
+              placeholder="Any special delivery instructions or notes"></textarea>
+          </div>
+        </form>
+
+        <!-- Order Summary -->
+        <div class="order-summary">
+          <h4>Order Summary</h4>
+          <div class="order-items">
+            <div class="order-item" *ngFor="let item of cartItems">
+              <img [src]="preffix + item.product.images[0]" [alt]="item.product.name" class="item-image">
+              <div class="item-details">
+                <h5>{{ item.product.name }}</h5>
+                <div class="item-options" *ngIf="item.selectedOptions">
+                  <span *ngFor="let option of item.selectedOptions | keyvalue" class="option-tag">
+                    {{ option.value.name }}
+                  </span>
+                </div>
+                <div class="item-quantity">Qty: {{ item.quantity }}</div>
+              </div>
+              <div class="item-price">${{ item.totalPrice.toFixed(2) }}</div>
+            </div>
+          </div>
+
+          <!-- Shipping Info -->
+          <div class="shipping-line" *ngIf="shippingInfo">
+            <span class="shipping-label">{{ shippingInfo.message }}</span>
+            <span class="shipping-cost">{{ shippingInfo.cost === 0 ? 'FREE' : '$' + shippingInfo.cost.toFixed(2) }}</span>
+          </div>
+
+          <div class="total-amount">
+            <strong>Total: ${{ totalAmount.toFixed(2) }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Payment -->
+      <div class="checkout-step" *ngIf="currentStep === 2">
+        <h3>Payment</h3>
+
+        <div class="payment-info">
+          <div class="payment-details">
+            <p>You will pay <strong>${{ totalAmount.toFixed(2) }}</strong> using cryptocurrency.</p>
+            <div class="shipping-notice" *ngIf="shippingInfo">
+              <i class="fa-solid fa-truck"></i>
+              <span>{{ shippingInfo.message }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="payment-section">
+          <app-uruk-checkout-button
+            *ngIf="quoteItems.length > 0"
+            [items]="quoteItems"
+            [disableGameBalance]="true"
+            [basketMetadata]="checkoutForm.value"
+            (onPurchaseCompleted)="onPaymentSuccess()">
+          </app-uruk-checkout-button>
+
+          <div class="loading-quote" *ngIf="quoteItems.length === 0">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <span>Preparing payment options...</span>
+          </div>
+        </div>
+
+        <div class="shipping-reminder">
+          <h4>Shipping Details:</h4>
+          <p><strong>Email:</strong> {{ checkoutForm.value.contactEmail }}</p>
+          <p><strong>Address:</strong> {{ checkoutForm.value.shippingAddress }}</p>
+          <p *ngIf="checkoutForm.value.phoneNumber"><strong>Phone:</strong> {{ checkoutForm.value.phoneNumber }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        *ngIf="currentStep === 1"
+        class="btn btn-primary"
+        (click)="proceedToPayment()"
+        [disabled]="loading">
+        Continue to Payment
+      </button>
+
+      <button
+        *ngIf="currentStep === 2"
+        class="btn btn-secondary"
+        (click)="goBackToShipping()"
+        [disabled]="loading">
+        Back to Shipping
+      </button>
+    </div>
+  </div>
+</div>

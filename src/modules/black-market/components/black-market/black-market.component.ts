@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import * as THREE from 'three';
 
 @Component({
@@ -8,7 +9,7 @@ import * as THREE from 'three';
   templateUrl: './black-market.component.html',
   styleUrls: ['./black-market.component.scss']
 })
-export class BlackMarketComponent implements OnInit, AfterViewInit, OnDestroy {
+export class BlackMarketComponent extends TemplatePage implements OnInit, AfterViewInit, OnDestroy {
   activeSection: string | null = null;
   @ViewChild('animatedParticles', { static: true }) particlesContainer: ElementRef;
 
@@ -19,7 +20,9 @@ export class BlackMarketComponent implements OnInit, AfterViewInit, OnDestroy {
   private animationFrameId: number;
   private clock = new THREE.Clock();
 
-  constructor(private router: Router, private location: Location) { }
+  constructor(private router: Router, private location: Location) {
+    super();
+  }
 
   ngOnInit(): void {
     // Initialize component

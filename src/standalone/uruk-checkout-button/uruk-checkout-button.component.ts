@@ -25,6 +25,8 @@ import { ChainSwitcherComponent } from '../chain-switcher/chain-switcher.compone
 })
 export class UrukCheckoutButtonComponent implements OnInit, OnDestroy {
   @Input() items: UrukCheckoutItem[] = [];
+  @Input() disableGameBalance: boolean = false;
+  @Input() basketMetadata?: any;
   @Output() onGamePayment = new EventEmitter<void>();
   @Output() onPurchaseCompleted = new EventEmitter<void>();
   public prefix = ViewportService.getPreffixImg();
@@ -55,11 +57,15 @@ export class UrukCheckoutButtonComponent implements OnInit, OnDestroy {
   protected readonly Math = Math;
 
   get totalPriceBasketInUruks() {
-    return this.items.reduce((acc, item) => acc + item.price, 0);
+    return this.items.reduce((acc, item) => acc + item.priceUruks, 0);
   }
 
   get isWeb2User() {
     return this.authService.loggedWithEmail();
+  }
+
+  get canPayWithGameBalance() {
+    return this.isWeb2User && !this.disableGameBalance;
   }
 
   constructor() {
@@ -94,9 +100,11 @@ export class UrukCheckoutButtonComponent implements OnInit, OnDestroy {
       const quoteItems = this.items.map(item => ({
         type: item.productType,
         quantity: 1,
-        priceUruks: item.price,
-        priceNative: 0,
-        id: item.backendId.toString()
+        priceUruks: item.priceUruks ?? 0,
+        priceNative: item.priceNative ?? 0,
+        priceUSD: item.priceUSD ?? 0,
+        id: item.backendId.toString(),
+        metadata: item.metadata || ""
       }));
 
       this.currentQuote = await this.urukCheckoutService.getQuote(quoteItems).toPromise();
@@ -169,7 +177,7 @@ export class UrukCheckoutButtonComponent implements OnInit, OnDestroy {
       this.spinnerService.show();
       this.setPaymentStatus('Processing URUK payment...', 'info', 'fa-solid fa-spinner fa-spin');
 
-      await this.urukCheckoutContractService.createAndPayBasketWithUruks(this.currentQuote);
+      await this.urukCheckoutContractService.createAndPayBasketWithUruks(this.currentQuote, this.basketMetadata);
       this.setPaymentStatus('Payment successful!', 'success', 'fa-solid fa-check-circle');
       this.handlePurchaseCompleted()
     } catch (error: any) {
@@ -190,7 +198,7 @@ export class UrukCheckoutButtonComponent implements OnInit, OnDestroy {
       this.spinnerService.show();
       this.setPaymentStatus('Processing native token payment...', 'info', 'fa-solid fa-spinner fa-spin');
 
-      await this.urukCheckoutContractService.createAndPayBasketWithNative(this.currentQuote);
+      await this.urukCheckoutContractService.createAndPayBasketWithNative(this.currentQuote, this.basketMetadata);
       this.setPaymentStatus('Payment successful!', 'success', 'fa-solid fa-check-circle');
       this.handlePurchaseCompleted()
     } catch (error: any) {

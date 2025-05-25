@@ -1,69 +1,342 @@
-<div class="product-detail-overlay" (click)="closeModal()">
-  <div class="product-detail-modal" (click)="$event.stopPropagation()">
-    <button class="close-button" (click)="closeModal()">
-      <i class="fa-solid fa-times"></i>
-    </button>
+<div class="product-modal-overlay" (click)="closeModal()">
+  <div class="product-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ product?.name }}</h2>
+      <button class="close-btn" (click)="closeModal()">
+        <i class="fa-solid fa-times"></i>
+      </button>
+    </div>
 
-    <div class="product-detail-content">
-      <div class="product-images">
-        <div class="main-image">
-          <button class="image-nav prev" (click)="prevImage()">
-            <i class="fa-solid fa-chevron-left"></i>
-          </button>
-          <img [src]="product.images[currentImageIndex]" [alt]="product.name">
-          <button class="image-nav next" (click)="nextImage()">
-            <i class="fa-solid fa-chevron-right"></i>
-          </button>
-        </div>
-
-        <div class="image-thumbnails" *ngIf="product.images.length > 1">
-          <div
-            class="thumbnail"
-            *ngFor="let image of product.images; let i = index"
-            [ngClass]="{'active': currentImageIndex === i}"
-            (click)="changeImage(i)">
-            <img [src]="image" [alt]="product.name + ' thumbnail ' + i">
+    <div class="modal-body">
+      <div
+        class="product-showcase"
+        [ngClass]="{ 'simple-product': !hasSelectableOptions() }"
+      >
+        <!-- Product Image Section -->
+        <div class="product-image-section">
+          <!-- Preview Toggle Buttons (only for customizable products with design options) -->
+          <div class="preview-toggle" *ngIf="hasDesignOptions()">
+            <button
+              class="toggle-btn"
+              [class.active]="previewSide === 'front'"
+              (click)="switchPreviewSide('front')"
+            >
+              <i class="fa-solid fa-user"></i> Front View
+            </button>
+            <button
+              class="toggle-btn"
+              [class.active]="previewSide === 'back'"
+              (click)="switchPreviewSide('back')"
+            >
+              <i class="fa-solid fa-user-ninja"></i> Back View
+            </button>
           </div>
-        </div>
-      </div>
 
-      <div class="product-info">
-        <h2 class="product-name">{{ product.name }}</h2>
-        <p class="product-price">{{ product.price | currency:'USD' }}</p>
-        <p class="product-description">{{ product.description }}</p>
+          <div class="main-image">
+            <img [src]="preffix + selectedImage" [alt]="product?.name" />
+            <!-- Preview indicator only for design products -->
+            <div class="preview-indicator" *ngIf="hasDesignOptions()">
+              <span class="preview-label"
+                >{{ previewSide === 'front' ? 'Front' : 'Back' }} View</span
+              >
+            </div>
+          </div>
 
-        <div class="product-options" *ngIf="product.options">
-          <div class="option-group" *ngFor="let option of product.options">
-            <h3 class="option-title">{{ option.type | titlecase }}</h3>
+          <!-- Selected Options Summary (only for customizable products) -->
+          <div class="selection-summary" *ngIf="hasSelectableOptions()">
+            <h4>Your Selection:</h4>
 
-            <div class="option-values">
-              <div
-                class="option-value"
-                *ngFor="let value of option.values"
-                [ngClass]="{'selected': isOptionSelected(option.type, value)}"
-                (click)="selectOption(option.type, value)">
+            <!-- Basic options -->
+            <div class="summary-item" *ngIf="selectedOptions['size']">
+              <strong>Size:</strong> {{ selectedOptions['size'].name }}
+            </div>
+            <div class="summary-item" *ngIf="selectedOptions['color']">
+              <strong>Color:</strong> {{ selectedOptions['color'].name }}
+            </div>
 
-                <div class="option-image" *ngIf="value.image">
-                  <img [src]="value.image" [alt]="value.name">
-                </div>
-                <span class="option-name">{{ value.name }}</span>
-              </div>
+            <!-- Design options (only if product has them) -->
+            <div class="summary-item" *ngIf="selectedOptions['front_design']">
+              <strong>Front:</strong> {{ selectedOptions['front_design'].name }}
+              <span *ngIf="selectedOptions['front_sticker_choice']">
+                + {{ selectedOptions['front_sticker_choice'].name }}
+              </span>
+            </div>
+            <div class="summary-item" *ngIf="selectedOptions['back_design']">
+              <strong>Back:</strong> {{ selectedOptions['back_design'].name }}
+              <span *ngIf="selectedOptions['back_sticker_choice']">
+                + {{ selectedOptions['back_sticker_choice'].name }}
+              </span>
+            </div>
+
+            <!-- Show message if no customizations yet -->
+            <div
+              class="summary-item"
+              *ngIf="
+                !selectedOptions['front_design'] &&
+                !selectedOptions['back_design'] &&
+                !selectedOptions['size']
+              "
+            >
+              <em>Make your selections above</em>
             </div>
           </div>
         </div>
 
-        <div class="quantity-selector">
-          <h3 class="quantity-title">Quantity</h3>
-          <div class="quantity-controls">
-            <button class="quantity-btn" (click)="decrementQuantity()">-</button>
-            <span class="quantity-value">{{ quantity }}</span>
-            <button class="quantity-btn" (click)="incrementQuantity()">+</button>
+        <!-- Product Options Section -->
+        <div class="product-options-section">
+          <div class="product-info">
+            <h3>{{ product?.name }}</h3>
+            <p class="product-description">{{ product?.description }}</p>
+            <div class="price-display">
+              <span class="price">${{ finalPrice.toFixed(2) }}</span>
+              <span
+                class="base-price"
+                *ngIf="finalPrice !== (product?.price || 0) * quantity"
+              >
+                Base: ${{ (product?.price || 0).toFixed(2) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Customization Options (only if product is customizable) -->
+          <div class="customization-section" *ngIf="hasSelectableOptions()">
+            <!-- Size Selection -->
+            <div
+              class="option-group"
+              *ngIf="getOptionByType('size') as sizeOption"
+            >
+              <label class="option-label">Size *</label>
+              <div class="option-buttons">
+                <button
+                  *ngFor="let size of sizeOption.values"
+                  class="option-btn"
+                  [class.selected]="isOptionSelected('size', size.id)"
+                  (click)="selectOption('size', size)"
+                >
+                  {{ size.name }}
+                  <span *ngIf="size.priceModifier" class="price-modifier">
+                    +${{ size.priceModifier.toFixed(2) }}
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Color Selection -->
+            <div
+              class="option-group"
+              *ngIf="getOptionByType('color') as colorOption"
+            >
+              <label class="option-label">Color *</label>
+              <div class="option-buttons">
+                <button
+                  *ngFor="let color of colorOption.values"
+                  class="option-btn"
+                  [class.selected]="isOptionSelected('color', color.id)"
+                  (click)="selectOption('color', color)"
+                >
+                  {{ color.name }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Front Design Selection -->
+            <div
+              class="option-group"
+              *ngIf="getOptionByType('front_design') as frontOption"
+            >
+              <label class="option-label">Front Design *</label>
+              <div class="design-options">
+                <div
+                  *ngFor="let design of frontOption.values"
+                  class="design-option"
+                  [class.selected]="isOptionSelected('front_design', design.id)"
+                  (click)="selectOption('front_design', design)"
+                >
+                  <div class="design-preview">
+                    <img [src]="preffix + design.image" [alt]="design.name" />
+                  </div>
+
+                  <div class="design-info">
+                    <h4>{{ design.name }}</h4>
+                    <span class="design-price" *ngIf="design.priceModifier">
+                      +${{ design.priceModifier.toFixed(2) }}
+                    </span>
+                    <span
+                      class="design-price included"
+                      *ngIf="
+                        !design.priceModifier || design.priceModifier === 0
+                      "
+                    >
+                      Included
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Front Sticker Choice -->
+            <div
+              class="option-group sticker-section"
+              *ngIf="
+                showFrontStickerChoice &&
+                getOptionByType('front_sticker_choice') as stickerOption
+              "
+            >
+              <label class="option-label">Choose Front Sticker *</label>
+              <div class="sticker-grid">
+                <div
+                  *ngFor="let sticker of stickerOption.values"
+                  class="sticker-option"
+                  [class.selected]="
+                    isOptionSelected('front_sticker_choice', sticker.id)
+                  "
+                  (click)="selectOption('front_sticker_choice', sticker)"
+                >
+                  <div class="sticker-preview">
+                    <img [src]="preffix + sticker.image" [alt]="sticker.name" />
+                  </div>
+                  <span class="sticker-name">{{ sticker.name }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Back Design Selection -->
+            <div
+              class="option-group"
+              *ngIf="getOptionByType('back_design') as backOption"
+            >
+              <label class="option-label">Back Design *</label>
+              <div class="design-options">
+                <div
+                  *ngFor="let design of backOption.values"
+                  class="design-option"
+                  [class.selected]="isOptionSelected('back_design', design.id)"
+                  (click)="selectOption('back_design', design)"
+                >
+                  <div class="design-preview">
+                    <img [src]="preffix + design.image" [alt]="design.name" />
+                  </div>
+
+                  <div class="design-info">
+                    <h4>{{ design.name }}</h4>
+                    <span class="design-price" *ngIf="design.priceModifier">
+                      +${{ design.priceModifier.toFixed(2) }}
+                    </span>
+                    <span
+                      class="design-price included"
+                      *ngIf="
+                        !design.priceModifier || design.priceModifier === 0
+                      "
+                    >
+                      Included
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Back Sticker Choice -->
+            <div
+              class="option-group sticker-section"
+              *ngIf="
+                showBackStickerChoice &&
+                getOptionByType('back_sticker_choice') as stickerOption
+              "
+            >
+              <label class="option-label">Choose Back Sticker *</label>
+              <div class="sticker-grid">
+                <div
+                  *ngFor="let sticker of stickerOption.values"
+                  class="sticker-option"
+                  [class.selected]="
+                    isOptionSelected('back_sticker_choice', sticker.id)
+                  "
+                  (click)="selectOption('back_sticker_choice', sticker)"
+                >
+                  <div class="sticker-preview">
+                    <img [src]="preffix + sticker.image" [alt]="sticker.name" />
+                  </div>
+                  <span class="sticker-name">{{ sticker.name }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quantity (always shown) -->
+          <div class="quantity-section">
+            <label class="option-label">Quantity</label>
+            <div class="quantity-controls">
+              <button
+                class="qty-btn"
+                (click)="updateQuantity(quantity - 1)"
+                [disabled]="quantity <= 1"
+              >
+                <i class="fa-solid fa-minus"></i>
+              </button>
+              <span class="quantity-display">{{ quantity }}</span>
+              <button class="qty-btn" (click)="updateQuantity(quantity + 1)">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Add to Cart Button (always shown) -->
+          <button
+            class="add-to-cart-btn"
+            [disabled]="!canAddToCart()"
+            (click)="addProductToCart()"
+          >
+            Add to Cart - ${{ finalPrice.toFixed(2) }}
+          </button>
+
+          <!-- Requirements Info (only for customizable products) -->
+          <div
+            class="requirements-info"
+            *ngIf="!canAddToCart() && hasSelectableOptions()"
+          >
+            <p>Please complete your selection:</p>
+            <ul>
+              <li *ngIf="!selectedOptions['size'] && getOptionByType('size')">
+                Size is required
+              </li>
+              <li *ngIf="!selectedOptions['color'] && getOptionByType('color')">
+                Color is required
+              </li>
+              <li
+                *ngIf="
+                  !selectedOptions['front_design'] &&
+                  getOptionByType('front_design')
+                "
+              >
+                Front design is required
+              </li>
+              <li
+                *ngIf="
+                  !selectedOptions['back_design'] &&
+                  getOptionByType('back_design')
+                "
+              >
+                Back design is required
+              </li>
+              <li
+                *ngIf="
+                  showFrontStickerChoice &&
+                  !selectedOptions['front_sticker_choice']
+                "
+              >
+                Front sticker choice is required
+              </li>
+              <li
+                *ngIf="
+                  showBackStickerChoice &&
+                  !selectedOptions['back_sticker_choice']
+                "
+              >
+                Back sticker choice is required
+              </li>
+            </ul>
           </div>
         </div>
-
-        <button class="add-to-cart-btn" (click)="addItemToCart()">
-          Add to Cart
-        </button>
       </div>
     </div>
   </div>

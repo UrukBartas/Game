@@ -6,7 +6,7 @@ import { Component, HostBinding } from '@angular/core';
   styles: [],
 })
 export class TemplatePage {
-  @HostBinding('class') class = 'h-100 w-100 d-block';
+  @HostBinding('class') class = 'h-100 w-100 d-block overflow-auto';
 
   setPageClass(customClass: string) {
     if (customClass) {

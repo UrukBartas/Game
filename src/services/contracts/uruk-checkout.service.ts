@@ -20,7 +20,7 @@ export class UrukCheckoutService extends ContractService {
     return this.executeReadContract<string>('calculateBasketFee', [itemsLength]);
   }
 
-  public async createAndPayBasketWithUruks(quote: Quote) {
+  public async createAndPayBasketWithUruks(quote: Quote, metadata = {}) {
     try {
       // Convert items to BasketItem array with proper decimal handling
       const basketItems = quote.items.map(item => ({
@@ -28,7 +28,8 @@ export class UrukCheckoutService extends ContractService {
         quantity: item.quantity,
         urukPrice: ethers.parseEther(item.priceUruks.toFixed(18)),
         nativePrice: 0,
-        backendId: item.id
+        backendId: item.id,
+        metadata: item.metadata || ""
       }));
 
       // Calculate total amount and approve spending
@@ -39,6 +40,15 @@ export class UrukCheckoutService extends ContractService {
         true
       );
 
+      // Generate basket metadata (can include shipping info, user preferences, etc.)
+      const basketMetadata = JSON.stringify({
+        timestamp: Date.now(),
+        chainId: quote.chainId,
+        itemCount: quote.items.length,
+        paymentMethod: 'URUK',
+        ...metadata
+      });
+
       // Execute the contract call with the new structure
       const { receipt } = await this.triggerTx(
         () => this.executeWriteContract(
@@ -46,7 +56,8 @@ export class UrukCheckoutService extends ContractService {
           [
             basketItems,
             quote.verificationHash,
-            totalAmount
+            totalAmount,
+            basketMetadata
           ]
         ),
         'Payment successful',
@@ -86,7 +97,7 @@ export class UrukCheckoutService extends ContractService {
     }
   }
 
-  public async createAndPayBasketWithNative(quote: Quote) {
+  public async createAndPayBasketWithNative(quote: Quote, metadata = {}) {
     try {
       // Format numbers with proper decimal handling
       const basePriceNative = ethers.parseEther(quote.totalPriceNative.toFixed(18));
@@ -95,12 +106,22 @@ export class UrukCheckoutService extends ContractService {
         quantity: item.quantity,
         urukPrice: ethers.parseEther(item.priceUruks.toFixed(18)),
         nativePrice: ethers.parseEther(item.priceNative.toFixed(18)),
-        backendId: item.id
+        backendId: item.id,
+        metadata: item.metadata || ""
       }));
 
       // Get fees using the new dynamic fee calculation
       const fees = await this.calculateBasketFee(basketItems.length);
       const totalAmountToSend = basePriceNative + BigInt(fees);
+
+      // Generate basket metadata (can include shipping info, user preferences, etc.)
+      const basketMetadata = JSON.stringify({
+        timestamp: Date.now(),
+        chainId: quote.chainId,
+        itemCount: quote.items.length,
+        paymentMethod: 'NATIVE',
+        ...metadata
+      });
 
       // Execute the contract call with the new structure
       const { receipt } = await this.triggerTx(
@@ -109,7 +130,8 @@ export class UrukCheckoutService extends ContractService {
           [
             basketItems,
             quote.verificationHash,
-            basePriceNative
+            basePriceNative,
+            basketMetadata
           ],
           totalAmountToSend
         ),

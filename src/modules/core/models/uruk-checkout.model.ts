@@ -5,7 +5,9 @@ export interface QuoteItem {
   quantity: number;
   priceUruks: number;
   priceNative: number;
+  priceUSD?: number;
   id: string;
+  metadata?: string; // JSON string with item customization details
 }
 
 
@@ -18,7 +20,10 @@ export interface PaymentStatus {
 export interface UrukCheckoutItem {
   productType: ProductType;
   backendId: number;
-  price: number;
+  priceUruks: number;
+  priceNative: number;
+  priceUSD?: number;
+  metadata?: string; // JSON string with item customization details
 }
 
 export interface Quote {

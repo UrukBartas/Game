@@ -16,16 +16,18 @@ export class ApiBaseService {
   protected store = inject(Store);
   protected spinnerService = inject(NgxSpinnerService);
 
-  constructor(protected _http: HttpClient) {}
+  constructor(protected _http: HttpClient) { }
 
   public get(
     endpoint: string,
     ignoreError?: boolean,
-    withCredentials = true
+    withCredentials = true,
+    params?: any
   ): Observable<any> {
     return this._http
       .get(environment.apiUrl + this.controllerPrefix + endpoint, {
         withCredentials,
+        params
       })
       .pipe(catchError((err) => this.handleError(err, ignoreError)));
   }
@@ -49,6 +51,19 @@ export class ApiBaseService {
   ): Observable<any> {
     return this._http
       .post(environment.apiUrl + this.controllerPrefix + endpoint, body, {
+        withCredentials: true,
+      })
+      .pipe(catchError((err) => this.handleError(err, ignoreError)));
+  }
+
+
+  public put(
+    endpoint: string,
+    body: any,
+    ignoreError?: boolean
+  ): Observable<any> {
+    return this._http
+      .put(environment.apiUrl + this.controllerPrefix + endpoint, body, {
         withCredentials: true,
       })
       .pipe(catchError((err) => this.handleError(err, ignoreError)));

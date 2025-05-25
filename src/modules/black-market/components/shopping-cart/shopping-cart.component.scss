@@ -265,7 +265,8 @@ $gold-dark: #785a28;
       border-top: 1px solid rgba($gold-dark, 0.3);
       font-weight: 700;
 
-      .summary-label, .summary-value {
+      .summary-label,
+      .summary-value {
         font-size: 1.2rem;
         color: $gold-primary;
       }
@@ -298,7 +299,11 @@ $gold-dark: #785a28;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 
     &:hover {
-      background: linear-gradient(to bottom, lighten($gold-primary, 5%), $gold-primary);
+      background: linear-gradient(
+        to bottom,
+        lighten($gold-primary, 5%),
+        $gold-primary
+      );
       transform: translateY(-2px);
       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
     }
@@ -307,27 +312,26 @@ $gold-dark: #785a28;
       transform: translateY(0);
     }
   }
+}
+.continue-shopping-btn {
+  width: 100%;
+  padding: 0.8rem;
+  background: transparent;
+  border: 1px solid $gold-dark;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $gold-light;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
 
-  .continue-shopping-btn {
-    width: 100%;
-    padding: 0.8rem;
-    background: transparent;
-    border: 1px solid $gold-dark;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: $gold-light;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  &:hover {
+    background: rgba($gold-dark, 0.2);
+    transform: translateY(-2px);
+  }
 
-    &:hover {
-      background: rgba($gold-dark, 0.2);
-      transform: translateY(-2px);
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
+  &:active {
+    transform: translateY(0);
   }
 }

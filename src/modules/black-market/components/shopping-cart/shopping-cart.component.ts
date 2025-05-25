@@ -1,56 +1,66 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ViewportService } from 'src/services/viewport.service';
+import { CartItemWithProduct } from '../../services/store.service';
 
 @Component({
   selector: 'app-shopping-cart',
   templateUrl: './shopping-cart.component.html',
   styleUrls: ['./shopping-cart.component.scss']
 })
-export class ShoppingCartComponent {
-  @Input() cartItems: any[] = [];
+export class ShoppingCartComponent implements OnInit {
+  @Input() cartItems: CartItemWithProduct[] = [];
+  @Input() isOpen: boolean = false;
   @Output() close = new EventEmitter<void>();
-  @Output() updateQuantity = new EventEmitter<{index: number, quantity: number}>();
+  @Output() updateQuantity = new EventEmitter<{ index: number, quantity: number }>();
   @Output() removeItem = new EventEmitter<number>();
   @Output() checkout = new EventEmitter<void>();
+  @Output() refreshCart = new EventEmitter<void>();
+  public preffix = ViewportService.getPreffixImg();
+  isCheckoutModalOpen: boolean = false;
 
-  constructor() { }
-
-  getItemTotal(item: any): number {
-    return item.product.price * item.quantity;
-  }
-
-  getCartTotal(): number {
-    return this.cartItems.reduce((total, item) => total + this.getItemTotal(item), 0);
-  }
-
-  incrementQuantity(index: number): void {
-    const newQuantity = this.cartItems[index].quantity + 1;
-    this.updateQuantity.emit({ index, quantity: newQuantity });
-  }
-
-  decrementQuantity(index: number): void {
-    if (this.cartItems[index].quantity > 1) {
-      const newQuantity = this.cartItems[index].quantity - 1;
-      this.updateQuantity.emit({ index, quantity: newQuantity });
-    }
-  }
-
-  removeCartItem(index: number): void {
-    this.removeItem.emit(index);
-  }
+  ngOnInit(): void { }
 
   closeCart(): void {
     this.close.emit();
   }
 
-  proceedToCheckout(): void {
-    this.checkout.emit();
+  onUpdateQuantity(index: number, quantity: number): void {
+    this.updateQuantity.emit({ index, quantity });
   }
 
-  getOptionLabel(item: any): string {
+  onRemoveItem(index: number): void {
+    this.removeItem.emit(index);
+  }
+
+  openCheckout(): void {
+    this.isCheckoutModalOpen = true;
+  }
+
+  closeCheckout(): void {
+    this.isCheckoutModalOpen = false;
+  }
+
+  onOrderCreated(order: any): void {
+    this.closeCheckout();
+    this.closeCart();
+    // Emit event to refresh the cart in the parent component
+    this.refreshCart.emit();
+    console.log('Order created successfully:', order);
+  }
+
+  getTotalPrice(): number {
+    return this.cartItems.reduce((total, item) => total + item.totalPrice, 0);
+  }
+
+  getTotalItems(): number {
+    return this.cartItems.reduce((total, item) => total + item.quantity, 0);
+  }
+
+  getSelectedOptionsText(item: CartItemWithProduct): string {
     if (!item.selectedOptions) return '';
 
     return Object.entries(item.selectedOptions)
-      .map(([key, value]: [string, any]) => `${key}: ${value.name}`)
+      .map(([type, option]) => option.name)
       .join(', ');
   }
 }
