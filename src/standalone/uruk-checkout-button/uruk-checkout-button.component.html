@@ -3,9 +3,9 @@
   <button
     type="button"
     class="btn btn-game-balance w-100"
-    [class.mb-3]="!canPayWithGameBalance"
+    [class.mb-3]="!isWeb2User"
     (click)="payWithGameBalance()"
-    [disabled]="(!canPayWithGameBalance) || (!isWeb2User && (!currentQuote || isLoadingQuote))"
+    [disabled]="!isWeb2User && (!currentQuote || isLoadingQuote)"
   >
     <div class="d-flex align-items-center justify-content-between w-100">
       <span class="d-flex align-items-center">
@@ -22,7 +22,7 @@
     </div>
   </button>
 </ng-template>
-@if (canPayWithGameBalance) {
+@if (isWeb2User) {
   <ng-container *ngTemplateOutlet="gameBalancePayment"></ng-container>
 } @else {
   <button
@@ -43,7 +43,9 @@
   <div class="popup-header">
     <i class="fa-solid fa-xmark close-icon pointer" (click)="togglePopup()"></i>
     <h4 class="text-center">
-      {{ canPayWithGameBalance ? 'Game Balance Payment' : 'Choose Payment Method' }}
+      {{
+        canPayWithGameBalance ? 'Game Balance Payment' : 'Choose Payment Method'
+      }}
     </h4>
 
     <!-- Loading State -->
@@ -93,7 +95,7 @@
 
   <!-- Game Balance Payment -->
   <ng-container *ngIf="canPayWithGameBalance">
-  <ng-container *ngTemplateOutlet="gameBalancePayment"></ng-container>
+    <ng-container *ngTemplateOutlet="gameBalancePayment"></ng-container>
   </ng-container>
 
   <!-- Web3 Payment Options -->

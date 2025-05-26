@@ -65,7 +65,7 @@ export class UrukCheckoutButtonComponent implements OnInit, OnDestroy {
   }
 
   get canPayWithGameBalance() {
-    return this.isWeb2User && !this.disableGameBalance;
+    return !this.disableGameBalance;
   }
 
   constructor() {

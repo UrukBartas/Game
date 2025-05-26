@@ -62,6 +62,7 @@ export class GameLayoutComponent {
       path: '/black-market',
       displayText: 'Black market',
       icon: 'text-rainbow fa fa-skull-crossbones',
+      onlyWeb3: true,
     },
     {
       path: '/inventory',
