@@ -25,7 +25,7 @@ export class CoinFlipComponent implements OnInit, AfterViewInit {
   @ViewChild('coin') coinElement: ElementRef<HTMLDivElement>;
 
   public prefix = ViewportService.getPreffixImg();
-  public betAmount = new FormControl(10, [Validators.required, Validators.min(1), Validators.max(10000)]);
+  public betAmount = new FormControl(10, [Validators.required, Validators.min(1), Validators.max(5000)]);
   public isFlipping = false;
   public lastResult: { outcome: string, winAmount: number, rewardItems?: Array<{ itemId: string; quantity: number }> } | null = null;
   public playerBalance$ = this.store.select(MainState.getPlayer).pipe(map(player => player.uruks || 0));
