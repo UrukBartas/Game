@@ -1,18 +1,24 @@
-<div class="fortune-wheel-container">
-  <div class="wheel-header">
-    <h2><i class="fas fa-dharmachakra"></i> Wheel of Fortune</h2>
-    <p class="wheel-description">
-      Test your luck on the Wheel of Fortune! Choose a multiplier, place your
-      bet, and spin to win!
+<div class="coin-flip-container">
+  <div class="coin-header">
+    <h2><i class="fas fa-coins"></i> Coin Flip</h2>
+    <p class="coin-description">
+      Test your luck with the magical coin! Choose heads, tails, or try for the rare goblin for bonus rewards!
     </p>
   </div>
 
-  <div class="wheel-game-area">
-    <div class="wheel-section">
-      <div class="wheel-container">
-        <canvas #wheel class="fortune-wheel"></canvas>
-        <div #marker class="wheel-marker">
-          <i class="fas fa-caret-down"></i>
+  <div class="coin-game-area">
+    <div class="coin-section">
+      <div class="coin-container">
+        <div #coin class="coin" [class.flipping]="isFlipping">
+          <div class="coin-face coin-heads">
+            <img [src]="prefix + '/assets/only_logo_front.png'" alt="Heads">
+          </div>
+          <div class="coin-face coin-tails">
+            <img [src]="prefix + '/assets/only_logo_back.png'" alt="Tails">
+          </div>
+          <div class="coin-face coin-goblin">
+            <img [src]="prefix + '/assets/goblin_coin.png'" alt="Goblin">
+          </div>
         </div>
       </div>
     </div>
@@ -21,26 +27,20 @@
       class="controls-section"
       *ngIf="playerBalance$ | async as playerBalance"
     >
-
-      <div class="multiplier-selection">
-        <h3>Choose your multiplier</h3>
-        <div class="multiplier-buttons">
+      <div class="outcome-selection">
+        <h3>Choose your bet</h3>
+        <div class="outcome-buttons">
           <button
-            *ngFor="
-              let segment of [
-                { multiplier: 2, color: '#3498db', label: 'x2' },
-                { multiplier: 3, color: '#2ecc71', label: 'x3' },
-                { multiplier: 5, color: '#f39c12', label: 'x5' },
-                { multiplier: 10, color: '#9b59b6', label: 'x10' },
-              ]
-            "
-            class="multiplier-btn"
-            [style.background-color]="segment.color"
-            [class.selected]="isMultiplierSelected(segment.multiplier)"
-            (click)="selectMultiplier(segment.multiplier)"
-            [disabled]="isSpinning"
+            *ngFor="let outcome of outcomes"
+            class="outcome-btn"
+            [style.background-color]="outcome.color"
+            [class.selected]="isOutcomeSelected(outcome.outcome)"
+            (click)="selectOutcome(outcome.outcome)"
+            [disabled]="isFlipping"
           >
-            {{ segment.label }}
+            {{ outcome.label }}
+            <small *ngIf="outcome.outcome === 'heads' || outcome.outcome === 'tails'">(47.5%)</small>
+            <small *ngIf="outcome.outcome === 'goblin'">(5%)</small>
           </button>
         </div>
       </div>
@@ -53,7 +53,7 @@
               id="betAmount"
               type="number"
               [formControl]="betAmount"
-              [disabled]="isSpinning"
+              [disabled]="isFlipping"
               min="1"
               max="10000"
               placeholder="Enter bet amount"
@@ -63,7 +63,7 @@
                 (click)="
                   betAmount.setValue(Math.max(1, (betAmount.value || 0) / 2))
                 "
-                [disabled]="isSpinning"
+                [disabled]="isFlipping"
               >
                 ½
               </button>
@@ -71,7 +71,7 @@
                 (click)="
                   betAmount.setValue(Math.min(10000, (betAmount.value || 0) * 2))
                 "
-                [disabled]="isSpinning"
+                [disabled]="isFlipping"
               >
                 2x
               </button>
@@ -79,7 +79,7 @@
                 (click)="
                   betAmount.setValue(Math.min(Math.min(playerBalance, 10000), playerBalance))
                 "
-                [disabled]="isSpinning"
+                [disabled]="isFlipping"
               >
                 Max
               </button>
@@ -93,25 +93,26 @@
         </div>
 
         <button
-          class="spin-button"
-          (click)="spinWheel()"
-          [disabled]="isSpinning || !betAmount.valid || !selectedMultiplier"
+          class="flip-button"
+          (click)="flipCoin()"
+          [disabled]="isFlipping || !betAmount.valid || !selectedOutcome"
         >
-          <i class="fas fa-sync-alt" [class.fa-spin]="isSpinning"></i>
-          {{ isSpinning ? 'Spinning...' : 'Spin the Wheel' }}
+          <i class="fas fa-sync-alt" [class.fa-spin]="isFlipping"></i>
+          {{ isFlipping ? 'Flipping...' : 'Flip the Coin' }}
         </button>
       </div>
 
-      <div class="result-display" *ngIf="lastResult && !isSpinning">
-        <div class="result-header">Last Spin Result:</div>
+      <div class="result-display" *ngIf="lastResult && !isFlipping">
+        <div class="result-header">Last Flip Result:</div>
         <div
           class="result-content"
           [ngClass]="{
-            win: lastResult.multiplier > 0 && lastResult.winAmount > 0,
-            lose: lastResult.multiplier === 0,
+            win: lastResult.winAmount > 0,
+            lose: lastResult.winAmount <= 0,
+            goblin: lastResult.outcome === 'goblin'
           }"
         >
-          <div class="result-multiplier">{{ lastResult.multiplier === 0 ? 'LOSE' : 'x' + lastResult.multiplier }}</div>
+          <div class="result-outcome">{{ getOutcomeDisplayName(lastResult.outcome) }}</div>
           <div class="result-amount">
             <img
               class="uruks-icon-small"
@@ -120,20 +121,28 @@
             />
             {{ lastResult.winAmount | number: '1.0-0' }}
           </div>
+          <div class="reward-items" *ngIf="lastResult.rewardItems && lastResult.rewardItems.length > 0">
+            <div class="bonus-label">Bonus Items:</div>
+            <div class="items-list">
+              <span *ngFor="let item of lastResult.rewardItems" class="reward-item">
+                {{ item.quantity }}x {{ item.itemId }}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Spin History Section -->
-  <div class="spin-history-section">
-    <h3>Recent Spins</h3>
+  <!-- Flip History Section -->
+  <div class="flip-history-section">
+    <h3>Recent Flips</h3>
     <div class="history-loading" *ngIf="isLoadingHistory">
       <i class="fas fa-spinner fa-spin"></i> Loading history...
     </div>
     <div
       class="history-table-container"
-      *ngIf="!isLoadingHistory && spinHistory.length > 0 && !isSpinning"
+      *ngIf="!isLoadingHistory && flipHistory.length > 0 && !isFlipping"
     >
       <table class="history-table">
         <thead>
@@ -147,33 +156,37 @@
         </thead>
         <tbody>
           <tr
-            *ngFor="let spin of spinHistory"
+            *ngFor="let flip of flipHistory"
             [ngClass]="{
-              'win-row': spin.winAmount > 0,
-              'lose-row': spin.winAmount <= 0,
+              'win-row': flip.winAmount > 0,
+              'lose-row': flip.winAmount <= 0,
+              'goblin-row': flip.resultOutcome === 'goblin'
             }"
           >
-            <td>{{ formatDate(spin.createdAt) }}</td>
+            <td>{{ formatDate(flip.createdAt) }}</td>
             <td>
               <img
                 class="uruks-icon-tiny"
                 [src]="prefix + '/assets/goldenuruks.png'"
                 alt="Uruks"
               />
-              {{ spin.betAmount | number: '1.0-0' }}
+              {{ flip.betAmount | number: '1.0-0' }}
             </td>
-            <td>{{ spin.selectedMultiplier === 0 ? 'LOSE' : 'x' + spin.selectedMultiplier }}</td>
-            <td>{{ spin.resultMultiplier === 0 ? 'LOSE' : 'x' + spin.resultMultiplier }}</td>
+            <td>{{ getOutcomeDisplayName(flip.selectedOutcome) }}</td>
+            <td>{{ getOutcomeDisplayName(flip.resultOutcome) }}</td>
             <td>
               <span
                 [ngClass]="{
-                  'win-text': spin.winAmount > 0,
-                  'lose-text': spin.winAmount <= 0,
+                  'win-text': flip.winAmount > 0,
+                  'lose-text': flip.winAmount <= 0,
                 }"
               >
-                {{ spin.winAmount > 0 ? '+' : ''
-                }}{{ spin.winAmount | number: '1.0-0' }}
+                {{ flip.winAmount > 0 ? '+' : ''
+                }}{{ flip.winAmount | number: '1.0-0' }}
               </span>
+              <div *ngIf="flip.rewardItems && flip.rewardItems.length > 0" class="mini-rewards">
+                <small *ngFor="let item of flip.rewardItems">+{{ item.quantity }}x {{ item.itemId }}</small>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -181,9 +194,9 @@
     </div>
     <div
       class="no-history"
-      *ngIf="!isLoadingHistory && spinHistory.length === 0"
+      *ngIf="!isLoadingHistory && flipHistory.length === 0"
     >
-      No spin history yet. Make your first bet!
+      No flip history yet. Make your first bet!
     </div>
   </div>
 
@@ -251,7 +264,7 @@
                   <th>#</th>
                   <th>Player</th>
                   <th>Bet Amount</th>
-                  <th>Multiplier</th>
+                  <th>Outcome</th>
                   <th>Win Amount</th>
                   <th>Date</th>
                 </tr>
@@ -264,7 +277,7 @@
                     <img class="uruks-icon-tiny" [src]="prefix + '/assets/goldenuruks.png'" alt="Uruks" />
                     {{ entry.betAmount | number: '1.0-0' }}
                   </td>
-                  <td class="multiplier">{{ entry.multiplier === 0 ? 'LOSE' : 'x' + entry.multiplier }}</td>
+                  <td class="outcome">{{ getOutcomeDisplayName(entry.outcome) }}</td>
                   <td class="win-amount">
                     <img class="uruks-icon-tiny" [src]="prefix + '/assets/goldenuruks.png'" alt="Uruks" />
                     {{ entry.winAmount | number: '1.0-0' }}
@@ -314,29 +327,22 @@
     </div>
   </div>
 
-  <div class="wheel-rules">
+  <div class="coin-rules">
     <h3>How to Play</h3>
     <ol>
-      <li>Choose a multiplier (LOSE, x2, x3, x5, or x10) to bet on</li>
+      <li>Choose between Heads (47.5%), Tails (47.5%), or the rare Goblin (5%)</li>
       <li>Enter your bet amount</li>
-      <li>Spin the wheel and test your luck!</li>
-      <li>
-        If the wheel lands on your chosen multiplier, you win your bet
-        multiplied by that value
-      </li>
-      <li>
-        If the wheel lands on LOSE or a different multiplier, you lose your bet
-      </li>
+      <li>Flip the coin and test your luck!</li>
+      <li>If the coin lands on your choice, you win double your bet</li>
+      <li>Hit the Goblin for double your bet PLUS bonus items!</li>
     </ol>
 
     <div class="odds-table">
-      <h4>Wheel Segments</h4>
-      <div class="segment-row">
-        <div class="segment-cell" style="background-color: #e74c3c">LOSE (25%)</div>
-        <div class="segment-cell" style="background-color: #3498db">x2 (30%)</div>
-        <div class="segment-cell" style="background-color: #2ecc71">x3 (25%)</div>
-        <div class="segment-cell" style="background-color: #f39c12">x5 (12%)</div>
-        <div class="segment-cell" style="background-color: #9b59b6">x10 (8%)</div>
+      <h4>Coin Outcomes</h4>
+      <div class="outcome-row">
+        <div class="outcome-cell" style="background-color: #FFD700">Heads (47.5%)</div>
+        <div class="outcome-cell" style="background-color: #C0C0C0">Tails (47.5%)</div>
+        <div class="outcome-cell" style="background-color: #8B4513">Goblin (5%) + Items</div>
       </div>
     </div>
   </div>

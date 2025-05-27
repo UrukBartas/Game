@@ -57,15 +57,15 @@
           </button>
         </div>
 
-        <!-- Other game cards (coming soon) -->
-        <div class="game-card">
+        <!-- Coin Flip Game Card -->
+        <div class="game-card" (click)="selectGame('coin-flip')">
           <div class="game-icon">
             <i class="fas fa-sync-alt"></i>
           </div>
           <h3>Coin Flip</h3>
-          <p>Test your luck with a simple coin flip. Double your uruks or lose it all!</p>
-          <button class="play-btn" disabled>
-            <i class="fas fa-lock"></i> Coming Soon
+          <p>Test your luck with the magical coin! Choose heads, tails, or try for the rare goblin!</p>
+          <button class="play-btn">
+            <i class="fas fa-play"></i> Play Now
           </button>
         </div>
 
@@ -91,6 +91,9 @@
 
         <!-- Fortune Wheel Game -->
         <app-fortune-wheel *ngIf="selectedGame === 'fortune-wheel'"></app-fortune-wheel>
+
+        <!-- Coin Flip Game -->
+        <app-coin-flip *ngIf="selectedGame === 'coin-flip'"></app-coin-flip>
       </div>
     </div>
   </div>

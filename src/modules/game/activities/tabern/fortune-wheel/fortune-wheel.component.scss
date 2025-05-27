@@ -161,6 +161,23 @@
             display: block;
             color: $white-100;
             margin-bottom: 0.5rem;
+
+            small {
+              color: rgba(255, 255, 255, 0.7);
+              font-weight: normal;
+              font-size: 0.9rem;
+            }
+          }
+
+          .bet-validation {
+            margin-top: 8px;
+
+            .error-text {
+              color: #ff6b6b;
+              font-size: 0.85rem;
+              display: block;
+              margin-top: 2px;
+            }
           }
 
           .bet-input-group {

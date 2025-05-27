@@ -26,7 +26,7 @@ export class FortuneWheelComponent implements OnInit, AfterViewInit {
   @ViewChild('marker') marker: ElementRef;
 
   public prefix = ViewportService.getPreffixImg();
-  public betAmount = new FormControl(10, [Validators.required, Validators.min(1)]);
+  public betAmount = new FormControl(10, [Validators.required, Validators.min(1), Validators.max(10000)]);
   public isSpinning = false;
   public lastResult: { multiplier: number, winAmount: number } | null = null;
   public playerBalance$ = this.store.select(MainState.getPlayer).pipe(map(player => player.uruks || 0));
@@ -92,6 +92,7 @@ export class FortuneWheelComponent implements OnInit, AfterViewInit {
   private generateRandomizedSegments(): WheelSegment[] {
     // Configuración de colores para cada multiplicador
     const colorMap = {
+      0: '#e74c3c',
       2: '#3498db',
       3: '#2ecc71',
       5: '#f39c12',
@@ -100,10 +101,11 @@ export class FortuneWheelComponent implements OnInit, AfterViewInit {
 
     // Configuración de la ruleta (debe coincidir con el backend)
     const wheelConfig = [
-      { multiplier: 2, probability: 0.45 },
-      { multiplier: 3, probability: 0.30 },
-      { multiplier: 5, probability: 0.15 },
-      { multiplier: 10, probability: 0.10 }
+      { multiplier: 0, probability: 0.25 },
+      { multiplier: 2, probability: 0.30 },
+      { multiplier: 3, probability: 0.25 },
+      { multiplier: 5, probability: 0.12 },
+      { multiplier: 10, probability: 0.08 }
     ];
 
     // Total de segmentos que queremos en la rueda
@@ -120,7 +122,7 @@ export class FortuneWheelComponent implements OnInit, AfterViewInit {
       const newSegments = Array(segments).fill({
         multiplier: config.multiplier,
         color: colorMap[config.multiplier],
-        label: `x${config.multiplier}`
+        label: config.multiplier === 0 ? 'LOSE' : `x${config.multiplier}`
       });
 
       segmentsToCreate.push(...newSegments);
@@ -449,11 +451,13 @@ export class FortuneWheelComponent implements OnInit, AfterViewInit {
 
     // Mostrar mensaje de resultado
     if (multiplier === 0) {
-      this.toastr.error(`Bad luck! You lost ${Math.abs(winAmount)} uruks.`, 'Wheel of Fortune');
+      this.toastr.error(`The wheel landed on LOSE! You lost ${Math.abs(winAmount)} uruks.`, 'Wheel of Fortune');
     } else if (this.selectedMultiplier === multiplier) {
       this.toastr.success(`Congratulations! You won ${winAmount} uruks!`, 'Wheel of Fortune');
     } else {
-      this.toastr.warning(`The wheel landed on x${multiplier}. You bet on x${this.selectedMultiplier}.`, 'Wheel of Fortune');
+      const multiplierText = multiplier === 0 ? 'LOSE' : `x${multiplier}`;
+      const selectedText = this.selectedMultiplier === 0 ? 'LOSE' : `x${this.selectedMultiplier}`;
+      this.toastr.warning(`The wheel landed on ${multiplierText}. You bet on ${selectedText}.`, 'Wheel of Fortune');
     }
 
     // Resetear selección

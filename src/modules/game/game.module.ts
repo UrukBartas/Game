@@ -80,6 +80,7 @@ import { DailyRollButtonComponent } from './activities/shop/components/daily-rol
 import { ShopComponent } from './activities/shop/shop.component';
 import { ShoppingComponent } from './activities/shopping/shopping.component';
 import { ActiveMissionDisplayerComponent } from './activities/tabern/active-mission-displayer/active-mission-displayer.component';
+import { CoinFlipComponent } from './activities/tabern/coin-flip/coin-flip.component';
 import { FortuneWheelComponent } from './activities/tabern/fortune-wheel/fortune-wheel.component';
 import { MissionBoardComponent } from './activities/tabern/mission-board/mission-board.component';
 import { TabernComponent } from './activities/tabern/tabern.component';
@@ -230,6 +231,7 @@ const pipes = [
     ActiveMissionDisplayerComponent,
     MissionBoardComponent,
     FortuneWheelComponent,
+    CoinFlipComponent,
     EmojiSelectorComponent,
     FightEmojisComponent,
     ChatComponent
