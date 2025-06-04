@@ -192,7 +192,7 @@
           </button>
         } @else {
           <p class="challenge-text">Are you ready to face death?</p>
-          <button class="crypt-button crypt-button-primary" (click)="startCrypt.emit()">
+          <button class="crypt-button crypt-button-primary" appCaptcha (captchaVerified)="startCrypt.emit()">
             <i class="fas fa-skull"></i> Enter the Crypt
           </button>
         }

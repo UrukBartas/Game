@@ -57,7 +57,7 @@
             class="button-rainbow"
             [style.fontSize]="getResponsiveButtonFontSize()"
           >
-            <span (click)="startQuest()"> START PHASE </span>
+            <span appCaptcha (captchaVerified)="startQuest()"> START PHASE </span>
             <i
               (click)="questRoll()"
               *ngIf="!adventure"
@@ -89,7 +89,7 @@
           class="button-rainbow"
           [style.fontSize]="getResponsiveButtonFontSize()"
         >
-          <span (click)="startQuest()"> START QUEST </span>
+          <span appCaptcha (captchaVerified)="startQuest()"> START QUEST </span>
           <i (click)="questRoll()" *ngIf="!adventure" class="fa fa-rotate"></i>
         </button>
       }

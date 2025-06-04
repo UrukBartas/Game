@@ -128,6 +128,8 @@ import { QuestTutorialComponent } from './components/tutorials/quest-tutorial/qu
 import { ShopTutorialComponent } from './components/tutorials/shop-tutorial/shop-tutorial.component';
 import { TabernTutorialComponent } from './components/tutorials/tabern-tutorial/tabern-tutorial.component';
 import { GameRoutingModule } from './game-routing.module';
+import { CaptchaDirective } from './directives/captcha.directive';
+import { CaptchaModalComponent } from './components/captcha-modal/captcha-modal.component';
 
 const directives = [
   ValidInputDirective,
@@ -233,8 +235,9 @@ const pipes = [
     FortuneWheelComponent,
     CoinFlipComponent,
     EmojiSelectorComponent,
-    FightEmojisComponent,
-    ChatComponent
+    ChatComponent,
+    CaptchaDirective,
+    CaptchaModalComponent
   ],
   imports: [
     ...directives,

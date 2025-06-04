@@ -78,12 +78,14 @@ export class ConnectComponent
     this.walletService.disconnect();
     const urlParams = new URLSearchParams(window.location.search);
     const realmParam = urlParams.get('realm');
+    const currentHost = window.location.hostname;
+    let autoSelectedRealm: Realm = null;
+    // Buscar realm por parámetro
     if (realmParam) {
       const existingRealm = this.lastLoadedRealms.find(
         (e) => e.id == realmParam
       );
       if (existingRealm) {
-        // Check if realm is disabled
         if (existingRealm.disabled) {
           this.toast.error(
             `The realm "${existingRealm.name}" is currently disabled. Please select another realm.`,
@@ -94,23 +96,47 @@ export class ConnectComponent
         }
         await Preferences.set({ key: 'selectedRealm', value: realmParam });
         this.selectedRealm = existingRealm;
+        return;
       } else {
         console.log('realm ' + realmParam + ' does not exist');
         this.showingRealms = true;
+        return;
       }
-    } else {
-      const selectedRealm = await this.getRealmFromPreferences();
-      // Check if the stored realm is disabled
-      if (selectedRealm && selectedRealm.disabled) {
+    }
+    // Buscar realm por host
+    autoSelectedRealm = this.lastLoadedRealms.find(realm => {
+      try {
+        const realmUrl = new URL(realm.url);
+        return realmUrl.hostname === currentHost;
+      } catch {
+        return false;
+      }
+    });
+    if (autoSelectedRealm) {
+      if (autoSelectedRealm.disabled) {
         this.toast.warning(
-          `Your previously selected realm "${selectedRealm.name}" is currently disabled. Please select another realm.`,
+          `The realm for this URL ("${autoSelectedRealm.name}") is currently disabled. Please select another realm.`,
           'Realm Unavailable'
         );
         this.showingRealms = true;
         this.selectedRealm = null;
       } else {
-        this.selectedRealm = selectedRealm;
+        await Preferences.set({ key: 'selectedRealm', value: autoSelectedRealm.id });
+        this.selectedRealm = autoSelectedRealm;
       }
+      return;
+    }
+    // Si no hay realm por host, buscar en preferencias
+    const selectedRealm = await this.getRealmFromPreferences();
+    if (selectedRealm && selectedRealm.disabled) {
+      this.toast.warning(
+        `Your previously selected realm "${selectedRealm.name}" is currently disabled. Please select another realm.`,
+        'Realm Unavailable'
+      );
+      this.showingRealms = true;
+      this.selectedRealm = null;
+    } else {
+      this.selectedRealm = selectedRealm;
     }
   }
 
