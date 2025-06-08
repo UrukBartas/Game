@@ -11,6 +11,7 @@
   <ng-container *ngIf="!victory && !defeat">
     <button
       (click)="surrender()"
+      [disabled]="victory || defeat || isAnimating()"
       [class]="
         'btn btn-primary surrender-button action-button shadow ' +
         getButtonSize()
@@ -20,6 +21,7 @@
     </button>
     <button
       (click)="showCombatLog()"
+      [disabled]="victory || defeat || isAnimating()"
       [class]="
         'btn btn-primary combat-log-button action-button shadow ' +
         getButtonSize()
@@ -185,7 +187,7 @@
       </div>
       <div class="action-buttons">
         <button
-          [disabled]="victory || defeat"
+          [disabled]="victory || defeat || isAnimating()"
           (click)="doAction(turnActions.ATTACK)"
           [class]="
             'btn btn-primary action-button attack-button shadow ' +
@@ -196,7 +198,7 @@
           <span class="action-cost">1 turn</span>
         </button>
         <button
-          [disabled]="victory || defeat"
+          [disabled]="victory || defeat || isAnimating()"
           (click)="doAction(turnActions.DEFEND)"
           [class]="
             'btn btn-primary action-button defend-button shadow ' +
@@ -208,7 +210,7 @@
         </button>
 
         <button
-          [disabled]="victory || defeat"
+          [disabled]="victory || defeat || isAnimating()"
           (click)="doAction(turnActions.CHARGE)"
           [class]="
             'btn btn-primary action-button charge-button shadow ' +
@@ -219,7 +221,7 @@
           <span class="action-cost">1 turn</span>
         </button>
         <button
-          [disabled]="victory || defeat"
+          [disabled]="victory || defeat || isAnimating()"
           (click)="openConsumableModal()"
           [class]="
             'btn btn-primary action-button items-button shadow ' +
@@ -231,7 +233,7 @@
         </button>
 
         <button
-          [disabled]="victory || defeat || bonusActionsRemaining <= 0"
+          [disabled]="victory || defeat || isAnimating() || bonusActionsRemaining <= 0"
           (click)="openBonusActionModal()"
           [class]="
             'btn btn-primary action-button bonus-action-button shadow ' +

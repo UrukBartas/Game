@@ -10,6 +10,7 @@ import { FightNotificationService } from './fight-notifications.service';
 })
 export class FightAnimationsService {
   private renderer: Renderer2;
+  private readonly TURN_ANIMATION_DURATION = 500; // Duration in ms for each turn animation
 
   constructor(
     private rendererFactory: RendererFactory2,
@@ -19,20 +20,53 @@ export class FightAnimationsService {
     this.renderer = rendererFactory.createRenderer(null, null);
   }
 
-  public controlTurnActions(fight: BaseFightModel) {
+  public async controlTurnActions(
+    fight: BaseFightModel,
+    previousPlayerState?: BaseFighterModel,
+    previousEnemyState?: BaseFighterModel
+  ) {
     // Limpiar todas las animaciones antes de aplicar nuevas
     this.clearAllAnimations();
 
-    const { player, enemy } = fight;
+    const { player, enemy } = previousPlayerState && previousEnemyState ? 
+      { player: previousPlayerState, enemy: previousEnemyState } : 
+      fight;
 
-    this.processTurnAction(
+    // Si el jugador está muerto, no procesamos ningún turno
+    if (player.currentStats.health <= 0) {
+      return;
+    }
+
+    // Procesar el turno del jugador primero
+    await this.processTurnActionWithDelay(
       player,
       '.player-status-container',
       '.enemy-status-container',
       '.player-container',
       this.viewportService.screenWidth == 'xs' ? 'up' : 'right'
     );
-    this.processTurnAction(
+
+    // Si el enemigo está muerto después del turno del jugador, no procesamos su turno
+    if (enemy.currentStats.health <= 0) {
+      return;
+    }
+
+    // Calcular el tiempo de espera basado en la acción
+    const waitTime = (() => {
+      switch (player.lastTurn.action) {
+        case TurnActionEnum.BLOCKED:
+        case TurnActionEnum.MISS:
+          return this.TURN_ANIMATION_DURATION * 2; // Doble tiempo para bloqueos y misses
+        default:
+          return this.TURN_ANIMATION_DURATION;
+      }
+    })();
+
+    // Esperar antes de procesar el turno del enemigo
+    await new Promise(resolve => setTimeout(resolve, waitTime));
+
+    // Procesar el turno del enemigo después
+    await this.processTurnActionWithDelay(
       enemy,
       '.enemy-status-container',
       '.player-status-container',
@@ -41,93 +75,135 @@ export class FightAnimationsService {
     );
   }
 
-  private processTurnAction(
+  private async processTurnActionWithDelay(
     fighter: BaseFighterModel,
     imageSelector: string,
     enemyNotificationContainer: string,
     playerNotificationContainer: string,
     direction: 'right' | 'left' | 'up' | 'down'
-  ) {
-    const action = fighter.lastTurn.action;
-    const damages = fighter.lastTurn.damages;
-    const damage = damages && damages.length > 0 ? damages[0].damage : 0;
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      const action = fighter.lastTurn.action;
+      const damages = fighter.lastTurn.damages;
+      const healings = fighter.lastTurn.healings;
+      const damage = damages && damages.length > 0 ? damages[0].damage : 0;
 
-    // Update background effect for all actions
-    this.updateBackgroundEffect(action);
+      // Update background effect for all actions
+      this.updateBackgroundEffect(action);
 
-    switch (action) {
-      case TurnActionEnum.ATTACK:
-        this.handleFighterAnimation(imageSelector, `attack-${direction}`, 1);
-        if (damage > 0) {
-          const targetSelector = imageSelector === '.player-status-container' ? 'enemy' : 'player';
-          this.showDamageNumber(targetSelector, damage, false);
+      let totalAnimationTime = this.TURN_ANIMATION_DURATION;
 
-          const targetElementSelector = imageSelector === '.player-status-container' ? '.enemy-status-container' : '.player-status-container';
-          animateElement(targetElementSelector, 'damage-flash');
-        }
-        break;
+      // Determinar si es el turno del jugador o del enemigo
+      const isPlayerTurn = imageSelector === '.player-status-container';
 
-      case TurnActionEnum.CRIT:
-        this.handleFighterAnimation(
-          imageSelector,
-          `crit-attack-${direction}`,
-          1
-        );
-        if (damage > 0) {
-          const targetSelector = imageSelector === '.player-status-container' ? 'enemy' : 'player';
-          this.showDamageNumber(targetSelector, damage, true);
+      // Primero procesamos la acción principal
+      switch (action) {
+        case TurnActionEnum.ATTACK:
+          this.handleFighterAnimation(imageSelector, `attack-${direction}`, 1);
+          if (damage > 0) {
+            setTimeout(() => {
+              const targetSelector = isPlayerTurn ? 'enemy' : 'player';
+              this.showDamageNumber(targetSelector, damage, false);
+              const targetElementSelector = isPlayerTurn ? '.enemy-status-container' : '.player-status-container';
+              animateElement(targetElementSelector, 'damage-flash');
+            }, 500);
+          }
+          break;
 
-          const targetElementSelector = imageSelector === '.player-status-container' ? '.enemy-status-container' : '.player-status-container';
-          this.playCriticalHitEffect(targetElementSelector);
-        }
-        break;
+        case TurnActionEnum.CRIT:
+          this.handleFighterAnimation(imageSelector, `crit-attack-${direction}`, 1);
+          if (damage > 0) {
+            setTimeout(() => {
+              const targetSelector = isPlayerTurn ? 'enemy' : 'player';
+              this.showDamageNumber(targetSelector, damage, true);
+              const targetElementSelector = isPlayerTurn ? '.enemy-status-container' : '.player-status-container';
+              this.playCriticalHitEffect(targetElementSelector);
+            }, 500);
+          }
+          break;
 
-      case TurnActionEnum.DEFEND:
-        this.handleFighterAnimation(imageSelector, `defend-${direction}`, 1);
-        // Add defending class for glow effect
-        const element = document.querySelector(imageSelector);
-        if (element) {
-          element.classList.add('defending');
+        case TurnActionEnum.DEFEND:
+          this.handleFighterAnimation(imageSelector, `defend-${direction}`, 1);
+          const element = document.querySelector(imageSelector);
+          if (element) {
+            element.classList.add('defending');
+            setTimeout(() => {
+              element.classList.remove('defending');
+            }, 1000);
+          }
+          break;
+
+        case TurnActionEnum.CHARGE:
+          this.handleFighterAnimation(imageSelector, 'charge', 1);
+          const chargeElement = document.querySelector(imageSelector);
+          if (chargeElement) {
+            chargeElement.classList.add('charging');
+            setTimeout(() => {
+              chargeElement.classList.remove('charging');
+            }, 1000);
+          }
+          break;
+
+        case TurnActionEnum.BLOCKED:
+          totalAnimationTime = this.TURN_ANIMATION_DURATION * 2; // Doble tiempo para bloqueos
+          // Realizar la animación de ataque primero
+          this.handleFighterAnimation(imageSelector, `attack-${direction}`, 1);
+          
+          // Mostrar el bloqueo en el objetivo
+          const targetContainerBlocked = isPlayerTurn ? 
+            '.enemy-status-container' : '.player-status-container';
+          const targetNotificationBlocked = isPlayerTurn ? 
+            enemyNotificationContainer : playerNotificationContainer;
+
           setTimeout(() => {
-            element.classList.remove('defending');
-          }, 1000);
-        }
-        break;
+            this.handleFighterAnimation(targetContainerBlocked, 'blocked', 1);
+            this.fightNotificationsService.showNotification(
+              targetNotificationBlocked,
+              FightNotificationService.getBlockHTML()
+            );
+            this.playBlockEffect(targetContainerBlocked);
+          }, 500);
+          break;
 
-      case TurnActionEnum.CHARGE:
-        this.handleFighterAnimation(imageSelector, 'charge', 1);
-        // Add charging class for glow effect
-        const chargeElement = document.querySelector(imageSelector);
-        if (chargeElement) {
-          chargeElement.classList.add('charging');
+        case TurnActionEnum.MISS:
+          totalAnimationTime = this.TURN_ANIMATION_DURATION * 2; // Tiempo extra para misses
+          // Realizar la animación de ataque primero
+          this.handleFighterAnimation(imageSelector, `attack-${direction}`, 1);
+          
+          // Mostrar el miss en el objetivo (el que evadió el ataque)
+          const targetContainerMiss = isPlayerTurn ? 
+            '.enemy-status-container' : '.player-status-container';
+          const targetNotificationMiss = isPlayerTurn ? 
+            enemyNotificationContainer : playerNotificationContainer;
+
           setTimeout(() => {
-            chargeElement.classList.remove('charging');
-          }, 1000);
-        }
-        break;
+            this.handleFighterAnimation(targetContainerMiss, 'missed', 1);
+            this.fightNotificationsService.showNotification(
+              targetNotificationMiss,
+              FightNotificationService.getMissHTML()
+            );
+          }, 500);
+          break;
 
-      case TurnActionEnum.BLOCKED:
-        this.handleFighterAnimation(imageSelector, 'blocked', 1);
-        this.fightNotificationsService.showNotification(
-          playerNotificationContainer,
-          FightNotificationService.getBlockHTML()
-        );
-        // Add block effect
-        const blockTarget = imageSelector === '.player-status-container' ? '.player-status-container' : '.enemy-status-container';
-        this.playBlockEffect(blockTarget);
-        break;
+        default:
+          break;
+      }
 
-      case TurnActionEnum.MISS:
-        this.handleFighterAnimation(imageSelector, 'missed', 1);
-        this.fightNotificationsService.showNotification(
-          playerNotificationContainer,
-          FightNotificationService.getMissHTML()
-        );
-        break;
+      // Después de la acción principal, procesamos los efectos secundarios (healings)
+      if (healings?.length > 0) {
+        // El healing siempre se aplica al luchador que realiza la acción
+        const healingTargetSelector = isPlayerTurn ? 'player' : 'enemy';
+        healings.forEach((healing, index) => {
+          setTimeout(() => {
+            this.showHealingNumber(healingTargetSelector, healing.healing);
+          }, 1000 + (index * 200)); // Empezamos después de la acción principal y espaciamos múltiples healings
+        });
+        totalAnimationTime = Math.max(totalAnimationTime, 1000 + (healings.length * 200));
+      }
 
-      default:
-        break;
-    }
+      // Resolver la promesa después de que terminen todas las animaciones
+      setTimeout(resolve, totalAnimationTime);
+    });
   }
 
   private handleFighterAnimation(
@@ -266,6 +342,27 @@ export class FightAnimationsService {
     setTimeout(() => {
       if (document.body.contains(damageElement)) {
         document.body.removeChild(damageElement);
+      }
+    }, 1500);
+  }
+
+  private showHealingNumber(target: 'player' | 'enemy', amount: number) {
+    const targetElement = document.querySelector(`.${target}-image`);
+    if (!targetElement) return;
+
+    const healingElement = document.createElement('div');
+    healingElement.className = 'damage-number healing';
+    healingElement.textContent = `+${amount}`;
+
+    const rect = targetElement.getBoundingClientRect();
+    healingElement.style.left = `${rect.left + rect.width / 2}px`;
+    healingElement.style.top = `${rect.top + rect.height / 3}px`;
+
+    document.body.appendChild(healingElement);
+
+    setTimeout(() => {
+      if (document.body.contains(healingElement)) {
+        document.body.removeChild(healingElement);
       }
     }, 1500);
   }

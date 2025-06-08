@@ -122,9 +122,5 @@
     </div>
   </div>
 
-  <!-- Estado de energía -->
-  <ng-template #exhausted>Exhausted: Attacks do 50% less damage</ng-template>
-  <div class="status-section energy-status" *ngIf="fighterStatus?.energy < 40">
-    <span class="emoji-icon" [ngbTooltip]="exhausted">😫</span>
-  </div>
+  <!-- Estado de energía - Eliminado ya que será manejado por el sistema de debuffs -->
 </div>

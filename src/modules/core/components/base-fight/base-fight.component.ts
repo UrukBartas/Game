@@ -61,6 +61,7 @@ export class BaseFightComponent
   private fightTurns: FightTurnModel[] = [];
   public bonusActionsRemaining = 0;
   public bonusActionsTotal = 0;
+  public isAnimating = signal<boolean>(false);
 
   @Input() fightType: FightTypes;
   @Input() backgroundImage: string;
@@ -161,63 +162,47 @@ export class BaseFightComponent
     this.onActionSubmit.emit({ action, consumableId });
   }
 
-  onActionSubmited(fight: BaseFightModel) {
+  async onActionSubmited(fight: BaseFightModel) {
+    // Guardamos el estado actual antes de actualizarlo
+    const previousPlayerState = { ...this.player() };
+    const previousEnemyState = { ...this.enemy() };
+    
     const { player, enemy } = fight;
 
-    // Si es una actualización de buff solamente, no reproducir animaciones completas
+    // Si es una actualización de buff solamente, actualizamos inmediatamente
     if (fight.buffUpdateOnly) {
-      // Solo actualizar los estados sin animaciones de ataque/defensa
       this.player.set(player);
       this.enemy.set(enemy);
     } else {
-      // Check for damage dealt in this turn
-      const lastTurn = fight.turns[fight.turns.length - 1];
-      if (lastTurn) {
-        const isPlayerCrit = lastTurn.playerTurn.action === TurnActionEnum.CRIT;
-        const isEnemyCrit = lastTurn.enemyTurn.action === TurnActionEnum.CRIT;
+      // Para acciones normales, esperamos a que terminen las animaciones
+      try {
+        this.isAnimating.set(true);
+        // Primero ejecutamos las animaciones manteniendo los estados anteriores
+        await this.fightAnimationsService.controlTurnActions(fight, previousPlayerState, previousEnemyState);
+        
+        // Una vez terminadas las animaciones, actualizamos los estados
+        this.player.set(player);
+        this.enemy.set(enemy);
+        this.isAnimating.set(false);
 
-        // Show damage and healing for player's turn
-        if (lastTurn.playerTurn.action === TurnActionEnum.ATTACK) {
-          // Show damage to enemy
-          if (lastTurn.playerTurn.damages.length > 0 && lastTurn.playerTurn.damages[0].damage > 0) {
-            this.showDamageNumber('enemy', lastTurn.playerTurn.damages[0].damage, isPlayerCrit);
-          }
-          // Show healing to player
-          if (lastTurn.playerTurn.healings?.length > 0) {
-            lastTurn.playerTurn.healings.forEach(healing => {
-              this.showHealingNumber('player', healing.healing);
-            });
-          }
-        }
+        // Verificamos si algún luchador ha sido derrotado
+        const ripPlayer = player.currentStats.health < 1;
+        const ripEnemy = enemy.currentStats.health < 1;
 
-        // Show damage and healing for enemy's turn
-        if (lastTurn.enemyTurn.action === TurnActionEnum.ATTACK) {
-          // Show damage to player
-          if (lastTurn.enemyTurn.damages.length > 0 && lastTurn.enemyTurn.damages[0].damage > 0) {
-            this.showDamageNumber('player', lastTurn.enemyTurn.damages[0].damage, isEnemyCrit);
-          }
-          // Show healing to enemy
-          if (lastTurn.enemyTurn.healings?.length > 0) {
-            lastTurn.enemyTurn.healings.forEach(healing => {
-              this.showHealingNumber('enemy', healing.healing);
-            });
-          }
+        if (ripPlayer || ripEnemy) {
+          setTimeout(() => {
+            ripPlayer
+              ? this.triggerDefeat(fight.result)
+              : this.triggerVictory(fight.result);
+          }, 1000);
         }
+      } catch (error) {
+        console.error('Error during fight animation:', error);
+        // En caso de error, actualizamos los estados de todas formas
+        this.player.set(player);
+        this.enemy.set(enemy);
+        this.isAnimating.set(false);
       }
-
-      // Animaciones completas para acciones normales
-      this.fightAnimationsService.controlTurnActions(fight);
-    }
-
-    const ripPlayer = player.currentStats.health < 1;
-    const ripEnemy = enemy.currentStats.health < 1;
-
-    if (ripPlayer || ripEnemy) {
-      setTimeout(() => {
-        ripPlayer
-          ? this.triggerDefeat(fight.result)
-          : this.triggerVictory(fight.result);
-      }, 1000);
     }
   }
 
