@@ -1,6 +1,6 @@
 <ng-container *ngIf="getItem$ | async as item">
   <app-item-box
-    [image]="item.imageLocal"
+    [image]="itemType == 'ITEM' ? item.itemData.imageLocal : item.imageLocal"
     [stack]="amount"
     [height]="height"
     [width]="width"
@@ -8,9 +8,14 @@
   >
     @if (!!item) {
       <div tooltip class="tooltip-uruk">
-        <app-generic-item-tooltip
-          [item]="item"
-        ></app-generic-item-tooltip>
+
+        @if (!!item?.itemData) {
+          <app-item-tooltip [item]="item"></app-item-tooltip>
+        } @else {
+          <app-generic-item-tooltip
+            [item]="item"
+          ></app-generic-item-tooltip>
+        }
       </div>
     }
   </app-item-box>

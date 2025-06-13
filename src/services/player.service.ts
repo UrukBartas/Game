@@ -265,4 +265,8 @@ export class PlayerService extends ApiBaseService {
   public searchPlayers(query: string): Observable<Array<{ id: string, name: string, image: string }>> {
     return this.get(`/search?query=${encodeURIComponent(query)}`);
   }
+
+  public getPlayerByUsername(username: string): Observable<PlayerModel> {
+    return this.get(`/by-username/${username}`);
+  }
 }

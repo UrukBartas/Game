@@ -4,46 +4,361 @@
   [class.chat-collapsed]="!isChatExpanded"
   data-game-feature="player-communication"
 >
-  <div class="chat-header" (click)="toggleChat()">
+  <div class="chat-header" (click)="!isChatExpanded && toggleChat()">
     <div class="header-content">
       <i class="fas fa-comments"></i>
-      <span *ngIf="hasUnreadMessages && !isChatExpanded" class="new-message-indicator"></span>
-      <span>UrukBox Chat</span>
-      <span class="online-count">{{ (onlinePlayers$ | async)?.length || 0 }} online</span>
+      <span
+        *ngIf="hasUnreadMessages && !isChatExpanded"
+        class="new-message-indicator"
+      ></span>
+      <span>{{ getChatTitle() }}</span>
+      <span class="online-count" *ngIf="currentChatType === 'GLOBAL'"
+        >{{ (onlineChatPlayers$ | async) || 0 }} online</span
+      >
     </div>
-    <i *ngIf="isChatExpanded"
-      class="fas text-light"
-      [class.fa-chevron-up]="!isChatExpanded"
-      [class.fa-chevron-down]="isChatExpanded"
-    ></i>
+
+    <!-- Chat controls when expanded -->
+    <div class="d-flex" *ngIf="isChatExpanded">
+      <!-- Switch to Global Chat -->
+      <button
+        class="btn btn-sm me-1"
+        [class.btn-primary]="currentChatType === 'GLOBAL'"
+        [class.btn-outline-secondary]="currentChatType !== 'GLOBAL'"
+        (click)="switchToGlobalChat(); $event.stopPropagation()"
+      >
+        🌍
+      </button>
+
+      <!-- Private Conversations -->
+      <button
+        [class.btn-primary]="currentChatType === 'PRIVATE'"
+        [class.btn-outline-secondary]="currentChatType !== 'PRIVATE'"
+        class="btn btn-sm btn-outline-secondary me-1"
+        (click)="togglePrivateConversations(); $event.stopPropagation()"
+      >
+        💬
+      </button>
+
+      <!-- Expand/Collapse Button -->
+      <button
+        class="btn btn-sm btn-outline-light"
+        (click)="toggleChat(); $event.stopPropagation()"
+      >
+        <i
+          class="fa"
+          [class.fa-chevron-up]="isChatExpanded"
+          [class.fa-chevron-down]="!isChatExpanded"
+        ></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Private Conversations List -->
+  <div
+    class="private-conversations"
+    *ngIf="showPrivateConversations && isChatExpanded"
+  >
+    <div class="conversation-header">
+      <div class="d-flex justify-content-between align-items-center">
+        <small class="text-light">Private Conversations</small>
+        <button
+          class="btn btn-sm btn-outline-primary new-whisper-btn"
+          (click)="toggleNewWhisperInput()"
+          title="Start new whisper"
+        >
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- New Whisper Input -->
+    <div class="new-whisper-container" *ngIf="showNewWhisperInput">
+      <div class="new-whisper-form d-flex p-2">
+        <input
+          type="text"
+          class="form-control new-whisper-input me-2"
+          [formControl]="newWhisperUsername"
+          placeholder="Enter username..."
+          (keydown.enter)="startNewWhisper()"
+          (keydown.escape)="cancelNewWhisper()"
+          maxlength="50"
+        />
+        <button
+          class="btn btn-sm btn-primary me-1"
+          (click)="startNewWhisper()"
+          [disabled]="!newWhisperUsername.value?.trim()"
+        >
+          <i class="fas fa-paper-plane"></i>
+        </button>
+        <button
+          class="btn btn-sm btn-outline-secondary"
+          (click)="cancelNewWhisper()"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+    <div class="conversation-list">
+      @if (!privateConversations.length) {
+        <div class="conversation-item d-flex align-items-center">
+          <small class="text-light">No private conversations</small>
+        </div>
+      }
+      <div
+        class="conversation-item d-flex align-items-center"
+        *ngFor="let conversation of privateConversations"
+        (click)="switchToPrivateChat(conversation)"
+      >
+        <img
+          [src]="conversation.otherPlayer.image"
+          class="avatar me-2"
+          alt="Avatar"
+        />
+        <div class="flex-grow-1">
+          <div class="fw-bold">{{ conversation.otherPlayer.name }}</div>
+          <small class="text-light"
+            >{{ conversation.lastMessage | slice: 0 : 30
+            }}{{ conversation.lastMessage.length > 30 ? '...' : '' }}</small
+          >
+        </div>
+        <small class="text-light">{{
+          conversation.lastMessageAt | date: 'short'
+        }}</small>
+      </div>
+    </div>
   </div>
 
   <div class="chat-content" *ngIf="isChatExpanded">
-    <div #chatContainer class="messages-container">
+    <!-- Chat Messages -->
+    <div
+      #chatContainer
+      class="messages-container"
+      *ngIf="!showPrivateConversations"
+    >
       <div
         class="message"
-        *ngFor="let message of messages"
+        *ngFor="let message of currentMessages"
         [class.own-message]="message.username === getCurrentUsername()"
       >
         <div class="message-header">
-          <span class="timestamp">{{
-            message.timestamp | date: 'shortDate'
-          }} {{message.timestamp | date: 'HH:mm'}}</span>
+          <span class="timestamp"
+            >{{ message.timestamp | date: 'shortDate' }}
+            {{ message.timestamp | date: 'HH:mm' }}</span
+          >
           <span
             class="username"
             [ngStyle]="getPlayerNameColor(message.username)"
+            (contextmenu)="onUsernameRightClick($event, message)"
+            [class.clickable-username]="
+              message.username !== getCurrentUsername()
+            "
           >
             {{ message.username }}
           </span>
         </div>
         <div class="message-content">
-          {{ message.message }}
+          <div *ngIf="message.message">{{ message.message }}</div>
+
+          <!-- Attachments Display -->
+          <div
+            class="attachments"
+            *ngIf="
+              message.attachments &&
+              (message.attachments.items?.length ||
+                message.attachments.materials?.length ||
+                message.attachments.consumables?.length ||
+                message.attachments.miscs?.length)
+            "
+          >
+            <!-- Items -->
+            <div
+              class="attachment-group"
+              *ngIf="message.attachments.items?.length"
+            >
+              <small>Items:</small>
+              <div class="attachment-items d-flex flex-wrap">
+                <app-remote-item-box
+                  class="attachment-item me-1 mb-1"
+                  *ngFor="let itemId of message.attachments.items"
+                  [itemType]="'ITEM'"
+                  [itemId]="itemId"
+                  [height]="24"
+                  [width]="24"
+                  (mouseenter)="onItemHover(itemId, 'item')"
+                >
+                </app-remote-item-box>
+              </div>
+            </div>
+
+            <!-- Materials -->
+            <div
+              class="attachment-group"
+              *ngIf="message.attachments.materials?.length"
+            >
+              <small>Materials:</small>
+              <div class="attachment-items d-flex flex-wrap">
+                <app-remote-item-box
+                  class="attachment-item me-1 mb-1"
+                  *ngFor="let materialId of message.attachments.materials"
+                  [itemType]="'MATERIAL'"
+                  [itemId]="materialId"
+                  [height]="24"
+                  [width]="24"
+                  (mouseenter)="onItemHover(materialId, 'material')"
+                >
+                </app-remote-item-box>
+              </div>
+            </div>
+
+            <!-- Consumables -->
+            <div
+              class="attachment-group"
+              *ngIf="message.attachments.consumables?.length"
+            >
+              <small>Consumables:</small>
+              <div class="attachment-items d-flex flex-wrap">
+                <app-remote-item-box
+                  class="attachment-item me-1 mb-1"
+                  *ngFor="let consumableId of message.attachments.consumables"
+                  [itemType]="'CONSUMABLE'"
+                  [itemId]="consumableId"
+                  [height]="24"
+                  [width]="24"
+                  (mouseenter)="onItemHover(consumableId, 'consumable')"
+                >
+                </app-remote-item-box>
+              </div>
+            </div>
+
+            <!-- Miscellany Items -->
+            <div
+              class="attachment-group"
+              *ngIf="message.attachments.miscs?.length"
+            >
+              <small>Misc:</small>
+              <div class="attachment-items d-flex flex-wrap">
+                <app-remote-item-box
+                  class="attachment-item me-1 mb-1"
+                  *ngFor="let miscId of message.attachments.miscs"
+                  [itemType]="'MISCELLANY'"
+                  [itemId]="miscId"
+                  [height]="24"
+                  [width]="24"
+                  (mouseenter)="onItemHover(miscId, 'misc')"
+                >
+                </app-remote-item-box>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- Current Attachments Preview -->
+    <div class="current-attachments" *ngIf="hasSelectedAttachments()">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <small class="text-light">Selected Items:</small>
+        <button
+          class="btn btn-sm btn-outline-danger"
+          (click)="clearAttachments()"
+        >
+          Clear
+        </button>
+      </div>
+
+      <!-- Selected Items Preview -->
+      <div class="selected-attachments d-flex flex-wrap">
+        <app-remote-item-box
+          class="badge me-1 mb-1"
+          *ngFor="let item of selectedAttachments.items"
+          [itemType]="'ITEM'"
+          [itemId]="item.id.toString()"
+          [height]="20"
+          [width]="20"
+        >
+        </app-remote-item-box>
+        <app-remote-item-box
+          class="badge me-1 mb-1"
+          *ngFor="let material of selectedAttachments.materials"
+          [itemType]="'MATERIAL'"
+          [itemId]="material.materialDataId"
+          [height]="20"
+          [width]="20"
+        >
+        </app-remote-item-box>
+        <app-remote-item-box
+          class="badge me-1 mb-1"
+          *ngFor="let consumable of selectedAttachments.consumables"
+          [itemType]="'CONSUMABLE'"
+          [itemId]="consumable.consumableDataId"
+          [height]="20"
+          [width]="20"
+        >
+        </app-remote-item-box>
+        <app-remote-item-box
+          class="badge me-1 mb-1"
+          *ngFor="let misc of selectedAttachments.miscs"
+          [itemType]="'MISCELLANY'"
+          [itemId]="misc.miscellanyItemDataId"
+          [height]="20"
+          [width]="20"
+        >
+        </app-remote-item-box>
+      </div>
+    </div>
+
+    <!-- Emoji Selector -->
+    <div class="emoji-selector" *ngIf="showEmojiSelector">
+      <div class="emoji-grid">
+        <button
+          class="btn btn-sm emoji-btn"
+          *ngFor="let emoji of emojis"
+          (click)="addEmoji(emoji)"
+        >
+          {{ emoji }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Item Picker -->
+    <div class="item-picker-container" *ngIf="showItemPicker">
+      <app-item-picker
+        [itemPickerDialogConfig]="{
+          display: {
+            itemPicking: true,
+            materialPicking: true,
+            consumablePicking: true,
+            miscPicking: true,
+          },
+          multipleSelection: {
+            itemPicking: true,
+            materialPicking: true,
+            consumablePicking: true,
+            miscPicking: true,
+          },
+        }"
+        (confirmSelection)="onItemSelection($event)"
+      >
+      </app-item-picker>
+    </div>
+
+    <!-- Chat Input -->
     <form class="chat-input" (ngSubmit)="sendMessage()">
-      <button type="button" class="emoji-btn" (click)="toggleEmojiSelector()" tabindex="-1" type="button">
+      <button
+        type="button"
+        class="emoji-btn"
+        title="Attach Items"
+        (click)="toggleItemPicker()"
+        tabindex="-1"
+      >
+        📎
+      </button>
+      <button
+        type="button"
+        class="emoji-btn"
+        (click)="toggleEmojiSelector()"
+        tabindex="-1"
+      >
         <i class="fa-regular fa-face-smile"></i>
       </button>
       <input
@@ -51,13 +366,18 @@
         type="text"
         [formControl]="messageInput"
         placeholder="Type your message..."
-        maxlength="200"
+        maxlength="500"
         (keydown.enter)="$event.preventDefault(); sendMessage()"
       />
-      <button type="submit" [disabled]="!messageInput.value?.trim()">
+      <button
+        type="submit"
+        [disabled]="!messageInput.value?.trim() && !hasSelectedAttachments()"
+      >
         <i class="fas fa-paper-plane"></i>
       </button>
     </form>
+
+    <!-- Original emoji selector (keep for compatibility) -->
     <div *ngIf="showEmojiSelector" class="emoji-selector-popover-casero">
       <span
         *ngFor="let emoji of emojis"
@@ -68,3 +388,20 @@
     </div>
   </div>
 </div>
+
+<!-- Username Context Menu Template -->
+<ng-template #usernameContextMenu let-data="data">
+  <div class="username-context-menu">
+    <div class="context-menu-header">
+      <span class="username-display">{{ data.username }}</span>
+    </div>
+    <div class="context-menu-item" (click)="onSendWhisper(data)">
+      <i class="fas fa-comment-dots me-2"></i>
+      Send Whisper
+    </div>
+    <div class="context-menu-item cancel" (click)="onCloseContextMenu()">
+      <i class="fas fa-times me-2"></i>
+      Cancel
+    </div>
+  </div>
+</ng-template>

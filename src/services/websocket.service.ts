@@ -17,9 +17,32 @@ export interface ChatMessage {
   username: string;
   message: string;
   timestamp: Date;
+  chatType?: 'GLOBAL' | 'PRIVATE';
+  senderId?: string;
+  recipientId?: string;
+  attachments?: {
+    items?: string[];
+    materials?: string[];
+    consumables?: string[];
+    miscs?: string[];
+  };
 }
 
+export interface PrivateConversation {
+  otherPlayer: {
+    id: string;
+    name: string;
+    image: string;
+  };
+  lastMessageAt: Date;
+  lastMessage: string;
+}
 
+export interface ItemAttachment {
+  itemId: string;
+  type: 'item' | 'material' | 'consumable' | 'misc';
+  details: any;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +57,14 @@ export class WebSocketService {
   public chatMessages$ = this.chatMessagesSubject.asObservable();
   private onlineChatPlayersSubject = new BehaviorSubject<number>(0);
   public onlineChatPlayers$ = this.onlineChatPlayersSubject.asObservable();
+
+  // Nuevos subjects para chat privado
+  private privateMessagesSubject = new BehaviorSubject<{[recipientId: string]: ChatMessage[]}>({});
+  public privateMessages$ = this.privateMessagesSubject.asObservable();
+  private privateConversationsSubject = new BehaviorSubject<PrivateConversation[]>([]);
+  public privateConversations$ = this.privateConversationsSubject.asObservable();
+  private itemAttachmentDetailsSubject = new Subject<ItemAttachment>();
+  public itemAttachmentDetails$ = this.itemAttachmentDetailsSubject.asObservable();
 
   // Nuevo subject para emojis en combate
   private fightEmojisSubject = new Subject<FightEmoji>();
@@ -83,6 +114,40 @@ export class WebSocketService {
       this.onlineChatPlayersSubject.next(data.count);
     });
 
+    // Nuevos listeners para chat privado
+    this.socket.on('privateMessage', (message: ChatMessage) => {
+      const currentPrivateMessages = this.privateMessagesSubject.value;
+      const recipientId = message.senderId === this.getCurrentUserId() ? message.recipientId : message.senderId;
+      
+      if (!currentPrivateMessages[recipientId!]) {
+        currentPrivateMessages[recipientId!] = [];
+      }
+      
+      currentPrivateMessages[recipientId!] = [...currentPrivateMessages[recipientId!], message].slice(-100);
+      this.privateMessagesSubject.next({...currentPrivateMessages});
+
+      // Notificar solo si el mensaje no es del usuario actual
+      if (message.senderId !== this.getCurrentUserId()) {
+        this.notifyNewMessage();
+      }
+
+      // Actualizar lista de conversaciones
+      this.getPrivateConversations();
+    });
+
+    this.socket.on('privateChatHistory', (data: { recipientId: string; messages: ChatMessage[] }) => {
+      const currentPrivateMessages = this.privateMessagesSubject.value;
+      currentPrivateMessages[data.recipientId] = data.messages;
+      this.privateMessagesSubject.next({...currentPrivateMessages});
+    });
+
+    this.socket.on('privateConversations', (conversations: PrivateConversation[]) => {
+      this.privateConversationsSubject.next(conversations);
+    });
+
+    this.socket.on('itemAttachmentDetails', (details: ItemAttachment) => {
+      this.itemAttachmentDetailsSubject.next(details);
+    });
 
     this.socket.on('onlinePlayers', (data) => {
       this.onlinePlayersSubject.next(data.players);
@@ -166,18 +231,44 @@ export class WebSocketService {
     this.socket.disconnect();
   }
 
-
-  public sendMessage(message: string): void {
-    if (!message.trim()) return;
+  // Métodos actualizados para chat
+  public sendMessage(message: string, attachments?: {
+    items?: string[];
+    materials?: string[];
+    consumables?: string[];
+    miscs?: string[];
+  }): void {
+    if (!message.trim() && !attachments) return;
     this.socket.emit('sendChatMessage', {
       message: message,
-      timestamp: new Date()
+      timestamp: new Date(),
+      chatType: 'GLOBAL',
+      attachments: attachments
     });
   }
 
+  public sendPrivateMessage(recipientId: string, message: string, attachments?: {
+    items?: string[];
+    materials?: string[];
+    consumables?: string[];
+    miscs?: string[];
+  }): void {
+    if (!message.trim() && !attachments) return;
+    this.socket.emit('sendChatMessage', {
+      message: message,
+      timestamp: new Date(),
+      chatType: 'PRIVATE',
+      recipientId: recipientId,
+      attachments: attachments
+    });
+  }
 
   private getCurrentUsername(): string {
     return ((this.store.selectSnapshot(MainState.getState))?.player as PlayerModel)?.name || '';
+  }
+
+  private getCurrentUserId(): string {
+    return ((this.store.selectSnapshot(MainState.getState))?.player as PlayerModel)?.id || '';
   }
 
   private notifyNewMessage(): void {
@@ -197,7 +288,19 @@ export class WebSocketService {
   }
 
   public getChatHistory(): void {
-    this.socket.emit('getChatHistory');
+    this.socket.emit('getChatHistory', { chatType: 'GLOBAL' });
+  }
+
+  public getPrivateChatHistory(recipientId: string): void {
+    this.socket.emit('getChatHistory', { chatType: 'PRIVATE', recipientId: recipientId });
+  }
+
+  public getPrivateConversations(): void {
+    this.socket.emit('getPrivateConversations');
+  }
+
+  public getItemAttachmentDetails(itemId: string, type: 'item' | 'material' | 'consumable' | 'misc'): void {
+    this.socket.emit('getItemAttachmentDetails', { itemId, type });
   }
 
   // Método para enviar un emoji durante el combate
@@ -210,8 +313,4 @@ export class WebSocketService {
       senderName: player.name
     });
   }
-
-
-
-
 }

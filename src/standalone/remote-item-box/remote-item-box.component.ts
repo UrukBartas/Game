@@ -3,25 +3,29 @@ import { Component, inject, Input, SimpleChanges } from '@angular/core';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { EMPTY, Observable, of } from 'rxjs';
 import { ConsumableDataService } from 'src/services/consumable-data.service';
+import { ItemService } from 'src/services/item.service';
 import { MaterialDataService } from 'src/services/material-data.service';
 import { MiscellanyDataService } from 'src/services/miscellany-data.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { GenericItemTooltipComponent } from '../generic-item-tooltip/generic-item-tooltip.component';
 import { ItemBoxComponent } from '../item-box/item-box.component';
+import { ItemTooltipComponent } from '../item-tooltip/item-tooltip.component';
 
 @Component({
   selector: 'app-remote-item-box',
   standalone: true,
-  imports: [CommonModule, NgbTooltipModule, ItemBoxComponent, GenericItemTooltipComponent],
+  imports: [CommonModule, NgbTooltipModule, ItemBoxComponent, GenericItemTooltipComponent, ItemTooltipComponent],
   templateUrl: './remote-item-box.component.html',
   styleUrl: './remote-item-box.component.scss'
 })
 export class RemoteItemBoxComponent {
-  @Input() itemType: 'MATERIAL' | 'MISCELLANY' | 'CONSUMABLE' = 'MATERIAL';
+  @Input() itemType: 'ITEM' | 'MATERIAL' | 'MISCELLANY' | 'CONSUMABLE' = 'MATERIAL';
   @Input() itemId: string;
   @Input() amount: number = 0;
   @Input() height: number = 30;
   @Input() width: number = 30;
+  
+  itemService = inject(ItemService);
   materialDataService = inject(MaterialDataService);
   miscellanyDataService = inject(MiscellanyDataService);
   consumableDataService = inject(ConsumableDataService);
@@ -39,6 +43,8 @@ export class RemoteItemBoxComponent {
     if (!this.itemId) return of(EMPTY);
 
     switch (this.itemType) {
+      case 'ITEM':
+        return this.itemService.getItem(parseInt(this.itemId));
       case 'MATERIAL':
         return this.materialDataService.byId(this.itemId);
       case 'MISCELLANY':
