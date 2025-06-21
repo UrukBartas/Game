@@ -11,6 +11,7 @@
     </p>
   </div>
 </ng-template>
+
 <ng-template
   #tooltipTier
   let-tier="tier"
@@ -28,6 +29,12 @@
     </div>
     @if (tier) {
       <ul class="list-unstyled mt-2">
+        <li>
+          <strong class="text-third"
+            >{{ tier.apr * 100 | number: '1.1-1' }}%</strong
+          >
+          Annual Percentage Rate (APR)
+        </li>
         @if (tier.matFactor > 1) {
           <li>
             <strong class="text-third">{{ tier.matFactor * 100 }}%</strong>
@@ -74,9 +81,7 @@
           }}</strong>
           Golden Uruks per day
         </li>
-        <li
-          *ngIf="calculateExtraAttempts(tier) > 0"
-        >
+        <li *ngIf="calculateExtraAttempts(tier) > 0">
           <strong class="text-third">
             +{{ calculateExtraAttempts(tier) }}
           </strong>
@@ -157,250 +162,1013 @@
       (click)="phase = 1"
       class="btn btn-secondary btn-lg btn-block w-100 btn-pending d-flex align-items-center justify-content-center gap-2 mt-3"
     >
-      Get workforce now!
+      <i class="fa-solid fa-pickaxe"></i>
+      Start Mining!
     </button>
   </div>
 </ng-template>
 
 <div class="h-100" id="themine">
-  <div class="themine-bg"></div>
+  <div class="themine-bg animated-bg">
+    <!-- Mining particles animation -->
+    <div class="mining-particles">
+      <div
+        *ngFor="let particle of [].constructor(12); let i = index"
+        class="particle"
+        [style.animation-delay]="i * 0.5 + 's'"
+      ></div>
+    </div>
+
+    <!-- Ambient light effects -->
+    <div class="ambient-lights">
+      <div class="light-beam light-1"></div>
+      <div class="light-beam light-2"></div>
+      <div class="light-beam light-3"></div>
+    </div>
+  </div>
 
   <div class="row separate p-1 p-md-4 gap-3">
+    <!-- Header Section with Status -->
     <div class="row d-flex align-items-center justify-content-center">
-      <div class="next-mining-gains gap-2">
-        <i class="fa-solid fa-hourglass-start rotating-icon"></i>
-        @if (!isBigScreen()) {
-          <span>{{ formattedTime }}</span>
-        } @else {
-          <span>Next mine rewards distribution: {{ formattedTime }}</span>
-        }
+      <div class="mine-status-header">
+        <div class="status-card rewards-timer">
+          <i class="fa-solid fa-hourglass-start rotating-icon"></i>
+          <span class="status-text">
+            @if (!isBigScreen()) {
+              <span>{{ formattedTime }}</span>
+            } @else {
+              <span>Next rewards calculation: {{ formattedTime }}</span>
+            }
+          </span>
+        </div>
+
+        <!-- Mine Guard Status -->
+        <div class="status-card guard-status" *ngIf="mineStake">
+          <div
+            class="guard-indicator"
+            [ngClass]="{ active: isGuarding, inactive: !isGuarding }"
+          >
+            <i
+              class="fa-solid"
+              [ngClass]="isGuarding ? 'fa-shield' : 'fa-shield-blank'"
+            ></i>
+            <span>{{ isGuarding ? 'GUARDED' : 'UNGUARDED' }}</span>
+          </div>
+
+          <button
+            class="btn btn-sm toggle-guard-btn"
+            [ngClass]="isGuarding ? 'btn-warning' : 'btn-success'"
+            (click)="toggleGuard()"
+            [disabled]="guardCooldownRemaining > 0"
+          >
+            <i
+              class="fa-solid"
+              [ngClass]="isGuarding ? 'fa-eye-slash' : 'fa-eye'"
+            ></i>
+            {{ isGuarding ? 'Stop Guarding' : 'Start Guarding' }}
+          </button>
+        </div>
       </div>
     </div>
+
+    <!-- Main Mine Interface -->
     <div class="flex-row justify-content-center align-items-center">
+      <!-- Phase 0: Main Mine View -->
       <div
         class="col-12 d-flex justify-content-center align-items-center text-center"
         *ngIf="phase == 0"
       >
-        <ng-container
-          *ngIf="
-            getActiveTier(
-              (totalMultichainWorkforce$ | async) ?? 0
-            ) as activeTier;
-            else elseTemplate
-          "
-        >
+        <div class="main-mine-interface">
+          <!-- Mine Stake Information -->
+          <div class="mine-stake-card uruk-card" *ngIf="mineStake">
+            <div class="stake-header">
+              <h3 class="text-third">
+                <i class="fa-solid fa-coins"></i>
+                Your Mining Operation
+              </h3>
+            </div>
+
+            <div class="stake-stats row">
+              <div class="col-md-4 stake-stat">
+                <div class="stat-value">
+                  {{ mineStake.stakeAmount | number }}
+                </div>
+                <div class="stat-label">Staked Uruks</div>
+              </div>
+
+              <div class="col-md-4 stake-stat">
+                <div class="stat-value text-third">
+                  {{ mineStake.unclaimedRewards | number: '1.0-2' }}
+                </div>
+                <div class="stat-label">Unclaimed Rewards</div>
+              </div>
+
+              <div class="col-md-4 stake-stat">
+                <div class="stat-value text-third">
+                  {{ getCurrentAPR() | number: '1.1-1' }}%
+                </div>
+                <div class="stat-label">Current APR</div>
+              </div>
+            </div>
+
+            <!-- Claim Rewards Button -->
+            <div class="stake-actions mt-3">
+              <button
+                class="btn btn-success btn-lg claim-rewards-btn"
+                [disabled]="
+                  mineStake.unclaimedRewards <= 0 || claimCooldownRemaining > 0
+                "
+                (click)="claimRewards()"
+              >
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+                <span>Claim Rewards</span>
+                <span class="reward-amount"
+                  >({{ mineStake.unclaimedRewards | number: '1.0-2' }})</span
+                >
+              </button>
+
+              <button
+                class="btn btn-outline-warning btn-lg"
+                (click)="phase = 2"
+              >
+                <i class="fa-solid fa-cog"></i>
+                Manage Stake
+              </button>
+            </div>
+
+            <!-- Cooldown Timer -->
+            <div class="cooldown-timer" *ngIf="claimCooldownRemaining > 0">
+              <i class="fa-solid fa-clock"></i>
+              Next claim available in:
+              {{ formatTimeRemaining(claimCooldownRemaining) }}
+            </div>
+          </div>
+
+          <!-- Current Tier Display -->
           <ng-container
-            *ngTemplateOutlet="
-              currentTierTemplate;
-              context: {
-                activeTier: activeTier,
-              }
-            "
-          ></ng-container>
-        </ng-container>
-        <ng-template #elseTemplate>
-          <ng-container
-            *ngTemplateOutlet="
-              currentTierTemplate;
-              context: {
-                activeTier: null,
-              }
-            "
-          ></ng-container>
-        </ng-template>
+            *ngIf="getCurrentTier() as activeTier; else noStakeTemplate"
+          >
+            <div class="current-tier-display uruk-card">
+              <div class="tier-showcase">
+                <div class="tier-image-container">
+                  <app-item-box
+                    [height]="getCurrentTierImageSize()"
+                    [width]="getCurrentTierImageSize()"
+                    [rarity]="activeTier.rarity"
+                    [image]="activeTier.image"
+                    class="tier-image animated-glow"
+                  >
+                    <ng-container
+                      tooltip
+                      *ngTemplateOutlet="
+                        tooltipTier;
+                        context: { tier: activeTier, usedAs: true }
+                      "
+                    >
+                    </ng-container>
+                  </app-item-box>
+                </div>
+
+                <div class="tier-info">
+                  <h4 class="tier-name">{{ activeTier.name }}</h4>
+                  <p class="tier-description">{{ activeTier.description }}</p>
+
+                  <div class="tier-benefits">
+                    <div class="benefit-item">
+                      <i class="fa-solid fa-percentage text-third"></i>
+                      <span
+                        >{{ activeTier.apr * 100 | number: '1.1-1' }}% APR</span
+                      >
+                    </div>
+                    <div class="benefit-item">
+                      <i class="fa-solid fa-gem text-third"></i>
+                      <span>{{ activeTier.matFactor }}x Materials</span>
+                    </div>
+                    <div class="benefit-item">
+                      <i class="fa-solid fa-treasure-chest text-warning"></i>
+                      <span
+                        >{{ activeTier.lootboxChance * 100 | number: '1.1-1' }}%
+                        Treasure</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Show Tier Progress for Existing Stakes -->
+              <div class="tier-progress-section mt-3">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-2"
+                >
+                  <span class="text-light">Tier Progress</span>
+                  <button
+                    class="btn btn-sm btn-outline-third"
+                    (click)="showTierProgress = !showTierProgress"
+                  >
+                    <i
+                      class="fa-solid"
+                      [ngClass]="showTierProgress ? 'fa-eye-slash' : 'fa-eye'"
+                    ></i>
+                    {{ showTierProgress ? 'Hide' : 'Show' }}
+                  </button>
+                </div>
+
+                <div class="tier-progress-wrapper" *ngIf="showTierProgress">
+                  <app-tierized-progress-bar
+                    [currentValue]="mineStake?.stakeAmount || 0"
+                    [tooltipTemplate]="tooltipTier"
+                    [tiers]="tiers$ | async"
+                  >
+                  </app-tierized-progress-bar>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #noStakeTemplate>
+            <div class="no-stake-card uruk-card">
+              <div class="empty-mine-illustration">
+                <i class="fa-solid fa-fire empty-icon"></i>
+                <h3 class="text-third">Your Mine Awaits</h3>
+                <p class="text-light">
+                  Start your mining operation and earn passive rewards!
+                </p>
+
+                <div class="potential-rewards">
+                  <h5 class="text-warning">Potential Earnings:</h5>
+                  <ul class="earnings-list">
+                    <li>
+                      Up to <strong class="text-third">14% APR</strong> on
+                      staked Uruks
+                    </li>
+                    <li>Bonus materials and treasures</li>
+                    <li>Exponential growth with higher tiers</li>
+                  </ul>
+                </div>
+
+                <button
+                  class="btn btn-primary btn-lg start-mining-btn"
+                  (click)="phase = 1; subphase = 0"
+                >
+                  <i class="fa-solid fa-pickaxe"></i>
+                  Start Mining Operation
+                </button>
+              </div>
+            </div>
+          </ng-template>
+        </div>
       </div>
+
+      <!-- Mine Raids Section -->
+      <div class="col-12 mine-raids-section" *ngIf="phase == 0 && mineStake">
+        <div class="raids-card uruk-card">
+          <div class="raids-header">
+            <h4 class="text-danger">
+              <i class="fa-solid fa-swords"></i>
+              Mine Warfare
+            </h4>
+            <p class="text-light">Attack other mines or defend your own!</p>
+          </div>
+
+          <div class="raids-actions row">
+            <div class="col-md-6">
+              <button
+                class="btn btn-danger btn-lg w-100 raid-btn"
+                [disabled]="raidCooldownRemaining > 0"
+                (click)="openRaidModal()"
+              >
+                <i class="fa-solid fa-sword"></i>
+                <span>Raid Mine</span>
+                <span class="cooldown-text" *ngIf="raidCooldownRemaining > 0">
+                  ({{ formatTimeRemaining(raidCooldownRemaining) }})
+                </span>
+              </button>
+            </div>
+
+            <div class="col-md-6">
+              <button
+                class="btn btn-outline-info btn-lg w-100"
+                (click)="phase = 3"
+              >
+                <i class="fa-solid fa-scroll"></i>
+                Raid History
+              </button>
+            </div>
+          </div>
+
+          <!-- Recent Raid Alerts -->
+          <div class="recent-raids" *ngIf="recentRaids?.length > 0">
+            <h6 class="text-warning">Recent Activity:</h6>
+            <div
+              class="raid-alert"
+              *ngFor="let raid of recentRaids | slice: 0 : 3"
+            >
+              <div
+                class="alert"
+                [ngClass]="{
+                  'alert-danger': !raid.attackerWon,
+                  'alert-success': raid.attackerWon,
+                }"
+              >
+                <i
+                  class="fa-solid"
+                  [ngClass]="
+                    !raid.attackerWon ? 'fa-exclamation-triangle' : 'fa-trophy'
+                  "
+                ></i>
+                <span>{{ getRaidMessage(raid) }}</span>
+                <small class="text-muted">{{
+                  formatTimeAgo(raid.raidedAt)
+                }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 1: Modular Staking Interface -->
       @if (phase == 1) {
         <div
-          class="amount-selector uruk-card d-flex flex-column justify-content-center align-items-center p-3 px-md-5 gap-3"
+          class="staking-wizard uruk-card d-flex flex-column justify-content-center align-items-center p-3 px-md-5 gap-3"
         >
-          <div
-            class="w-100 px-2 d-flex align-items-center justify-content-end gap-2"
-          >
-            <div class="actions-panel d-flex gap-2">
+          <!-- Wizard Header with Steps -->
+          <div class="wizard-header w-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h3 class="text-third mb-0">
+                <i class="fa-solid fa-coins"></i>
+                {{ mineStake ? 'Increase Investment' : 'Start Mining' }}
+              </h3>
+
               <button
-                class="action-button back-button"
-                *ngIf="phase == 1"
+                class="btn btn-outline-secondary"
                 (click)="phase = 0; subphase = 0"
-                urSubtitle
               >
                 <i class="fa-solid fa-arrow-left"></i>
                 <span class="button-text">Back</span>
               </button>
+            </div>
 
-              <button
-                class="action-button history-button"
-                (click)="phase = 1; subphase = 1"
-                urSubtitle
+            <!-- Progress Steps -->
+            <div class="wizard-steps">
+              <div
+                class="step"
+                [ngClass]="{ active: subphase === 0, completed: subphase > 0 }"
               >
-                <i class="fa-solid fa-clock-rotate-left"></i>
-                <span class="button-text">Unstake History</span>
-              </button>
-
-              <button
-                class="action-button remove-button"
-                *ngIf="!!(stakeInfo | async)"
-                (click)="removeStaked()"
-                urSubtitle
+                <div class="step-number">1</div>
+                <div class="step-label">Amount</div>
+              </div>
+              <div
+                class="step-line"
+                [ngClass]="{ completed: subphase > 0 }"
+              ></div>
+              <div
+                class="step"
+                [ngClass]="{ active: subphase === 1, completed: subphase > 1 }"
               >
-                <i class="fa-solid fa-circle-minus"></i>
-                <span class="button-text">Remove Stake</span>
-              </button>
+                <div class="step-number">2</div>
+                <div class="step-label">Review</div>
+              </div>
+              <div
+                class="step-line"
+                [ngClass]="{ completed: subphase > 1 }"
+              ></div>
+              <div class="step" [ngClass]="{ active: subphase === 2 }">
+                <div class="step-number">3</div>
+                <div class="step-label">Confirm</div>
+              </div>
             </div>
           </div>
 
-          <div *ngIf="subphase == 1" class="unstakes-container px-1 px-md-5 col-12">
-            <ng-container *ngIf="stakeInfo | async as stakeInfoVar">
-              <div class="unstakes-header">
-                <h4 class="text-third mb-3">Ongoing Unstakes</h4>
-                <p class="text-light" *ngIf="stakeInfoVar.requests.length == 0">
-                  You are not unstaking anything right now.
+          <!-- Step 0: Amount Selection -->
+          <ng-container *ngIf="subphase === 0">
+            <div class="step-content w-100 gap-2 d-flex flex-column">
+              <div class="step-title text-center">
+                <h4 class="text-warning">How much do you want to invest?</h4>
+                <p class="text-light">
+                  Choose the amount of Golden Uruks to stake in your mine
                 </p>
               </div>
 
-              <ng-container *ngIf="stakeInfoVar.requests.length > 0">
-                <div class="unstakes-list">
-                  <div
-                    *ngFor="let request of stakeInfoVar.requests; let i = index"
-                    class="unstake-item"
-                    [ngClass]="{'claimable': request?.remainingTime <= today}"
-                  >
-                    <div class="unstake-amount">
-                      <img class="uruks-icon" src="{{ prefix + '/assets/goldenuruks.png' }}" alt="Golden Uruks">
-                      <span class="amount-value" [ngbTooltip]="uruks" [tooltipContext]="{ uruks: request?.amount ?? 0 }">
-                        {{ request?.amount ?? 0 | number }}
-                      </span>
-                    </div>
-
-                    <div class="unstake-status" urSubtext>
-                      <div class="status-indicator" [ngClass]="{'ready': request.remainingTime <= today}"></div>
-                      <span *ngIf="request.remainingTime <= today">Ready to claim!</span>
-                      <span *ngIf="request.remainingTime > today">Claimable in {{ request?.remainingTime | timeAgo }}</span>
-                    </div>
-
-                    <button
-                      type="button"
-                      class="btn-claim"
-                      [disabled]="request?.remainingTime > today"
-                      (click)="claimTokens(i)"
-                    >
-                      <i class="fa-solid fa-hand-holding-dollar"></i>
-                      Claim
-                    </button>
-                  </div>
-                </div>
-              </ng-container>
-            </ng-container>
-          </div>
-          <ng-container *ngIf="subphase == 0">
-            <app-chain-switcher
-              [height]="getChainSwitcherHeight()"
-              [width]="getChainSwitcherHeight()"
-            ></app-chain-switcher>
-            <app-balance-selector
-              [type]="stakeType"
-              [player$]="player$"
-              [erc20Balance$]="erc20Balance$"
-              [(selectedUruks)]="selectedUruksToExport"
-            ></app-balance-selector>
-
-            <div class="row w-100 actions-add">
-              <button
-                type="button"
-                (click)="giveUruksToWorkers()"
-                [disabled]="!walletService.allowChainConnected()"
-                class="btn btn-secondary btn-lg btn-block w-100 btn-pending d-flex align-items-center justify-content-center gap-2 col"
+              <app-chain-switcher
+                [height]="getChainSwitcherHeight()"
+                [width]="getChainSwitcherHeight()"
+                class="mb-4"
               >
-                @if (walletService.allowChainConnected()) {
-                  Stake
-                  <div
-                    class="price text-white text-center"
-                    urTitle
-                    [ngbTooltip]="uruks"
-                    [tooltipContext]="{
-                      uruks: selectedUruksToExport,
-                    }"
+              </app-chain-switcher>
+
+              <app-balance-selector
+                [type]="stakeType"
+                [player$]="player$"
+                [erc20Balance$]="erc20Balance$"
+                [(selectedUruks)]="selectedUruksToStake"
+                class="w-100 mb-4"
+              >
+              </app-balance-selector>
+
+              <div class="step-actions">
+                <button
+                  class="btn btn-primary btn-lg w-100"
+                  [disabled]="selectedUruksToStake < minStakeAmount"
+                  (click)="subphase = 1"
+                >
+                  <i class="fa-solid fa-arrow-right"></i>
+                  Continue
+                  <span
+                    *ngIf="selectedUruksToStake >= minStakeAmount"
+                    class="ms-2"
                   >
-                    {{ selectedUruksToExport | compressNumber }}
-                    <img
-                      class="uruks-icon pb-1"
-                      src="{{ prefix + '/assets/goldenuruks.png' }}"
-                    />
-                  </div>
-                } @else {
-                  Switch to the correct chain before staking
-                }
-              </button>
+                    ({{ selectedUruksToStake | compressNumber }} Uruks)
+                  </span>
+                </button>
+              </div>
             </div>
           </ng-container>
+
+          <!-- Step 1: Review & Tier Preview -->
+          <ng-container *ngIf="subphase === 1">
+            <div class="step-content w-100">
+              <div class="step-title text-center mb-4">
+                <h4 class="text-warning">Review Your Investment</h4>
+                <p class="text-light">Check your tier and expected rewards</p>
+              </div>
+
+              <!-- Investment Summary -->
+              <div class="investment-summary mb-4">
+                <div class="summary-card">
+                  <div class="summary-item">
+                    <span class="label">Investment Amount:</span>
+                    <span class="value text-warning">
+                      {{ selectedUruksToStake | number }}
+                      <img
+                        src="{{ prefix + '/assets/goldenuruks.png' }}"
+                        class="uruks-icon"
+                      />
+                    </span>
+                  </div>
+
+                  <div class="summary-item" *ngIf="mineStake">
+                    <span class="label">Current Stake:</span>
+                    <span class="value"
+                      >{{ mineStake.stakeAmount | number }} Uruks</span
+                    >
+                  </div>
+
+                  <div class="summary-item">
+                    <span class="label">Total After Investment:</span>
+                    <span class="value text-third">
+                      {{
+                        selectedUruksToStake + (mineStake?.stakeAmount || 0)
+                          | number
+                      }}
+                      Uruks
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tier Preview -->
+              <div class="tier-preview-section mb-4">
+                <h5 class="text-third mb-3">Your New Tier:</h5>
+                <div
+                  class="tier-preview-card"
+                  *ngIf="
+                    getPreviewTier(
+                      selectedUruksToStake + (mineStake?.stakeAmount || 0)
+                    ) as previewTier
+                  "
+                >
+                  <div class="tier-preview-content">
+                    <div class="tier-image-preview">
+                      <img
+                        [src]="prefix + previewTier.image"
+                        [alt]="previewTier.name"
+                      />
+                    </div>
+                    <div class="tier-details">
+                      <h6 class="tier-name">{{ previewTier.name }}</h6>
+                      <div class="tier-benefits-grid">
+                        <div class="benefit">
+                          <i class="fa-solid fa-percentage text-success"></i>
+                          <span
+                            >{{ previewTier.apr * 100 | number: '1.1-1' }}%
+                            APR</span
+                          >
+                        </div>
+                        <div class="benefit">
+                          <i class="fa-solid fa-gem text-third"></i>
+                          <span>{{ previewTier.matFactor }}x Materials</span>
+                        </div>
+                        <div class="benefit">
+                          <i
+                            class="fa-solid fa-treasure-chest text-warning"
+                          ></i>
+                          <span
+                            >{{
+                              previewTier.lootboxChance * 100 | number: '1.1-1'
+                            }}% Treasure</span
+                          >
+                        </div>
+                        <div class="benefit">
+                          <i class="fa-solid fa-coins text-yellow"></i>
+                          <span
+                            >{{
+                              previewTier.uruksBoost * 100 | number: '1.1-1'
+                            }}% Uruks Boost</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Earnings Projection -->
+              <div class="earnings-projection mb-4">
+                <h6 class="text-warning mb-2">Expected Daily Earnings:</h6>
+                <div class="projection-card">
+                  <div class="projection-item">
+                    <span>Daily Rewards:</span>
+                    <span class="text-success">
+                      {{
+                        ((selectedUruksToStake +
+                          (mineStake?.stakeAmount || 0)) *
+                          (getPreviewTier(
+                            selectedUruksToStake + (mineStake?.stakeAmount || 0)
+                          )?.apr || 0)) /
+                          365 | number: '1.2-2'
+                      }}
+                      Uruks
+                    </span>
+                  </div>
+                  <div class="projection-item">
+                    <span>Monthly Rewards:</span>
+                    <span class="text-success">
+                      {{
+                        ((selectedUruksToStake +
+                          (mineStake?.stakeAmount || 0)) *
+                          (getPreviewTier(
+                            selectedUruksToStake + (mineStake?.stakeAmount || 0)
+                          )?.apr || 0)) /
+                          12 | number: '1.2-2'
+                      }}
+                      Uruks
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="step-actions d-flex gap-3">
+                <button
+                  class="btn btn-outline-secondary btn-sm"
+                  (click)="subphase = 0"
+                >
+                  <i class="fa-solid fa-arrow-left"></i>
+                  Back
+                </button>
+                <button
+                  class="btn btn-primary btn-lg flex-fill"
+                  (click)="subphase = 2"
+                >
+                  <i class="fa-solid fa-arrow-right"></i>
+                  Proceed to Confirmation
+                </button>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Step 2: Final Confirmation -->
+          <ng-container *ngIf="subphase === 2">
+            <div class="step-content w-100">
+              <div class="step-title text-center mb-4">
+                <h4 class="text-warning">Confirm Your Investment</h4>
+                <p class="text-light">
+                  Final step to start earning passive rewards
+                </p>
+              </div>
+
+              <!-- Final Summary -->
+              <div class="final-summary mb-4">
+                <div class="summary-header">
+                  <i class="fa-solid fa-info-circle text-warning"></i>
+                  <h6 class="mb-0">Transaction Summary</h6>
+                </div>
+                <div class="summary-details">
+                  <div class="detail-row">
+                    <span>Amount to Stake:</span>
+                    <span class="text-warning"
+                      >{{ selectedUruksToStake | number }} Uruks</span
+                    >
+                  </div>
+                  <div class="detail-row">
+                    <span>New Tier:</span>
+                    <span class="text-third">{{
+                      getPreviewTier(
+                        selectedUruksToStake + (mineStake?.stakeAmount || 0)
+                      )?.name
+                    }}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span>APR:</span>
+                    <span class="text-success"
+                      >{{
+                        (getPreviewTier(
+                          selectedUruksToStake + (mineStake?.stakeAmount || 0)
+                        )?.apr || 0) * 100 | number: '1.1-1'
+                      }}%</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Important Notes -->
+              <div class="important-notes mb-4">
+                <div class="note-card">
+                  <h6 class="text-warning mb-2">
+                    <i class="fa-solid fa-exclamation-triangle"></i>
+                    Important Notes:
+                  </h6>
+                  <ul class="notes-list">
+                    <li>Rewards can be claimed every 24 hours</li>
+                    <li>Unclaimed rewards are vulnerable to raids</li>
+                    <li>Consider activating guard protection</li>
+                    <li>Higher tiers unlock better rewards and bonuses</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="step-actions d-flex gap-3">
+                <button
+                  class="btn btn-outline-secondary btn-sm"
+                  (click)="subphase = 1"
+                >
+                  <i class="fa-solid fa-arrow-left"></i>
+                  Back
+                </button>
+                <button
+                  class="btn btn-success btn-lg flex-fill btn-pending"
+                  [disabled]="
+                    !walletService.allowChainConnected() ||
+                    selectedUruksToStake < minStakeAmount
+                  "
+                  (click)="stakeUruks()"
+                >
+                  @if (walletService.allowChainConnected()) {
+                    <i class="fa-solid fa-pickaxe"></i>
+                    <span>{{
+                      mineStake ? 'Increase Stake' : 'Start Mining'
+                    }}</span>
+                  } @else {
+                    <i class="fa-solid fa-exclamation-triangle"></i>
+                    Switch to correct chain
+                  }
+                </button>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Management Options (shown in all steps if user has existing stake) -->
+          <div
+            class="management-options w-100 mt-4"
+            *ngIf="mineStake && subphase === 0"
+          >
+            <div class="options-divider">
+              <span class="divider-text">Or manage existing stake</span>
+            </div>
+            <div class="management-buttons">
+              <button class="btn btn-outline-info btn-sm" (click)="phase = 2">
+                <i class="fa-solid fa-cog"></i>
+                Manage Stake
+              </button>
+              <button
+                class="btn btn-outline-warning btn-sm"
+                (click)="subphase = 10"
+              >
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                Unstake History
+              </button>
+            </div>
+          </div>
+
+          <!-- Unstake History (subphase 10) -->
+          <div *ngIf="subphase === 10" class="unstakes-container w-100">
+            <div class="unstakes-header">
+              <div class="d-flex justify-content-between align-items-center">
+                <h4 class="text-third mb-0">Unstaking History</h4>
+                <button
+                  class="btn btn-sm btn-outline-secondary"
+                  (click)="subphase = 0"
+                >
+                  <i class="fa-solid fa-arrow-left"></i>
+                  Back
+                </button>
+              </div>
+              <p class="text-light mt-2" *ngIf="unstakeRequests?.length == 0">
+                No unstaking requests found.
+              </p>
+            </div>
+
+            <ng-container *ngIf="unstakeRequests?.length > 0">
+              <div class="unstakes-list">
+                <div
+                  *ngFor="let request of unstakeRequests; let i = index"
+                  class="unstake-item"
+                  [ngClass]="{ claimable: request.isClaimable }"
+                >
+                  <div class="unstake-amount">
+                    <img
+                      class="uruks-icon"
+                      src="{{ prefix + '/assets/goldenuruks.png' }}"
+                      alt="Golden Uruks"
+                    />
+                    <span class="amount-value">{{
+                      request.amount | number
+                    }}</span>
+                  </div>
+
+                  <div class="unstake-status">
+                    <div
+                      class="status-indicator"
+                      [ngClass]="{ ready: request.isClaimable }"
+                    ></div>
+                    <span *ngIf="request.isClaimable">Ready to claim!</span>
+                    <span *ngIf="!request.isClaimable">{{
+                      formatTimeRemaining(request.timeRemaining)
+                    }}</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="btn-claim"
+                    [disabled]="!request.isClaimable"
+                    (click)="claimUnstake(i)"
+                  >
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                    Claim
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+          </div>
         </div>
       }
 
-      <ng-template #currentTierTemplate let-activeTier="activeTier">
-        <div
-          class="current-tier text-white d-flex gap-3 flex-column px-1 px-md-4 uruk-card"
-        >
+      <!-- Phase 2: Manage Stake -->
+      @if (phase == 2) {
+        <div class="manage-stake-interface uruk-card p-4">
           <div
-            class="tier-image d-flex justify-content-center align-items-center flex-column"
+            class="manage-header d-flex justify-content-between align-items-center"
           >
-            <ng-container
-              *ngIf="totalMultichainWorkforce$ | async as totalWorkforce"
+            <h3 class="text-third">
+              <i class="fa-solid fa-cog"></i>
+              Manage Mining Operation
+            </h3>
+            <button
+              class="btn btn-outline-secondary btn-sm"
+              (click)="phase = 0"
             >
-              <span class="py-2" *ngIf="totalWorkforce && totalWorkforce > 0"
-                >Total workforce: {{ totalWorkforce ?? 0 }}
-                <img
-                  class="navbar-uruks-icon pb-1"
-                  src="{{ prefix + '/assets/goldenuruks.png' }}"
-                  style="max-width: 32px"
-                />
-                <span
-                  *ngIf="
-                    (stakeInfo | async)?.amountStaked ?? 0 as amountStakedChain
-                  "
-                  class="text-light"
-                >
-                  ({{ amountStakedChain ?? 0 }} current chain)</span
-                >
-              </span></ng-container
-            >
-
-            <app-item-box
-              [height]="getCurrentTierImageSize()"
-              [width]="getCurrentTierImageSize()"
-              [rarity]="activeTier ? activeTier.rarity : null"
-              [image]="activeTier ? activeTier.image : CONTRACT_IMAGE"
-            >
-              <ng-container
-                tooltip
-                *ngTemplateOutlet="
-                  tooltipTier;
-                  context: {
-                    tier: activeTier,
-                    usedAs: true,
-                  }
-                "
-              ></ng-container>
-            </app-item-box>
+              <i class="fa-solid fa-arrow-left"></i>
+              Back
+            </button>
           </div>
-          <ng-container
-            *ngTemplateOutlet="
-              tooltipTier;
-              context: {
-                tier: activeTier,
-                showAction: true,
-              }
-            "
-          ></ng-container>
-        </div>
-      </ng-template>
-    </div>
 
-    <div class="col-12">
-      <div class="px-1 px-md-5 tier-list-wrapper">
-        <app-tierized-progress-bar
-          [currentValue]="totalMultichainWorkforce$ | async"
-          [tooltipTemplate]="tooltipTier"
-          [tiers]="tiers$ | async"
-        ></app-tierized-progress-bar>
+          <div class="current-stake-info" *ngIf="mineStake">
+            <div class="info-grid">
+              <div class="info-item">
+                <label>Total Staked:</label>
+                <span class="value"
+                  >{{ mineStake.stakeAmount | number }} Uruks</span
+                >
+              </div>
+              <div class="info-item">
+                <label>Current Tier:</label>
+                <span class="value">{{ getCurrentTier()?.name }}</span>
+              </div>
+              <div class="info-item">
+                <label>Unclaimed Rewards:</label>
+                <span class="value text-third"
+                  >{{
+                    mineStake.unclaimedRewards | number: '1.0-2'
+                  }}
+                  Uruks</span
+                >
+              </div>
+              <div class="info-item">
+                <label>Total Earned:</label>
+                <span class="value text-warning"
+                  >{{ mineStake.totalEarned | number: '1.0-2' }} Uruks</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="manage-actions">
+            <button
+              class="btn btn-primary btn-lg"
+              (click)="phase = 1; subphase = 0"
+            >
+              <i class="fa-solid fa-plus"></i>
+              Add More Stake
+            </button>
+
+            <button class="btn btn-warning btn-lg" (click)="initiateUnstake()">
+              <i class="fa-solid fa-minus"></i>
+              Reduce Stake
+            </button>
+
+            <button
+              class="btn btn-success btn-lg"
+              [disabled]="mineStake?.unclaimedRewards <= 0"
+              (click)="claimRewards()"
+            >
+              <i class="fa-solid fa-hand-holding-dollar"></i>
+              Claim All Rewards
+            </button>
+          </div>
+
+          <!-- Show Tier Progress in Management -->
+          <div class="tier-progress-section mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="text-third mb-0">Tier Progress</h5>
+              <button
+                class="btn btn-sm btn-outline-third"
+                (click)="showTierProgress = !showTierProgress"
+              >
+                <i
+                  class="fa-solid"
+                  [ngClass]="showTierProgress ? 'fa-eye-slash' : 'fa-eye'"
+                ></i>
+                {{ showTierProgress ? 'Hide' : 'Show' }} Tiers
+              </button>
+            </div>
+
+            <div class="tier-progress-wrapper" *ngIf="showTierProgress">
+              <app-tierized-progress-bar
+                [currentValue]="mineStake?.stakeAmount || 0"
+                [tooltipTemplate]="tooltipTier"
+                [tiers]="tiers$ | async"
+              >
+              </app-tierized-progress-bar>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Phase 3: Raid History -->
+      @if (phase == 3) {
+        <div class="raid-history-interface uruk-card p-4">
+          <div
+            class="history-header d-flex justify-content-between align-items-center"
+          >
+            <h3 class="text-danger">
+              <i class="fa-solid fa-scroll"></i>
+              Battle History
+            </h3>
+            <button class="btn btn-outline-secondary btn-sm" (click)="phase = 0">
+              <i class="fa-solid fa-arrow-left"></i>
+              Back
+            </button>
+          </div>
+
+          <div class="history-tabs">
+            <button
+              class="tab-button"
+              [ngClass]="{ active: historyTab === 'attacks' }"
+              (click)="historyTab = 'attacks'"
+            >
+              <i class="fa-solid fa-sword"></i>
+              Your Attacks
+            </button>
+            <button
+              class="tab-button"
+              [ngClass]="{ active: historyTab === 'defenses' }"
+              (click)="historyTab = 'defenses'"
+            >
+              <i class="fa-solid fa-shield"></i>
+              Defenses
+            </button>
+          </div>
+
+          <div class="history-content">
+            <div
+              class="raid-list"
+              *ngIf="getRaidHistory() | async as raidHistory"
+            >
+              <div class="raid-item" *ngFor="let raid of raidHistory">
+                <div class="raid-participants">
+                  <div class="participant attacker">
+                    <img
+                      [src]="raid.attacker.image"
+                      class="participant-avatar"
+                    />
+                    <span class="participant-name">{{
+                      raid.attacker.name
+                    }}</span>
+                  </div>
+                  <div class="vs-indicator">
+                    <i class="fa-solid fa-swords"></i>
+                  </div>
+                  <div class="participant defender">
+                    <img
+                      [src]="raid.defender.image"
+                      class="participant-avatar"
+                    />
+                    <span class="participant-name">{{
+                      raid.defender.name
+                    }}</span>
+                  </div>
+                </div>
+
+                <div class="raid-result">
+                  <div
+                    class="result-badge"
+                    [ngClass]="{
+                      victory: raid.attackerWon,
+                      defeat: !raid.attackerWon,
+                    }"
+                  >
+                    {{ raid.attackerWon ? 'VICTORY' : 'DEFEAT' }}
+                  </div>
+                  <div class="stolen-amount">
+                    <span class="amount">{{ raid.stolenAmount | number }}</span>
+                    <img
+                      src="{{ prefix + '/assets/goldenuruks.png' }}"
+                      class="uruks-icon"
+                    />
+                  </div>
+                </div>
+
+                <div class="raid-details">
+                  <span class="raid-type">{{
+                    raid.wasGuarded ? 'Combat' : 'Unguarded'
+                  }}</span>
+                  <span class="raid-time">{{
+                    formatTimeAgo(raid.raidedAt)
+                  }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Raid Modal -->
+<div class="modal fade" id="raidModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content uruk-modal">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">
+          <i class="fa-solid fa-swords"></i>
+          Choose Your Target
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="raid-targets">
+          <div
+            class="target-item"
+            *ngFor="let target of raidTargets"
+            (click)="selectRaidTarget(target)"
+          >
+            <div class="target-info">
+              <img [src]="target.player.image" class="target-avatar" />
+              <div class="target-details">
+                <h6 class="target-name">{{ target.player.name }}</h6>
+                <span class="target-tier">{{ target.tier.name }}</span>
+                <span class="target-rewards text-third"
+                  >{{ target.unclaimedRewards | number }} Uruks</span
+                >
+              </div>
+            </div>
+            <div class="target-status">
+              <div
+                class="guard-status"
+                [ngClass]="{
+                  guarded: target.isGuarded,
+                  unguarded: !target.isGuarded,
+                }"
+              >
+                <i
+                  class="fa-solid"
+                  [ngClass]="target.isGuarded ? 'fa-shield' : 'fa-shield-blank'"
+                ></i>
+                <span>{{ target.isGuarded ? 'Guarded' : 'Unguarded' }}</span>
+              </div>
+              <div class="potential-loot">
+                <span
+                  >Potential:
+                  {{ target.unclaimedRewards * 0.8 | number }} Uruks</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -16,6 +16,8 @@ import {
   startWith,
   switchMap,
   tap,
+  Observable,
+  of,
 } from 'rxjs';
 import { TemplatePage } from 'src/modules/core/components/template-page.component';
 import { Rarity } from 'src/modules/core/models/items.model';
@@ -35,9 +37,58 @@ export interface MineTier {
   matFactor: number;
   lootboxChance: number;
   uruksAllowed: number;
+  uruksBoost?: number;
+  apr?: number;
+  name?: string;
+  description?: string;
+  image?: string;
+  rarity?: Rarity;
+  tier?: string;
 }
 
-// Add this enum to match your backend
+export interface MineStakeInfo {
+  id: string;
+  stakeAmount: number;
+  tier: string;
+  unclaimedRewards: number;
+  totalEarned: number;
+  lastClaimAt: Date | null;
+  isActive: boolean;
+  canClaim: boolean;
+  nextClaimAt: Date | null;
+}
+
+export interface RaidTarget {
+  player: {
+    name: string;
+    image: string;
+  };
+  tier: MineTier;
+  unclaimedRewards: number;
+  isGuarded: boolean;
+}
+
+export interface RaidHistoryItem {
+  attacker: {
+    name: string;
+    image: string;
+  };
+  defender: {
+    name: string;
+    image: string;
+  };
+  attackerWon: boolean;
+  stolenAmount: number;
+  wasGuarded: boolean;
+  raidedAt: Date;
+}
+
+export interface UnstakeRequest {
+  amount: number;
+  isClaimable: boolean;
+  timeRemaining: number;
+}
+
 export enum MineTierIdentifier {
   BARE_HANDS = 'BARE_HANDS',
   REINFORCEMENTS = 'REINFORCEMENTS',
@@ -59,14 +110,32 @@ export class TheMineComponent extends TemplatePage {
   public today = new Date();
   public phase = 0;
   public subphase = 0;
-  formattedTime: string = ''; // Formato de cuenta regresiva (MM:SS)
+  formattedTime: string = '';
 
-  // Rarity color mapping utility
+  showTierProgress = false;
+  Math = Math;
+
+  mineStake: MineStakeInfo | null = null;
+  isGuarding = false;
+  guardCooldownRemaining = 0;
+  claimCooldownRemaining = 0;
+  raidCooldownRemaining = 0;
+  selectedUruksToStake = 0;
+  minStakeAmount = 1000;
+  unstakeRequests: UnstakeRequest[] = [];
+  raidTargets: RaidTarget[] = [];
+  recentRaids: RaidHistoryItem[] = [];
+  historyTab: 'attacks' | 'defenses' = 'attacks';
+
   getRarityColor = getRarityColor;
 
   statsService = inject(StatsService);
 
   public tiers$ = this.statsService.getMineTiers().pipe(
+    map((tiers) => tiers.map(tier => ({
+      ...tier,
+      apr: tier.apr || 0
+    }))),
     tap((tiers) => {
       this.tiers = tiers;
     })
@@ -75,11 +144,9 @@ export class TheMineComponent extends TemplatePage {
   public tiers: Array<any> = [];
   public stakeType: 'in-game' | 'wallet' = 'wallet';
 
-  // Constants
   public CONTRACT_IMAGE = 'assets/materials/15.webp';
   public prefix = ViewportService.getPreffixImg();
 
-  // Injected services
   store = inject(Store);
   walletService = inject(WalletService);
   spinnerService = inject(NgxSpinnerService);
@@ -91,16 +158,13 @@ export class TheMineComponent extends TemplatePage {
   playerService = inject(PlayerService);
   totalMultichainWorkforce$ = this.playerService.getMultichainStakedAmount$();
   public RarityEnum = Rarity;
-  // Reactive form controls
+
   useWallet = new FormControl(true);
 
-  // Player state from the store
   player$ = this.store.select(MainState.getPlayer);
 
-  // Selected Uruks to export
   public selectedUruksToExport = 0;
 
-  // Reactive balance stream
   erc20Balance$ = new BehaviorSubject([]);
 
   erc20BalanceInterval$ = interval(2000).pipe(
@@ -125,7 +189,6 @@ export class TheMineComponent extends TemplatePage {
     })
   );
 
-  // Stake info reactive stream
   stakeInfo = new BehaviorSubject(null);
 
   stakeInfoInterval$ = interval(5000).pipe(
@@ -147,7 +210,7 @@ export class TheMineComponent extends TemplatePage {
             timeStaked: timeStaked.toString(),
             requests: (requests ?? []).map((request) => {
               const requestTime = Number(request.requestTime.toString()) * 1000;
-              const additionalDays = 18 * 86400000; // 18 días en milisegundos
+              const additionalDays = 18 * 86400000;
               return {
                 amount: Number(ethers.formatEther(request.amount.toString())),
                 remainingTime: new Date(requestTime + additionalDays),
@@ -186,6 +249,7 @@ export class TheMineComponent extends TemplatePage {
       });
 
     this.startCountdown();
+    this.loadMineStakeData();
   }
 
   calculateEndTime(requestTime: number): Date {
@@ -313,18 +377,142 @@ export class TheMineComponent extends TemplatePage {
     return paddedValue;
   }
 
-  // Update this method to match your backend logic exactly
   public calculateExtraAttempts(tier: any): number {
     if (!tier) return 0;
 
-    // Find the index in the actual tiers array, not in the enum
     const tierIndex = this.tiers.findIndex((t) => t.id === tier.id);
     const pickaxeIndex = this.tiers.findIndex((t) => t.id === MineTierIdentifier.PICKEAXE);
 
-    // Only proceed if we found valid indices
     if (tierIndex === -1 || pickaxeIndex === -1) return 0;
 
-    // Use the same formula as the backend
     return Math.min(Math.max(tierIndex - pickaxeIndex, 0), this.MAX_EXTRA_CRYPT_ATTEMPS);
+  }
+
+  async loadMineStakeData() {
+    // TODO: Implement API calls to load mine stake data
+    // This should load mineStake, cooldowns, etc.
+  }
+
+  getCurrentTier(): MineTier | null {
+    if (!this.mineStake) return null;
+    return this.tiers.find(tier => tier.id === this.mineStake?.tier) || null;
+  }
+
+  getCurrentAPR(): number {
+    const tier = this.getCurrentTier();
+    return tier?.apr ? tier.apr * 100 : 0;
+  }
+
+  getPreviewTier(amount: number): MineTier | null {
+    return this.tiers.find(tier => amount >= tier.start && amount < tier.end) || null;
+  }
+
+
+  async toggleGuard() {
+    try {
+      // TODO: Implement guard toggle API call
+      this.isGuarding = !this.isGuarding;
+      this.toastService.success(`Guard ${this.isGuarding ? 'activated' : 'deactivated'}`);
+    } catch (error) {
+      this.toastService.error('Failed to toggle guard');
+    }
+  }
+
+  async claimRewards() {
+    try {
+      // TODO: Implement claim rewards API call
+      this.toastService.success('Rewards claimed successfully!');
+      await this.loadMineStakeData(); // Reload data
+    } catch (error) {
+      this.toastService.error('Failed to claim rewards');
+    }
+  }
+
+  async stakeUruks() {
+    try {
+      // TODO: Implement stake uruks API call
+      this.toastService.success('Uruks staked successfully!');
+      this.phase = 0; // Return to main view
+      await this.loadMineStakeData(); // Reload data
+    } catch (error) {
+      this.toastService.error('Failed to stake uruks');
+    }
+  }
+
+  async initiateUnstake() {
+    try {
+      // TODO: Implement unstake initiation
+      this.toastService.success('Unstake request initiated');
+    } catch (error) {
+      this.toastService.error('Failed to initiate unstake');
+    }
+  }
+
+  async claimUnstake(index: number) {
+    try {
+      // TODO: Implement unstake claim
+      this.toastService.success('Unstake claimed successfully!');
+    } catch (error) {
+      this.toastService.error('Failed to claim unstake');
+    }
+  }
+
+  async openRaidModal() {
+    try {
+      // TODO: Load raid targets
+      this.raidTargets = []; // Placeholder
+      // Open modal logic here
+    } catch (error) {
+      this.toastService.error('Failed to load raid targets');
+    }
+  }
+
+  selectRaidTarget(target: RaidTarget) {
+    // TODO: Implement raid execution
+    console.log('Raiding target:', target);
+  }
+
+  getRaidHistory(): Observable<RaidHistoryItem[]> {
+    // TODO: Implement raid history loading
+    return of(this.recentRaids);
+  }
+
+  getRaidMessage(raid: any): string {
+    // TODO: Implement raid message formatting
+    return 'Raid message placeholder';
+  }
+
+  // Utility methods to replace missing pipes
+  formatTimeRemaining(milliseconds: number): string {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}m ${seconds}s`;
+    } else if (minutes > 0) {
+      return `${minutes}m ${seconds}s`;
+    } else {
+      return `${seconds}s`;
+    }
+  }
+
+  formatTimeAgo(date: Date): string {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffDays > 0) {
+      return `${diffDays}d ago`;
+    } else if (diffHours > 0) {
+      return `${diffHours}h ago`;
+    } else if (diffMins > 0) {
+      return `${diffMins}m ago`;
+    } else {
+      return 'Just now';
+    }
   }
 }

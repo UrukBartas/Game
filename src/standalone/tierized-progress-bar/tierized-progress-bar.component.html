@@ -17,6 +17,7 @@
         *ngFor="let tier of tiers; let i = index"
         [ngClass]="{'active': isTierActive(tier)}"
         [ngbTooltip]="tooltipTemplate"
+        [closeDelay]="999999"
         [tooltipContext]="{ tier: tier, usedAs: true }"
       >
         <img

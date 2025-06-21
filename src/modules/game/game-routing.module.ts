@@ -47,8 +47,8 @@ const routes: Routes = [
         component: TabernComponent,
         title: 'The Tavern',
         data: {
-          tutorial: TabernTutorialComponent
-        }
+          tutorial: TabernTutorialComponent,
+        },
       },
       {
         path: 'auction-house',
@@ -148,6 +148,7 @@ const routes: Routes = [
         title: 'The Mine',
         data: {
           tutorial: MineTutorialComponent,
+          hideChat: true,
         },
       },
       {
@@ -166,7 +167,7 @@ const routes: Routes = [
         title: 'Leaderboard',
         data: {
           tutorial: LeaderboardTutorialComponent,
-          hideChat: true
+          hideChat: true,
         },
       },
       {
@@ -201,4 +202,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class GameRoutingModule { }
+export class GameRoutingModule {}

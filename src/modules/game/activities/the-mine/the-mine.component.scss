@@ -2,9 +2,11 @@
 @import 'node_modules/bootstrap/scss/functions';
 @import 'node_modules/bootstrap/scss/variables';
 @import '../../../../variables.scss';
+
 #themine {
   position: relative;
   height: 100%;
+  
   .uruk-helper {
     display: flex;
     align-items: center;
@@ -13,12 +15,14 @@
       display: flex;
     }
   }
+  
   .actions-add {
     flex-direction: row;
     @include media-breakpoint-down(sm) {
       flex-direction: column;
     }
   }
+  
   .next-mining-gains {
     border: 1px solid $white-100;
     color: $white-100;
@@ -28,11 +32,13 @@
     justify-content: center;
     border-radius: 25px;
   }
+  
   .description,
   .row {
     position: relative;
     z-index: 100;
   }
+  
   .themine-bg {
     position: absolute;
     top: 0;
@@ -53,12 +59,13 @@
       background-position-x: 65%;
     }
   }
+  
   .separate {
     display: flex;
     height: 100%;
     justify-content: center;
     @include media-breakpoint-down(sm) {
-      justify-content: start;
+      justify-content: center;
     }
   }
 
@@ -67,11 +74,11 @@
   }
 
   p {
-    white-space: normal; /* Ajustar el texto a nuevas líneas */
-    word-wrap: break-word; /* Asegurar el ajuste de palabras largas */
-    overflow-wrap: break-word; /* Propiedad moderna para lo mismo */
-    word-break: break-word; /* Forzar el ajuste si es necesario */
-    hyphens: auto; /* Añadir guiones automáticos si es compatible */
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
   }
 
   .table-responsive {
@@ -96,15 +103,15 @@
 }
 
 .amount-selector {
-  background: rgba(0, 0, 0, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba($black-500, 0.85);
+  border: 1px solid rgba($white-100, 0.1);
   backdrop-filter: blur(10px);
   border-radius: 15px;
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+    border-color: rgba($white-100, 0.2);
+    box-shadow: 0 0 20px rgba($yellow, 0.1);
   }
 
   .actions {
@@ -112,7 +119,7 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba($white-100, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -120,14 +127,14 @@
       transition: all 0.3s ease;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba($white-100, 0.2);
         transform: translateY(-2px);
       }
     }
   }
 
   .unstakes {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba($black-400, 0.3);
     border-radius: 10px;
     padding: 1rem;
 
@@ -137,7 +144,7 @@
 
       td {
         vertical-align: middle;
-        border-color: rgba(255, 255, 255, 0.1);
+        border-color: rgba($white-100, 0.1);
       }
 
       .btn-secondary {
@@ -145,7 +152,7 @@
 
         &:not(:disabled):hover {
           transform: translateY(-2px);
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 4px 8px rgba($black, 0.2);
         }
       }
     }
@@ -167,7 +174,7 @@
         background: linear-gradient(
           45deg,
           transparent,
-          rgba(255, 215, 0, 0.1),
+          rgba($yellow, 0.1),
           transparent
         );
         transform: rotate(45deg);
@@ -176,17 +183,17 @@
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+        box-shadow: 0 4px 15px rgba($yellow, 0.2);
       }
     }
   }
 }
 
 .current-tier {
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba($black-500, 0.85);
   backdrop-filter: blur(10px);
   border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba($white-100, 0.1);
   transition: all 0.3s ease;
 
   .container-tier {
@@ -194,7 +201,7 @@
   }
 
   &:hover {
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba($white-100, 0.2);
     transform: translateY(-2px);
   }
 
@@ -211,7 +218,7 @@
       height: 20px;
       background: radial-gradient(
         ellipse at center,
-        rgba(255, 215, 0, 0.2),
+        rgba($yellow, 0.2),
         transparent
       );
       filter: blur(5px);
@@ -220,14 +227,14 @@
 }
 
 .next-mining-gains {
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba($black-500, 0.85);
   backdrop-filter: blur(5px);
   padding: 0.5rem 1.5rem;
   border: none;
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+  box-shadow: 0 0 15px rgba($yellow, 0.1);
 
   .rotating-icon {
-    color: #ffd700;
+    color: $yellow;
     margin-right: 10px;
   }
 }
@@ -249,8 +256,8 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba($black-400, 0.6);
+    border: 1px solid rgba($white-100, 0.15);
     border-radius: 8px;
     padding: 8px 12px;
     color: $third;
@@ -258,10 +265,10 @@
     cursor: pointer;
 
     &:hover {
-      background: rgba(0, 0, 0, 0.8);
-      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba($black-400, 0.8);
+      border-color: rgba($white-100, 0.3);
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 8px rgba($black, 0.3);
     }
 
     i {
@@ -283,21 +290,21 @@
     }
 
     &.history-button:hover {
-      color: lightblue;
+      color: $cyan;
     }
 
     &.remove-button:hover {
-      color: $danger;
+      color: $red;
     }
   }
 }
 
 .unstakes-container {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba($black-400, 0.7);
   border-radius: 12px;
   padding: 20px;
   margin-top: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba($white-100, 0.1);
 
   .unstakes-header {
     margin-bottom: 15px;
@@ -322,7 +329,7 @@
     }
 
     &::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba($white-100, 0.05);
       border-radius: 10px;
     }
 
@@ -336,24 +343,24 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba($black-400, 0.5);
+    border: 1px solid rgba($white-100, 0.1);
     border-radius: 10px;
     padding: 15px;
     transition: all 0.3s ease;
 
     &:hover {
-      background: rgba(0, 0, 0, 0.7);
-      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba($black-400, 0.7);
+      border-color: rgba($white-100, 0.2);
     }
 
     &.claimable {
-      background: rgba(39, 55, 30, 0.4);
-      border-color: rgba(76, 175, 80, 0.3);
+      background: rgba($primary, 0.4);
+      border-color: rgba($secondary, 0.3);
 
       &:hover {
-        background: rgba(39, 55, 30, 0.6);
-        border-color: rgba(76, 175, 80, 0.5);
+        background: rgba($primary, 0.6);
+        border-color: rgba($secondary, 0.5);
       }
     }
 
@@ -387,8 +394,8 @@
         background-color: $gray-500;
 
         &.ready {
-          background-color: $success;
-          box-shadow: 0 0 8px rgba($success, 0.6);
+          background-color: $secondary;
+          box-shadow: 0 0 8px rgba($secondary, 0.6);
         }
       }
     }
@@ -407,12 +414,12 @@
 
       &:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 10px rgba($black, 0.3);
       }
 
       &:disabled {
-        background: linear-gradient(to bottom, $gray-600, $gray-700);
-        color: $gray-400;
+        background: linear-gradient(to bottom, $gray-400, $gray-500);
+        color: $gray-200;
         cursor: not-allowed;
       }
 
@@ -433,6 +440,1588 @@
       .btn-claim {
         width: 100%;
         justify-content: center;
+      }
+    }
+  }
+}
+
+// New animated background and particles
+.themine-bg.animated-bg {
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      45deg,
+      rgba($light-brown, 0.1) 0%,
+      rgba($brown, 0.1) 50%,
+      rgba($orange, 0.1) 100%
+    );
+    animation: gradientShift 8s ease-in-out infinite;
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+// Mining particles animation
+.mining-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: $yellow;
+    border-radius: 50%;
+    animation: particleFloat 12s linear infinite;
+    opacity: 0;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, rgba($yellow, 0.6) 0%, transparent 70%);
+      border-radius: 50%;
+      top: -2px;
+      left: -2px;
+    }
+    
+    &:nth-child(odd) {
+      background: $orange;
+      animation-duration: 15s;
+    }
+    
+    &:nth-child(3n) {
+      background: $cyan;
+      animation-duration: 10s;
+    }
+  }
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translateY(100vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) translateX(50px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+// Ambient light effects
+.ambient-lights {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  
+  .light-beam {
+    position: absolute;
+    background: linear-gradient(45deg, rgba($white-100, 0.1), transparent);
+    border-radius: 50%;
+    filter: blur(20px);
+    animation: lightPulse 6s ease-in-out infinite;
+    
+    &.light-1 {
+      width: 200px;
+      height: 200px;
+      top: 20%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+    
+    &.light-2 {
+      width: 150px;
+      height: 150px;
+      top: 60%;
+      right: 15%;
+      animation-delay: 2s;
+    }
+    
+    &.light-3 {
+      width: 100px;
+      height: 100px;
+      bottom: 30%;
+      left: 50%;
+      animation-delay: 4s;
+    }
+  }
+}
+
+@keyframes lightPulse {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+// Header status cards
+.mine-status-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+  
+  .status-card {
+    background: rgba($black-400, 0.7);
+    border: 2px solid $primary;
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba($black, 0.3);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba($black, 0.4);
+    }
+    
+    &.rewards-timer {
+      border-color: $secondary;
+      
+      .rotating-icon {
+        color: $secondary;
+        animation: rotate 2s linear infinite;
+      }
+    }
+    
+    &.guard-status {
+      border-color: $yellow;
+      
+      .guard-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: bold;
+        
+        &.active {
+          color: $secondary;
+        }
+        
+        &.inactive {
+          color: $red;
+        }
+      }
+      
+      .toggle-guard-btn {
+        margin-left: 1rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+        
+        &:hover:not(:disabled) {
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+  
+  .status-text {
+    font-weight: 500;
+    color: $white-100;
+  }
+}
+
+// Main mine interface
+.main-mine-interface {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+// Mine stake card
+.mine-stake-card {
+  width: 100%;
+  max-width: 800px;
+  background: linear-gradient(135deg, rgba($black-400, 0.8) 0%, rgba($black-300, 0.9) 100%);
+  border: 2px solid $secondary;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba($secondary, 0.2);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba($secondary, 0.1), transparent);
+    animation: shimmer 3s linear infinite;
+  }
+  
+  .stake-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    
+    h3 {
+      margin: 0;
+      font-size: 1.8rem;
+      text-shadow: 0 2px 4px rgba($black, 0.5);
+    }
+  }
+  
+  .stake-stats {
+    margin-bottom: 1.5rem;
+    
+    .stake-stat {
+      text-align: center;
+      padding: 1rem;
+      
+      .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        display: block;
+        text-shadow: 0 2px 4px rgba($black, 0.5);
+      }
+      
+      .stat-label {
+        font-size: 0.9rem;
+        color: $gray-200;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 0.5rem;
+      }
+    }
+  }
+  
+  .stake-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    
+    .claim-rewards-btn {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.75rem 1.5rem;
+      font-size: 1.1rem;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba($white-100, 0.2), transparent);
+        transition: left 0.5s;
+      }
+      
+      &:hover:not(:disabled)::before {
+        left: 100%;
+      }
+      
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba($secondary, 0.4);
+      }
+      
+      .reward-amount {
+        font-size: 0.9rem;
+        opacity: 0.8;
+      }
+    }
+  }
+  
+  .cooldown-timer {
+    text-align: center;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background: rgba($yellow, 0.2);
+    border-radius: 8px;
+    color: $yellow;
+    font-size: 0.9rem;
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+// Current tier display
+.current-tier-display {
+  width: 100%;
+  max-width: 600px;
+  background: linear-gradient(135deg, rgba($black-400, 0.8) 0%, rgba($black-300, 0.9) 100%);
+  border: 2px solid $third;
+  border-radius: 16px;
+  padding: 2rem;
+  
+  .tier-showcase {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    
+    @media (min-width: 768px) {
+      flex-direction: row;
+      text-align: left;
+    }
+    
+    .tier-image-container {
+      .tier-image.animated-glow {
+        animation: glow 2s ease-in-out infinite alternate;
+        filter: drop-shadow(0 0 10px rgba($white-100, 0.3));
+      }
+    }
+    
+    .tier-info {
+      flex: 1;
+      
+      .tier-name {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: $third;
+        text-shadow: 0 2px 4px rgba($black, 0.5);
+      }
+      
+      .tier-description {
+        color: $gray-200;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+      }
+      
+      .tier-benefits {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        
+        .benefit-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.95rem;
+          
+          i {
+            width: 20px;
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes glow {
+  from { filter: drop-shadow(0 0 5px rgba($white-100, 0.3)); }
+  to { filter: drop-shadow(0 0 20px rgba($white-100, 0.6)); }
+}
+
+// No stake card
+.no-stake-card {
+  width: 100%;
+  max-width: 600px;
+  background: linear-gradient(135deg, rgba($black-400, 0.7) 0%, rgba($black-300, 0.8) 100%);
+  border: 2px dashed $gray-400;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  
+  .empty-mine-illustration {
+    .empty-icon {
+      font-size: 4rem;
+      color: $gray-400;
+      margin-bottom: 1rem;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    h3 {
+      margin-bottom: 1rem;
+    }
+    
+    .potential-rewards {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: rgba($yellow, 0.1);
+      border-radius: 12px;
+      border: 1px solid rgba($yellow, 0.3);
+      
+      h5 {
+        margin-bottom: 1rem;
+      }
+      
+      .earnings-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        
+        li {
+          padding: 0.5rem 0;
+          position: relative;
+          color: $gray-200;
+
+          &::before {
+            content: '⭐';
+            margin-right: 0.5rem;
+          }
+        }
+      }
+    }
+    
+    .start-mining-btn {
+      font-size: 1.2rem;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba($blue, 0.4);
+      }
+    }
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+// Mine raids section
+.mine-raids-section {
+  margin-top: 2rem;
+  
+  .raids-card {
+    background: linear-gradient(135deg, rgba($red, 0.1) 0%, rgba($black-400, 0.8) 100%);
+    border: 2px solid $red;
+    border-radius: 16px;
+    padding: 2rem;
+    
+    .raids-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      
+      h4 {
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba($black, 0.5);
+      }
+    }
+    
+    .raids-actions {
+      margin-bottom: 1.5rem;
+      
+      .raid-btn {
+        position: relative;
+        overflow: hidden;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          border-radius: 50%;
+          background: rgba($white-100, 0.2);
+          transition: all 0.3s ease;
+          transform: translate(-50%, -50%);
+        }
+        
+        &:hover:not(:disabled)::after {
+          width: 300px;
+          height: 300px;
+        }
+        
+        .cooldown-text {
+          font-size: 0.8rem;
+          opacity: 0.7;
+        }
+      }
+    }
+    
+    .recent-raids {
+      .raid-alert {
+        margin-bottom: 0.5rem;
+        
+        .alert {
+          border-radius: 8px;
+          padding: 0.75rem;
+          margin: 0;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          
+          i {
+            margin-right: 0.5rem;
+          }
+          
+          small {
+            font-size: 0.75rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Staking interface improvements
+.staking-interface {
+  .staking-explanation {
+    width: 100%;
+    margin-bottom: 2rem;
+    
+    .explanation-card {
+      background: rgba($yellow, 0.1);
+      border: 1px solid rgba($yellow, 0.3);
+      border-radius: 12px;
+      padding: 1.5rem;
+      
+      h5 {
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+      
+      .explanation-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        
+        li {
+          padding: 0.5rem 0;
+          position: relative;
+          padding-left: 1.5rem;
+          color: $gray-200;
+          
+          &::before {
+            content: '💡';
+            position: absolute;
+            left: 0;
+          }
+        }
+      }
+    }
+  }
+  
+  .tier-preview {
+    width: 100%;
+    margin: 1rem 0;
+    
+    .preview-card {
+      background: rgba($blue, 0.1);
+      border: 1px solid rgba($blue, 0.3);
+      border-radius: 12px;
+      padding: 1rem;
+      
+      .preview-tier {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        
+        .preview-image {
+          width: 50px;
+          height: 50px;
+          border-radius: 8px;
+        }
+        
+        .preview-info {
+          display: flex;
+          flex-direction: column;
+          
+          .preview-apr {
+            font-size: 0.9rem;
+            color: $secondary;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Manage stake interface
+.manage-stake-interface {
+  .current-stake-info {
+    margin-bottom: 2rem;
+    
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      
+      .info-item {
+        background: rgba($white-100, 0.05);
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        
+        label {
+          display: block;
+          font-size: 0.8rem;
+          color: $gray-200;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          margin-bottom: 0.5rem;
+        }
+        
+        .value {
+          font-size: 1.2rem;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+  
+  .manage-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    
+    .btn {
+      flex: 1;
+      min-width: 180px;
+      padding: 1rem;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+// Raid history interface
+.raid-history-interface {
+  .history-tabs {
+    display: flex;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid $black-300;
+    
+    .tab-button {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 1rem;
+      color: $gray-200;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+      
+      &.active {
+        color: $white-100;
+        border-bottom-color: $primary;
+        background: rgba($white-100, 0.05);
+      }
+      
+      &:hover:not(.active) {
+        color: $white-100;
+        background: rgba($white-100, 0.02);
+      }
+      
+      i {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+  
+  .raid-list {
+    .raid-item {
+      background: rgba($white-100, 0.05);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba($black, 0.3);
+      }
+      
+      .raid-participants {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        
+        .participant {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          
+          .participant-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid $black-300;
+          }
+          
+          .participant-name {
+            font-weight: bold;
+          }
+        }
+        
+        .vs-indicator {
+          color: $red;
+          font-size: 1.2rem;
+        }
+      }
+      
+      .raid-result {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        
+        .result-badge {
+          padding: 0.25rem 0.75rem;
+          border-radius: 20px;
+          font-size: 0.8rem;
+          font-weight: bold;
+          text-transform: uppercase;
+          
+          &.victory {
+            background: $secondary;
+            color: $white-100;
+          }
+          
+          &.defeat {
+            background: $red;
+            color: $white-100;
+          }
+        }
+        
+        .stolen-amount {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-weight: bold;
+          
+          .uruks-icon {
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+      
+      .raid-details {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: $gray-200;
+      }
+    }
+  }
+}
+
+// Raid modal
+.uruk-modal {
+  background: linear-gradient(135deg, rgba($black-500, 0.95) 0%, rgba($black-400, 0.98) 100%);
+  border: 2px solid $primary;
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  
+  .modal-header {
+    border-bottom: 1px solid $black-300;
+    padding: 1.5rem;
+    
+    .modal-title {
+      text-shadow: 0 2px 4px rgba($black, 0.5);
+    }
+  }
+  
+  .raid-targets {
+    max-height: 400px;
+    overflow-y: auto;
+    
+    .target-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background: rgba($white-100, 0.05);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        background: rgba($white-100, 0.1);
+        transform: translateY(-2px);
+      }
+      
+      .target-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        
+        .target-avatar {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          border: 2px solid $black-300;
+        }
+        
+        .target-details {
+          display: flex;
+          flex-direction: column;
+          
+          .target-name {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+          }
+          
+          .target-tier {
+            font-size: 0.9rem;
+            color: $gray-200;
+          }
+          
+          .target-rewards {
+            font-size: 0.9rem;
+            font-weight: bold;
+          }
+        }
+      }
+      
+      .target-status {
+        text-align: right;
+        
+        .guard-status {
+          margin-bottom: 0.5rem;
+          
+          &.guarded {
+            color: $secondary;
+          }
+          
+          &.unguarded {
+            color: $red;
+          }
+          
+          i {
+            margin-right: 0.25rem;
+          }
+        }
+        
+        .potential-loot {
+          font-size: 0.8rem;
+          color: $yellow;
+        }
+      }
+    }
+  }
+}
+
+// Responsive improvements
+@media (max-width: 768px) {
+  .mine-status-header {
+    flex-direction: column;
+    
+    .status-card {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  .stake-stats {
+    .stake-stat {
+      margin-bottom: 1rem;
+    }
+  }
+  
+  .tier-showcase {
+    text-align: center;
+  }
+  
+  .raids-actions {
+    .col-md-6 {
+      margin-bottom: 1rem;
+    }
+  }
+  
+  .manage-actions {
+    .btn {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+// Additional utility classes
+.rotating-icon {
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animated-glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.btn-pending {
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba($white-100, 0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  &:hover:not(:disabled)::before {
+    left: 100%;
+  }
+}
+
+// Enhanced uruk-card base styles
+.uruk-card {
+  position: relative;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 8px 32px rgba($black, 0.3);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba($black, 0.4);
+  }
+}
+
+// New Modular Wizard Styles
+.staking-wizard {
+  max-width: 800px;
+  margin: 0 auto;
+  
+  .wizard-header {
+    .wizard-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 2rem 0;
+      padding: 0 2rem;
+      
+      .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        
+        .step-number {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: rgba($gray-400, 0.3);
+          border: 2px solid $gray-400;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          color: $gray-200;
+          transition: all 0.3s ease;
+          margin-bottom: 0.5rem;
+        }
+        
+        .step-label {
+          font-size: 0.875rem;
+          color: $gray-300;
+          text-align: center;
+          transition: all 0.3s ease;
+        }
+        
+        &.active {
+          .step-number {
+            background: linear-gradient(135deg, $primary, $secondary);
+            border-color: $secondary;
+            color: $white-100;
+            box-shadow: 0 0 15px rgba($secondary, 0.5);
+          }
+          
+          .step-label {
+            color: $secondary;
+            font-weight: 600;
+          }
+        }
+        
+        &.completed {
+          .step-number {
+            background: linear-gradient(135deg, $secondary, $third);
+            border-color: $third;
+            color: $white-100;
+          }
+          
+          .step-label {
+            color: $third;
+          }
+        }
+      }
+      
+      .step-line {
+        flex: 1;
+        height: 2px;
+        background: rgba($gray-400, 0.3);
+        margin: 0 1rem;
+        position: relative;
+        top: -20px;
+        transition: all 0.3s ease;
+        
+        &.completed {
+          background: linear-gradient(90deg, $secondary, $third);
+          box-shadow: 0 0 8px rgba($secondary, 0.3);
+        }
+      }
+      
+      @media (max-width: 768px) {
+        padding: 0 1rem;
+        
+        .step {
+          .step-number {
+            width: 30px;
+            height: 30px;
+            font-size: 0.8rem;
+          }
+          
+          .step-label {
+            font-size: 0.75rem;
+          }
+        }
+        
+        .step-line {
+          margin: 0 0.5rem;
+          top: -15px;
+        }
+      }
+    }
+  }
+  
+  .step-content {
+    .step-title {
+      h4 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      p {
+        font-size: 1rem;
+        opacity: 0.8;
+      }
+    }
+    
+    .step-actions {
+      margin-top: 2rem;
+      
+      .btn {
+        padding: 0.75rem 2rem;
+        font-size: 1.1rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+}
+
+// Quick Amount Buttons
+.quick-amounts {
+  .amount-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    
+    .btn {
+      flex: 1;
+      min-width: 80px;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($black, 0.3);
+      }
+      
+      @media (max-width: 576px) {
+        min-width: 60px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+// Investment Summary
+.investment-summary {
+  .summary-card {
+    background: rgba($white-100, 0.05);
+    border: 1px solid rgba($white-100, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+    
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba($white-100, 0.1);
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      .label {
+        font-weight: 500;
+        color: $gray-200;
+      }
+      
+      .value {
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        
+        .uruks-icon {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+  }
+}
+
+// Tier Preview Section
+.tier-preview-section {
+  .tier-preview-card {
+    background: linear-gradient(135deg, rgba($third, 0.1), rgba($secondary, 0.1));
+    border: 2px solid rgba($third, 0.3);
+    border-radius: 16px;
+    padding: 1.5rem;
+    
+    .tier-preview-content {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      
+      @media (max-width: 768px) {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .tier-image-preview {
+        img {
+          width: 80px;
+          height: 80px;
+          border-radius: 12px;
+          box-shadow: 0 4px 15px rgba($black, 0.3);
+        }
+      }
+      
+      .tier-details {
+        flex: 1;
+        
+        .tier-name {
+          font-size: 1.3rem;
+          margin-bottom: 1rem;
+          color: $third;
+        }
+        
+        .tier-benefits-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+          gap: 0.75rem;
+          
+          .benefit {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            
+            i {
+              width: 20px;
+              text-align: center;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Earnings Projection
+.earnings-projection {
+  .projection-card {
+    background: rgba($yellow, 0.1);
+    border: 1px solid rgba($yellow, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    
+    .projection-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      
+      &:not(:last-child) {
+        border-bottom: 1px solid rgba($yellow, 0.2);
+      }
+    }
+  }
+}
+
+// Final Summary
+.final-summary {
+  background: rgba($blue, 0.1);
+  border: 2px solid rgba($blue, 0.3);
+  border-radius: 16px;
+  padding: 1.5rem;
+  
+  .summary-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    
+    i {
+      font-size: 1.2rem;
+    }
+  }
+  
+  .summary-details {
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba($blue, 0.2);
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+// Important Notes
+.important-notes {
+  .note-card {
+    background: rgba($red, 0.1);
+    border: 1px solid rgba($red, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    
+    .notes-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 0 0;
+      
+      li {
+        position: relative;
+        padding: 0.5rem 0 0.5rem 1.5rem;
+        color: $gray-200;
+        
+        &::before {
+          content: '•';
+          position: absolute;
+          left: 0;
+          color: $red;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+// Management Options
+.management-options {
+  .options-divider {
+    text-align: center;
+    margin: 2rem 0 1rem 0;
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba($white-100, 0.2);
+      z-index: 1;
+    }
+    
+    .divider-text {
+      background: rgba($black-400, 0.9);
+      padding: 0 1rem;
+      color: $gray-200;
+      font-size: 0.9rem;
+      position: relative;
+      z-index: 2;
+    }
+  }
+  
+  .management-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    
+    .btn {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+// Tier Progress Section
+.tier-progress-section {
+  background: rgba($white-100, 0.02);
+  border: 1px solid rgba($white-100, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  
+  .tier-progress-wrapper {
+    margin-top: 1rem;
+    
+    // Add some padding to make it look better
+    ::ng-deep app-tierized-progress-bar {
+      .progress-container {
+        background: rgba($white-100, 0.05);
+        border-radius: 8px;
+        padding: 1rem;
+      }
+    }
+  }
+}
+
+// Enhanced Unstakes Container
+.unstakes-container {
+  background: rgba($black-400, 0.7);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba($white-100, 0.1);
+  
+  .unstakes-header {
+    margin-bottom: 15px;
+    
+    h4 {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+  }
+  
+  .unstakes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 5px;
+    
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: rgba($white-100, 0.05);
+      border-radius: 10px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: $third;
+      border-radius: 10px;
+    }
+  }
+  
+  .unstake-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba($black-400, 0.5);
+    border: 1px solid rgba($white-100, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: rgba($black-400, 0.7);
+      border-color: rgba($white-100, 0.2);
+    }
+    
+    &.claimable {
+      background: rgba($primary, 0.4);
+      border-color: rgba($secondary, 0.3);
+      
+      &:hover {
+        background: rgba($primary, 0.6);
+        border-color: rgba($secondary, 0.5);
+      }
+    }
+    
+    .unstake-amount {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      
+      .uruks-icon {
+        width: 24px;
+        height: 24px;
+      }
+      
+      .amount-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: $white-100;
+      }
+    }
+    
+    .unstake-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: $gray-300;
+      
+      .status-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: $gray-500;
+        
+        &.ready {
+          background-color: $secondary;
+          box-shadow: 0 0 8px rgba($secondary, 0.6);
+        }
+      }
+    }
+    
+    .btn-claim {
+      background: linear-gradient(to bottom, $third, darken($third, 10%));
+      color: $black;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba($black, 0.3);
+      }
+      
+      &:disabled {
+        background: linear-gradient(to bottom, $gray-400, $gray-500);
+        color: $gray-200;
+        cursor: not-allowed;
+      }
+      
+      i {
+        font-size: 14px;
+      }
+    }
+    
+    @include media-breakpoint-down(sm) {
+      flex-direction: column;
+      gap: 15px;
+      text-align: center;
+      
+      .unstake-amount, .unstake-status {
+        justify-content: center;
+      }
+      
+      .btn-claim {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+// Responsive improvements for wizard
+@media (max-width: 768px) {
+  .staking-wizard {
+    padding: 1rem;
+    
+    .step-content {
+      .step-title {
+        h4 {
+          font-size: 1.3rem;
+        }
+      }
+      
+      .step-actions {
+        .btn {
+          padding: 0.6rem 1.5rem;
+          font-size: 1rem;
+        }
+      }
+    }
+    
+    .tier-preview-section {
+      .tier-preview-card {
+        padding: 1rem;
+        
+        .tier-details {
+          .tier-benefits-grid {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+          }
+        }
+      }
+    }
+    
+    .management-options {
+      .management-buttons {
+        flex-direction: column;
+        
+        .btn {
+          width: 100%;
+        }
       }
     }
   }

@@ -807,3 +807,15 @@ app-base-tutorial {
     }
   }
 }
+
+
+app-game-layout{
+  .uruks{
+    @include media-breakpoint-down(md) {
+      font-size: 0.7rem;
+    }
+  }
+}
+app-the-mine{
+  overflow-x: hidden !important;
+}

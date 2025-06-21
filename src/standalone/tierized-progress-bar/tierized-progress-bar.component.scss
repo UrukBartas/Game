@@ -11,6 +11,10 @@
   margin: 10px 0;
 }
 
+::ng-deep .tooltip-inner {
+  max-width: 350px;
+}
+
 .rpg-progress-bar-container {
   flex: 1;
   overflow-x: auto;
