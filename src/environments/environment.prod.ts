@@ -5,5 +5,5 @@ export const environment = {
     'https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main',
   permaLinkImgPrefMobile:
     'https://raw.githubusercontent.com/UrukBartas/assets/refs/heads/main/assets_mobile',
-  apiUrl: 'https://api.urukbartas.com',
+  apiUrl: 'https://uruk-bartas-prod-baaf8833238d.herokuapp.com/',
 };
