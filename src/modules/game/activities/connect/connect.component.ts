@@ -8,29 +8,25 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Preferences } from '@capacitor/preferences';
 import { Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
-import { firstValueFrom, tap } from 'rxjs';
-import { TemplatePage } from 'src/modules/core/components/template-page.component';
-import { Realm } from 'src/modules/core/models/session.model';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from 'src/services/auth.service';
-import { SessionService } from 'src/services/session.service';
 import { ViewportService } from 'src/services/viewport.service';
 import { WalletService } from 'src/services/wallet.service';
 import { LoginPlayer, MainState } from 'src/store/main.store';
 import { passwordPattern } from '../edit-character/edit-character.component';
 import { ThreePortalService } from './service/three-portal.service';
+
 @Component({
   selector: 'app-connect',
   templateUrl: './connect.component.html',
   styleUrls: ['./connect.component.scss'],
 })
-export class ConnectComponent
-  extends TemplatePage
-  implements OnInit, AfterViewInit {
+export class ConnectComponent implements OnInit, AfterViewInit {
   @ViewChild('threeContainer', { static: true })
   threeContainer!: ElementRef<HTMLDivElement>;
+
   public prefix = ViewportService.getPreffixImg();
   walletService = inject(WalletService);
   authService = inject(AuthService);
@@ -40,10 +36,9 @@ export class ConnectComponent
   fb = inject(FormBuilder);
   threeService = inject(ThreePortalService);
   activatedRoute = inject(ActivatedRoute);
-  seesionService = inject(SessionService);
+
   public doingLoginWithWeb2 = false;
   public recoveringPassword = false;
-  public showingRealms = false;
   public formGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
@@ -57,14 +52,9 @@ export class ConnectComponent
   ]);
   public isRecoveringPassword = false;
   public token!: string;
-  public realms$ = this.seesionService
-    .getRealms()
-    .pipe(tap((e) => (this.lastLoadedRealms = e)));
-  public lastLoadedRealms: Array<Realm> = [];
-  public selectedRealm: Realm;
+
   async ngOnInit() {
     this.token = this.activatedRoute.snapshot.queryParams['token'];
-
     this.isRecoveringPassword =
       this.activatedRoute.snapshot.data['resetPassword'] == true &&
       !!this.token;
@@ -74,120 +64,7 @@ export class ConnectComponent
       this.router.navigateByUrl('/inventory');
       return;
     }
-    await firstValueFrom(this.realms$);
     this.walletService.disconnect();
-    const urlParams = new URLSearchParams(window.location.search);
-    const realmParam = urlParams.get('realm');
-    const currentHost = window.location.hostname;
-    let autoSelectedRealm: Realm = null;
-    // Buscar realm por parámetro
-    if (realmParam) {
-      const existingRealm = this.lastLoadedRealms.find(
-        (e) => e.id == realmParam
-      );
-      if (existingRealm) {
-        if (existingRealm.disabled) {
-          this.toast.error(
-            `The realm "${existingRealm.name}" is currently disabled. Please select another realm.`,
-            'Realm Unavailable'
-          );
-          this.showingRealms = true;
-          return;
-        }
-        await Preferences.set({ key: 'selectedRealm', value: realmParam });
-        this.selectedRealm = existingRealm;
-        return;
-      } else {
-        console.log('realm ' + realmParam + ' does not exist');
-        this.showingRealms = true;
-        return;
-      }
-    }
-    // Buscar realm por host
-    autoSelectedRealm = this.lastLoadedRealms.find(realm => {
-      try {
-        const realmUrl = new URL(realm.url);
-        return realmUrl.hostname === currentHost;
-      } catch {
-        return false;
-      }
-    });
-    if (autoSelectedRealm) {
-      if (autoSelectedRealm.disabled) {
-        this.toast.warning(
-          `The realm for this URL ("${autoSelectedRealm.name}") is currently disabled. Please select another realm.`,
-          'Realm Unavailable'
-        );
-        this.showingRealms = true;
-        this.selectedRealm = null;
-      } else {
-        await Preferences.set({ key: 'selectedRealm', value: autoSelectedRealm.id });
-        this.selectedRealm = autoSelectedRealm;
-      }
-      return;
-    }
-    // Si no hay realm por host, buscar en preferencias
-    const selectedRealm = await this.getRealmFromPreferences();
-    if (selectedRealm && selectedRealm.disabled) {
-      this.toast.warning(
-        `Your previously selected realm "${selectedRealm.name}" is currently disabled. Please select another realm.`,
-        'Realm Unavailable'
-      );
-      this.showingRealms = true;
-      this.selectedRealm = null;
-    } else {
-      this.selectedRealm = selectedRealm;
-    }
-  }
-
-  private async getRealmFromPreferences(): Promise<Realm> {
-    const selectedRealmRes = await Preferences.get({ key: 'selectedRealm' });
-    const selectedRealm = selectedRealmRes.value;
-    return this.lastLoadedRealms.find((e) => e.id == selectedRealm);
-  }
-
-  public async handleEnterRealms() {
-    if (this.authService.nativePlatform) {
-      this.router.navigateByUrl('/create');
-      return;
-    }
-    const selectedRealm = await this.getRealmFromPreferences();
-    if (!!selectedRealm) {
-      // Check if the selected realm is disabled
-      if (selectedRealm.disabled) {
-        this.toast.warning(
-          `Your selected realm "${selectedRealm.name}" is currently disabled. Please select another realm.`,
-          'Realm Unavailable'
-        );
-        this.showingRealms = true;
-        return;
-      }
-      this.walletService.modal.open();
-    } else {
-      this.showingRealms = true;
-    }
-  }
-
-  public async handleSelectedRealm(realm: Realm) {
-    // Prevent selection of disabled realms
-    if (realm.disabled) {
-      this.toast.error(
-        `The realm "${realm.name}" is currently disabled and cannot be accessed.`,
-        'Realm Unavailable'
-      );
-      return;
-    }
-
-    await Preferences.set({
-      key: 'selectedRealm',
-      value: JSON.stringify(realm),
-    });
-    // Construir la URL con el query parameter
-    const realmUrl = new URL(realm.url);
-    realmUrl.searchParams.set('realm', realm.id);
-
-    // Redirigir al URL con los query params
-    window.location.href = realmUrl.toString();
   }
 
   ngAfterViewInit(): void {
@@ -201,6 +78,14 @@ export class ConnectComponent
         password: this.formGroup.value.password,
       })
     );
+  }
+
+  public handleConnect() {
+    if (this.authService.nativePlatform) {
+      this.router.navigateByUrl('/create');
+      return;
+    }
+    this.walletService.modal.open();
   }
 
   public async sendLinkRecoverPassword() {
@@ -247,13 +132,4 @@ export class ConnectComponent
       );
     }
   }
-
-  public getRealmsByStatus(status: 'mainnet' | 'testnet'): Array<Realm> {
-    return this.lastLoadedRealms.filter(realm => realm.status === status);
-  }
-
-  public getEnabledRealmsByStatus(status: 'mainnet' | 'testnet'): Array<Realm> {
-    return this.lastLoadedRealms.filter(realm => realm.status === status && !realm.disabled);
-  }
-
 }

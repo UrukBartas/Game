@@ -38,142 +38,79 @@
           @if (recoveringPassword) {
             <ng-container *ngTemplateOutlet="recoverPassword"></ng-container>
           } @else {
-            <ng-container *ngTemplateOutlet="login"></ng-container>
+            <div [formGroup]="formGroup" class="gap-3 px-3 email-container">
+              <div class="form-group">
+                <label for="characterName" class="text-third">Email</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="characterName"
+                  formControlName="email"
+                  name="characterName"
+                  placeholder="Enter email"
+                  validInput
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="password" class="text-third">Password:</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  formControlName="password"
+                  name="password"
+                  placeholder="Enter password"
+                />
+              </div>
+              <div class="d-flex justify-content-between gap-2" style="flex-wrap: wrap">
+                <span class="hoverable-text" routerLink="/create">Create an account</span>
+                <span class="hoverable-text" (click)="recoveringPassword = true">Forgot your password?</span>
+              </div>
+              <button
+                type="submit"
+                [disabled]="formGroup.invalid"
+                class="btn btn-lg btn-secondary save-button"
+                (click)="doLogin()"
+              >
+                Login
+                <i class="fa-solid fa-torii-gate pl-2"></i>
+              </button>
+              <button
+                type="submit"
+                class="btn btn-lg btn-dark save-button"
+                (click)="doingLoginWithWeb2 = false"
+              >
+                Back
+              </button>
+            </div>
           }
         } @else {
-          @if (showingRealms) {
-            <ng-container *ngTemplateOutlet="listRealms"></ng-container>
-          } @else {
-            <button
-              type="submit"
-              class="btn btn-lg btn-primary save-button"
-              (click)="handleEnterRealms()"
+          <button
+            type="submit"
+            class="btn btn-lg btn-primary save-button"
+            (click)="handleConnect()"
+          >
+            Enter the Game
+            <i class="fa-solid fa-torii-gate pl-2"></i>
+          </button>
+          <div class="divider">
+            <span class="text-light">OR</span>
+          </div>
+          <div class="options d-flex gap-4">
+            <p
+              urText
+              class="text-white text-center pointer hoverable-text"
+              (click)="doingLoginWithWeb2 = true"
             >
-              @if (!!selectedRealm) {
-                Enter the {{ selectedRealm.name }} realm
-              } @else {
-                Choose your realm
-              }
-
-              <i class="fa-solid fa-torii-gate pl-2"></i>
-            </button>
-            <div class="divider">
-              <span class="text-light">OR</span>
-            </div>
-            <div class="options d-flex gap-4">
-              <p
-                urText
-                class="text-white text-center pointer hoverable-text"
-                (click)="doingLoginWithWeb2 = true"
-              >
-                Login with email
-              </p>
-
-              <!-- <p
-                urText
-                class="text-white text-center pointer hoverable-text"
-                *ngIf="!!selectedRealm"
-                (click)="showingRealms = true"
-              >
-                Change realms
-              </p> -->
-            </div>
-          }
+              Login with email
+            </p>
+          </div>
         }
       }
     </div>
   }
 </div>
-
-<ng-template #listRealms>
-  <h3 class="realm-selection-title">Choose your Realm</h3>
-
-  <div class="realms-container">
-    <!-- Production Realms -->
-    <div class="realm-category" *ngIf="getRealmsByStatus('mainnet').length > 0">
-      <h4 class="realm-category-title">Production Realms</h4>
-      <div class="realm-cards">
-        <div
-          class="realm-card production"
-          [ngClass]="{ disabled: realm.disabled }"
-          *ngFor="let realm of getRealmsByStatus('mainnet')"
-          (click)="handleSelectedRealm(realm)"
-        >
-          <div class="realm-banner" [ngClass]="realm.class">
-            <div class="realm-icon">
-              <i [class]="realm.icon"></i>
-            </div>
-            <div class="disabled-overlay" *ngIf="realm.disabled">
-              <i class="fa-solid fa-lock"></i>
-              <span>DISABLED</span>
-            </div>
-          </div>
-          <div class="realm-info">
-            <h5 class="realm-name">{{ realm.name }}</h5>
-            <p class="realm-description">{{ realm.description }}</p>
-            <div
-              class="realm-status"
-              [ngClass]="realm.disabled ? 'offline' : 'online'"
-            >
-              <span class="status-indicator"></span>
-              <span class="status-text">{{
-                realm.disabled ? 'Disabled' : 'Online'
-              }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Test Realms -->
-    <div
-      class="realm-category test-realms"
-      *ngIf="getRealmsByStatus('testnet').length > 0"
-    >
-      <h4 class="realm-category-title">Test Realms</h4>
-      <div class="realm-cards">
-        <div
-          class="realm-card test"
-          [ngClass]="{ disabled: realm.disabled }"
-          *ngFor="let realm of getRealmsByStatus('testnet')"
-          (click)="handleSelectedRealm(realm)"
-        >
-          <div class="realm-banner" [ngClass]="realm.class">
-            <div class="realm-icon">
-              <i [class]="realm.icon"></i>
-            </div>
-            <div class="test-badge">TEST</div>
-            <div class="disabled-overlay" *ngIf="realm.disabled">
-              <i class="fa-solid fa-lock"></i>
-              <span>DISABLED</span>
-            </div>
-          </div>
-          <div class="realm-info">
-            <h5 class="realm-name">{{ realm.name }}</h5>
-            <p class="realm-description">{{ realm.description }}</p>
-            <div
-              class="realm-status"
-              [ngClass]="realm.disabled ? 'offline' : 'online'"
-            >
-              <span class="status-indicator"></span>
-              <span class="status-text">{{
-                realm.disabled ? 'Disabled' : 'Online'
-              }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <button
-    type="button"
-    class="btn btn-dark back-button"
-    (click)="showingRealms = false"
-  >
-    Go back
-  </button>
-</ng-template>
 
 <ng-template #newPassword>
   <div class="gap-3 px-3 email-container">
@@ -255,57 +192,6 @@
       type="submit"
       class="btn btn-lg btn-dark save-button"
       (click)="recoveringPassword = false"
-    >
-      Back
-    </button>
-  </div>
-</ng-template>
-
-<ng-template #login>
-  <div [formGroup]="formGroup" class="gap-3 px-3 email-container">
-    <div class="form-group">
-      <label for="characterName" class="text-third">Email</label>
-      <input
-        type="text"
-        class="form-control"
-        id="characterName"
-        formControlName="email"
-        name="characterName"
-        placeholder="Enter email"
-        validInput
-      />
-    </div>
-
-    <div class="form-group">
-      <label for="password" class="text-third">Password:</label>
-      <input
-        type="password"
-        class="form-control"
-        id="password"
-        formControlName="password"
-        name="password"
-        placeholder="Enter password"
-      />
-    </div>
-    <div class="d-flex justify-content-between gap-2" style="flex-wrap: wrap">
-      <span class="hoverable-text" routerLink="/create">Create an account</span>
-      <span class="hoverable-text" (click)="recoveringPassword = true"
-        >Forgot your password?</span
-      >
-    </div>
-    <button
-      type="submit"
-      [disabled]="formGroup.invalid"
-      class="btn btn-lg btn-secondary save-button"
-      (click)="doLogin()"
-    >
-      Login
-      <i class="fa-solid fa-torii-gate pl-2"></i>
-    </button>
-    <button
-      type="submit"
-      class="btn btn-lg btn-dark save-button"
-      (click)="doingLoginWithWeb2 = false"
     >
       Back
     </button>
